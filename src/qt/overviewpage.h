@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -35,29 +35,38 @@ public:
     void setClientModel(ClientModel *clientModel);
     void setWalletModel(WalletModel *walletModel);
     void showOutOfSyncWarning(bool fShow);
+    void updateObfuscationProgress();
 
 public Q_SLOTS:
-    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
-                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void obfuScationStatus();
+    void setBalance(const CAmount& balance, const CAmount& stake, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& anonymizedBalance);
 
 Q_SIGNALS:
     void transactionClicked(const QModelIndex &index);
 
 private:
+    QTimer* timer;
     Ui::OverviewPage *ui;
     ClientModel *clientModel;
     WalletModel *walletModel;
     CAmount currentBalance;
+    CAmount currentStake;
     CAmount currentUnconfirmedBalance;
     CAmount currentImmatureBalance;
+    CAmount currentAnonymizedBalance;
     CAmount currentWatchOnlyBalance;
     CAmount currentWatchUnconfBalance;
     CAmount currentWatchImmatureBalance;
+    int nDisplayUnit;
 
     TxViewDelegate *txdelegate;
     TransactionFilterProxy *filter;
 
 private Q_SLOTS:
+    void toggleObfuscation();
+    void obfuscationAuto();
+    void obfuscationReset();
     void updateDisplayUnit();
     void handleTransactionClicked(const QModelIndex &index);
     void updateAlerts(const QString &warnings);

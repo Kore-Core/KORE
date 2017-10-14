@@ -1,6 +1,6 @@
 Mac OS X Build Instructions and Notes
 ====================================
-This guide will show you how to build bitcoind (headless client) for OS X.
+This guide will show you how to build kored (headless client) for OS X.
 
 Notes
 -----
@@ -36,15 +36,15 @@ Instructions: Homebrew
 
 NOTE: Building with Qt4 is still supported, however, could result in a broken UI. As such, building with Qt5 is recommended.
 
-### Building `bitcoin`
+### Building `kore`
 
 1. Clone the GitHub tree to get the source code and go into the directory.
 
-        git clone https://github.com/bitcoin/bitcoin.git
-        cd bitcoin
+        git clone https://github.com/kore/kore.git
+        cd kore
 
-2.  Build bitcoin-core:
-    This will configure and build the headless bitcoin binaries as well as the gui (if Qt is found).
+2.  Build kore-core:
+    This will configure and build the headless kore binaries as well as the gui (if Qt is found).
     You can disable the gui build by passing `--without-gui` to configure.
 
         ./autogen.sh
@@ -55,7 +55,7 @@ NOTE: Building with Qt4 is still supported, however, could result in a broken UI
 
         make check
 
-4.  (Optional) You can also install bitcoind to your path:
+4.  (Optional) You can also install kored to your path:
 
         make install
 
@@ -67,7 +67,7 @@ Download Qt Creator from https://www.qt.io/download/. Download the "community ed
 1. Make sure you installed everything through Homebrew mentioned above
 2. Do a proper ./configure --enable-debug
 3. In Qt Creator do "New Project" -> Import Project -> Import Existing Project
-4. Enter "bitcoin-qt" as project name, enter src/qt as location
+4. Enter "kore-qt" as project name, enter src/qt as location
 5. Leave the file selection as it is
 6. Confirm the "summary page"
 7. In the "Projects" tab select "Manage Kits..."
@@ -77,11 +77,11 @@ Download Qt Creator from https://www.qt.io/download/. Download the "community ed
 
 Creating a release build
 ------------------------
-You can ignore this section if you are building `bitcoind` for your own use.
+You can ignore this section if you are building `kored` for your own use.
 
-bitcoind/bitcoin-cli binaries are not included in the Bitcoin-Qt.app bundle.
+kored/kore-cli binaries are not included in the Kore-Qt.app bundle.
 
-If you are building `bitcoind` or `Bitcoin Core` for others, your build machine should be set up
+If you are building `kored` or `Kore Core` for others, your build machine should be set up
 as follows for maximum compatibility:
 
 All dependencies should be compiled with these flags:
@@ -90,30 +90,30 @@ All dependencies should be compiled with these flags:
  -arch x86_64
  -isysroot $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
 
-Once dependencies are compiled, see [doc/release-process.md](release-process.md) for how the Bitcoin Core
+Once dependencies are compiled, see [doc/release-process.md](release-process.md) for how the Kore Core
 bundle is packaged and signed to create the .dmg disk image that is distributed.
 
 Running
 -------
 
-It's now available at `./bitcoind`, provided that you are still in the `src`
+It's now available at `./kored`, provided that you are still in the `src`
 directory. We have to first create the RPC configuration file, though.
 
-Run `./bitcoind` to get the filename where it should be put, or just try these
+Run `./kored` to get the filename where it should be put, or just try these
 commands:
 
-    echo -e "rpcuser=bitcoinrpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/Bitcoin/bitcoin.conf"
-    chmod 600 "/Users/${USER}/Library/Application Support/Bitcoin/bitcoin.conf"
+    echo -e "rpcuser=korerpc\nrpcpassword=$(xxd -l 16 -p /dev/urandom)" > "/Users/${USER}/Library/Application Support/Kore/kore.conf"
+    chmod 600 "/Users/${USER}/Library/Application Support/Kore/kore.conf"
 
 The next time you run it, it will start downloading the blockchain, but it won't
 output anything while it's doing this. This process may take several hours;
 you can monitor its process by looking at the debug.log file, like this:
 
-    tail -f $HOME/Library/Application\ Support/Bitcoin/debug.log
+    tail -f $HOME/Library/Application\ Support/Kore/debug.log
 
 Other commands:
 -------
 
-    ./bitcoind -daemon # to start the bitcoin daemon.
-    ./bitcoin-cli --help  # for a list of command-line options.
-    ./bitcoin-cli help    # When the daemon is running, to get a list of RPC commands
+    ./kored -daemon # to start the kore daemon.
+    ./kore-cli --help  # for a list of command-line options.
+    ./kore-cli help    # When the daemon is running, to get a list of RPC commands

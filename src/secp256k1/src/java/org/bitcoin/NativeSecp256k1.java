@@ -1,4 +1,4 @@
-package org.bitcoin;
+package org.kore;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

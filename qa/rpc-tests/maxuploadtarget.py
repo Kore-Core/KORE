@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-# Copyright (c) 2015-2016 The Bitcoin Core developers
+# Copyright (c) 2015-2016 The Kore Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 from test_framework.mininode import *
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import KoreTestFramework
 from test_framework.util import *
 import time
 
@@ -79,15 +79,15 @@ class TestNode(NodeConnCB):
         self.ping_counter += 1
         return success
 
-class MaxUploadTest(BitcoinTestFramework):
+class MaxUploadTest(KoreTestFramework):
     def __init__(self):
         self.utxo = []
         self.txouts = gen_return_txouts()
  
     def add_options(self, parser):
         parser.add_option("--testbinary", dest="testbinary",
-                          default=os.getenv("BITCOIND", "bitcoind"),
-                          help="bitcoind binary to test")
+                          default=os.getenv("BITCOIND", "kored"),
+                          help="kored binary to test")
 
     def setup_chain(self):
         initialize_chain_clean(self.options.tmpdir, 2)

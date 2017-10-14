@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,6 +10,8 @@
 #include "script/script.h"
 #include "serialize.h"
 #include "uint256.h"
+
+class CTransaction;
 
 /** An outpoint - a combination of a transaction hash and an index n into its vout */
 class COutPoint
@@ -31,7 +33,7 @@ public:
 
     void SetNull() { hash.SetNull(); n = (uint32_t) -1; }
     bool IsNull() const { return (hash.IsNull() && n == (uint32_t) -1); }
-
+    bool IsMasternodeReward(const CTransaction* tx) const;
     friend bool operator<(const COutPoint& a, const COutPoint& b)
     {
         return (a.hash < b.hash || (a.hash == b.hash && a.n < b.n));
@@ -48,6 +50,10 @@ public:
     }
 
     std::string ToString() const;
+    std::string ToStringShort() const;
+
+    uint256 GetHash();
+
 };
 
 /** An input of a transaction.  It contains the location of the previous
@@ -60,6 +66,7 @@ public:
     COutPoint prevout;
     CScript scriptSig;
     uint32_t nSequence;
+    CScript prevPubKey;
 
     /* Setting nSequence to this value for every input in a transaction
      * disables nLockTime. */
@@ -128,6 +135,7 @@ class CTxOut
 public:
     CAmount nValue;
     CScript scriptPubKey;
+    int nRounds;
 
     CTxOut()
     {
@@ -148,6 +156,7 @@ public:
     {
         nValue = -1;
         scriptPubKey.clear();
+        nRounds = -10; // an initial value, should be no way to get this by calculations
     }
 
     bool IsNull() const
@@ -155,7 +164,23 @@ public:
         return (nValue == -1);
     }
 
+    void SetEmpty()
+    {
+        nValue = 0;
+        scriptPubKey.clear();
+    }
+
+    bool IsEmpty() const
+    {
+        return (nValue == 0 && scriptPubKey.empty());
+    }
+
     uint256 GetHash() const;
+
+    bool IsUnspendable() const
+    {
+        return IsEmpty() || scriptPubKey.IsUnspendable();
+    }
 
     CAmount GetDustThreshold(const CFeeRate &minRelayTxFee) const
     {
@@ -167,7 +192,7 @@ public:
         // need a CTxIn of at least 148 bytes to spend:
         // so dust is a spendable txout less than
         // 546*minRelayTxFee/1000 (in satoshis)
-        if (scriptPubKey.IsUnspendable())
+        if (IsUnspendable())
             return 0;
 
         size_t nSize = GetSerializeSize(SER_DISK,0)+148u;
@@ -182,7 +207,8 @@ public:
     friend bool operator==(const CTxOut& a, const CTxOut& b)
     {
         return (a.nValue       == b.nValue &&
-                a.scriptPubKey == b.scriptPubKey);
+                a.scriptPubKey == b.scriptPubKey &&
+                a.nRounds      == b.nRounds);
     }
 
     friend bool operator!=(const CTxOut& a, const CTxOut& b)
@@ -221,6 +247,7 @@ public:
     // and bypass the constness. This is safe, as they update the entire
     // structure, including the hash.
     const int32_t nVersion;
+    const uint32_t nTime;
     const std::vector<CTxIn> vin;
     const std::vector<CTxOut> vout;
     const uint32_t nLockTime;
@@ -239,6 +266,7 @@ public:
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
         READWRITE(*const_cast<int32_t*>(&this->nVersion));
         nVersion = this->nVersion;
+        READWRITE(*const_cast<uint32_t*>(&nTime));
         READWRITE(*const_cast<std::vector<CTxIn>*>(&vin));
         READWRITE(*const_cast<std::vector<CTxOut>*>(&vout));
         READWRITE(*const_cast<uint32_t*>(&nLockTime));
@@ -270,6 +298,12 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull());
     }
 
+    bool IsCoinStake() const
+    {
+        // the coin stake transaction is marked with the first output empty
+        return (vin.size() > 0 && (!vin[0].prevout.IsNull()) && vout.size() >= 2 && vout[0].IsEmpty());
+    }
+
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
         return a.hash == b.hash;
@@ -287,6 +321,7 @@ public:
 struct CMutableTransaction
 {
     int32_t nVersion;
+    uint32_t nTime;
     std::vector<CTxIn> vin;
     std::vector<CTxOut> vout;
     uint32_t nLockTime;
@@ -300,6 +335,7 @@ struct CMutableTransaction
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
         READWRITE(this->nVersion);
         nVersion = this->nVersion;
+        READWRITE(nTime);
         READWRITE(vin);
         READWRITE(vout);
         READWRITE(nLockTime);
@@ -309,6 +345,19 @@ struct CMutableTransaction
      * fly, as opposed to GetHash() in CTransaction, which uses a cached result.
      */
     uint256 GetHash() const;
+
+    std::string ToString() const;
+
+    friend bool operator==(const CMutableTransaction& a, const CMutableTransaction& b)
+    {
+        return a.GetHash() == b.GetHash();
+    }
+
+    friend bool operator!=(const CMutableTransaction& a, const CMutableTransaction& b)
+    {
+        return !(a == b);
+    }
+
 };
 
 #endif // BITCOIN_PRIMITIVES_TRANSACTION_H

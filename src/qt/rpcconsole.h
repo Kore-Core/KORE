@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,6 +11,8 @@
 #include "net.h"
 
 #include <QWidget>
+#include <QCompleter>
+
 
 class ClientModel;
 class PlatformStyle;
@@ -25,7 +27,7 @@ class QMenu;
 class QItemSelection;
 QT_END_NAMESPACE
 
-/** Local Bitcoin RPC console. */
+/** Local KoreRPC console. */
 class RPCConsole: public QWidget
 {
     Q_OBJECT
@@ -78,6 +80,15 @@ private Q_SLOTS:
 
 public Q_SLOTS:
     void clear();
+
+    /** Wallet repair options */
+    void walletSalvage();
+    void walletRescan();
+    void walletZaptxes1();
+    void walletZaptxes2();
+    void walletUpgrade();
+    void walletReindex();
+
     /** Append the message to the message widget */
     void message(int category, const QString &message, bool html = false);
     /** Set number of connections shown in the UI */
@@ -102,16 +113,28 @@ public Q_SLOTS:
     void unbanSelectedNode();
     /** set which tab has the focus (is visible) */
     void setTabFocus(enum TabTypes tabType);
+    /** Switch to wallet-repair tab and show */
+    void showRepair();
+    /** Open external (default) editor with kore.conf */
+    void showConfEditor();
+    /** Open external (default) editor with masternode.conf */
+    void showMNConfEditor();
+    /** Show folder with wallet backups in default browser */
+    void showBackups();
 
 Q_SIGNALS:
     // For RPC command executor
     void stopExecutor();
     void cmdRequest(const QString &command);
+    /** Get restart command-line parameters and handle restart */
+    void handleRestart(QStringList args);
 
 private:
     static QString FormatBytes(quint64 bytes);
     void startExecutor();
     void setTrafficGraphRange(int mins);
+    /** Build parameter list for restart */
+    void buildParameterlist(QString arg);
     /** show detailed information on ui about selected node */
     void updateNodeDetail(const CNodeCombinedStats *stats);
 
@@ -134,6 +157,7 @@ private:
     RPCTimerInterface *rpcTimerInterface;
     QMenu *peersTableContextMenu;
     QMenu *banTableContextMenu;
+    QCompleter *autoCompleter;
 };
 
 #endif // BITCOIN_QT_RPCCONSOLE_H

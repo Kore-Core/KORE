@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,7 +7,7 @@
 #define BITCOIN_MAIN_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/kore-config.h"
 #endif
 
 #include "amount.h"
@@ -15,6 +15,7 @@
 #include "coins.h"
 #include "net.h"
 #include "script/script_error.h"
+#include "script/standard.h"
 #include "sync.h"
 #include "versionbits.h"
 
@@ -26,6 +27,8 @@
 #include <string>
 #include <utility>
 #include <vector>
+
+#include <atomic>
 
 #include <boost/unordered_map.hpp>
 
@@ -110,7 +113,8 @@ static const bool DEFAULT_RELAYPRIORITY = true;
 static const bool DEFAULT_PERMIT_BAREMULTISIG = true;
 static const unsigned int DEFAULT_BYTES_PER_SIGOP = 20;
 static const bool DEFAULT_CHECKPOINTS_ENABLED = true;
-static const bool DEFAULT_TXINDEX = false;
+static const bool DEFAULT_TXINDEX = true;
+static const bool DEFAULT_ADDRINDEX = true;
 static const unsigned int DEFAULT_BANSCORE_THRESHOLD = 100;
 
 static const bool DEFAULT_TESTSAFEMODE = false;
@@ -125,6 +129,7 @@ struct BlockHasher
     size_t operator()(const uint256& hash) const { return hash.GetCheapHash(); }
 };
 
+extern std::map<uint256, int64_t> mapRejectedBlocks;
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
 extern CTxMemPool mempool;
@@ -135,10 +140,11 @@ extern uint64_t nLastBlockSize;
 extern const std::string strMessageMagic;
 extern CWaitableCriticalSection csBestBlock;
 extern CConditionVariable cvBlockChange;
-extern bool fImporting;
+extern std::atomic_bool fImporting;
 extern bool fReindex;
 extern int nScriptCheckThreads;
 extern bool fTxIndex;
+extern bool fAddrIndex;
 extern bool fIsBareMultisigStd;
 extern bool fRequireStandard;
 extern unsigned int nBytesPerSigOp;
@@ -148,6 +154,10 @@ extern size_t nCoinCacheUsage;
 extern CFeeRate minRelayTxFee;
 extern bool fAlerts;
 extern bool fEnableReplacement;
+double coinyearreward();
+
+extern bool fLargeWorkForkFound;
+extern bool fLargeWorkInvalidChainFound;
 
 /** Best header we've seen so far (used for getheaders queries' starting points). */
 extern CBlockIndex *pindexBestHeader;
@@ -163,7 +173,7 @@ extern bool fPruneMode;
 /** Number of MiB of block files that we're trying to stay below. */
 extern uint64_t nPruneTarget;
 /** Block files containing a block-height within MIN_BLOCKS_TO_KEEP of chainActive.Tip() will not be pruned. */
-static const unsigned int MIN_BLOCKS_TO_KEEP = 288;
+static const unsigned int MIN_BLOCKS_TO_KEEP = 500;
 
 static const signed int DEFAULT_CHECKBLOCKS = MIN_BLOCKS_TO_KEEP;
 static const unsigned int DEFAULT_CHECKLEVEL = 3;
@@ -223,7 +233,7 @@ bool SendMessages(CNode* pto);
 /** Run an instance of the script checking thread */
 void ThreadScriptCheck();
 /** Try to detect Partition (network isolation) attacks against us */
-void PartitionCheck(bool (*initialDownloadCheck)(), CCriticalSection& cs, const CBlockIndex *const &bestHeader, int64_t nPowTargetSpacing);
+void PartitionCheck(bool (*initialDownloadCheck)(), CCriticalSection& cs, const CBlockIndex *const &bestHeader, int64_t nTargetSpacing);
 /** Check whether we are doing an initial block download (synchronizing from disk or network) */
 bool IsInitialBlockDownload();
 /** Format a string that describes several potential problems detected by the core.
@@ -238,8 +248,10 @@ std::string GetWarnings(const std::string& strFor);
 bool GetTransaction(const uint256 &hash, CTransaction &tx, const Consensus::Params& params, uint256 &hashBlock, bool fAllowSlow = false);
 /** Find the best known block, and make it the tip of the block chain */
 bool ActivateBestChain(CValidationState& state, const CChainParams& chainparams, const CBlock* pblock = NULL);
-CAmount GetBlockSubsidy(int nHeight, const Consensus::Params& consensusParams);
-
+CAmount GetProofOfWorkSubsidy(int nHeight, const Consensus::Params& consensusParams);
+CAmount GetProofOfStakeSubsidy(int nHeight, CAmount input, uint64_t nCoinAge);
+bool GetCoinAge(const CBlockIndex* pindexPrev, uint64_t& nCoinAge, const CTransaction tx);
+int64_t GetMasternodePayment(int nHeight, int64_t blockValue);
 /**
  * Prune block and undo files (blk???.dat and undo???.dat) so that the disk space used is less than a user-defined target.
  * The user sets the target (in MB) on the command line or in config file.  This will be run on startup and whenever new
@@ -283,6 +295,13 @@ std::string FormatStateMessage(const CValidationState &state);
 /** Get the BIP9 state for a given deployment at the current tip. */
 ThresholdState VersionBitsTipState(const Consensus::Params& params, Consensus::DeploymentPos pos);
 
+bool AcceptableInputs(CTxMemPool& pool, CValidationState& state, const CTransaction& tx, bool fLimitFree, bool* pfMissingInputs, bool fRejectInsaneFee = false, bool isDSTX = false);
+
+int GetInputAge(CTxIn& vin);
+int GetInputAgeIX(uint256 nTXHash, CTxIn& vin);
+bool GetCoinAge(const CTransaction& tx, unsigned int nTxTime, uint64_t& nCoinAge);
+int GetIXConfirmations(uint256 nTXHash);
+
 struct CNodeStateStats {
     int nMisbehavior;
     int nSyncHeight;
@@ -313,8 +332,52 @@ struct CDiskTxPos : public CDiskBlockPos
         CDiskBlockPos::SetNull();
         nTxOffset = 0;
     }
+
+    friend bool operator<(const CDiskTxPos &a, const CDiskTxPos &b) {
+        return  (a.nFile < b.nFile || (
+                (a.nFile == b.nFile) && (a.nPos < b.nPos || (
+                        (a.nPos == b.nPos) && (a.nTxOffset < b.nTxOffset)))));
+    }
 };
 
+struct CExtDiskTxPos : public CDiskTxPos
+{
+    unsigned int nHeight;
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+        READWRITE(*(CDiskTxPos*)this);
+        READWRITE(VARINT(nHeight));
+    }
+
+    CExtDiskTxPos(const CDiskTxPos &pos, int nHeightIn) : CDiskTxPos(pos), nHeight(nHeightIn) {
+    }
+
+    CExtDiskTxPos() {
+        SetNull();
+    }
+
+    void SetNull() {
+        CDiskTxPos::SetNull();
+        nHeight = 0;
+    }
+
+    friend bool operator==(const CExtDiskTxPos &a, const CExtDiskTxPos &b) {
+        return (a.nHeight == b.nHeight && a.nFile == b.nFile && a.nPos == b.nPos && a.nTxOffset == b.nTxOffset);
+    }
+
+    friend bool operator!=(const CExtDiskTxPos &a, const CExtDiskTxPos &b) {
+        return !(a == b);
+    }
+
+    friend bool operator<(const CExtDiskTxPos &a, const CExtDiskTxPos &b) {
+        if (a.nHeight < b.nHeight) return true;
+        if (a.nHeight > b.nHeight) return false;
+        return ((const CDiskTxPos)a < (const CDiskTxPos)b);
+    }
+};
 
 /** 
  * Count ECDSA signature operations the old-fashioned (pre-0.6) way
@@ -338,8 +401,7 @@ unsigned int GetP2SHSigOpCount(const CTransaction& tx, const CCoinsViewCache& ma
  * This does not modify the UTXO set. If pvChecks is not NULL, script checks are pushed onto it
  * instead of being performed inline.
  */
-bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &view, bool fScriptChecks,
-                 unsigned int flags, bool cacheStore, std::vector<CScriptCheck> *pvChecks = NULL);
+bool CheckInputs(const CTransaction& tx, CValidationState &state, const CCoinsViewCache &view, bool fScriptChecks, unsigned int flags, bool cacheStore, std::vector<CScriptCheck> *pvChecks = NULL);
 
 /** Apply the effects of this transaction on the UTXO set represented by view */
 void UpdateCoins(const CTransaction& tx, CValidationState &state, CCoinsViewCache &inputs, int nHeight);
@@ -425,9 +487,12 @@ public:
 bool WriteBlockToDisk(const CBlock& block, CDiskBlockPos& pos, const CMessageHeader::MessageStartChars& messageStart);
 bool ReadBlockFromDisk(CBlock& block, const CDiskBlockPos& pos, const Consensus::Params& consensusParams);
 bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus::Params& consensusParams);
+bool ReadTransaction(CTransaction& tx, const CDiskTxPos &pos, uint256 &hashBlock);
+bool FindTransactionsByDestination(const CTxDestination &dest, std::set<CExtDiskTxPos> &setpos);
 
 /** Functions for validating blocks and updating the block tree */
-
+/** Reprocess a number of blocks to try and get on the correct chain again **/
+bool DisconnectBlocksAndReprocess(int blocks);
 /** Undo the effects of this block (with given index) on the UTXO set represented by coins.
  *  In case pfClean is provided, operation will try to be tolerant about errors, and *pfClean
  *  will be true if no problems were found. Otherwise, the return value will be false in case
@@ -447,6 +512,10 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
 
 /** Check a block is completely valid from start to finish (only works on top of our current best block, with cs_main held) */
 bool TestBlockValidity(CValidationState& state, const CChainParams& chainparams, const CBlock& block, CBlockIndex* pindexPrev, bool fCheckPOW = true, bool fCheckMerkleRoot = true);
+
+bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex **pindex, bool fRequested, CDiskBlockPos* dbp, const uint256& hash);
+
+bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state, const uint256& hash, const CChainParams& chainparams, CBlockIndex **ppindex= NULL);
 
 
 class CBlockFileInfo

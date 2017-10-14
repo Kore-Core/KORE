@@ -341,7 +341,7 @@ static bool WriteBinaryFile(const std::string &filename, const std::string &data
     return true;
 }
 
-/****** Bitcoin specific TorController implementation ********/
+/****** Korespecific TorController implementation ********/
 
 /** Controller that connects to Tor control socket, authenticate, then create
  * and maintain a ephemeral hidden service.
@@ -460,12 +460,12 @@ void TorController::auth_cb(TorControlConnection& conn, const TorControlReply& r
         if (GetArg("-onion", "") == "") {
             proxyType addrOnion = proxyType(CService("127.0.0.1", 9050), true);
             SetProxy(NET_TOR, addrOnion);
-            SetLimited(NET_TOR, false);
+            SetReachable(NET_TOR);
         }
 
         // Finally - now create the service
         if (private_key.empty()) // No private key, generate one
-            private_key = "NEW:RSA1024"; // Explicitly request RSA1024 - see issue #9214
+            private_key = "NEW:BEST";
         // Request hidden service, redirect port.
         // Note that the 'virtual' port doesn't have to be the same as our internal port, but this is just a convenient
         // choice.  TODO; refactor the shutdown sequence some day.

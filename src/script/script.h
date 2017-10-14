@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,6 +8,7 @@
 
 #include "crypto/common.h"
 #include "prevector.h"
+#include "pubkey.h"
 
 #include <assert.h>
 #include <climits>
@@ -176,8 +177,10 @@ enum opcodetype
 
 
     // template matching params
+    OP_BIGINTEGER = 0xf0,
     OP_SMALLINTEGER = 0xfa,
     OP_PUBKEYS = 0xfb,
+    OP_ANYDATA = 0xfc,
     OP_PUBKEYHASH = 0xfd,
     OP_PUBKEY = 0xfe,
 
@@ -308,6 +311,11 @@ public:
         return m_value;
     }
 
+    int64_t getint64() const
+    {
+	return m_value;
+    }
+
     std::vector<unsigned char> getvch() const
     {
         return serialize(m_value);
@@ -429,6 +437,14 @@ public:
     CScript& operator<<(const CScriptNum& b)
     {
         *this << b.getvch();
+        return *this;
+    }
+
+    CScript& operator<<(const CPubKey& key)
+    {
+        assert(key.size() < OP_PUSHDATA1);
+        insert(end(), (unsigned char)key.size());
+        insert(end(), key.begin(), key.end());
         return *this;
     }
 
@@ -594,7 +610,7 @@ public:
     }
 
     /**
-     * Pre-version-0.6, Bitcoin always counted CHECKMULTISIGs
+     * Pre-version-0.6, Korealways counted CHECKMULTISIGs
      * as 20 sigops. With pay-to-script-hash, that changed:
      * CHECKMULTISIGs serialized in scriptSigs are
      * counted more accurately, assuming they are of the form
@@ -608,6 +624,7 @@ public:
      */
     unsigned int GetSigOpCount(const CScript& scriptSig) const;
 
+    bool IsNormalPaymentScript() const;
     bool IsPayToScriptHash() const;
 
     /** Called by IsStandardTx and P2SH/BIP62 VerifyScript (which makes it consensus-critical). */
@@ -624,6 +641,7 @@ public:
         return (size() > 0 && *begin() == OP_RETURN);
     }
 
+    std::string ToString() const;
     void clear()
     {
         // The default std::vector::clear() does not release memory.

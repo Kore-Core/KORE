@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -63,7 +63,7 @@ static inline void popstack(vector<valtype>& stack)
     stack.pop_back();
 }
 
-bool static IsCompressedOrUncompressedPubKey(const valtype &vchPubKey) {
+bool IsCompressedOrUncompressedPubKey(const valtype &vchPubKey) {
     if (vchPubKey.size() < 33) {
         //  Non-canonical public key: too short
         return false;
@@ -91,11 +91,11 @@ bool static IsCompressedOrUncompressedPubKey(const valtype &vchPubKey) {
  * excessively padded (do not start with a 0 byte, unless an otherwise negative number follows,
  * in which case a single 0 byte is necessary and even required).
  * 
- * See https://bitcointalk.org/index.php?topic=8392.msg127623#msg127623
+ * See https://koretalk.org/index.php?topic=8392.msg127623#msg127623
  *
  * This function is consensus-critical since BIP66.
  */
-bool static IsValidSignatureEncoding(const std::vector<unsigned char> &sig) {
+bool IsValidSignatureEncoding(const std::vector<unsigned char> &sig, bool haveHashType) {
     // Format: 0x30 [total-length] 0x02 [R-length] [R] 0x02 [S-length] [S] [sighash]
     // * total-length: 1-byte length descriptor of everything that follows,
     //   excluding the sighash byte.
@@ -116,7 +116,7 @@ bool static IsValidSignatureEncoding(const std::vector<unsigned char> &sig) {
     if (sig[0] != 0x30) return false;
 
     // Make sure the length covers the entire signature.
-    if (sig[1] != sig.size() - 3) return false;
+    if (sig[1] != sig.size() - (haveHashType ? 3 : 2)) return false;
 
     // Extract the length of the R element.
     unsigned int lenR = sig[3];
@@ -129,7 +129,7 @@ bool static IsValidSignatureEncoding(const std::vector<unsigned char> &sig) {
 
     // Verify that the length of the signature matches the sum of the length
     // of the elements.
-    if ((size_t)(lenR + lenS + 7) != sig.size()) return false;
+    if ((size_t)(lenR + lenS + (haveHashType ? 7 : 6)) != sig.size()) return false;
  
     // Check whether the R element is an integer.
     if (sig[2] != 0x02) return false;
@@ -160,7 +160,7 @@ bool static IsValidSignatureEncoding(const std::vector<unsigned char> &sig) {
     return true;
 }
 
-bool static IsLowDERSignature(const valtype &vchSig, ScriptError* serror) {
+bool IsLowDERSignature(const valtype &vchSig, ScriptError* serror) {
     if (!IsValidSignatureEncoding(vchSig)) {
         return set_error(serror, SCRIPT_ERR_SIG_DER);
     }
@@ -1089,6 +1089,8 @@ public:
     void Serialize(S &s, int nType, int nVersion) const {
         // Serialize nVersion
         ::Serialize(s, txTo.nVersion, nType, nVersion);
+        // Serialize nTime
+        ::Serialize(s, txTo.nTime, nType, nVersion);
         // Serialize vin
         unsigned int nInputs = fAnyoneCanPay ? 1 : txTo.vin.size();
         ::WriteCompactSize(s, nInputs);

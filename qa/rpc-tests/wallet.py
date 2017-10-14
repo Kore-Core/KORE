@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Bitcoin Core developers
+# Copyright (c) 2014-2016 The Kore Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import KoreTestFramework
 from test_framework.util import *
 
-class WalletTest (BitcoinTestFramework):
+class WalletTest (KoreTestFramework):
 
     def check_fee_amount(self, curr_balance, balance_with_fee, fee_per_byte, tx_size):
         """Return curr_balance after asserting the fee was in range"""
@@ -203,7 +203,7 @@ class WalletTest (BitcoinTestFramework):
 
         #do some -walletbroadcast tests
         stop_nodes(self.nodes)
-        wait_bitcoinds()
+        wait_koreds()
         self.nodes = start_nodes(3, self.options.tmpdir, [["-walletbroadcast=0"],["-walletbroadcast=0"],["-walletbroadcast=0"]])
         connect_nodes_bi(self.nodes,0,1)
         connect_nodes_bi(self.nodes,1,2)
@@ -229,7 +229,7 @@ class WalletTest (BitcoinTestFramework):
 
         #restart the nodes with -walletbroadcast=1
         stop_nodes(self.nodes)
-        wait_bitcoinds()
+        wait_koreds()
         self.nodes = start_nodes(3, self.options.tmpdir)
         connect_nodes_bi(self.nodes,0,1)
         connect_nodes_bi(self.nodes,1,2)
@@ -315,7 +315,7 @@ class WalletTest (BitcoinTestFramework):
         for m in maintenance:
             print("check " + m)
             stop_nodes(self.nodes)
-            wait_bitcoinds()
+            wait_koreds()
             self.nodes = start_nodes(3, self.options.tmpdir, [[m]] * 3)
             while m == '-reindex' and [block_count] * 3 != [self.nodes[i].getblockcount() for i in range(3)]:
                 # reindex will leave rpc warm up "early"; Wait for it to finish

@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -14,6 +14,7 @@
 #include "base58.h"
 #include "keystore.h"
 #include "main.h"
+#include "spork.h"
 #include "sync.h"
 #include "ui_interface.h"
 #include "wallet/wallet.h"
@@ -31,7 +32,7 @@ WalletModel::WalletModel(const PlatformStyle *platformStyle, CWallet *wallet, Op
     QObject(parent), wallet(wallet), optionsModel(optionsModel), addressTableModel(0),
     transactionTableModel(0),
     recentRequestsTableModel(0),
-    cachedBalance(0), cachedUnconfirmedBalance(0), cachedImmatureBalance(0),
+    cachedBalance(0), cachedStake(0), cachedUnconfirmedBalance(0), cachedImmatureBalance(0),
     cachedEncryptionStatus(Unencrypted),
     cachedNumBlocks(0)
 {
@@ -72,9 +73,20 @@ CAmount WalletModel::getBalance(const CCoinControl *coinControl) const
     return wallet->GetBalance();
 }
 
+
+CAmount WalletModel::getAnonymizedBalance() const
+{
+    return wallet->GetAnonymizedBalance();
+}
+
 CAmount WalletModel::getUnconfirmedBalance() const
 {
     return wallet->GetUnconfirmedBalance();
+}
+
+CAmount WalletModel::getStake() const
+{
+    return wallet->GetStakeBalance();
 }
 
 CAmount WalletModel::getImmatureBalance() const
@@ -122,12 +134,13 @@ void WalletModel::pollBalanceChanged()
     if(!lockWallet)
         return;
 
-    if(fForceCheckBalanceChanged || chainActive.Height() != cachedNumBlocks)
+    if(fForceCheckBalanceChanged || chainActive.Height() != cachedNumBlocks  || nObfuscationRounds != cachedObfuscationRounds || cachedTxLocks != nCompleteTXLocks)
     {
         fForceCheckBalanceChanged = false;
 
         // Balance and number of transactions might have changed
         cachedNumBlocks = chainActive.Height();
+        cachedObfuscationRounds = nObfuscationRounds;
 
         checkBalanceChanged();
         if(transactionTableModel)
@@ -137,12 +150,17 @@ void WalletModel::pollBalanceChanged()
 
 void WalletModel::checkBalanceChanged()
 {
+    TRY_LOCK(cs_main, lockMain);
+    if (!lockMain) return;
+
     CAmount newBalance = getBalance();
     CAmount newUnconfirmedBalance = getUnconfirmedBalance();
     CAmount newImmatureBalance = getImmatureBalance();
+    CAmount newAnonymizedBalance = getAnonymizedBalance();
     CAmount newWatchOnlyBalance = 0;
     CAmount newWatchUnconfBalance = 0;
     CAmount newWatchImmatureBalance = 0;
+    CAmount newStake = getStake();
     if (haveWatchOnly())
     {
         newWatchOnlyBalance = getWatchBalance();
@@ -150,17 +168,19 @@ void WalletModel::checkBalanceChanged()
         newWatchImmatureBalance = getWatchImmatureBalance();
     }
 
-    if(cachedBalance != newBalance || cachedUnconfirmedBalance != newUnconfirmedBalance || cachedImmatureBalance != newImmatureBalance ||
-        cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance)
+    if(cachedBalance != newBalance || cachedStake != newStake || cachedUnconfirmedBalance != newUnconfirmedBalance || cachedImmatureBalance != newImmatureBalance ||
+        cachedAnonymizedBalance != newAnonymizedBalance || cachedTxLocks != nCompleteTXLocks || cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance)
     {
         cachedBalance = newBalance;
+        cachedStake = newStake;
         cachedUnconfirmedBalance = newUnconfirmedBalance;
         cachedImmatureBalance = newImmatureBalance;
+        cachedAnonymizedBalance = newAnonymizedBalance;
+        cachedTxLocks = nCompleteTXLocks;
         cachedWatchOnlyBalance = newWatchOnlyBalance;
         cachedWatchUnconfBalance = newWatchUnconfBalance;
         cachedWatchImmatureBalance = newWatchImmatureBalance;
-        Q_EMIT balanceChanged(newBalance, newUnconfirmedBalance, newImmatureBalance,
-                            newWatchOnlyBalance, newWatchUnconfBalance, newWatchImmatureBalance);
+        Q_EMIT balanceChanged(newBalance, newStake, newUnconfirmedBalance, newImmatureBalance,  newWatchOnlyBalance, newWatchUnconfBalance, newWatchImmatureBalance, newAnonymizedBalance);
     }
 }
 
@@ -185,7 +205,7 @@ void WalletModel::updateWatchOnlyFlag(bool fHaveWatchonly)
 
 bool WalletModel::validateAddress(const QString &address)
 {
-    CBitcoinAddress addressParsed(address.toStdString());
+    CKoreAddress addressParsed(address.toStdString());
     return addressParsed.IsValid();
 }
 
@@ -199,6 +219,10 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
     if(recipients.empty())
     {
         return OK;
+    }
+
+    if (isAnonymizeOnlyUnlocked()) {
+        return AnonymizeOnlyUnlocked;
     }
 
     QSet<QString> setAddress; // Used to detect duplicates
@@ -232,7 +256,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             total += subtotal;
         }
         else
-        {   // User-entered bitcoin address / amount:
+        {   // User-entered kore address / amount:
             if(!validateAddress(rcp.address))
             {
                 return InvalidAddress;
@@ -244,7 +268,7 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
             setAddress.insert(rcp.address);
             ++nAddresses;
 
-            CScript scriptPubKey = GetScriptForDestination(CBitcoinAddress(rcp.address.toStdString()).Get());
+            CScript scriptPubKey = GetScriptForDestination(CKoreAddress(rcp.address.toStdString()).Get());
             CRecipient recipient = {scriptPubKey, rcp.amount, rcp.fSubtractFeeFromAmount};
             vecSend.push_back(recipient);
 
@@ -274,10 +298,24 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 
         CWalletTx *newTx = transaction.getTransaction();
         CReserveKey *keyChange = transaction.getPossibleKeyChange();
-        bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, nChangePosRet, strFailReason, coinControl);
+
+        if (recipients[0].useSwiftTX && total > GetSporkValue(SPORK_5_MAX_VALUE) * COIN) {
+            Q_EMIT message(tr("Send Coins"), tr("SwiftTX doesn't support sending values that high yet. Transactions are currently limited to %1 KORE.").arg(GetSporkValue(SPORK_5_MAX_VALUE)),
+                CClientUIInterface::MSG_ERROR);
+            return TransactionCreationFailed;
+        }
+
+        bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, nChangePosRet, strFailReason, coinControl, recipients[0].inputType, recipients[0].useSwiftTX);
         transaction.setTransactionFee(nFeeRequired);
+
         if (fSubtractFeeFromAmount && fCreated)
             transaction.reassignAmounts(nChangePosRet);
+
+        if (recipients[0].useSwiftTX && newTx->GetValueOut() > GetSporkValue(SPORK_5_MAX_VALUE) * COIN) {
+            Q_EMIT message(tr("Send Coins"), tr("SwiftTX doesn't support sending values that high yet. Transactions are currently limited to %1 PIV.").arg(GetSporkValue(SPORK_5_MAX_VALUE)),
+                CClientUIInterface::MSG_ERROR);
+            return TransactionCreationFailed;
+        }
 
         if(!fCreated)
         {
@@ -304,9 +342,14 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
 {
     QByteArray transaction_array; /* store serialized transaction */
 
+    if (isAnonymizeOnlyUnlocked()) {
+        return AnonymizeOnlyUnlocked;
+    }
+
     {
         LOCK2(cs_main, wallet->cs_wallet);
         CWalletTx *newTx = transaction.getTransaction();
+        QList<SendCoinsRecipient> recipients = transaction.getRecipients();
 
         Q_FOREACH(const SendCoinsRecipient &rcp, transaction.getRecipients())
         {
@@ -323,12 +366,12 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
                 rcp.paymentRequest.SerializeToString(&value);
                 newTx->vOrderForm.push_back(make_pair(key, value));
             }
-            else if (!rcp.message.isEmpty()) // Message from normal bitcoin:URI (bitcoin:123...?message=example)
+            else if (!rcp.message.isEmpty()) // Message from normal kore:URI (kore:123...?message=example)
                 newTx->vOrderForm.push_back(make_pair("Message", rcp.message.toStdString()));
         }
 
         CReserveKey *keyChange = transaction.getPossibleKeyChange();
-        if(!wallet->CommitTransaction(*newTx, *keyChange))
+        if (!wallet->CommitTransaction(*newTx, *keyChange, (recipients[0].useSwiftTX) ? "ix" : "tx"))
             return TransactionCommitFailed;
 
         CTransaction* t = (CTransaction*)newTx;
@@ -345,7 +388,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction &tran
         if (!rcp.paymentRequest.IsInitialized())
         {
             std::string strAddress = rcp.address.toStdString();
-            CTxDestination dest = CBitcoinAddress(strAddress).Get();
+            CTxDestination dest = CKoreAddress(strAddress).Get();
             std::string strLabel = rcp.label.toStdString();
             {
                 LOCK(wallet->cs_wallet);
@@ -399,9 +442,9 @@ WalletModel::EncryptionStatus WalletModel::getEncryptionStatus() const
     else if(wallet->IsLocked())
     {
         return Locked;
-    }
-    else
-    {
+    } else if (wallet->fWalletUnlockAnonymizeOnly) {
+        return UnlockedForAnonymizationOnly;
+    } else {
         return Unlocked;
     }
 }
@@ -434,6 +477,12 @@ bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase)
     }
 }
 
+bool WalletModel::isAnonymizeOnlyUnlocked()
+{
+    return wallet->fWalletUnlockAnonymizeOnly;
+}
+
+
 bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureString &newPass)
 {
     bool retval;
@@ -461,7 +510,7 @@ static void NotifyAddressBookChanged(WalletModel *walletmodel, CWallet *wallet,
         const CTxDestination &address, const std::string &label, bool isMine,
         const std::string &purpose, ChangeType status)
 {
-    QString strAddress = QString::fromStdString(CBitcoinAddress(address).ToString());
+    QString strAddress = QString::fromStdString(CKoreAddress(address).ToString());
     QString strLabel = QString::fromStdString(label);
     QString strPurpose = QString::fromStdString(purpose);
 
@@ -517,9 +566,16 @@ void WalletModel::unsubscribeFromCoreSignals()
 }
 
 // WalletModel::UnlockContext implementation
-WalletModel::UnlockContext WalletModel::requestUnlock()
+WalletModel::UnlockContext WalletModel::requestUnlock(bool relock)
 {
     bool was_locked = getEncryptionStatus() == Locked;
+
+    if (!was_locked && isAnonymizeOnlyUnlocked()) {
+        setWalletLocked(true);
+        wallet->fWalletUnlockAnonymizeOnly = false;
+        was_locked = getEncryptionStatus() == Locked;
+    }
+
     if(was_locked)
     {
         // Request UI to unlock wallet
@@ -528,7 +584,7 @@ WalletModel::UnlockContext WalletModel::requestUnlock()
     // If wallet is still locked, unlock was failed or cancelled, mark context as invalid
     bool valid = getEncryptionStatus() != Locked;
 
-    return UnlockContext(this, valid, was_locked);
+    return UnlockContext(this, valid, relock);
 }
 
 WalletModel::UnlockContext::UnlockContext(WalletModel *wallet, bool valid, bool relock):
@@ -540,10 +596,11 @@ WalletModel::UnlockContext::UnlockContext(WalletModel *wallet, bool valid, bool 
 
 WalletModel::UnlockContext::~UnlockContext()
 {
-    if(valid && relock)
-    {
+/*
+    if (valid && relock) {
         wallet->setWalletLocked(true);
     }
+*/
 }
 
 void WalletModel::UnlockContext::CopyFrom(const UnlockContext& rhs)
@@ -617,7 +674,7 @@ void WalletModel::listCoins(std::map<QString, std::vector<COutput> >& mapCoins) 
         CTxDestination address;
         if(!out.fSpendable || !ExtractDestination(cout.tx->vout[cout.i].scriptPubKey, address))
             continue;
-        mapCoins[QString::fromStdString(CBitcoinAddress(address).ToString())].push_back(out);
+        mapCoins[QString::fromStdString(CKoreAddress(address).ToString())].push_back(out);
     }
 }
 
@@ -656,7 +713,7 @@ void WalletModel::loadReceiveRequests(std::vector<std::string>& vReceiveRequests
 
 bool WalletModel::saveReceiveRequest(const std::string &sAddress, const int64_t nId, const std::string &sRequest)
 {
-    CTxDestination dest = CBitcoinAddress(sAddress).Get();
+    CTxDestination dest = CKoreAddress(sAddress).Get();
 
     std::stringstream ss;
     ss << nId;
@@ -667,4 +724,9 @@ bool WalletModel::saveReceiveRequest(const std::string &sAddress, const int64_t 
         return wallet->EraseDestData(dest, key);
     else
         return wallet->AddDestData(dest, key, sRequest);
+}
+
+bool WalletModel::isMine(CKoreAddress address)
+{
+    return IsMine(*wallet, address.Get());
 }

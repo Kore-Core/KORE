@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -45,6 +45,7 @@ public:
     static QList<CAmount> payAmounts;
     static CCoinControl *coinControl;
     static bool fSubtractFeeFromAmount;
+    static int nSplitBlockDummy;
 
 private:
     Ui::CoinControlDialog *ui;
@@ -70,6 +71,7 @@ private:
         COLUMN_AMOUNT,
         COLUMN_LABEL,
         COLUMN_ADDRESS,
+        COLUMN_OBFUSCATION_ROUNDS,
         COLUMN_DATE,
         COLUMN_CONFIRMATIONS,
         COLUMN_PRIORITY,
@@ -127,6 +129,7 @@ private Q_SLOTS:
     void headerSectionClicked(int);
     void buttonBoxClicked(QAbstractButton*);
     void buttonSelectAllClicked();
+    void buttonToggleLockClicked();
     void updateLabelLocked();
 };
 

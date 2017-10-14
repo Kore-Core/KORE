@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,16 +8,18 @@
 
 #include "crypto/ripemd160.h"
 #include "crypto/sha256.h"
-#include "prevector.h"
+#include "crypto/sph_shabal.h"
+//#include "prevector.h"
 #include "serialize.h"
 #include "uint256.h"
 #include "version.h"
 
 #include <vector>
+#include <openssl/sha.h>
 
 typedef uint256 ChainCode;
 
-/** A hasher class for Bitcoin's 256-bit hash (double SHA-256). */
+/** A hasher class for Kore's 256-bit hash (double SHA-256). */
 class CHash256 {
 private:
     CSHA256 sha;
@@ -41,7 +43,7 @@ public:
     }
 };
 
-/** A hasher class for Bitcoin's 160-bit hash (SHA-256 + RIPEMD-160). */
+/** A hasher class for Kore's 160-bit hash (SHA-256 + RIPEMD-160). */
 class CHash160 {
 private:
     CSHA256 sha;
@@ -64,6 +66,20 @@ public:
         return *this;
     }
 };
+
+template<typename T1>
+inline uint256 HashShabal(const T1 pbegin, const T1 pend)
+{
+    sph_shabal256_context ctx_shabal;
+    static unsigned char pblank[1];
+    uint256 hash[1];
+    sph_shabal256_init(&ctx_shabal);
+    // ZSHABAL;
+    sph_shabal256 (&ctx_shabal, (pbegin == pend ? pblank : static_cast<const void*>(&pbegin[0])), (pend - pbegin) * sizeof(pbegin[0]));
+    sph_shabal256_close(&ctx_shabal, static_cast<void*>(&hash[0]));
+
+    return hash[0];
+}
 
 /** Compute the 256-bit hash of an object. */
 template<typename T1>
@@ -170,5 +186,15 @@ uint256 SerializeHash(const T& obj, int nType=SER_GETHASH, int nVersion=PROTOCOL
 unsigned int MurmurHash3(unsigned int nHashSeed, const std::vector<unsigned char>& vDataToHash);
 
 void BIP32Hash(const ChainCode &chainCode, unsigned int nChild, unsigned char header, const unsigned char data[32], unsigned char output[64]);
+
+typedef struct
+{
+    SHA512_CTX ctxInner;
+    SHA512_CTX ctxOuter;
+} HMAC_SHA512_CTX;
+
+int HMAC_SHA512_Init(HMAC_SHA512_CTX *pctx, const void *pkey, size_t len);
+int HMAC_SHA512_Update(HMAC_SHA512_CTX *pctx, const void *pdata, size_t len);
+int HMAC_SHA512_Final(unsigned char *pmd, HMAC_SHA512_CTX *pctx);
 
 #endif // BITCOIN_HASH_H

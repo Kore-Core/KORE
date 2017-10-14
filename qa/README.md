@@ -1,7 +1,7 @@
 The [pull-tester](/qa/pull-tester/) folder contains a script to call
 multiple tests from the [rpc-tests](/qa/rpc-tests/) folder.
 
-Every pull request to the bitcoin repository is built and run through
+Every pull request to the kore repository is built and run through
 the regression test suite. You can also run all or only individual
 tests locally.
 
@@ -31,9 +31,9 @@ Possible options:
 
 ```
   -h, --help            show this help message and exit
-  --nocleanup           Leave bitcoinds and test.* datadir on exit or error
-  --noshutdown          Don't stop bitcoinds after the test execution
-  --srcdir=SRCDIR       Source directory containing bitcoind/bitcoin-cli
+  --nocleanup           Leave koreds and test.* datadir on exit or error
+  --noshutdown          Don't stop koreds after the test execution
+  --srcdir=SRCDIR       Source directory containing kored/kore-cli
                         (default: ../../src)
   --tmpdir=TMPDIR       Root directory for datadirs
   --tracerpc            Print out all RPC calls as they are made
@@ -58,7 +58,7 @@ to recover with:
 
 ```bash
 rm -rf cache
-killall bitcoind
+killall kored
 ```
 
 Writing tests

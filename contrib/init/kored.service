@@ -1,0 +1,22 @@
+[Unit]
+Description=Kore's distributed currency daemon
+After=network.target
+
+[Service]
+User=kore
+Group=kore
+
+Type=forking
+PIDFile=/var/lib/kored/kored.pid
+ExecStart=/usr/bin/kored -daemon -pid=/var/lib/kored/kored.pid \
+-conf=/etc/kore/kore.conf -datadir=/var/lib/kored -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

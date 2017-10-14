@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -37,9 +37,9 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *platformStyle, QWidget *pare
     ui->addAsLabel->setPlaceholderText(tr("Enter a label for this address to add it to your address book"));
 #endif
 
-    // normal bitcoin address field
+    // normal kore address field
     GUIUtil::setupAddressWidget(ui->payTo, this);
-    // just a label for displaying bitcoin address(es)
+    // just a label for displaying kore address(es)
     ui->payTo_is->setFont(GUIUtil::fixedPitchFont());
 
     // Connect signals
@@ -48,6 +48,20 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *platformStyle, QWidget *pare
     connect(ui->deleteButton, SIGNAL(clicked()), this, SLOT(deleteClicked()));
     connect(ui->deleteButton_is, SIGNAL(clicked()), this, SLOT(deleteClicked()));
     connect(ui->deleteButton_s, SIGNAL(clicked()), this, SLOT(deleteClicked()));
+    connect(ui->payAmount, SIGNAL(valueChanged()), this, SLOT(payAmountChange()));
+}
+
+void SendCoinsEntry::payAmountChange(){
+
+   CAmount amount = ui->payAmount->value();
+   double mprice = amount/COIN;   
+   
+   QString xprice = QString::number(koreprice*mprice , 'f',8);
+   ui->btcvalue->setText(xprice);
+
+   QString price = QString::number(usdrate * mprice, 'f',2);
+   ui->usdvalue->setText(price);
+	
 }
 
 SendCoinsEntry::~SendCoinsEntry()
@@ -108,7 +122,7 @@ void SendCoinsEntry::clear()
     ui->memoTextLabel_s->clear();
     ui->payAmount_s->clear();
 
-    // update the display unit, to not use the default ("BTC")
+    // update the display unit, to not use the default ("KORE")
     updateDisplayUnit();
 }
 

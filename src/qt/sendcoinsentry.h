@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -17,7 +17,7 @@ namespace Ui {
 }
 
 /**
- * A single entry in the dialog for sending bitcoins.
+ * A single entry in the dialog for sending kores.
  * Stacked widget, with different UIs for payment requests
  * with a strong payee identity.
  */
@@ -53,13 +53,14 @@ Q_SIGNALS:
     void removeEntry(SendCoinsEntry *entry);
     void payAmountChanged();
     void subtractFeeFromAmountChanged();
-
+    
 private Q_SLOTS:
     void deleteClicked();
     void on_payTo_textChanged(const QString &address);
     void on_addressBookButton_clicked();
     void on_pasteButton_clicked();
     void updateDisplayUnit();
+    void payAmountChange();
 
 private:
     SendCoinsRecipient recipient;

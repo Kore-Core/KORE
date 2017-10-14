@@ -1,4 +1,4 @@
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -12,6 +12,7 @@
 
 #include <secp256k1.h>
 #include <secp256k1_recovery.h>
+#include <secp256k1_schnorr.h>
 
 static secp256k1_context* secp256k1_context_sign = NULL;
 
@@ -186,7 +187,7 @@ bool CKey::VerifyPubKey(const CPubKey& pubkey) const {
         return false;
     }
     unsigned char rnd[8];
-    std::string str = "Bitcoin key verification\n";
+    std::string str = "Kore key verification\n";
     GetRandBytes(rnd, sizeof(rnd));
     uint256 hash;
     CHash256().Write((unsigned char*)str.data(), str.size()).Write(rnd, sizeof(rnd)).Finalize(hash.begin());

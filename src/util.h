@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -11,7 +11,7 @@
 #define BITCOIN_UTIL_H
 
 #if defined(HAVE_CONFIG_H)
-#include "config/bitcoin-config.h"
+#include "config/kore-config.h"
 #endif
 
 #include "compat.h"
@@ -39,6 +39,21 @@ public:
     /** Translate a message to the native language of the user. */
     boost::signals2::signal<std::string (const char* psz)> Translate;
 };
+
+extern bool fMasterNode;
+extern bool fLiteMode;
+extern bool fEnableSwiftTX;
+extern int nSwiftTXDepth;
+extern int nObfuscationRounds;
+extern int nAnonymizeKoreAmountKoreAmount;
+extern int nLiquidityProvider;
+extern bool fEnableObfuscation;
+extern int64_t enforceMasternodePaymentsTime;
+extern std::string strMasterNodeAddr;
+extern int keysLoaded;
+extern bool fSucessfullyLoaded;
+extern std::vector<int64_t> obfuScationDenominations;
+extern std::string strBudgetMode;
 
 extern std::map<std::string, std::string> mapArgs;
 extern std::map<std::string, std::vector<std::string> > mapMultiArgs;
@@ -125,6 +140,7 @@ boost::filesystem::path GetDefaultDataDir();
 const boost::filesystem::path &GetDataDir(bool fNetSpecific = true);
 void ClearDatadirCache();
 boost::filesystem::path GetConfigFile();
+boost::filesystem::path GetMasternodeConfigFile();
 #ifndef WIN32
 boost::filesystem::path GetPidFile();
 void CreatePidFile(const boost::filesystem::path &path, pid_t pid);
@@ -224,7 +240,7 @@ void RenameThread(const char* name);
  */
 template <typename Callable> void TraceThread(const char* name,  Callable func)
 {
-    std::string s = strprintf("bitcoin-%s", name);
+    std::string s = strprintf("kore-%s", name);
     RenameThread(s.c_str());
     try
     {

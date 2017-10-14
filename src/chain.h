@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,6 +7,7 @@
 #define BITCOIN_CHAIN_H
 
 #include "arith_uint256.h"
+#include "chainparams.h"
 #include "primitives/block.h"
 #include "pow.h"
 #include "tinyformat.h"
@@ -90,6 +91,7 @@ enum BlockStatus {
     BLOCK_FAILED_VALID       =   32, //! stage after last reached validness failed
     BLOCK_FAILED_CHILD       =   64, //! descends from failed block
     BLOCK_FAILED_MASK        =   BLOCK_FAILED_VALID | BLOCK_FAILED_CHILD,
+    BLOCK_PROOF_OF_STAKE     =   128, //! is proof-of-stake block
 };
 
 /** The block chain is a tree shaped structure starting with the
@@ -135,6 +137,12 @@ public:
 
     //! Verification status of this block. See enum BlockStatus
     unsigned int nStatus;
+    
+    //! Keep track of overall money suppy (this has to be seperate as the actual supply fluctuates)
+    int64_t nMoneySupply; 
+
+    //! hash modifier of proof-of-stake
+    uint256 nStakeModifier;
 
     //! block header
     int nVersion;
@@ -145,6 +153,9 @@ public:
 
     //! (memory only) Sequential id assigned to distinguish order in which blocks are received.
     uint32_t nSequenceId;
+
+    //! (memory only) Maximum nTime in the chain upto and including this block.
+    unsigned int nTimeMax;
 
     void SetNull()
     {
@@ -159,7 +170,10 @@ public:
         nTx = 0;
         nChainTx = 0;
         nStatus = 0;
+        nStakeModifier = uint256();
+        nMoneySupply = 0;
         nSequenceId = 0;
+        nTimeMax = 0;
 
         nVersion       = 0;
         hashMerkleRoot = uint256();
@@ -225,6 +239,11 @@ public:
         return (int64_t)nTime;
     }
 
+    int64_t GetBlockTimeMax() const
+    {
+        return (int64_t)nTimeMax;
+    }
+
     enum { nMedianTimeSpan=11 };
 
     int64_t GetMedianTimePast() const
@@ -241,10 +260,25 @@ public:
         return pbegin[(pend - pbegin)/2];
     }
 
+    bool IsProofOfWork() const
+    {
+        return !IsProofOfStake();
+    }
+
+    bool IsProofOfStake() const
+    {
+        return (nStatus & BLOCK_PROOF_OF_STAKE);
+    }
+
+    void SetProofOfStake()
+    {
+        nStatus |= BLOCK_PROOF_OF_STAKE;
+    }
+
     std::string ToString() const
     {
-        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, merkle=%s, hashBlock=%s)",
-            pprev, nHeight,
+        return strprintf("CBlockIndex(pprev=%p, nHeight=%d, moneysupply=%d, type=%s, nStakeModifier=%x, merkle=%s, hashBlock=%s)",
+            pprev, nHeight, nMoneySupply, IsProofOfStake() ? "PoS" : "PoW", nStakeModifier.ToString(),
             hashMerkleRoot.ToString(),
             GetBlockHash().ToString());
     }
@@ -303,6 +337,8 @@ public:
 
         READWRITE(VARINT(nHeight));
         READWRITE(VARINT(nStatus));
+        READWRITE(nStakeModifier);
+        READWRITE(nMoneySupply);
         READWRITE(VARINT(nTx));
         if (nStatus & (BLOCK_HAVE_DATA | BLOCK_HAVE_UNDO))
             READWRITE(VARINT(nFile));
@@ -399,6 +435,11 @@ public:
 
     /** Find the last common block between this chain and a block index entry. */
     const CBlockIndex *FindFork(const CBlockIndex *pindex) const;
+
+    /** Find the earliest block with timestamp equal or greater than the given. */
+    CBlockIndex* FindEarliestAtLeast(int64_t nTime) const;
 };
+
+const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfStake);
 
 #endif // BITCOIN_CHAIN_H

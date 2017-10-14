@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -82,11 +82,12 @@ CNode* FindNode(const CNetAddr& ip);
 CNode* FindNode(const CSubNet& subNet);
 CNode* FindNode(const std::string& addrName);
 CNode* FindNode(const CService& ip);
-CNode* ConnectNode(CAddress addrConnect, const char *pszDest = NULL);
+CNode* ConnectNode(CAddress addrConnect, const char *pszDest = NULL, bool obfuScationMaster = false);
 bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOutbound = NULL, const char *strDest = NULL, bool fOneShot = false);
 void MapPort(bool fUseUPnP);
 unsigned short GetListenPort();
 bool BindListenPort(const CService &bindAddr, std::string& strError, bool fWhitelisted = false);
+void StartTor(boost::thread_group& threadGroup);
 void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler);
 bool StopNode();
 void SocketSendData(CNode *pnode);
@@ -146,8 +147,12 @@ bool IsLocal(const CService& addr);
 bool GetLocal(CService &addr, const CNetAddr *paddrPeer = NULL);
 bool IsReachable(enum Network net);
 bool IsReachable(const CNetAddr &addr);
+void SetReachable(enum Network net, bool fFlag = true);
 CAddress GetLocalAddress(const CNetAddr *paddrPeer = NULL);
 
+extern double usdprice;
+extern double koreprice;
+extern double usdrate;
 
 extern bool fDiscover;
 extern bool fListen;
@@ -181,6 +186,7 @@ struct LocalServiceInfo {
 
 extern CCriticalSection cs_mapLocalHost;
 extern std::map<CNetAddr, LocalServiceInfo> mapLocalHost;
+typedef std::map<std::string, uint64_t> mapMsgCmdSize; //command, total bytes
 
 class CNodeStats
 {
@@ -198,7 +204,9 @@ public:
     bool fInbound;
     int nStartingHeight;
     uint64_t nSendBytes;
+    mapMsgCmdSize mapSendBytesPerMsgCmd;
     uint64_t nRecvBytes;
+    mapMsgCmdSize mapRecvBytesPerMsgCmd;
     bool fWhitelisted;
     double dPingTime;
     double dPingWait;
@@ -354,6 +362,12 @@ public:
     // b) the peer may tell us in its version message that we should not relay tx invs
     //    unless it loads a bloom filter.
     bool fRelayTxes;
+    // Should be 'true' only if we connected to this node to actually mix funds.
+    // In this case node will be released automatically via CMasternodeMan::ProcessMasternodeConnections().
+    // Connecting to verify connectability/status or connecting for sending/relaying single message
+    // (even if it's relative to mixing e.g. for blinding) should NOT set this to 'true'.
+    // For such cases node should be released manually (preferably right after corresponding code).
+    bool fObfuScationMaster;
     CSemaphoreGrant grantOutbound;
     CCriticalSection cs_filter;
     CBloomFilter* pfilter;
@@ -367,10 +381,15 @@ protected:
     static CCriticalSection cs_setBanned;
     static bool setBannedIsDirty;
 
+    std::vector<std::string> vecRequestsFulfilled; //keep track of what client has asked for
+
     // Whitelisted ranges. Any node connecting from these is automatically
     // whitelisted (as well as those connecting to whitelisted binds).
     static std::vector<CSubNet> vWhitelistedRange;
     static CCriticalSection cs_vWhitelistedRange;
+
+    mapMsgCmdSize mapSendBytesPerMsgCmd;
+    mapMsgCmdSize mapRecvBytesPerMsgCmd;
 
     // Basic fuzz-testing
     void Fuzz(int nChance); // modifies ssSend
@@ -527,7 +546,7 @@ public:
     void AbortMessage() UNLOCK_FUNCTION(cs_vSend);
 
     // TODO: Document the precondition of this function.  Is cs_vSend locked?
-    void EndMessage() UNLOCK_FUNCTION(cs_vSend);
+    void EndMessage(const char* pszCommand) UNLOCK_FUNCTION(cs_vSend);
 
     void PushVersion();
 
@@ -537,7 +556,7 @@ public:
         try
         {
             BeginMessage(pszCommand);
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -553,7 +572,7 @@ public:
         {
             BeginMessage(pszCommand);
             ssSend << a1;
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -569,7 +588,7 @@ public:
         {
             BeginMessage(pszCommand);
             ssSend << a1 << a2;
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -585,7 +604,7 @@ public:
         {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3;
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -601,7 +620,7 @@ public:
         {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4;
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -617,7 +636,7 @@ public:
         {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5;
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -633,7 +652,7 @@ public:
         {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6;
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -649,7 +668,7 @@ public:
         {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7;
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -665,7 +684,7 @@ public:
         {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8;
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -681,7 +700,7 @@ public:
         {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8 << a9;
-            EndMessage();
+            EndMessage(pszCommand);
         }
         catch (...)
         {
@@ -690,6 +709,74 @@ public:
         }
     }
 
+    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10>
+    void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3, const T4& a4, const T5& a5, const T6& a6, const T7& a7, const T8& a8, const T9& a9, const T10& a10)
+    {
+        try {
+            BeginMessage(pszCommand);
+            ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8 << a9 << a10;
+            EndMessage(pszCommand);
+        } catch (...) {
+            AbortMessage();
+            throw;
+        }
+    }
+
+    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11>
+    void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3, const T4& a4, const T5& a5, const T6& a6, const T7& a7, const T8& a8, const T9& a9, const T10& a10, const T11& a11)
+    {
+        try {
+            BeginMessage(pszCommand);
+            ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8 << a9 << a10 << a11;
+            EndMessage(pszCommand);
+        } catch (...) {
+            AbortMessage();
+            throw;
+        }
+    }
+
+    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9, typename T10, typename T11, typename T12>
+    void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3, const T4& a4, const T5& a5, const T6& a6, const T7& a7, const T8& a8, const T9& a9, const T10& a10, const T11& a11, const T12& a12)
+    {
+        try {
+            BeginMessage(pszCommand);
+            ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8 << a9 << a10 << a11 << a12;
+            EndMessage(pszCommand);
+        } catch (...) {
+            AbortMessage();
+            throw;
+        }
+    }
+
+    bool HasFulfilledRequest(std::string strRequest)
+    {
+        BOOST_FOREACH (std::string& type, vecRequestsFulfilled) {
+            if (type == strRequest) return true;
+        }
+        return false;
+    }
+
+    void ClearFulfilledRequest(std::string strRequest)
+    {
+        std::vector<std::string>::iterator it = vecRequestsFulfilled.begin();
+        while (it != vecRequestsFulfilled.end()) {
+            if ((*it) == strRequest) {
+                vecRequestsFulfilled.erase(it);
+                return;
+            }
+            ++it;
+        }
+    }
+
+    void FulfilledRequest(std::string strRequest)
+    {
+        if (HasFulfilledRequest(strRequest)) return;
+        vecRequestsFulfilled.push_back(strRequest);
+    }
+
+    bool IsSubscribed(unsigned int nChannel);
+    void Subscribe(unsigned int nChannel, unsigned int nHops = 0);
+    void CancelSubscribe(unsigned int nChannel);
     void CloseSocketDisconnect();
 
     // Denial-of-service detection/prevention
@@ -757,12 +844,17 @@ public:
     static uint64_t GetMaxOutboundTimeLeftInCycle();
 };
 
-
+class CExplicitNetCleanup
+{
+public:
+    static void callCleanup();
+};
 
 class CTransaction;
 void RelayTransaction(const CTransaction& tx);
 void RelayTransaction(const CTransaction& tx, const CDataStream& ss);
-
+void RelayTransactionLockReq(const CTransaction& tx, bool relayToAll = false);
+void RelayInv(CInv& inv, const int minProtoVersion = MIN_PEER_PROTO_VERSION);
 /** Access to the (IP) address database (peers.dat) */
 class CAddrDB
 {

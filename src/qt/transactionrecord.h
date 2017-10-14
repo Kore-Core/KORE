@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2013 The Bitcoin Core developers
+// Copyright (c) 2011-2013 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -60,6 +60,9 @@ public:
 
     /** Current number of blocks (to know whether cached status is still valid) */
     int cur_num_blocks;
+
+    //** Know when to update transaction for ix locks **/
+    int cur_num_ix_locks;
 };
 
 /** UI model for a transaction. A core transaction can be represented by multiple UI transactions if it has
@@ -72,15 +75,23 @@ public:
     {
         Other,
         Generated,
+        Staked,
         SendToAddress,
         SendToOther,
         RecvWithAddress,
+        MNReward,
         RecvFromOther,
-        SendToSelf
+        SendToSelf,
+        RecvWithObfuscation,
+        ObfuscationDenominate,
+        ObfuscationCollateralPayment,
+        ObfuscationMakeCollaterals,
+        ObfuscationCreateDenominations,
+        Obfuscated
     };
 
     /** Number of confirmation recommended for accepting a transaction */
-    static const int RecommendedNumConfirmations = 6;
+    static const int RecommendedNumConfirmations = 10;
 
     TransactionRecord():
             hash(), time(0), type(Other), address(""), debit(0), credit(0), idx(0)
@@ -127,6 +138,9 @@ public:
 
     /** Return the unique identifier for this transaction (part) */
     QString getTxID() const;
+
+    /** Return the output index of the subtransaction  */
+    int getOutputIndex() const;
 
     /** Format subtransaction id */
     static QString formatSubTxId(const uint256 &hash, int vout);

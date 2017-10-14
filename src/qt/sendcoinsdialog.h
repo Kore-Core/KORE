@@ -1,4 +1,4 @@
-// Copyright (c) 2011-2015 The Bitcoin Core developers
+// Copyright (c) 2011-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -26,7 +26,7 @@ QT_END_NAMESPACE
 
 const int defaultConfirmTarget = 25;
 
-/** Dialog for sending bitcoins */
+/** Dialog for sending kores */
 class SendCoinsDialog : public QDialog
 {
     Q_OBJECT
@@ -45,6 +45,7 @@ public:
     void setAddress(const QString &address);
     void pasteEntry(const SendCoinsRecipient &rv);
     bool handlePaymentRequest(const SendCoinsRecipient &recipient);
+    bool fSplitBlock;
 
 public Q_SLOTS:
     void clear();
@@ -52,14 +53,15 @@ public Q_SLOTS:
     void accept();
     SendCoinsEntry *addEntry();
     void updateTabsAndLabels();
-    void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
-                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void setBalance(const CAmount& balance, const CAmount& stake, const CAmount& unconfirmedBalance, const CAmount& immatureBalance,
+                    const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance, const CAmount& anon);
 
 private:
     Ui::SendCoinsDialog *ui;
     ClientModel *clientModel;
     WalletModel *model;
     bool fNewRecipientAllowed;
+    void send(QList<SendCoinsRecipient> recipients, QString strFee, QStringList formatted);
     bool fFeeMinimized;
     const PlatformStyle *platformStyle;
 
@@ -76,6 +78,7 @@ private Q_SLOTS:
     void on_buttonMinimizeFee_clicked();
     void removeEntry(SendCoinsEntry* entry);
     void updateDisplayUnit();
+    void updateSwiftTX();
     void coinControlFeatureChanged(bool);
     void coinControlButtonClicked();
     void coinControlChangeChecked(int);
@@ -89,6 +92,8 @@ private Q_SLOTS:
     void coinControlClipboardPriority();
     void coinControlClipboardLowOutput();
     void coinControlClipboardChange();
+    void splitBlockChecked(int);
+    void splitBlockLineEditChanged(const QString& text);
     void setMinimumFee();
     void updateFeeSectionControls();
     void updateMinFeeLabel();

@@ -1,0 +1,6 @@
+usr/local/bin/kore-qt usr/bin
+share/pixmaps/kore32.xpm usr/share/pixmaps
+share/pixmaps/kore16.xpm usr/share/pixmaps
+share/pixmaps/kore128.png usr/share/pixmaps
+debian/kore-qt.desktop usr/share/applications
+debian/kore-qt.protocol usr/share/kde4/services/

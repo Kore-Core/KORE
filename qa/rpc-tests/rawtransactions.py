@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Bitcoin Core developers
+# Copyright (c) 2014-2016 The Kore Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,11 +8,11 @@
 # that spend (directly or indirectly) coinbase transactions.
 #
 
-from test_framework.test_framework import BitcoinTestFramework
+from test_framework.test_framework import KoreTestFramework
 from test_framework.util import *
 
 # Create one-input, one-output, no-fee transaction:
-class RawTransactionsTest(BitcoinTestFramework):
+class RawTransactionsTest(KoreTestFramework):
 
     def setup_chain(self):
         print("Initializing test directory "+self.options.tmpdir)
@@ -22,7 +22,7 @@ class RawTransactionsTest(BitcoinTestFramework):
         self.nodes = start_nodes(3, self.options.tmpdir)
 
         #connect to a local machine for debugging
-        #url = "http://bitcoinrpc:DP6DvqZtqXarpeNWyN3LZTFchCCyCUuHwNF7E8pX99x1@%s:%d" % ('127.0.0.1', 18332)
+        #url = "http://korerpc:DP6DvqZtqXarpeNWyN3LZTFchCCyCUuHwNF7E8pX99x1@%s:%d" % ('127.0.0.1', 18332)
         #proxy = AuthServiceProxy(url)
         #proxy.url = url # store URL on proxy for info
         #self.nodes.append(proxy)

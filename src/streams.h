@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Bitcoin Core developers
+// Copyright (c) 2009-2015 The KoreCore developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -114,12 +114,12 @@ public:
     iterator end()                                   { return vch.end(); }
     size_type size() const                           { return vch.size() - nReadPos; }
     bool empty() const                               { return vch.size() == nReadPos; }
-    void resize(size_type n, value_type c=0)         { vch.resize(n + nReadPos, c); }
+    void resize(size_type n, value_type c = 0)       { vch.resize(n + nReadPos, c); }
     void reserve(size_type n)                        { vch.reserve(n + nReadPos); }
     const_reference operator[](size_type pos) const  { return vch[pos + nReadPos]; }
     reference operator[](size_type pos)              { return vch[pos + nReadPos]; }
     void clear()                                     { vch.clear(); nReadPos = 0; }
-    iterator insert(iterator it, const char& x=char()) { return vch.insert(it, x); }
+    iterator insert(iterator it, const char& x = char()) { return vch.insert(it, x); }
     void insert(iterator it, size_type n, const char& x) { vch.insert(it, n, x); }
 
     void insert(iterator it, std::vector<char>::const_iterator first, std::vector<char>::const_iterator last)
@@ -320,14 +320,6 @@ public:
         }
     }
 };
-
-
-
-
-
-
-
-
 
 
 /** Non-refcounted RAII wrapper for FILE*

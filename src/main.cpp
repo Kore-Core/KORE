@@ -1837,7 +1837,7 @@ CAmount GetProofOfWorkSubsidy(int nHeight, const Consensus::Params& consensusPar
 
 CAmount GetProofOfStakeSubsidy(int nHeight, CAmount input, uint64_t nCoinAge)
 {
-    CAmount subsidy = input + input *0.02;
+    CAmount subsidy = input + input * 0.0002;
 
     return subsidy;
 }

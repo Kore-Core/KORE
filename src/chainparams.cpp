@@ -145,11 +145,11 @@ public:
         nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1508005906, 13, 0x201fffff, 1, pow (7,2) * COIN);
+        genesis = CreateGenesisBlock(1508044256, 15, 0x201fffff, 1, pow (7,2) * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         //MineNewGenesisBlock();
-        assert(consensus.hashGenesisBlock == uint256S("0x11a092b7ec53a0bc3aa662bccacfa7ee9d37a1beaa36ecf5a2722d7c50fd7794"));
-        assert(genesis.hashMerkleRoot == uint256S("0xd47135d9cf4471563834d04918a5dd43d6b67a8c37cf1bdd26cba82ab81cd919"));
+        assert(consensus.hashGenesisBlock == uint256S("0x02dfee5ea5f283657b440d9a9a6fd03d0636fae24f66ba3e366be481fe02a4f1"));
+        assert(genesis.hashMerkleRoot == uint256S("0x5cfccee3c44788ed962b46a3c4f9e9868a432ee8eb03a6fb1faf2fc7786c8af2"));
 
         //vSeeds.push_back(CDNSSeedData("kore.sipa.be", "seed.kore.sipa.be")); // Pieter Wuille
 
@@ -174,9 +174,9 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            ( 3, uint256S("0x00d7abb1a5d01031b7f26967b423af9a72e4e8e45f2eda442e5f50634333c0a4")),
-            1508006208,
-            4,
+            ( 4, uint256S("0x00d403d7b730e27cb564a44d2219f5e00b42c8f6747165c325ad5ecad695e41f")),
+            1508044503,
+            5,
             1440
         };
     }

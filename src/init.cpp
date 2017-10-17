@@ -1394,7 +1394,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         }
     } else {
         string automatic_onion;
-        boost::filesystem::path const hostname_path = GetDefaultDataDir() / "onion" / "hostname";
+        boost::filesystem::path const hostname_path = GetDataDir() / "onion" / "hostname";
         if (!boost::filesystem::exists(hostname_path)) {
             return InitError(_("No external address found."));
         }

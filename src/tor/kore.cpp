@@ -16,24 +16,15 @@ int coin_port_num = 0;
 
 char const* kore_tor_data_directory(
 ) {
-    static std::string const retrieved = (
-        GetDefaultDataDir(
-        ) / "tor"
-    ).string(
-    );
-    return retrieved.c_str(
-    );
+    static std::string const retrieved = (GetDataDir() / "tor").string();
+    return retrieved.c_str();
 }
 
 char const* kore_service_directory(
 ) {
     static std::string const retrieved = (
-        GetDefaultDataDir(
-        ) / "onion"
-    ).string(
-    );
-    return retrieved.c_str(
-    );
+        GetDataDir() / "onion").string();
+    return retrieved.c_str();
 }
 
 int check_interrupted(

@@ -64,7 +64,10 @@
 
 using namespace std;
 
-extern "C" { int tor_main(int argc, char *argv[]); }
+extern "C" { int tor_main(int argc, char *argv[]);
+	
+	void tor_cleanup(void);
+}
 
 namespace {
     const int MAX_OUTBOUND_CONNECTIONS = 16;
@@ -2080,6 +2083,11 @@ void static Discover(boost::thread_group& threadGroup)
 void StartTor(boost::thread_group& threadGroup)
 {
     threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "kore-tornet", &ThreadTorNet));
+}
+
+void StopTor()
+{
+    tor_cleanup();
 }
 
 void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)

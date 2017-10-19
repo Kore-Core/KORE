@@ -40,14 +40,15 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
         if(fProofOfStake){
 		    nActualSpacing = nTargetSpacing;
         }else {
-            nActualSpacing = nTargetSpacing/4;
+            nActualSpacing = nTargetSpacing/2;
 		}
 	}
-    if (nActualSpacing > nTargetSpacing*4){
+	
+    if (nActualSpacing > nTargetSpacing*2){
         if(fProofOfStake){
-		    nActualSpacing = nTargetSpacing*2;
+		    nActualSpacing = nTargetSpacing*4;
         }else{ 
-            nActualSpacing = nTargetSpacing*4;
+            nActualSpacing = nTargetSpacing*8;
         }
     }
      
@@ -59,14 +60,14 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
     bnNew *= ((params.DifficultyAdjustmentInterval() - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
     bnNew /= ((params.DifficultyAdjustmentInterval() + 1) * nTargetSpacing);
 
-    if (bnNew > bnPowLimit)
+    if (bnNew <= 0 || bnNew > bnPowLimit)
         bnNew = bnPowLimit;
 
     // debug print
     LogPrintf("GetNextWorkRequired RETARGET\n");
     LogPrintf("params.nTargetSpacing = %d    nActualSpacing = %d\n", params.nTargetTimespan, nActualSpacing);
-    LogPrintf("Before: %08x  %s\n", pindexLast->nBits, bnOld.ToString());
-    LogPrintf("After:  %08x  %s\n", bnNew.GetCompact(), bnNew.ToString());
+    LogPrintf("Before: %x  %s\n", pindexLast->nBits, bnOld.ToString());
+    LogPrintf("After:  %x  %s\n", bnNew.GetCompact(), bnNew.ToString());
 
     return bnNew.GetCompact();
 }

@@ -43,6 +43,7 @@
 #include "utilstrencodings.h"
 #include "validationinterface.h"
 #include "tor/kore.h"
+
 #ifdef ENABLE_WALLET
 #include "wallet/db.h"
 //#include "keepass.h"
@@ -200,6 +201,7 @@ void PrepareShutdown()
     /// module was initialized.
     RenameThread("kore-shutoff");
     mempool.AddTransactionsUpdated(1);
+    StopTor();
     StopHTTPRPC();
     StopREST();
     StopRPC();

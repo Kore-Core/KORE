@@ -112,7 +112,7 @@ bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTime, con
     if (coins->nTime + Params().GetConsensus().nStakeMinAge > nTime) // Min age requirement
         return false;
 
-    return CheckStakeKernelHash(pindexPrev->pprev, block.nBits, coins, prevout, block.vtx[1].nTime);
+    return CheckStakeKernelHash(pindexPrev->pprev, block.nBits, coins, prevout, nTime);
 }
 
 // Check kernel hash target and coinstake signature

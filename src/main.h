@@ -249,7 +249,7 @@ bool GetTransaction(const uint256 &hash, CTransaction &tx, const Consensus::Para
 /** Find the best known block, and make it the tip of the block chain */
 bool ActivateBestChain(CValidationState& state, const CChainParams& chainparams, const CBlock* pblock = NULL);
 CAmount GetProofOfWorkSubsidy(int nHeight, const Consensus::Params& consensusParams);
-CAmount GetProofOfStakeSubsidy(int nHeight, CAmount input, uint64_t nCoinAge);
+CAmount GetProofOfStakeSubsidy(int nHeight, CAmount input);
 bool GetCoinAge(const CBlockIndex* pindexPrev, uint64_t& nCoinAge, const CTransaction tx);
 int64_t GetMasternodePayment(int nHeight, int64_t blockValue);
 /**

@@ -1835,9 +1835,9 @@ CAmount GetProofOfWorkSubsidy(int nHeight, const Consensus::Params& consensusPar
     return 5 * COIN;
 }
 
-CAmount GetProofOfStakeSubsidy(int nHeight, CAmount input, uint64_t nCoinAge)
+CAmount GetProofOfStakeSubsidy(int nHeight, CAmount input)
 {
-    CAmount subsidy = input + input * 0.0002;
+    CAmount subsidy = input + input * 0.00024;
 
     return subsidy;
 }
@@ -1849,7 +1849,7 @@ CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 
 double coinyearreward(){
 
-   CAmount reward = GetProofOfStakeSubsidy(chainActive.Tip()->nHeight, COIN, 0);
+   CAmount reward = GetProofOfStakeSubsidy(chainActive.Tip()->nHeight, COIN);
 
     return reward / COIN;
 }
@@ -2740,9 +2740,9 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     if (block.IsProofOfStake()) {
 
-        uint64_t nCoinAge;
-        if (!GetCoinAge(pindex, nCoinAge, block.vtx[1] ))
-            return state.DoS(100, error("ConnectBlock(): coinstake cant get coinage"), REJECT_INVALID, "no-coin-age");
+        //uint64_t nCoinAge;
+        //if (!GetCoinAge(pindex, nCoinAge, block.vtx[1] ))
+          //  return state.DoS(100, error("ConnectBlock(): coinstake cant get coinage"), REJECT_INVALID, "no-coin-age");
 
         CAmount nValueIns = 0;
 	CTransaction tx2;
@@ -2754,7 +2754,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 		    nValueIns += tx2.vout[txin.prevout.n].nValue;					
         }
 
-        CAmount blockReward = nFees + GetProofOfStakeSubsidy(pindex->nHeight, nValueIns, nCoinAge);
+        CAmount blockReward = nFees + GetProofOfStakeSubsidy(pindex->nHeight, nValueIns);
 
         if (nActualStakeReward > blockReward)
             return state.DoS(100, error("ConnectBlock(): coinstake pays too much (actual=%d vs limit=%d)", nActualStakeReward, blockReward), REJECT_INVALID, "bad-cs-amount");
@@ -4016,7 +4016,7 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, const CCha
 				CTransaction txPrev;
 				uint256 hashBlockPrev;
 				if (!GetTransaction(txin.prevout.hash, txPrev, Params().GetConsensus(), hashBlockPrev, true)) {
-					LogPrintf("GetCoinAge: failed to find vin transaction \n");
+					LogPrintf("GetTransactio: failed to find vin transaction \n");
 					continue; // previous transaction not in main chain
 				}
 

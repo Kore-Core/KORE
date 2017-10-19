@@ -5,7 +5,6 @@
 
 #include "kore.h"
 #include "util.h"
-
 #include <boost/filesystem.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -22,23 +21,19 @@ char const* kore_tor_data_directory(
 
 char const* kore_service_directory(
 ) {
-    static std::string const retrieved = (
-        GetDataDir() / "onion").string();
+    static std::string const retrieved = (GetDataDir() / "onion").string();
     return retrieved.c_str();
 }
 
 int check_interrupted(
 ) {
-    return boost::this_thread::interruption_requested(
-    ) ? 1 : 0;
+    return boost::this_thread::interruption_requested() ? 1 : 0;
 }
 
 static boost::mutex initializing;
 
 static std::auto_ptr<boost::unique_lock<boost::mutex> > uninitialized(
-    new boost::unique_lock<boost::mutex>(
-        initializing
-    )
+    new boost::unique_lock<boost::mutex>(initializing)
 );
 
 void set_initialized(

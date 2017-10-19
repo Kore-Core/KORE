@@ -250,12 +250,12 @@ UniValue getstakesubsidy(const UniValue& params, bool fHelp)
         throw JSONRPCError(RPC_DESERIALIZATION_ERROR, "TX decode failed");
     }
 
-    uint64_t nCoinAge;
     
-    if (!GetCoinAge(chainActive.Tip(), nCoinAge, tx))
-        throw JSONRPCError(RPC_MISC_ERROR, "GetCoinAge failed");
+    
+    //if (!GetCoinAge(chainActive.Tip(), nCoinAge, tx))
+        //throw JSONRPCError(RPC_MISC_ERROR, "GetCoinAge failed");
 
-    return GetProofOfStakeSubsidy(chainActive.Tip()->nHeight, tx.GetValueOut(), nCoinAge);
+    return GetProofOfStakeSubsidy(chainActive.Tip()->nHeight, tx.GetValueOut());
 }
 
 UniValue getstakinginfo(const UniValue& params, bool fHelp)

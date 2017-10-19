@@ -3310,11 +3310,11 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     // Calculate coin age reward
     CAmount devsubsidy = 0;
     {
-        uint64_t nCoinAge =0;
+        //uint64_t nCoinAge =0;
         //if (!GetCoinAge(pindexPrev, nCoinAge, txNew))
         //    return error("CreateCoinStake : failed to calculate coin age");
 
-        int64_t nReward = GetProofOfStakeSubsidy(pindexPrev->nHeight , nCredit, nCoinAge);
+        int64_t nReward = GetProofOfStakeSubsidy(pindexPrev->nHeight , nCredit);
         devsubsidy = (nReward - nCredit) * 0.1;
         nReward-=devsubsidy;
 

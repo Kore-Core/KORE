@@ -136,20 +136,20 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xd1;
-        pchMessageStart[1] = 0x7a;
-        pchMessageStart[2] = 0xa2;
-        pchMessageStart[3] = 0xf4;
+        pchMessageStart[0] = 0xb7;
+        pchMessageStart[1] = 0x7c;
+        pchMessageStart[2] = 0xa5;
+        pchMessageStart[3] = 0xc2;
         vAlertPubKey = ParseHex("042b0fb78026380244cc458a914dae461899b121f53bc42105d134158b9773e3fdadca67ca3015dc9c4ef9b9df91f2ef05b890a15cd2d2b85930d37376b2196002");
         nDefaultPort = 10743; // 8333;
         nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1508044256, 15, 0x201fffff, 1, pow (7,2) * COIN);
+        genesis = CreateGenesisBlock(1508363992, 18, 0x201fffff, 1, pow (7,2) * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         //MineNewGenesisBlock();
-        assert(consensus.hashGenesisBlock == uint256S("0x02dfee5ea5f283657b440d9a9a6fd03d0636fae24f66ba3e366be481fe02a4f1"));
-        assert(genesis.hashMerkleRoot == uint256S("0x5cfccee3c44788ed962b46a3c4f9e9868a432ee8eb03a6fb1faf2fc7786c8af2"));
+        assert(consensus.hashGenesisBlock == uint256S("0x1d944213dd58989569534f0b4770850bde4a667f6cef46c5074cf84552372a4f"));
+        assert(genesis.hashMerkleRoot == uint256S("0xbd9a6ef703ca4553cb1c53f442e56a46ed84726dcd54817109768f099725c315"));
 
         //vSeeds.push_back(CDNSSeedData("kore.sipa.be", "seed.kore.sipa.be")); // Pieter Wuille
 

@@ -78,8 +78,8 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     uint256 hashProofOfStake = ss.GetHash();
 
     // Now check if proof-of-stake hash meets target protocol
-    if (UintToArith256(hashProofOfStake) / nValueIn > bnTarget){
-		LogPrintf("CheckKernel() : hash does not meet protocol target \n");
+    if ((UintToArith256(hashProofOfStake) / nValueIn ) > bnTarget){
+		LogPrintf("CheckStakeKernelHash() : hash does not meet protocol target \n");
         return false;        
 	}
 

@@ -106,7 +106,7 @@ public:
     CMainParams() {
         strNetworkID = "main";
         consensus.nSubsidyHalvingInterval = 4000;
-        consensus.nMaxReorganizationDepth = 20;
+        consensus.nMaxReorganizationDepth = 50;
         consensus.nMajorityEnforceBlockUpgrade = 750;
         consensus.nMajorityRejectBlockOutdated = 950;
         consensus.nMajorityWindow = 1000;
@@ -119,7 +119,7 @@ public:
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
-        consensus.nMinerConfirmationWindow = 20; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nMinerConfirmationWindow = 50; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
@@ -136,20 +136,20 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xb7;
-        pchMessageStart[1] = 0x7c;
-        pchMessageStart[2] = 0xa5;
-        pchMessageStart[3] = 0xc2;
+        pchMessageStart[0] = 0xb3;
+        pchMessageStart[1] = 0x7b;
+        pchMessageStart[2] = 0xa7;
+        pchMessageStart[3] = 0xd6;
         vAlertPubKey = ParseHex("042b0fb78026380244cc458a914dae461899b121f53bc42105d134158b9773e3fdadca67ca3015dc9c4ef9b9df91f2ef05b890a15cd2d2b85930d37376b2196002");
         nDefaultPort = 10743; // 8333;
         nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1508363992, 18, 0x201fffff, 1, pow (7,2) * COIN);
+        genesis = CreateGenesisBlock(1508485382, 37, 0x201fffff, 1, pow (7,2) * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         //MineNewGenesisBlock();
-        assert(consensus.hashGenesisBlock == uint256S("0x1d944213dd58989569534f0b4770850bde4a667f6cef46c5074cf84552372a4f"));
-        assert(genesis.hashMerkleRoot == uint256S("0xbd9a6ef703ca4553cb1c53f442e56a46ed84726dcd54817109768f099725c315"));
+        assert(consensus.hashGenesisBlock == uint256S("0x067d8a0140f9c4b3eb7578460d916ad179c089a276c2386cdd82f7a3ec2b6403"));
+        assert(genesis.hashMerkleRoot == uint256S("0x684fc96ac7e4aab4548b5430b129f3617d722704fd5647b0ab51c4404723cc82"));
 
         //vSeeds.push_back(CDNSSeedData("kore.sipa.be", "seed.kore.sipa.be")); // Pieter Wuille
 
@@ -174,10 +174,10 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            ( 4, uint256S("0x000384b505be24345a35ddc936e430cef51069fea3cb7968e13dab5beb63fddb")),
-            1508389994,
-            5,
-            1440
+            ( 0, uint256S("0x")),
+            0,
+            0,
+            0
         };
     }
 };

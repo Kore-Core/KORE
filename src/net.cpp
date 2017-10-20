@@ -831,7 +831,7 @@ void ThreadTorNet() {
         (char*)"--Log",
         argvLogDecl
     };
-
+    boost::this_thread::interruption_point();
     tor_main(4, argv);
 }
 

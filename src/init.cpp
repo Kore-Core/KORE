@@ -824,6 +824,8 @@ void InitLogging()
     LogPrintf("Koreversion %s (%s)\n", FormatFullVersion(), CLIENT_DATE);
 }
 
+std::vector<std::string> onionseeds ={"fzmjhi7xbapufts6.onion","p6sfbaw762mcqyxg.onion", "b5gacg24h6licg5m.onion", "skrivht2uj3yjluv.onion", "yylyof6avhsmb327.onion"};
+
 /** Initialize kore.
  *  @pre Parameters should be parsed and config file should be read.
  */
@@ -889,6 +891,15 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     const CChainParams& chainparams = Params();
 
     // also see: InitParameterInteraction()
+
+    // create a conf file , add seeds (workaround to seed node issue and quick connectivity)
+    boost::filesystem::path pathConfig = GetConfigFile();
+    if (!boost::filesystem::exists(pathConfig)){
+		std::ofstream configfile;
+		configfile.open(pathConfig.string().c_str(),fstream::out);
+		for (auto a:onionseeds)
+		configfile<<"addnode="<< a <<std::endl;
+	}
 
     // if using block pruning, then disable txindex
     if (GetArg("-prune", 0)) {
@@ -1598,6 +1609,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
     // ********************************************************* Step 8: load wallet
 #ifdef ENABLE_WALLET
+
     if (fDisableWallet) {
         pwalletMain = NULL;
         LogPrintf("Wallet disabled!\n");

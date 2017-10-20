@@ -329,17 +329,9 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         pblock->nNonce         = 0;
         pblocktemplate->vTxSigOps[0] = GetLegacySigOpCount(pblock->vtx[0]);
 
-        if(fProofOfStake && !SignBlock(pwallet, pblock)){
-            if (fDebug)LogPrintf("CreateNewBlock failed to sign block \n");
-                return NULL;
-        }
-
         CValidationState state;
-
-        if (!TestBlockValidity(state, chainparams, *pblock, pindexPrev, false, false)) {
-            if (fDebug) LogPrintf("CreateNewBlock failed testblockvalidity  %s \n", FormatStateMessage(state));
-            //throw std::runtime_error(strprintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state)));
-            return NULL;
+        if (!fProofOfStake && !TestBlockValidity(state, chainparams, *pblock, pindexPrev, false, false)) {
+            throw std::runtime_error(strprintf("%s: TestBlockValidity failed: %s", __func__, FormatStateMessage(state)));
         }
     }
     return pblocktemplate.release();
@@ -370,38 +362,6 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 //
 
 //
-// ScanHash scans nonces looking for a hash with at least some zero bits.
-// The nonce is usually preserved between calls, but periodically or if the
-// nonce is 0xffff0000 or above, the block is rebuilt and nNonce starts over at
-// zero.
-//
-bool static ScanHash(const CBlockHeader *pblock, uint32_t& nNonce, uint256 *phash)
-{
-    // Write the first 76 bytes of the block header to a double-SHA256 state.
-    CHash256 hasher;
-    CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-    ss << *pblock;
-    assert(ss.size() == 80);
-    hasher.Write((unsigned char*)&ss[0], 76);
-
-    while (true) {
-        nNonce++;
-
-        // Write the last 4 bytes of the block header (the nonce) to a copy of
-        // the double-SHA256 state, and compute the result.
-        CHash256(hasher).Write((unsigned char*)&nNonce, 4).Finalize((unsigned char*)phash);
-
-        // Return the nonce if the hash has at least some zero bits,
-        // caller will check if it has enough to reach the target
-        if (((uint16_t*)phash)[15] == 0)
-            return true;
-
-        // If nothing found after trying for a while, return -1
-        if ((nNonce & 0xfff) == 0)
-            return false;
-    }
-}
-
 static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
 {
 
@@ -443,54 +403,54 @@ void ThreadStakeMiner(CWallet* pwallet)
     boost::shared_ptr<CReserveScript> coinstakeScript;
     GetMainSignals().ScriptForMining(coinstakeScript);
 
-    try {
+    if (!coinstakeScript || coinstakeScript->reserveScript.empty())
+        throw std::runtime_error("No coinstake script available (staking requires a wallet)");
 
-        if (!coinstakeScript || coinstakeScript->reserveScript.empty())
-            throw std::runtime_error("No coinstake script available (staking requires a wallet)");
-
-        while (true)
+    bool fTryToSync = true;
+    
+    while (true)
+    {
+        while (pwallet->IsLocked())
         {
-            while (pwallet->IsLocked())
-            {
-                nLastCoinStakeSearchInterval = 0;
-                MilliSleep(1000);
-            }
-
-            while (vNodes.empty() || IsInitialBlockDownload())
-            {
-                nLastCoinStakeSearchInterval = 0;
-                MilliSleep(1000);
-            }
-
-            //
-            // Create new block
-            //
-
-            unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock(chainparams, coinstakeScript->reserveScript, pwallet, true));
-            if (!pblocktemplate.get())
-            {
-                if (fDebug) LogPrintf("Error in StakeMiner: Keypool ran out, or bad timing \n");
-                MilliSleep(600);
-            }else{
-                CBlock *pblock = &pblocktemplate->block;
-                SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                ProcessBlockFound(pblock, chainparams);
-                SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                MilliSleep(500);
-            }
+            nLastCoinStakeSearchInterval = 0;
+            MilliSleep(1000);
         }
-    }
-    catch (const boost::thread_interrupted&)
-    {
-        LogPrintf("StakeMiner terminated\n");
-        throw;
-    }
-    catch (const std::runtime_error &e)
-    {
-        LogPrintf("StakeMiner runtime error: %s\n", e.what());
-        return;
-    }
 
+        while (vNodes.empty() || IsInitialBlockDownload())
+        {
+			fTryToSync = true;
+            nLastCoinStakeSearchInterval = 0;
+            MilliSleep(1000);
+        }
+
+		if (fTryToSync)
+		{
+			fTryToSync = false;
+			if (vNodes.size() < 6 || pindexBestHeader->GetBlockTime() < GetTime() - 10 * 60)
+			{
+				MilliSleep(60000);
+				continue;
+			}
+		}
+
+        //
+        // Create new block
+        //
+        unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock(chainparams, coinstakeScript->reserveScript, pwallet, true));
+        if (!pblocktemplate.get())
+             return;
+
+        CBlock *pblock = &pblocktemplate->block;
+        if(SignBlock(pwallet, pblock))
+        {
+            SetThreadPriority(THREAD_PRIORITY_NORMAL);
+            ProcessBlockFound(pblock, chainparams);
+            SetThreadPriority(THREAD_PRIORITY_LOWEST);
+            MilliSleep(500);
+        }
+        else
+            MilliSleep(500);
+    }
 }
 
 // attempt to generate suitable proof-of-stake
@@ -498,13 +458,18 @@ bool SignBlock(CWallet* pwallet, CBlock* pblock)
 {
     // if we are trying to sign
     //    something except proof-of-stake block template
-    if (!pblock->vtx[0].vout[0].IsEmpty())
-        return false;
+    if (!pblock->vtx[0].vout[0].IsEmpty()){
+    	LogPrintf("something except proof-of-stake block\n");
+    	return false;
+    }
+
 
     // if we are trying to sign
     //    a complete proof-of-stake block
-    if (pblock->IsProofOfStake())
-         return true;
+    if (pblock->IsProofOfStake()){
+    	LogPrintf("trying to sign a complete proof-of-stake block\n");
+    	return true;
+    }
 
     static int64_t nLastCoinStakeSearchTime = GetAdjustedTime(); // startup timestamp
 
@@ -514,12 +479,12 @@ bool SignBlock(CWallet* pwallet, CBlock* pblock)
     txCoinStake.nTime &= ~STAKE_TIMESTAMP_MASK;
     CAmount nFees = 0;
 
-    int64_t nSearchTime = GetAdjustedTime(); // search to current time
+    int64_t nSearchTime = txCoinStake.nTime; // search to current time
 
     //LogPrintf("SearchTime = %d \n", nSearchTime);
     //LogPrintf("nLastCoinStakeSearchTime = %d \n", nLastCoinStakeSearchTime);
 
-    if (nSearchTime >= nLastCoinStakeSearchTime)
+    if (nSearchTime > nLastCoinStakeSearchTime)
     {
         int64_t nSearchInterval =  1 ;
 
@@ -538,17 +503,8 @@ bool SignBlock(CWallet* pwallet, CBlock* pblock)
 
                 pblock->vtx.insert(pblock->vtx.begin() + 1, txCoinStake);
                 pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
+
                 // append a signature to our block
-                CTxDestination address;
-                CKeyID keyID;
-                if(!ExtractDestination(pblock->vtx[1].vout[1].scriptPubKey, address)){
-                    return false;
-                }
-
-                CKoreAddress d(address);
-                d.GetKeyID(keyID);
-
-                pwalletMain->GetKey(keyID, key);
                 return key.Sign(pblock->GetHash(), pblock->vchBlockSig);
             }
         }

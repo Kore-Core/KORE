@@ -356,6 +356,9 @@ void RPCConsole::setClientModel(ClientModel *model)
         setNumBlocks(model->getNumBlocks(), model->getLastBlockDate(), model->getVerificationProgress(NULL));
         connect(model, SIGNAL(numBlocksChanged(int,QDateTime,double)), this, SLOT(setNumBlocks(int,QDateTime,double)));
 
+        setMasternodeCount(model->getMasternodeCountString());
+        connect(model, SIGNAL(strMasternodesChanged(QString)), this, SLOT(setMasternodeCount(QString)));
+
         updateTrafficStats(model->getTotalBytesRecv(), model->getTotalBytesSent());
         connect(model, SIGNAL(bytesChanged(quint64,quint64)), this, SLOT(updateTrafficStats(quint64, quint64)));
 
@@ -569,7 +572,7 @@ void RPCConsole::clear()
             ).arg(fixedFontInfo.family(), ptSize)
         );
 
-    message(CMD_REPLY, (tr("Welcome to the KoreCore RPC console.") + "<br>" +
+    message(CMD_REPLY, (tr("Welcome to the Kore Core RPC console.") + "<br>" +
                         tr("Use up and down arrows to navigate history, and <b>Ctrl-L</b> to clear screen.") + "<br>" +
                         tr("Type <b>help</b> for an overview of available commands.")), true);
 }
@@ -614,6 +617,11 @@ void RPCConsole::setNumBlocks(int count, const QDateTime& blockDate, double nVer
 {
     ui->numberOfBlocks->setText(QString::number(count));
     ui->lastBlockTime->setText(blockDate.toString());
+}
+
+void RPCConsole::setMasternodeCount(const QString& strMasternodes)
+{
+    ui->masternodeCount->setText(strMasternodes);
 }
 
 void RPCConsole::setMempoolSize(long numberOfTxs, size_t dynUsage)

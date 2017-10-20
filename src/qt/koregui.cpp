@@ -225,10 +225,12 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
     QSpinBox *opacitySpinBox = new QSpinBox();
     opacitySpinBox->setRange(40, 100);
     
-    QLabel *minerLabel = new QLabel("Miner Threads:");
+    QLabel *minerLabel = new QLabel("Miner Threads: 0");
 	QSlider *miner = new QSlider(Qt::Horizontal, this);
-	miner->setRange(0, GetNumCores());
-	
+	int cores = GetNumCores();
+	miner->setRange(0, cores);
+	QString minermax = QString::number(cores);
+	QLabel *maxminer = new QLabel(minermax);	
 	labelStakingIcon = new QLabel();
 
     frameBlocksLayout->addWidget(labelBtclabel);
@@ -272,6 +274,7 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
     
     statusBar()->addWidget(minerLabel);
     statusBar()->addWidget(miner);
+    statusBar()->addWidget(maxminer);
     statusBar()->addWidget(opacityLabel);
     statusBar()->addWidget(opacitySpinBox);
     
@@ -281,6 +284,9 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
     connect(openConfEditorAction, SIGNAL(triggered()), rpcConsole, SLOT(showConfEditor()));
     connect(openMNConfEditorAction, SIGNAL(triggered()), rpcConsole, SLOT(showMNConfEditor()));
     connect(showBackupsAction, SIGNAL(triggered()), rpcConsole, SLOT(showBackups()));
+
+    // Get restart command-line parameters and handle restart
+    connect(rpcConsole, SIGNAL(handleRestart(QStringList)), this, SLOT(handleRestart(QStringList)));
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);
@@ -1323,7 +1329,6 @@ void KoreGUI::detectShutdown()
             engageDisengageMining(0);
         if(rpcConsole)
             rpcConsole->hide();
-           
         qApp->quit();
     }
 }

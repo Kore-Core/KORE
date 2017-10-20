@@ -53,13 +53,13 @@ SendCoinsEntry::SendCoinsEntry(const PlatformStyle *platformStyle, QWidget *pare
 
 void SendCoinsEntry::payAmountChange(){
 
-   CAmount amount = ui->payAmount->value();
-   double mprice = amount/COIN;   
+   //CAmount amount = ui->payAmount->value();
+   double mprice = ui->payAmount->value();   
    
-   QString xprice = QString::number(koreprice*mprice , 'f',8);
+   QString xprice = QString::number((koreprice*mprice)/COIN , 'f',8);
    ui->btcvalue->setText(xprice);
 
-   QString price = QString::number(usdrate * mprice, 'f',2);
+   QString price = QString::number((usdrate * mprice)/COIN, 'f',2);
    ui->usdvalue->setText(price);
 	
 }

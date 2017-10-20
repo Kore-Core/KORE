@@ -316,7 +316,7 @@ void OverviewPage::updateObfuscationProgress()
     if (!pwalletMain) return;
 
     QString strAmountAndRounds;
-    QString strAnonymizeKoreAmount = KoreUnits::formatHtmlWithUnit(nDisplayUnit, nAnonymizeKoreAmountKoreAmount * COIN, false, KoreUnits::separatorAlways);
+    QString strAnonymizeKoreAmount = KoreUnits::formatHtmlWithUnit(nDisplayUnit, nAnonymizeKoreAmount * COIN, false, KoreUnits::separatorAlways);
 
     if (currentBalance == 0) {
         ui->obfuscationProgress->setValue(0);
@@ -351,11 +351,11 @@ void OverviewPage::updateObfuscationProgress()
     CAmount nMaxToAnonymize = nAnonymizableBalance + currentAnonymizedBalance + nDenominatedUnconfirmedBalance;
 
     // If it's more than the anon threshold, limit to that.
-    if (nMaxToAnonymize > nAnonymizeKoreAmountKoreAmount * COIN) nMaxToAnonymize = nAnonymizeKoreAmountKoreAmount * COIN;
+    if (nMaxToAnonymize > nAnonymizeKoreAmount * COIN) nMaxToAnonymize = nAnonymizeKoreAmount * COIN;
 
     if (nMaxToAnonymize == 0) return;
 
-    if (nMaxToAnonymize >= nAnonymizeKoreAmountKoreAmount * COIN) {
+    if (nMaxToAnonymize >= nAnonymizeKoreAmount * COIN) {
         ui->labelAmountRounds->setToolTip(tr("Found enough compatible inputs to anonymize %1")
                                               .arg(strAnonymizeKoreAmount));
         strAnonymizeKoreAmount = strAnonymizeKoreAmount.remove(strAnonymizeKoreAmount.indexOf("."), KoreUnits::decimals(nDisplayUnit) + 1);
@@ -535,7 +535,7 @@ void OverviewPage::toggleObfuscation()
 
         /* show obfuscation configuration if client has defaults set */
 
-        if (nAnonymizeKoreAmountKoreAmount == 0) {
+        if (nAnonymizeKoreAmount == 0) {
             ObfuscationConfig dlg(this);
             dlg.setModel(walletModel);
             dlg.exec();

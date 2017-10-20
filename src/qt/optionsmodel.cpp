@@ -76,11 +76,11 @@ void OptionsModel::Init(bool resetSettings)
     if (!settings.contains("nObfuscationRounds"))
         settings.setValue("nObfuscationRounds", 2);
 
-    if (!settings.contains("nAnonymizeKoreAmountKoreAmount"))
-        settings.setValue("nAnonymizeKoreAmountKoreAmount", 1000);
+    if (!settings.contains("nAnonymizeKoreAmount"))
+        settings.setValue("nAnonymizeKoreAmount", 1000);
 
     nObfuscationRounds = settings.value("nObfuscationRounds").toLongLong();
-    nAnonymizeKoreAmountKoreAmount = settings.value("nAnonymizeKoreAmountKoreAmount").toLongLong();
+    nAnonymizeKoreAmount = settings.value("nAnonymizeKoreAmount").toLongLong();
 
     if (!settings.contains("fShowMasternodesTab"))
         settings.setValue("fShowMasternodesTab", masternodeConfig.getCount());
@@ -108,7 +108,7 @@ void OptionsModel::Init(bool resetSettings)
 #ifdef ENABLE_WALLET
     // Main
     if (!settings.contains("nReserveBalance"))
-        settings.setValue("nReserveBalance", (qint64)nReserveBalance);
+        settings.setValue("nReserveBalance", 0);
     if (!settings.contains("bSpendZeroConfChange"))
         settings.setValue("bSpendZeroConfChange", true);
     if (!SoftSetBoolArg("-spendzeroconfchange", settings.value("bSpendZeroConfChange").toBool()))
@@ -158,8 +158,8 @@ void OptionsModel::Init(bool resetSettings)
 
     if (settings.contains("nObfuscationRounds"))
         SoftSetArg("-obfuscationrounds", settings.value("nObfuscationRounds").toString().toStdString());
-    if (settings.contains("nAnonymizeKoreAmountKoreAmount"))
-        SoftSetArg("-anonymizekoreamount", settings.value("nAnonymizeKoreAmountKoreAmount").toString().toStdString());
+    if (settings.contains("nAnonymizeKoreAmount"))
+        SoftSetArg("-anonymizekoreamount", settings.value("nAnonymizeKoreAmount").toString().toStdString());
 
     language = settings.value("language").toString();
 }
@@ -237,7 +237,7 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         case ShowMasternodesTab:
             return settings.value("fShowMasternodesTab");
         case ReserveBalance:
-            return QVariant((qint64) nReserveBalance);
+            return settings.value("nReserveBalance");
 #endif
         case DisplayUnit:
             return nDisplayUnit;
@@ -254,9 +254,9 @@ QVariant OptionsModel::data(const QModelIndex & index, int role) const
         case ThreadsScriptVerif:
             return settings.value("nThreadsScriptVerif");
         case ObfuscationRounds:
-            return QVariant(nObfuscationRounds);
+            return settings.value("nObfuscationRounds"); 
         case AnonymizeKoreAmount:
-            return QVariant(nAnonymizeKoreAmountKoreAmount);
+            return settings.value("nAnonymizeKoreAmount"); 
         case Listen:
             return settings.value("fListen");
         default:
@@ -369,8 +369,10 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             }
             break;
         case ReserveBalance:
-            nReserveBalance = value.toLongLong();
-            settings.setValue("nReserveBalance", (qint64) nReserveBalance);
+            if (settings.value("nReserveBalance") != value) {
+                settings.setValue("nReserveBalance", value);
+                setRestartRequired(true);
+            }
             break;
 #endif
         case DisplayUnit:
@@ -401,9 +403,9 @@ bool OptionsModel::setData(const QModelIndex & index, const QVariant & value, in
             Q_EMIT obfuscationRoundsChanged(nObfuscationRounds);
             break;
         case AnonymizeKoreAmount:
-            nAnonymizeKoreAmountKoreAmount = value.toInt();
-            settings.setValue("nAnonymizeKoreAmountKoreAmount", nAnonymizeKoreAmountKoreAmount);
-            Q_EMIT anonymizeKoreAmountChanged(nAnonymizeKoreAmountKoreAmount);
+            nAnonymizeKoreAmount = value.toInt();
+            settings.setValue("nAnonymizeKoreAmount", nAnonymizeKoreAmount);
+            Q_EMIT anonymizeKoreAmountChanged(nAnonymizeKoreAmount);
             break;
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();

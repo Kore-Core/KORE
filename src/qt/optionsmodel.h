@@ -64,7 +64,7 @@ public:
 
     /* Explicit getters */
     bool getMinimizeToTray() { return fMinimizeToTray; }
-    CAmount getReserveBalance() { return nReserveBalance; }
+    //CAmount getReserveBalance() { return nReserveBalance; }
     bool getMinimizeOnClose() { return fMinimizeOnClose; }
     int getDisplayUnit() { return nDisplayUnit; }
     QString getThirdPartyTxUrls() { return strThirdPartyTxUrls; }

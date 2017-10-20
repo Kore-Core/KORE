@@ -1925,9 +1925,9 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
         nObfuscationRounds = 99999;
     }
 
-    nAnonymizeKoreAmountKoreAmount = GetArg("-anonymizekoreamount", 0);
-    if (nAnonymizeKoreAmountKoreAmount > 999999) nAnonymizeKoreAmountKoreAmount = 999999;
-    if (nAnonymizeKoreAmountKoreAmount < 2) nAnonymizeKoreAmountKoreAmount = 2;
+    nAnonymizeKoreAmount = GetArg("-anonymizekoreamount", 0);
+    if (nAnonymizeKoreAmount > 999999) nAnonymizeKoreAmount = 999999;
+    if (nAnonymizeKoreAmount < 2) nAnonymizeKoreAmount = 2;
 
     fEnableSwiftTX = GetBoolArg("-enableswifttx", fEnableSwiftTX);
     nSwiftTXDepth = GetArg("-swifttxdepth", nSwiftTXDepth);
@@ -1942,7 +1942,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     LogPrintf("fLiteMode %d\n", fLiteMode);
     LogPrintf("nSwiftTXDepth %d\n", nSwiftTXDepth);
     LogPrintf("Obfuscation rounds %d\n", nObfuscationRounds);
-    LogPrintf("Anonymize KORE Amount %d\n", nAnonymizeKoreAmountKoreAmount);
+    LogPrintf("Anonymize KORE Amount %d\n", nAnonymizeKoreAmount);
     LogPrintf("Budget Mode %s\n", strBudgetMode.c_str());
 
     /* Denominations

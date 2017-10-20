@@ -11,9 +11,21 @@
 #include "uint256.h"
 #include "util.h"
 
+static arith_uint256 GetTargetLimit(int64_t nTime, bool fProofOfStake, const Consensus::Params& params)
+{
+    uint256 nLimit;
+
+    if (fProofOfStake)
+       nLimit = params.posLimit;
+    else 
+       nLimit = params.powLimit;    
+
+    return UintToArith256(nLimit);
+}
+
 unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHeader *pblock, const Consensus::Params& params, bool fProofOfStake)
 {
-    unsigned int nTargetLimit = fProofOfStake ? UintToArith256(params.posLimit).GetCompact(): UintToArith256(params.powLimit).GetCompact();
+    unsigned int nTargetLimit = UintToArith256(params.powLimit).GetCompact();
 
     // Genesis block
     if (pindexLast == NULL)
@@ -26,34 +38,21 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
     if (pindexPrevPrev->pprev == NULL)
         return nTargetLimit; // second block
 
-    return CalculateNextWorkRequired(pindexPrev, pindexPrevPrev->GetBlockTime(), params, fProofOfStake);
+    return CalculateNextWorkRequired(pindexPrev, pindexPrevPrev->GetBlockTime(), params);
 }
 
-unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params, bool fProofOfStake)
+unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
 {
     int64_t nActualSpacing = pindexLast->GetBlockTime() - nFirstBlockTime;
     int64_t nTargetSpacing = params.nTargetSpacing;
-
+            
     // Limit adjustment step    
     
-    if (nActualSpacing < nTargetSpacing/4){
-        if(fProofOfStake){
-		    nActualSpacing = nTargetSpacing;
-        }else {
-            nActualSpacing = nTargetSpacing/2;
-		}
-	}
-	
-    if (nActualSpacing > nTargetSpacing*2){
-        if(fProofOfStake){
-		    nActualSpacing = nTargetSpacing*4;
-        }else{ 
-            nActualSpacing = nTargetSpacing*8;
-        }
-    }
-     
+    if (nActualSpacing < 0)
+        nActualSpacing = nTargetSpacing;
+  
     // Retarget
-    const arith_uint256 bnPowLimit = fProofOfStake ? UintToArith256(params.posLimit) : UintToArith256(params.powLimit);
+    const arith_uint256 bnPowLimit = GetTargetLimit(pindexLast->GetBlockTime(), pindexLast->IsProofOfStake(), params);
     arith_uint256 bnNew, bnOld;
     bnNew.SetCompact(pindexLast->nBits);
     bnOld = bnNew;

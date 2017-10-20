@@ -362,7 +362,6 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 //
 
 //
-
 static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
 {
 
@@ -404,54 +403,54 @@ void ThreadStakeMiner(CWallet* pwallet)
     boost::shared_ptr<CReserveScript> coinstakeScript;
     GetMainSignals().ScriptForMining(coinstakeScript);
 
-    try {
+    if (!coinstakeScript || coinstakeScript->reserveScript.empty())
+        throw std::runtime_error("No coinstake script available (staking requires a wallet)");
 
-        if (!coinstakeScript || coinstakeScript->reserveScript.empty())
-            throw std::runtime_error("No coinstake script available (staking requires a wallet)");
-
-        while (true)
+    bool fTryToSync = true;
+    
+    while (true)
+    {
+        while (pwallet->IsLocked())
         {
-            while (pwallet->IsLocked())
-            {
-                nLastCoinStakeSearchInterval = 0;
-                MilliSleep(1000);
-            }
-
-            while (vNodes.empty() || IsInitialBlockDownload())
-            {
-                nLastCoinStakeSearchInterval = 0;
-                MilliSleep(1000);
-            }
-
-            //
-            // Create new block
-            //
-
-            unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock(chainparams, coinstakeScript->reserveScript, pwallet, true));
-            if (!pblocktemplate.get())
-            {
-                if (fDebug) LogPrintf("Error in StakeMiner: Keypool ran out, or bad timing \n");
-                MilliSleep(600);
-            }else{
-                CBlock *pblock = &pblocktemplate->block;
-                SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                ProcessBlockFound(pblock, chainparams);
-                SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                MilliSleep(500);
-            }
+            nLastCoinStakeSearchInterval = 0;
+            MilliSleep(1000);
         }
-    }
-    catch (const boost::thread_interrupted&)
-    {
-        LogPrintf("StakeMiner terminated\n");
-        throw;
-    }
-    catch (const std::runtime_error &e)
-    {
-        LogPrintf("StakeMiner runtime error: %s\n", e.what());
-        return;
-    }
 
+        while (vNodes.empty() || IsInitialBlockDownload())
+        {
+			fTryToSync = true;
+            nLastCoinStakeSearchInterval = 0;
+            MilliSleep(1000);
+        }
+
+		if (fTryToSync)
+		{
+			fTryToSync = false;
+			if (vNodes.size() < 3 || pindexBestHeader->GetBlockTime() < GetTime() - 10 * 60)
+			{
+				MilliSleep(60000);
+				continue;
+			}
+		}
+
+        //
+        // Create new block
+        //
+        unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock(chainparams, coinstakeScript->reserveScript, pwallet, true));
+        if (!pblocktemplate.get())
+             return;
+
+        CBlock *pblock = &pblocktemplate->block;
+        if(SignBlock(pwallet, pblock))
+        {
+            SetThreadPriority(THREAD_PRIORITY_NORMAL);
+            ProcessBlockFound(pblock, chainparams);
+            SetThreadPriority(THREAD_PRIORITY_LOWEST);
+            MilliSleep(500);
+        }
+        else
+            MilliSleep(500);
+    }
 }
 
 // attempt to generate suitable proof-of-stake
@@ -459,13 +458,18 @@ bool SignBlock(CWallet* pwallet, CBlock* pblock)
 {
     // if we are trying to sign
     //    something except proof-of-stake block template
-    if (!pblock->vtx[0].vout[0].IsEmpty())
-        return false;
+    if (!pblock->vtx[0].vout[0].IsEmpty()){
+    	LogPrintf("something except proof-of-stake block\n");
+    	return false;
+    }
+
 
     // if we are trying to sign
     //    a complete proof-of-stake block
-    if (pblock->IsProofOfStake())
-         return true;
+    if (pblock->IsProofOfStake()){
+    	LogPrintf("trying to sign a complete proof-of-stake block\n");
+    	return true;
+    }
 
     static int64_t nLastCoinStakeSearchTime = GetAdjustedTime(); // startup timestamp
 
@@ -475,12 +479,12 @@ bool SignBlock(CWallet* pwallet, CBlock* pblock)
     txCoinStake.nTime &= ~STAKE_TIMESTAMP_MASK;
     CAmount nFees = 0;
 
-    int64_t nSearchTime = GetAdjustedTime(); // search to current time
+    int64_t nSearchTime = txCoinStake.nTime; // search to current time
 
     //LogPrintf("SearchTime = %d \n", nSearchTime);
     //LogPrintf("nLastCoinStakeSearchTime = %d \n", nLastCoinStakeSearchTime);
 
-    if (nSearchTime >= nLastCoinStakeSearchTime)
+    if (nSearchTime > nLastCoinStakeSearchTime)
     {
         int64_t nSearchInterval =  1 ;
 
@@ -499,17 +503,8 @@ bool SignBlock(CWallet* pwallet, CBlock* pblock)
 
                 pblock->vtx.insert(pblock->vtx.begin() + 1, txCoinStake);
                 pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
+
                 // append a signature to our block
-                CTxDestination address;
-                CKeyID keyID;
-                if(!ExtractDestination(pblock->vtx[1].vout[1].scriptPubKey, address)){
-                    return false;
-                }
-
-                CKoreAddress d(address);
-                d.GetKeyID(keyID);
-
-                pwalletMain->GetKey(keyID, key);
                 return key.Sign(pblock->GetHash(), pblock->vchBlockSig);
             }
         }

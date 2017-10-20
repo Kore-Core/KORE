@@ -18,8 +18,8 @@
 #include "masternode-sync.h"
 #include "net.h"
 #include "policy/policy.h"
-#include "pow.h"
 #include "pos.h"
+#include "pow.h"
 #include "primitives/transaction.h"
 #include "script/standard.h"
 #include "timedata.h"
@@ -80,10 +80,10 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
     return nNewTime - nOldTime;
 }
 
-inline CMutableTransaction CreateCoinbaseTransaction(const CScript& scriptPubKeyIn, const int nHeight, bool fProofOfStake)
+inline CMutableTransaction CreateCoinbaseTransaction(const CScript& scriptPubKeyIn, CAmount nFees, const int nHeight, bool fProofOfStake)
 {
     // Create and Compute final coinbase transaction.
-    CAmount reward = GetProofOfWorkSubsidy(chainActive.Tip()->nHeight+ 1, Params().GetConsensus());
+    CAmount reward = nFees+ GetProofOfWorkSubsidy(chainActive.Tip()->nHeight+ 1, Params().GetConsensus());
     CAmount devsubsidy = reward *0.1;
 
     CMutableTransaction txNew;
@@ -256,7 +256,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
                 continue;
             }
 
-            if (!IsFinalTx(tx, nHeight, nLockTimeCutoff))
+            if (tx.IsCoinStake() || !IsFinalTx(tx, nHeight, nLockTimeCutoff)|| pblock->GetBlockTime() < (int64_t)tx.nTime)
                 continue;
 
             unsigned int nTxSigOps = iter->GetSigOpCount();
@@ -311,7 +311,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 
         if (fDebug) LogPrintf("CreateNewBlock(): total size %u txs: %u fees: %ld sigops %d\n", nBlockSize, nBlockTx, nFees, nBlockSigOps);
 
-        pblock->vtx[0] = CreateCoinbaseTransaction(scriptPubKeyIn, nHeight, fProofOfStake);
+        pblock->vtx[0] = CreateCoinbaseTransaction(scriptPubKeyIn, nFees, nHeight, fProofOfStake);
 
         //Make payee
         if (!fProofOfStake && pblock->vtx[0].vout.size() > 1) {
@@ -490,7 +490,7 @@ bool SignBlock(CWallet* pwallet, CBlock* pblock)
 
         if (pwallet->CreateCoinStake(*pwallet, pblock->nBits, nSearchInterval, nFees, txCoinStake, key))
         {
-            if (txCoinStake.nTime >= chainActive.Tip()->GetMedianTimePast()+1)
+            if (txCoinStake.nTime >= pindexBestHeader->GetMedianTimePast()+1)
             {
                 // make sure coinstake would meet timestamp protocol
                 //    as it would be the same as the block timestamp

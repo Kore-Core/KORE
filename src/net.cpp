@@ -1455,9 +1455,6 @@ void MapPort(bool)
 }
 #endif
 
-
-
-
 void ThreadDNSAddressSeed()
 {
     // goal: only query DNS seeds if address need is acute

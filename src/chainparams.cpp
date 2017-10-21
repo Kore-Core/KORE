@@ -83,7 +83,6 @@ void  CChainParams::MineNewGenesisBlock()
     LogPrintf("genesis.nTime = %u \n",  genesis.nTime);
     LogPrintf("genesis.nNonce = %u \n",  genesis.nNonce);
     LogPrintf("genesis.nBits = %u \n",  genesis.nBits);
-    LogPrintf("genesis.GetPoWHash = %s\n",  genesis.GetHash().ToString().c_str());
     LogPrintf("genesis.GetHash = %s\n",  genesis.GetHash().ToString().c_str());
     LogPrintf("genesis.hashMerkleRoot = %s\n",  genesis.hashMerkleRoot.ToString().c_str());
 

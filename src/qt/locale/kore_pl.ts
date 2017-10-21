@@ -168,8 +168,8 @@
         <translation>Jesteś pewien, że chcesz zaszyfrować swój portfel?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>Program KoreCore zamknie się, aby dokończyć proces szyfrowania. Pamiętaj, że szyfrowanie portfela nie zabezpiecza w pełni twoich koreów przed kradzieżą przez złośliwe oprogramowanie mogące zainfekować twój komputer.</translation>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <translation>Program Kore Core zamknie się, aby dokończyć proces szyfrowania. Pamiętaj, że szyfrowanie portfela nie zabezpiecza w pełni twoich koreów przed kradzieżą przez złośliwe oprogramowanie mogące zainfekować twój komputer.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -306,7 +306,7 @@
         <translation>Otwórz URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
+        <source>Kore Core client</source>
         <translation>Klient Rdzenia Korea</translation>
     </message>
     <message>
@@ -358,7 +358,7 @@
         <translation>Odbie&amp;rz</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
+        <source>Show information about Kore Core</source>
         <translation>Pokaż informacje o Rdzeniu Korea</translation>
     </message>
     <message>
@@ -398,7 +398,7 @@
         <translation>Pasek zakładek</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Rdzeń Korea</translation>
     </message>
     <message>
@@ -406,12 +406,12 @@
         <translation>Żądaj płatności (generuje kod QR oraz koreowe URI)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;O KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;O Kore Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
-        <translation>Zmień opcje konfiguracji dla KoreCore</translation>
+        <source>Modify configuration options for Kore Core</source>
+        <translation>Zmień opcje konfiguracji dla Kore Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -430,7 +430,7 @@
         <translation>&amp;Opcje linii komend</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
         <translation>Pokaż pomoc Rdzenia Kore, aby zobaczyć listę wszystkich opcji linii poleceń</translation>
     </message>
     <message numerus="yes">
@@ -855,7 +855,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Rdzeń Korea</translation>
     </message>
     <message>
@@ -867,8 +867,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>O KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>O Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,15 +918,15 @@
         <translation>Witaj</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Witaj w KoreCore</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Witaj w Kore Core</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
-        <translation>Ponieważ jest to pierwsze uruchomienie programu, możesz wybrać gdzie KoreCore będzie przechowywał swoje dane.</translation>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
+        <translation>Ponieważ jest to pierwsze uruchomienie programu, możesz wybrać gdzie Kore Core będzie przechowywał swoje dane.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>Program pobierze i będzie przechowywał kopię łańcucha bloków koreowych. W wybranym katalogu musi być przynajmniej %1 GB miejsca, a z czasem ilość danych będzie rosła. Portfel będzie przechowywany w tym samym katalogu.</translation>
     </message>
     <message>
@@ -938,7 +938,7 @@
         <translation>Użyj wybranego folderu dla danych</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Rdzeń Korea</translation>
     </message>
     <message>
@@ -1020,7 +1020,7 @@
         <translation>Minimalizuje zamiast zakończyć działanie programu przy zamykaniu okna. Kiedy ta opcja jest włączona, program zakończy działanie po wybieraniu Zamknij w menu.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting KoreCore.</source>
+        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
         <translation>Można tu ustawić język interfejsu uzytkownika. Żeby ustawienie przyniosło skutek trzeba uruchomić ponownie Kore.</translation>
     </message>
     <message>
@@ -1048,12 +1048,12 @@
         <translation>&amp;Sieć</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
+        <source>Automatically start Kore Core after logging in to the system.</source>
         <translation>Automatycznie uruchamia Korepo zalogowaniu do systemu.</translation>
     </message>
     <message>
-        <source>&amp;Start KoreCore on system login</source>
-        <translation>Uruchamiaj KoreCore wraz z zalogowaniem do &amp;systemu</translation>
+        <source>&amp;Start Kore Core on system login</source>
+        <translation>Uruchamiaj Kore Core wraz z zalogowaniem do &amp;systemu</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1506,8 +1506,8 @@
         <translation>Zużycie pamięci</translation>
     </message>
     <message>
-        <source>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Otwórz plik logowania debugowania KoreCore z obecnego katalogu z danymi. Może to potrwać kilka sekund przy większych plikach.</translation>
+        <source>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Otwórz plik logowania debugowania Kore Core z obecnego katalogu z danymi. Może to potrwać kilka sekund przy większych plikach.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1658,8 +1658,8 @@
         <translation>Odblokuj węzeł</translation>
     </message>
     <message>
-        <source>Welcome to the KoreCore RPC console.</source>
-        <translation>Witaj w konsoli KoreCore RPC.</translation>
+        <source>Welcome to the Kore Core RPC console.</source>
+        <translation>Witaj w konsoli Kore Core RPC.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2244,8 +2244,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
-        <translation>KoreCore się zamyka...</translation>
+        <source>Kore Core is shutting down...</source>
+        <translation>Kore Core się zamyka...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2390,12 +2390,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Rdzeń Korea</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>Deweloperzy KoreCore</translation>
+        <source>The Kore Core developers</source>
+        <translation>Deweloperzy Kore Core</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2952,8 +2952,8 @@
         <translation>To jest testowa wersja - używaj na własne ryzyko - nie używaj do wykopywania oraz przy aplikacjach kupieckich</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. KoreCore is probably already running.</source>
-        <translation>Nie można przywiązać z portem %s na tym komputerze. KoreCore prawdopodobnie już działa.</translation>
+        <source>Unable to bind to %s on this computer. Kore Core is probably already running.</source>
+        <translation>Nie można przywiązać z portem %s na tym komputerze. Kore Core prawdopodobnie już działa.</translation>
     </message>
     <message>
         <source>WARNING: abnormally high number of blocks generated, %d blocks received in the last %d hours (%d expected)</source>
@@ -3124,7 +3124,7 @@
         <translation>Powiąż się z podanym adresem, aby nasłuchiwać połączenia JSON-RPC. Użyj notacji [host]:port dla IPv6. Ta opcja może być określona kilka razy (domyślnie: powiąż ze wszystkimi interfejsami)</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</source>
+        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
         <translation>Nie można uzyskać blokady na katalogu z danymi %s. Rdzeń Korenajprawdopodobniej jest już uruchomiony.</translation>
     </message>
     <message>
@@ -3212,12 +3212,12 @@
         <translation>Połącz przez SOCKS5 proxy</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
-        <translation>Copyright (C) 2009-%i The KoreCore Developers</translation>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
+        <translation>Copyright (C) 2009-%i The Kore Core Developers</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of KoreCore</source>
-        <translation>Błąd ładowania wallet.dat: Portfel wymaga nowszej wersji KoreCore</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
+        <translation>Błąd ładowania wallet.dat: Portfel wymaga nowszej wersji Kore Core</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
@@ -3232,8 +3232,8 @@
         <translation>Informacja</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. KoreCore is shutting down.</source>
-        <translation>Wstępna kontrola poprawności nie powiodła się. KoreCore wyłącza się.</translation>
+        <source>Initialization sanity check failed. Kore Core is shutting down.</source>
+        <translation>Wstępna kontrola poprawności nie powiodła się. Kore Core wyłącza się.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s'</source>
@@ -3344,7 +3344,7 @@
         <translation>Nazwa użytkownika dla połączeń JSON-RPC</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart KoreCore to complete</source>
+        <source>Wallet needed to be rewritten: restart Kore Core to complete</source>
         <translation>Portfel wymaga przepisania: zrestartuj Korea aby ukończyć</translation>
     </message>
     <message>

@@ -165,8 +165,8 @@ Estas son las direcciones de Korepara enviar pagos . Siempre verifique la cantid
         <translation>Estas seguro de que deseas encriptar tu billetera?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>KoreCore se cerrará ahora para finalizar el proceso de encriptación. Recuerda que encriptando tu billetera no protegera por completo tus kores desde robos por malware que infectan tu computadora.</translation>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <translation>Kore Core se cerrará ahora para finalizar el proceso de encriptación. Recuerda que encriptando tu billetera no protegera por completo tus kores desde robos por malware que infectan tu computadora.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -279,8 +279,8 @@ Estas son las direcciones de Korepara enviar pagos . Siempre verifique la cantid
         <translation>Abrir &amp;URL...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore cliente</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core cliente</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -323,8 +323,8 @@ Estas son las direcciones de Korepara enviar pagos . Siempre verifique la cantid
         <translation>&amp;Recibir</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Mostrar información sobre KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Mostrar información sobre Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -347,8 +347,8 @@ Estas son las direcciones de Korepara enviar pagos . Siempre verifique la cantid
         <translation>&amp;Ayuda</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -374,15 +374,15 @@ Estas son las direcciones de Korepara enviar pagos . Siempre verifique la cantid
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     </context>
 <context>
     <name>Intro</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -457,8 +457,8 @@ Estas son las direcciones de Korepara enviar pagos . Siempre verifique la cantid
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     </context>
 <context>

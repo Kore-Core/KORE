@@ -168,8 +168,8 @@
         <translation>Er du sikker på, at du ønsker at kryptere din tegnebog?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>KoreCore vil nu lukke for at færdiggøre krypteringsprocessen. Husk at kryptering af din tegnebog kan ikke beskytte dine kore fuldt ud mod at blive stjålet af eventuel malware, der måtte have inficeret din computer.</translation>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <translation>Kore Core vil nu lukke for at færdiggøre krypteringsprocessen. Husk at kryptering af din tegnebog kan ikke beskytte dine kore fuldt ud mod at blive stjålet af eventuel malware, der måtte have inficeret din computer.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -306,8 +306,8 @@
         <translation>&amp;Åbn URI…</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore-klient</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core-klient</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,8 +358,8 @@
         <translation>&amp;Modtag</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Vis oplysninger om KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Vis oplysninger om Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -398,20 +398,20 @@
         <translation>Faneværktøjslinje</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
         <translation>Anmod om betalinger (genererer QR-koder og "kore:"-URI'er)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;Om KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;Om Kore Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
-        <translation>Ændr opsætning af KoreCore</translation>
+        <source>Modify configuration options for Kore Core</source>
+        <translation>Ændr opsætning af Kore Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -430,8 +430,8 @@
         <translation>Tilvalg for &amp;kommandolinje</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
-        <translation>Vis KoreCore hjælpebesked for at få en liste over mulige tilvalg for Korekommandolinje</translation>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
+        <translation>Vis Kore Core hjælpebesked for at få en liste over mulige tilvalg for Korekommandolinje</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Korenetwork</source>
@@ -855,8 +855,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
@@ -867,8 +867,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>Om KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>Om Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +918,16 @@
         <translation>Velkommen</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Velkommen til KoreCore.</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Velkommen til Kore Core.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
-        <translation>Siden dette er første gang, programmet startes, kan du vælge, hvor KoreCore skal gemme sin data.</translation>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
+        <translation>Siden dette er første gang, programmet startes, kan du vælge, hvor Kore Core skal gemme sin data.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>KoreCore vil downloade og gemme et kopi af Kore-blokkæden. Mindst %1 GB data vil blive gemt i denne mappe, og den vil vokse over tid. Tegnebogen vil også blive gemt i denne mappe.</translation>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>Kore Core vil downloade og gemme et kopi af Kore-blokkæden. Mindst %1 GB data vil blive gemt i denne mappe, og den vil vokse over tid. Tegnebogen vil også blive gemt i denne mappe.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -938,8 +938,8 @@
         <translation>Brug tilpasset mappe for data:</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,8 +1020,8 @@
         <translation>Minimér i stedet for at lukke applikationen, når vinduet lukkes. Når denne indstilling er slået til, vil applikationen først blive lukket, når Afslut vælges i menuen.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting KoreCore.</source>
-        <translation>Sproget for brugerfladen kan vælges her. Denne indstilling vil træde i kraft efter genstart af KoreCore.</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
+        <translation>Sproget for brugerfladen kan vælges her. Denne indstilling vil træde i kraft efter genstart af Kore Core.</translation>
     </message>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
@@ -1048,12 +1048,12 @@
         <translation>&amp;Netværk</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
-        <translation>Start KoreCore automatisk efter der logges ind på systemet.</translation>
+        <source>Automatically start Kore Core after logging in to the system.</source>
+        <translation>Start Kore Core automatisk efter der logges ind på systemet.</translation>
     </message>
     <message>
-        <source>&amp;Start KoreCore on system login</source>
-        <translation>&amp;Start KoreCore ved system-login</translation>
+        <source>&amp;Start Kore Core on system login</source>
+        <translation>&amp;Start Kore Core ved system-login</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1518,8 +1518,8 @@
         <translation>Hukommelsesforbrug</translation>
     </message>
     <message>
-        <source>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Åbn KoreCores fejlsøgningslogfil fra den aktuelle datamappe. Dette kan tage nogle få sekunder for store logfiler.</translation>
+        <source>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Åbn Kore Cores fejlsøgningslogfil fra den aktuelle datamappe. Dette kan tage nogle få sekunder for store logfiler.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1678,8 +1678,8 @@
         <translation>&amp;Fjern bandlysning af knude</translation>
     </message>
     <message>
-        <source>Welcome to the KoreCore RPC console.</source>
-        <translation>Velkommen til KoreCores RPC-konsol.</translation>
+        <source>Welcome to the Kore Core RPC console.</source>
+        <translation>Velkommen til Kore Cores RPC-konsol.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2264,8 +2264,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
-        <translation>KoreCore lukker ned…</translation>
+        <source>Kore Core is shutting down...</source>
+        <translation>Kore Core lukker ned…</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2414,12 +2414,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>Udviklerne af KoreCore</translation>
+        <source>The Kore Core developers</source>
+        <translation>Udviklerne af Kore Core</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2936,8 +2936,8 @@
         <translation>Maksimalt totalgebyr (i %s) for brug i en enkelt tegnebogstransaktion; ved at sætte dette for lavt, kan store transaktioner afbrydes (standard: %s)</translation>
     </message>
     <message>
-        <source>Please check that your computer's date and time are correct! If your clock is wrong KoreCore will not work properly.</source>
-        <translation>Kontrollér venligst, at din computers dato og tid er korrekt! Hvis uret ikke passer, vil KoreCore ikke fungere korrekt.</translation>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong Kore Core will not work properly.</source>
+        <translation>Kontrollér venligst, at din computers dato og tid er korrekt! Hvis uret ikke passer, vil Kore Core ikke fungere korrekt.</translation>
     </message>
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
@@ -3008,8 +3008,8 @@
         <translation>Dette er en foreløbig testudgivelse - brug på eget ansvar - brug ikke til udvinding eller handelsprogrammer</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. KoreCore is probably already running.</source>
-        <translation>Ikke i stand til at tildele til %s på denne computer. KoreCore kører sansynligvis allerede.</translation>
+        <source>Unable to bind to %s on this computer. Kore Core is probably already running.</source>
+        <translation>Ikke i stand til at tildele til %s på denne computer. Kore Core kører sansynligvis allerede.</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
@@ -3216,8 +3216,8 @@
         <translation>Tildel til den givne adresse for at lytte efter JSON-RPC-forbindelser. Brug [vært]:port-notation for IPv6. Denne valgmulighed kan angives flere gange (standard: tildel til alle grænseflader)</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</source>
-        <translation>Kan ikke opnå en lås på datamappe %s. KoreCore kører sansynligvis allerede.</translation>
+        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
+        <translation>Kan ikke opnå en lås på datamappe %s. Kore Core kører sansynligvis allerede.</translation>
     </message>
     <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
@@ -3316,12 +3316,12 @@
         <translation>Forbind gennem SOCKS5-proxy</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
-        <translation>Ophavsret © 2009-%i Udviklerne af KoreCore</translation>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
+        <translation>Ophavsret © 2009-%i Udviklerne af Kore Core</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of KoreCore</source>
-        <translation>Fejl ved indlæsning af wallet.dat: Tegnebog kræver en nyere version af KoreCore</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
+        <translation>Fejl ved indlæsning af wallet.dat: Tegnebog kræver en nyere version af Kore Core</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
@@ -3336,8 +3336,8 @@
         <translation>Information</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. KoreCore is shutting down.</source>
-        <translation>Sundhedstjek under klargøring mislykkedes. KoreCore lukker ned.</translation>
+        <source>Initialization sanity check failed. Kore Core is shutting down.</source>
+        <translation>Sundhedstjek under klargøring mislykkedes. Kore Core lukker ned.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s'</source>
@@ -3456,8 +3456,8 @@
         <translation>Brugernavn til JSON-RPC-forbindelser</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart KoreCore to complete</source>
-        <translation>Det var nødvendigt at genskrive tegnebogen: genstart KoreCore for at gennemføre</translation>
+        <source>Wallet needed to be rewritten: restart Kore Core to complete</source>
+        <translation>Det var nødvendigt at genskrive tegnebogen: genstart Kore Core for at gennemføre</translation>
     </message>
     <message>
         <source>Warning</source>

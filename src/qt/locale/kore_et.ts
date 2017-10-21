@@ -326,11 +326,11 @@
         <translation>Vahelehe tööriistariba</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Korei tuumik</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>Kirjeldus Korei Tuumast</translation>
     </message>
     <message>
@@ -591,7 +591,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Korei tuumik</translation>
     </message>
     <message>
@@ -599,7 +599,7 @@
         <translation>versioon</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>Kirjeldus Korei Tuumast</translation>
     </message>
     <message>
@@ -622,7 +622,7 @@
         <translation>Teretulemast</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Korei tuumik</translation>
     </message>
     <message>
@@ -1290,11 +1290,11 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Korei tuumik</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
+        <source>The Kore Core developers</source>
         <translation>Korei Tuuma arendajad</translation>
     </message>
     <message>

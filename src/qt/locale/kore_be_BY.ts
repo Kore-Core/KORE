@@ -168,8 +168,8 @@
         <translation>Ці ўпэўненыя вы, што жадаеце зашыфраваць свой гаманец?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>KoreCore зараз будзе зачынены, каб фіналізаваць працэс шыфравання. Памятайце, што шыфраванне вашага гаманца не гарантуе абсалютную абарону ад магчымасці крадзяжу біткойнаў шкоднымі праграмамі, якія могуць інфікаваць ваш камп'ютар.</translation>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <translation>Kore Core зараз будзе зачынены, каб фіналізаваць працэс шыфравання. Памятайце, што шыфраванне вашага гаманца не гарантуе абсалютную абарону ад магчымасці крадзяжу біткойнаў шкоднымі праграмамі, якія могуць інфікаваць ваш камп'ютар.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -298,8 +298,8 @@
         <translation>Адчыниць &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore кліент</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core кліент</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -350,8 +350,8 @@
         <translation>Атрымаць</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Паказаць інфармацыю аб KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Паказаць інфармацыю аб Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -386,20 +386,20 @@
         <translation>Дапамога</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
         <translation>Запатрабаваць плацёж (генеруецца QR-код для біткойн URI)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>Аб KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>Аб Kore Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
-        <translation>Мадыфікаваць опцыі канфігурацыі KoreCore</translation>
+        <source>Modify configuration options for Kore Core</source>
+        <translation>Мадыфікаваць опцыі канфігурацыі Kore Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -418,8 +418,8 @@
         <translation>Опцыі каманднага радка</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
-        <translation>Паказваць даведку KoreCore каб атрымаць спіс магчымых опцый каманднага радка</translation>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
+        <translation>Паказваць даведку Kore Core каб атрымаць спіс магчымых опцый каманднага радка</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Korenetwork</source>
@@ -775,16 +775,16 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>(%1-bit)</source>
         <translation>(%1-біт)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>Аб KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>Аб Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -806,12 +806,12 @@
         <translation>Вітаем</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Вітаем у KoreCore.</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Вітаем у Kore Core.</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1102,12 +1102,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>Распрацоўнікі KoreCore</translation>
+        <source>The Kore Core developers</source>
+        <translation>Распрацоўнікі Kore Core</translation>
     </message>
     <message>
         <source>[testnet]</source>

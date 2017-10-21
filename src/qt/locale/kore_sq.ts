@@ -246,11 +246,11 @@
         <translation>Shiriti i mjeteve</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Berthama Kore</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>Rreth Berthames Bitkoin</translation>
     </message>
     <message>
@@ -385,7 +385,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Berthama Kore</translation>
     </message>
     <message>
@@ -393,7 +393,7 @@
         <translation>versioni</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>Rreth Berthames Bitkoin</translation>
     </message>
     </context>
@@ -404,11 +404,11 @@
         <translation>Miresevini</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
+        <source>Welcome to Kore Core.</source>
         <translation>Miresevini ne Berthamen Kore</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Berthama Kore</translation>
     </message>
     <message>
@@ -624,7 +624,7 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Berthama Kore</translation>
     </message>
     <message>

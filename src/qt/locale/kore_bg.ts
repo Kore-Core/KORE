@@ -168,7 +168,7 @@
         <translation>Наистина ли желаете да шифрирате портфейла си?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
         <translation>Биткоин сега ще се затоври за да завърши процеса на криптиране. Запомнете, че криптирането на вашия портефейл не може напълно да предпази вашите монети от кражба чрез зловреден софтуер, инфектирал вашия компютър</translation>
     </message>
     <message>
@@ -294,8 +294,8 @@
         <translation>Отвори &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore клиент</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core клиент</translation>
     </message>
     <message>
         <source>Send coins to a Koreaddress</source>
@@ -338,7 +338,7 @@
         <translation>&amp;Получаване</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
+        <source>Show information about Kore Core</source>
         <translation>Покажете информация за Биткойн ядрото</translation>
     </message>
     <message>
@@ -378,7 +378,7 @@
         <translation>Раздели</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     <message>
@@ -386,8 +386,8 @@
         <translation>Изискване на плащания(генерира QR кодове и биткойн: URIs)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;Относно KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;Относно Kore Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -406,7 +406,7 @@
         <translation>&amp;Налични команди</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
         <translation>Покажи помощните съобщения на Биткойн за да видиш наличните и валидни команди</translation>
     </message>
     <message>
@@ -783,7 +783,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     <message>
@@ -795,8 +795,8 @@
         <translation>(%1-битов)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>Относно KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>Относно Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -818,11 +818,11 @@
         <translation>Добре дошли</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
+        <source>Welcome to Kore Core.</source>
         <translation>Добре дошли в Биткойн ядрото.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
         <translation>Тъй като това е първото стартиране на програмата можете да изберете къде Биткон ядрото да запази данните си.</translation>
     </message>
     <message>
@@ -834,7 +834,7 @@
         <translation>Използване на директория ръчно</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     <message>
@@ -900,8 +900,8 @@
         <translation>&amp;Мрежа</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
-        <translation>Автоматично стартиране на KoreCore след влизане в системата.</translation>
+        <source>Automatically start Kore Core after logging in to the system.</source>
+        <translation>Автоматично стартиране на Kore Core след влизане в системата.</translation>
     </message>
     <message>
         <source>W&amp;allet</source>
@@ -1804,7 +1804,7 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
+        <source>Kore Core is shutting down...</source>
         <translation>Биткойн ядрото се изключва...</translation>
     </message>
     <message>
@@ -1930,12 +1930,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>Разработчици на KoreCore</translation>
+        <source>The Kore Core developers</source>
+        <translation>Разработчици на Kore Core</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2456,7 +2456,7 @@
         <translation>Свързване чрез SOCKS5  прокси</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
         <translation>Всички права запазени (C) 2009-%i Доставчиците на Биткойн</translation>
     </message>
     <message>

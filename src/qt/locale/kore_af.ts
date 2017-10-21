@@ -152,7 +152,7 @@
         <translation>Is u seker dat u die beursie wil kodifiseer?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
         <translation>KoreKern gaan nou toemaak om die kodifikasie af te handel. Onthou dat die kodifikasie van u beursie nie altyd u munte kan beskerm teen diefstal deur kwaadwillige sagteware op u rekenaar nie.</translation>
     </message>
     <message>
@@ -258,7 +258,7 @@
         <translation>Oop &amp; URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
+        <source>Kore Core client</source>
         <translation>KoreKern klient</translation>
     </message>
     <message>
@@ -298,7 +298,7 @@
         <translation>&amp;Ontvang</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
+        <source>Show information about Kore Core</source>
         <translation>Vertoon inligting oor KoreKern</translation>
     </message>
     <message>
@@ -322,7 +322,7 @@
         <translation>&amp;Help</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreKern</translation>
     </message>
     <message>
@@ -330,11 +330,11 @@
         <translation>Versoek betalings (genereer QR-kodes en kore: URI's)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>&amp;Omtrent KoreKern</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
+        <source>Modify configuration options for Kore Core</source>
         <translation>Verander konfigurasie-opsies vir KoreKern</translation>
     </message>
     <message>
@@ -369,7 +369,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreKern</translation>
     </message>
     <message>
@@ -380,7 +380,7 @@
 <context>
     <name>Intro</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreKern</translation>
     </message>
     </context>
@@ -444,7 +444,7 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreKern</translation>
     </message>
     </context>

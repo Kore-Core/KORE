@@ -201,7 +201,6 @@ void PrepareShutdown()
     /// module was initialized.
     RenameThread("kore-shutoff");
     mempool.AddTransactionsUpdated(1);
-    StopTor();
     StopHTTPRPC();
     StopREST();
     StopRPC();
@@ -216,6 +215,7 @@ void PrepareShutdown()
     DumpBudgets();
     DumpMasternodePayments();
     StopTorControl();
+    StopTor();
     UnregisterNodeSignals(GetNodeSignals());
 
     if (fFeeEstimatesInitialized)
@@ -580,7 +580,7 @@ std::string HelpMessage(HelpMessageMode mode)
 std::string LicenseInfo()
 {
     // todo: remove urls from translations on next change
-    return FormatParagraph(strprintf(_("Copyright (C) 2009-%i The KoreCore Developers"), COPYRIGHT_YEAR)) + "\n" +
+    return FormatParagraph(strprintf(_("Copyright (C) 2009-%i The Kore Core Developers"), COPYRIGHT_YEAR)) + "\n" +
            "\n" +
            FormatParagraph(strprintf(_("Copyright (C) 2014-%i The Dash Core Developers"), COPYRIGHT_YEAR)) + "\n" +
            "\n" +

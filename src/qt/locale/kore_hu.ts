@@ -294,8 +294,8 @@
         <translation>&amp;URI azonosító megnyitása...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore kliens</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core kliens</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -346,8 +346,8 @@
         <translation>&amp;Fogadás</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>KoreCore információ megjelenítése</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Kore Core információ megjelenítése</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -386,20 +386,20 @@
         <translation>Fül eszköztár</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
         <translation>Fizetési kérelem (QR-kódot és "kore:" URI azonosítót hoz létre)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;A KoreCore-ról</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;A Kore Core-ról</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
-        <translation>Konfigurációs opciók módosítása a KoreCore-hoz</translation>
+        <source>Modify configuration options for Kore Core</source>
+        <translation>Konfigurációs opciók módosítása a Kore Core-hoz</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -418,8 +418,8 @@
         <translation>Paran&amp;cssor kapcsolók</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
-        <translation>A KoreCore súgóüzenet megjelenítése a Korelehetséges parancssori kapcsolóival.</translation>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
+        <translation>A Kore Core súgóüzenet megjelenítése a Korelehetséges parancssori kapcsolóival.</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Korenetwork</source>
@@ -839,8 +839,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
@@ -851,8 +851,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>A KoreCore-ról</translation>
+        <source>About Kore Core</source>
+        <translation>A Kore Core-ról</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -874,12 +874,12 @@
         <translation>Üdvözlünk</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Üdvözlünk a KoreCore-ban.</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Üdvözlünk a Kore Core-ban.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>A KoreCore le fogja tölteni és tárolni fogja a Koreblokklánc egy másolatát. Legalább %1GB adat lesz tárolva ebben a mappában, és ez folyamatosan nőni fog. A tárca szintén itt lesz tárolva.</translation>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>A Kore Core le fogja tölteni és tárolni fogja a Koreblokklánc egy másolatát. Legalább %1GB adat lesz tárolva ebben a mappában, és ez folyamatosan nőni fog. A tárca szintén itt lesz tárolva.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -890,8 +890,8 @@
         <translation>Saját adatkönyvtár használata:</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -960,7 +960,7 @@
         <translation>A proxy IP címe (pl.: IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting KoreCore.</source>
+        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
         <translation>Itt beállíthatod a kezelőfelület nyelvét. A beállítás a Koreújraindítása után lép érvénybe.</translation>
     </message>
     <message>
@@ -980,7 +980,7 @@
         <translation>&amp;Hálózat</translation>
     </message>
     <message>
-        <source>&amp;Start KoreCore on system login</source>
+        <source>&amp;Start Kore Core on system login</source>
         <translation>A Koreelindítása bejelentkezéskor</translation>
     </message>
     <message>
@@ -1829,8 +1829,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
-        <translation>A KoreCore leáll...</translation>
+        <source>Kore Core is shutting down...</source>
+        <translation>A Kore Core leáll...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -1935,12 +1935,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>A KoreCore fejlesztői</translation>
+        <source>The Kore Core developers</source>
+        <translation>A Kore Core fejlesztői</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2433,8 +2433,8 @@
         <translation>Külső cím (-whitebind address) feloldása nem sikerült: '%s'</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
-        <translation>Copyright (C) 2009-%i A KoreCore Fejlesztői</translation>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
+        <translation>Copyright (C) 2009-%i A Kore Core Fejlesztői</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>

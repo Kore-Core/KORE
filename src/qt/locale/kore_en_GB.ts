@@ -168,8 +168,8 @@
         <translation>Are you sure you wish to encrypt your wallet?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</translation>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <translation>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -306,8 +306,8 @@
         <translation>Open &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore client</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core client</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,8 +358,8 @@
         <translation>&amp;Receive</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Show information about KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Show information about Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -398,20 +398,20 @@
         <translation>Tabs toolbar</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
         <translation>Request payments (generates QR codes and kore: URIs)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;About KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;About Kore Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
-        <translation>Modify configuration options for KoreCore</translation>
+        <source>Modify configuration options for Kore Core</source>
+        <translation>Modify configuration options for Kore Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -430,8 +430,8 @@
         <translation>&amp;Command-line options</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
-        <translation>Show the KoreCore help message to get a list with possible Korecommand-line options</translation>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
+        <translation>Show the Kore Core help message to get a list with possible Korecommand-line options</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Korenetwork</source>
@@ -855,8 +855,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
@@ -867,8 +867,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>About KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>About Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +918,16 @@
         <translation>Welcome</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Welcome to KoreCore.</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Welcome to Kore Core.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
-        <translation>As this is the first time the program is launched, you can choose where KoreCore will store its data.</translation>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
+        <translation>As this is the first time the program is launched, you can choose where Kore Core will store its data.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</translation>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -938,8 +938,8 @@
         <translation>Use a custom data directory:</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,8 +1020,8 @@
         <translation>Minimise instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting KoreCore.</source>
-        <translation>The user interface language can be set here. This setting will take effect after restarting KoreCore.</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
+        <translation>The user interface language can be set here. This setting will take effect after restarting Kore Core.</translation>
     </message>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
@@ -1048,12 +1048,12 @@
         <translation>&amp;Network</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
-        <translation>Automatically start KoreCore after logging in to the system.</translation>
+        <source>Automatically start Kore Core after logging in to the system.</source>
+        <translation>Automatically start Kore Core after logging in to the system.</translation>
     </message>
     <message>
-        <source>&amp;Start KoreCore on system login</source>
-        <translation>&amp;Start KoreCore on system login</translation>
+        <source>&amp;Start Kore Core on system login</source>
+        <translation>&amp;Start Kore Core on system login</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1518,8 +1518,8 @@
         <translation>Memory usage</translation>
     </message>
     <message>
-        <source>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</translation>
+        <source>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1678,8 +1678,8 @@
         <translation>&amp;Unban Node</translation>
     </message>
     <message>
-        <source>Welcome to the KoreCore RPC console.</source>
-        <translation>Welcome to the KoreCore RPC console.</translation>
+        <source>Welcome to the Kore Core RPC console.</source>
+        <translation>Welcome to the Kore Core RPC console.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2264,8 +2264,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
-        <translation>KoreCore is shutting down...</translation>
+        <source>Kore Core is shutting down...</source>
+        <translation>Kore Core is shutting down...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2414,12 +2414,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>The KoreCore developers</translation>
+        <source>The Kore Core developers</source>
+        <translation>The Kore Core developers</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2936,8 +2936,8 @@
         <translation>Maximum total fees (in %s) to use in a single wallet transaction; setting this too low may abort large transactions (default: %s)</translation>
     </message>
     <message>
-        <source>Please check that your computer's date and time are correct! If your clock is wrong KoreCore will not work properly.</source>
-        <translation>Please check that your computer's date and time are correct! If your clock is wrong KoreCore will not work properly.</translation>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong Kore Core will not work properly.</source>
+        <translation>Please check that your computer's date and time are correct! If your clock is wrong Kore Core will not work properly.</translation>
     </message>
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
@@ -3008,8 +3008,8 @@
         <translation>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. KoreCore is probably already running.</source>
-        <translation>Unable to bind to %s on this computer. KoreCore is probably already running.</translation>
+        <source>Unable to bind to %s on this computer. Kore Core is probably already running.</source>
+        <translation>Unable to bind to %s on this computer. Kore Core is probably already running.</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
@@ -3216,8 +3216,8 @@
         <translation>Bind to given address to listen for JSON-RPC connections. Use [host]:port notation for IPv6. This option can be specified multiple times (default: bind to all interfaces)</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</source>
-        <translation>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</translation>
+        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
+        <translation>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</translation>
     </message>
     <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
@@ -3316,12 +3316,12 @@
         <translation>Connect through SOCKS5 proxy</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
-        <translation>Copyright (C) 2009-%i The KoreCore Developers</translation>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
+        <translation>Copyright (C) 2009-%i The Kore Core Developers</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of KoreCore</source>
-        <translation>Error loading wallet.dat: Wallet requires newer version of KoreCore</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
+        <translation>Error loading wallet.dat: Wallet requires newer version of Kore Core</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
@@ -3336,8 +3336,8 @@
         <translation>Information</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. KoreCore is shutting down.</source>
-        <translation>Initialisation sanity check failed. KoreCore is shutting down.</translation>
+        <source>Initialization sanity check failed. Kore Core is shutting down.</source>
+        <translation>Initialisation sanity check failed. Kore Core is shutting down.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s'</source>
@@ -3456,8 +3456,8 @@
         <translation>Username for JSON-RPC connections</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart KoreCore to complete</source>
-        <translation>Wallet needed to be rewritten: restart KoreCore to complete</translation>
+        <source>Wallet needed to be rewritten: restart Kore Core to complete</source>
+        <translation>Wallet needed to be rewritten: restart Kore Core to complete</translation>
     </message>
     <message>
         <source>Warning</source>

@@ -18,7 +18,7 @@
         <translation>Kore</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreJezrga</translation>
     </message>
     </context>
@@ -37,14 +37,14 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreJezrga</translation>
     </message>
     </context>
 <context>
     <name>Intro</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreJezrga</translation>
     </message>
     </context>
@@ -112,7 +112,7 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreJezrga</translation>
     </message>
     </context>

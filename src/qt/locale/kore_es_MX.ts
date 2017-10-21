@@ -270,8 +270,8 @@
         <translation>Abrir &amp;URL...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>cliente KoreCore</translation>
+        <source>Kore Core client</source>
+        <translation>cliente Kore Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -338,19 +338,19 @@
         <translation>Pestañas</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>nucleo Kore</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>Acerca de KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>Acerca de Kore Core</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
         <translation>opciones de la &amp;Linea de comandos</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
         <translation>Mostrar mensaje de ayuda del nucleo de Korepara optener una lista con los posibles comandos  de Kore</translation>
     </message>
     <message>
@@ -505,7 +505,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>nucleo Kore</translation>
     </message>
     <message>
@@ -517,8 +517,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>Acerca de KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>Acerca de Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -536,7 +536,7 @@
 <context>
     <name>Intro</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>nucleo Kore</translation>
     </message>
     </context>
@@ -818,7 +818,7 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
+        <source>Kore Core is shutting down...</source>
         <translation>Apagando el nucleo de Kore...</translation>
     </message>
     <message>
@@ -848,12 +848,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>Los desarrolladores de KoreCore</translation>
+        <source>The Kore Core developers</source>
+        <translation>Los desarrolladores de Kore Core</translation>
     </message>
     </context>
 <context>

@@ -58,12 +58,12 @@
 <context>
     <name>KoreGUI</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>О KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>О Kore Core</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -125,16 +125,16 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
         <translation>версия</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>О KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>О Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -148,8 +148,8 @@
 <context>
     <name>Intro</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -220,8 +220,8 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     </context>
 <context>

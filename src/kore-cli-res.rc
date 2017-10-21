@@ -17,7 +17,7 @@ BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
             VALUE "CompanyName",        "Kore"
-            VALUE "FileDescription",    "kore-cli (JSON-RPC client for KoreCore)"
+            VALUE "FileDescription",    "kore-cli (JSON-RPC client for Kore Core)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "kore-cli"
             VALUE "LegalCopyright",     COPYRIGHT_STR

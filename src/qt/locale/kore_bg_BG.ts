@@ -34,11 +34,11 @@
 <context>
     <name>KoreGUI</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>За Биткойн ядрото</translation>
     </message>
     </context>
@@ -57,18 +57,18 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>За Биткойн ядрото</translation>
     </message>
     </context>
 <context>
     <name>Intro</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     </context>
@@ -120,7 +120,7 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Биткойн ядро</translation>
     </message>
     </context>

@@ -168,7 +168,7 @@
         <translation>Tem certeza de que deseja criptografar sua carteira?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
         <translation>O Koreirá fechar agora para terminar o processo de criptografia. Lembre-se que criptografando sua carteira não te protege totalmente de ter seus kores roubados por um malware que infectar seu computador.</translation>
     </message>
     <message>
@@ -306,7 +306,7 @@
         <translation>Abrir &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
+        <source>Kore Core client</source>
         <translation>Cliente Kore</translation>
     </message>
     <message>
@@ -358,7 +358,7 @@
         <translation>&amp;Receber</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
+        <source>Show information about Kore Core</source>
         <translation>Mostrar informações sobre Kore</translation>
     </message>
     <message>
@@ -398,7 +398,7 @@
         <translation>Barra de ferramentas</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Kore</translation>
     </message>
     <message>
@@ -406,11 +406,11 @@
         <translation>Solicitações de pagamentos (gera códigos QR e kore: URIs)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>&amp;Sobre Kore</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
+        <source>Modify configuration options for Kore Core</source>
         <translation>Modificar opções de configuração do Kore</translation>
     </message>
     <message>
@@ -430,7 +430,7 @@
         <translation>Opções de linha de &amp;comando</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
         <translation>Mostra a mensagem de ajuda do Korepara pegar a lista com os comandos possíveis</translation>
     </message>
     <message numerus="yes">
@@ -855,7 +855,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Kore</translation>
     </message>
     <message>
@@ -867,7 +867,7 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>Sobre o Kore</translation>
     </message>
     <message>
@@ -918,15 +918,15 @@
         <translation>Bem-vindo</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
+        <source>Welcome to Kore Core.</source>
         <translation>Bem vindo ao Kore.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
         <translation>A primeira vez que o programa é aberto você pode escolher onde o Korevai guardar os dados.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>O Korevai fazer download e salvar uma cópia da cadeia de blocos do Kore: Blockchain. Pelo menos %1 GB de dados serão armazenados nesse diretório e isso aumentará ao longo do tempo. Sua carteira também será armazenada nesse diretório.</translation>
     </message>
     <message>
@@ -938,7 +938,7 @@
         <translation>Use um diretório de dados personalizado:</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Kore</translation>
     </message>
     <message>
@@ -1020,8 +1020,8 @@
         <translation>Minimizar em vez de fechar o programa quando a janela for fechada. Quando essa opção estiver ativa, o programa só será fechado somente pela opção Sair no menu Arquivo.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting KoreCore.</source>
-        <translation>A linguagem da interface do usuário pode ser alterada aqui. A mudança ocorrerá após o reinício do KoreCore.</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
+        <translation>A linguagem da interface do usuário pode ser alterada aqui. A mudança ocorrerá após o reinício do Kore Core.</translation>
     </message>
     <message>
         <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
@@ -1048,11 +1048,11 @@
         <translation>Rede</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
+        <source>Automatically start Kore Core after logging in to the system.</source>
         <translation>Inicar automaticamente o Koreao logar no sistema.</translation>
     </message>
     <message>
-        <source>&amp;Start KoreCore on system login</source>
+        <source>&amp;Start Kore Core on system login</source>
         <translation>&amp;Iniciar Koreno login do sistema</translation>
     </message>
     <message>
@@ -1518,7 +1518,7 @@
         <translation>Uso de memória</translation>
     </message>
     <message>
-        <source>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <source>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Abrir o arquivo de log de depuração do Korena pasta de dados atual. Isso pode demorar para arquivos grandes.</translation>
     </message>
     <message>
@@ -1678,7 +1678,7 @@
         <translation>&amp;Desbanir nó</translation>
     </message>
     <message>
-        <source>Welcome to the KoreCore RPC console.</source>
+        <source>Welcome to the Kore Core RPC console.</source>
         <translation>Bem vindo ao console de RPC do Kore.</translation>
     </message>
     <message>
@@ -2264,7 +2264,7 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
+        <source>Kore Core is shutting down...</source>
         <translation>Koreestá sendo encerrado...</translation>
     </message>
     <message>
@@ -2414,11 +2414,11 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Kore</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
+        <source>The Kore Core developers</source>
         <translation>Programadores do Kore</translation>
     </message>
     <message>
@@ -2936,7 +2936,7 @@
         <translation>Total máximo de comissão (em %s) que será usado em uma única transação; um valor muito baixo pode cancelar uma transação grande (padrão: %s)</translation>
     </message>
     <message>
-        <source>Please check that your computer's date and time are correct! If your clock is wrong KoreCore will not work properly.</source>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong Kore Core will not work properly.</source>
         <translation>Por favor verifique se a data e horário estão corretos no seu computador! Se o seu relógio estiver incorreto, a Carteira Korenão irá funcionar corretamente.</translation>
     </message>
     <message>
@@ -3008,7 +3008,7 @@
         <translation>Este pode ser um build de teste pré-lançamento - use por sua conta e risco - não use para mineração ou aplicações de comércio.</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. KoreCore is probably already running.</source>
+        <source>Unable to bind to %s on this computer. Kore Core is probably already running.</source>
         <translation>Impossível ouvir em %s neste computador. Provavelmente o Korejá está sendo executado.</translation>
     </message>
     <message>
@@ -3216,7 +3216,7 @@
         <translation>Conecte ao endereço dado para receber conecções JSON-RPC. Use a notação [destino]:porta para IPv6. Essa opção pode ser especificada várias vezes (padrão: conecte a todas as interfaces)</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</source>
+        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
         <translation>Não foi possível obter acesso exclusivo ao diretório de dados %s. Provavelmente Korejá está sendo executado.</translation>
     </message>
     <message>
@@ -3316,11 +3316,11 @@
         <translation>Connecte-se através de um proxy SOCKS5</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
-        <translation>Copyright (C) 2009-%i Desenvolvedores KoreCore</translation>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
+        <translation>Copyright (C) 2009-%i Desenvolvedores Kore Core</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of KoreCore</source>
+        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
         <translation>Erro ao carregar wallet.dat: A carteira requer a nova versão do Kore</translation>
     </message>
     <message>
@@ -3336,7 +3336,7 @@
         <translation>Informação</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. KoreCore is shutting down.</source>
+        <source>Initialization sanity check failed. Kore Core is shutting down.</source>
         <translation>O teste de integridade da inicialização falhou. O Core do Koreestá sendo desligado.</translation>
     </message>
     <message>
@@ -3456,7 +3456,7 @@
         <translation>Nome de usuário para conexões JSON-RPC</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart KoreCore to complete</source>
+        <source>Wallet needed to be rewritten: restart Kore Core to complete</source>
         <translation>Sua carteira precisou ser reescrita: favor reiniciar o Korepara completar</translation>
     </message>
     <message>

@@ -174,8 +174,8 @@
         <translation>Mở &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore client</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core client</translation>
     </message>
     <message>
         <source>Kore</source>
@@ -214,12 +214,12 @@
         <translation>Trợ &amp;giúp</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;Về KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;Về Kore Core</translation>
     </message>
     <message numerus="yes">
         <source>%n hour(s)</source>
@@ -377,16 +377,16 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
         <translation>version</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>Về KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>Về Kore Core</translation>
     </message>
     </context>
 <context>
@@ -396,8 +396,8 @@
         <translation>Chào mừng</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -616,8 +616,8 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     </context>
 <context>

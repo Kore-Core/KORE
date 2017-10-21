@@ -100,7 +100,7 @@ UniValue getinfo(const UniValue& params, bool fHelp)
             obj.push_back(Pair("obfuscation_balance", ValueFromAmount(pwalletMain->GetAnonymizedBalance())));
     }
 #endif
-    obj.push_back(Pair("Network Supply",  ValueFromAmount((CAmount)chainActive.Tip()->nMoneySupply)));
+    obj.push_back(Pair("Network Supply",  ValueFromAmount(pindexBestHeader->nMoneySupply)));
     obj.push_back(Pair("blocks",        (int)chainActive.Height()));
     obj.push_back(Pair("timeoffset",    GetTimeOffset()));
     obj.push_back(Pair("connections",   (int)vNodes.size()));

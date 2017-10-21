@@ -168,8 +168,8 @@
         <translation>Weet u zeker dat u uw portemonnee wilt versleutelen?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>KoreCore zal nu afsluiten om het versleutelingsproces te voltooien. Hou er rekening mee dat versleuteling van je portemonnee je niet volledig beschermt tegen diefstal van jouw kores door malware op je computer.</translation>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <translation>Kore Core zal nu afsluiten om het versleutelingsproces te voltooien. Hou er rekening mee dat versleuteling van je portemonnee je niet volledig beschermt tegen diefstal van jouw kores door malware op je computer.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -306,8 +306,8 @@
         <translation>Open &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCoreapplicatie</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Coreapplicatie</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,8 +358,8 @@
         <translation>&amp;Ontvangen</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Toon informatie over KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Toon informatie over Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -398,20 +398,20 @@
         <translation>Tab-werkbalk</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
         <translation>Vraag betaling aan (genereert QR-codes en kore: URI's)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;Over KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;Over Kore Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
-        <translation>Wijzig configuratieopties voor KoreCore</translation>
+        <source>Modify configuration options for Kore Core</source>
+        <translation>Wijzig configuratieopties voor Kore Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -430,8 +430,8 @@
         <translation>&amp;Opdrachytregelopties</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
-        <translation>Toon het KoreCore hulpbericht om een lijst te krijgen met mogelijke Koreopdrachtregelopties</translation>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
+        <translation>Toon het Kore Core hulpbericht om een lijst te krijgen met mogelijke Koreopdrachtregelopties</translation>
     </message>
     <message numerus="yes">
         <source>%n active connection(s) to Korenetwork</source>
@@ -855,8 +855,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
@@ -867,8 +867,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>Over KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>Over Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -918,16 +918,16 @@
         <translation>Welkom</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Welkom bij KoreCore</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Welkom bij Kore Core</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
-        <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar KoreCore de data moet opslaan.</translation>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
+        <translation>Omdat dit de eerste keer is dat het programma gestart is, kunt u nu kiezen waar Kore Core de data moet opslaan.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>KoreCore zal een kopie van de Koreblokketen downloaden en opslaan. Tenminste %1 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd. De portemonnee wordt ook in deze map opgeslagen.</translation>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <translation>Kore Core zal een kopie van de Koreblokketen downloaden en opslaan. Tenminste %1 GB aan data wordt opgeslagen in deze map en het zal groeien in de tijd. De portemonnee wordt ook in deze map opgeslagen.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -938,8 +938,8 @@
         <translation>Gebruik een persoonlijke gegevensmap:</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1020,7 +1020,7 @@
         <translation>Minimaliseren in plaats van de applicatie af te sluiten wanneer het venster is afgesloten. Als deze optie is ingeschakeld, zal de toepassing pas worden afgesloten na het selecteren van Exit in het menu.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting KoreCore.</source>
+        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
         <translation>Stel hier de taal van de applicatie in. Deze instelling zal van kracht worden na het herstarten van de applicatie.</translation>
     </message>
     <message>
@@ -1048,12 +1048,12 @@
         <translation>&amp;Netwerk</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
-        <translation>KoreCore automatisch starten bij inloggen.</translation>
+        <source>Automatically start Kore Core after logging in to the system.</source>
+        <translation>Kore Core automatisch starten bij inloggen.</translation>
     </message>
     <message>
-        <source>&amp;Start KoreCore on system login</source>
-        <translation>&amp;Start KoreCore tijdens login.</translation>
+        <source>&amp;Start Kore Core on system login</source>
+        <translation>&amp;Start Kore Core tijdens login.</translation>
     </message>
     <message>
         <source>(0 = auto, &lt;0 = leave that many cores free)</source>
@@ -1518,8 +1518,8 @@
         <translation>Geheugengebruik</translation>
     </message>
     <message>
-        <source>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Open het KoreCore debuglogbestand van de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
+        <source>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Open het Kore Core debuglogbestand van de huidige gegevensmap. Dit kan enkele seconden duren voor grote logbestanden.</translation>
     </message>
     <message>
         <source>Received</source>
@@ -1678,8 +1678,8 @@
         <translation>&amp;Maak Ban Ongedaan voor Node</translation>
     </message>
     <message>
-        <source>Welcome to the KoreCore RPC console.</source>
-        <translation>Welkom op de KoreCore RPC console.</translation>
+        <source>Welcome to the Kore Core RPC console.</source>
+        <translation>Welkom op de Kore Core RPC console.</translation>
     </message>
     <message>
         <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
@@ -2264,8 +2264,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
-        <translation>KoreCore is aan het afsluiten...</translation>
+        <source>Kore Core is shutting down...</source>
+        <translation>Kore Core is aan het afsluiten...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2414,12 +2414,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>De KoreCore-ontwikkelaars</translation>
+        <source>The Kore Core developers</source>
+        <translation>De Kore Core-ontwikkelaars</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2936,8 +2936,8 @@
         <translation>Maximum totale transactiekosten (in %s) om te gebruiken voor een enkele portemonneetransactie; als dit te laag is ingesteld kan het grote transacties verhinderen (default: %s)</translation>
     </message>
     <message>
-        <source>Please check that your computer's date and time are correct! If your clock is wrong KoreCore will not work properly.</source>
-        <translation>Check a.u.b. of de datum en tijd van uw computer correct zijn! Als uw klok verkeerd staat zal KoreCore niet correct werken.</translation>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong Kore Core will not work properly.</source>
+        <translation>Check a.u.b. of de datum en tijd van uw computer correct zijn! Als uw klok verkeerd staat zal Kore Core niet correct werken.</translation>
     </message>
     <message>
         <source>Prune configured below the minimum of %d MiB.  Please use a higher number.</source>
@@ -3008,8 +3008,8 @@
         <translation>Dit is een prerelease testversie – gebruik op eigen risico! Gebruik deze niet voor het delven van munten of handelsdoeleinden</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. KoreCore is probably already running.</source>
-        <translation>Niet in staat om %s te verbinden op deze computer. KoreCore draait waarschijnlijk al.</translation>
+        <source>Unable to bind to %s on this computer. Kore Core is probably already running.</source>
+        <translation>Niet in staat om %s te verbinden op deze computer. Kore Core draait waarschijnlijk al.</translation>
     </message>
     <message>
         <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
@@ -3216,8 +3216,8 @@
         <translation>Bind aan gegeven adres om te luisteren voor JSON-RPC verbindingen. Gebruik [host]:poort notatie voor IPv6. Deze optie kan meerdere keren gespecificeerd worden (standaard: bind aan alle interfaces.</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</source>
-        <translation>Kan geen lock verkrijgen op gegevensmap %s. KoreCore draait waarschijnlijk al.</translation>
+        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
+        <translation>Kan geen lock verkrijgen op gegevensmap %s. Kore Core draait waarschijnlijk al.</translation>
     </message>
     <message>
         <source>Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)</source>
@@ -3316,12 +3316,12 @@
         <translation>Verbind door SOCKS5 proxy</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
-        <translation>Auteursrecht (C) 2009-%i De KoreCore Ontwikkelaars</translation>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
+        <translation>Auteursrecht (C) 2009-%i De Kore Core Ontwikkelaars</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of KoreCore</source>
-        <translation>Fout bij laden wallet.dat: Portemonnee vereist een nieuwere versie van KoreCore</translation>
+        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
+        <translation>Fout bij laden wallet.dat: Portemonnee vereist een nieuwere versie van Kore Core</translation>
     </message>
     <message>
         <source>Error reading from database, shutting down.</source>
@@ -3336,8 +3336,8 @@
         <translation>Informatie</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. KoreCore is shutting down.</source>
-        <translation>Initialisatie sanity check mislukt. KoreCore is aan het afsluiten.</translation>
+        <source>Initialization sanity check failed. Kore Core is shutting down.</source>
+        <translation>Initialisatie sanity check mislukt. Kore Core is aan het afsluiten.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s'</source>
@@ -3456,8 +3456,8 @@
         <translation>Gebruikersnaam voor JSON-RPC-verbindingen</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart KoreCore to complete</source>
-        <translation>Portemonnee moest herschreven worden: Herstart KoreCore om te voltooien</translation>
+        <source>Wallet needed to be rewritten: restart Kore Core to complete</source>
+        <translation>Portemonnee moest herschreven worden: Herstart Kore Core om te voltooien</translation>
     </message>
     <message>
         <source>Warning</source>

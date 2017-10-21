@@ -482,7 +482,6 @@ bool WalletModel::isAnonymizeOnlyUnlocked()
     return wallet->fWalletUnlockAnonymizeOnly;
 }
 
-
 bool WalletModel::changePassphrase(const SecureString &oldPass, const SecureString &newPass)
 {
     bool retval;

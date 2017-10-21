@@ -168,7 +168,7 @@
         <translation>Cüzdanınızı şifrelemek istediğinizden emin misiniz?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
         <translation>Şifreleme işlemini tamamlamak için KoreÇekirdeği şimdi kapanacaktır. Cüzdanınızı şifrelemenin, Korelerinizin bilgisayara bulaşan kötücül bir yazılım tarafından çalınmaya karşı tamamen koruyamayacağını unutmayınız.</translation>
     </message>
     <message>
@@ -306,7 +306,7 @@
         <translation>&amp;URI aç...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
+        <source>Kore Core client</source>
         <translation>KoreÇekirdeği istemcisi</translation>
     </message>
     <message>
@@ -358,7 +358,7 @@
         <translation>&amp;Al</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
+        <source>Show information about Kore Core</source>
         <translation>KoreÇekirdeği hakkında bilgi göster</translation>
     </message>
     <message>
@@ -398,7 +398,7 @@
         <translation>Sekme araç çubuğu</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreÇekirdeği</translation>
     </message>
     <message>
@@ -406,11 +406,11 @@
         <translation>Ödeme talep et (QR kodu ve kore URI'si oluşturur)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>KoreÇekirdeği &amp;hakkında</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
+        <source>Modify configuration options for Kore Core</source>
         <translation>KoreÇekirdeği yapılandırma seçeneklerini değiştir</translation>
     </message>
     <message>
@@ -430,7 +430,7 @@
         <translation>&amp;Komut satırı seçenekleri</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
         <translation>Korekomut satırı seçeneklerinin listesini elde etmek için KoreÇekirdeği yardım mesajını göster</translation>
     </message>
     <message numerus="yes">
@@ -855,7 +855,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreÇekirdeği</translation>
     </message>
     <message>
@@ -867,7 +867,7 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>KoreÇekirdeği hakkında</translation>
     </message>
     <message>
@@ -918,15 +918,15 @@
         <translation>Hoş geldiniz</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
+        <source>Welcome to Kore Core.</source>
         <translation>KoreÇekirdeğine hoş geldiniz.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
         <translation>Bu programı ilk kez başlattığınızdan dolayı KoreÇekirdeğinin verilerini nereye saklayacağını seçebilirsiniz.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>Koreçekirdeği Koreblok zincirinin bir kopyasını indirip saklayacaktır. Asgari %1GB bouyutunda veri bu klasörde saklanacak ve zamanla bu boyut artacaktır. Cüzdan da bu klasörde saklanacaktır. </translation>
     </message>
     <message>
@@ -938,7 +938,7 @@
         <translation>Özel bir veri klasörü kullan:</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreÇekirdeği</translation>
     </message>
     <message>
@@ -1020,7 +1020,7 @@
         <translation>Pencere kapatıldığında uygulamadan çıkmak yerine uygulamayı küçültür. Bu seçenek etkinleştirildiğinde, uygulama sadece menüden çıkış seçildiğinde kapanacaktır.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting KoreCore.</source>
+        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
         <translation>Kullanıcı arayüzünün dili burada belirtilebilir. Bu ayar KoreÇekirdeği tekrar başlatıldığında etkinleşecektir.</translation>
     </message>
     <message>
@@ -1048,11 +1048,11 @@
         <translation>&amp;Şebeke</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
+        <source>Automatically start Kore Core after logging in to the system.</source>
         <translation>Sistemde oturum açıldığında KoreÇekirdeğini otomatik olarak başlat.</translation>
     </message>
     <message>
-        <source>&amp;Start KoreCore on system login</source>
+        <source>&amp;Start Kore Core on system login</source>
         <translation>KoreÇekirdeğini sistem oturumuyla &amp;başlat</translation>
     </message>
     <message>
@@ -1518,7 +1518,7 @@
         <translation>Bellek kullanımı</translation>
     </message>
     <message>
-        <source>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <source>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Güncel veri klasöründen KoreÇekirdeği hata ayıklama kütük dosyasını açar. Büyük kütük dosyaları için bu birkaç saniye alabilir.</translation>
     </message>
     <message>
@@ -1678,7 +1678,7 @@
         <translation>Düğümün Yasağını Kald&amp;ır</translation>
     </message>
     <message>
-        <source>Welcome to the KoreCore RPC console.</source>
+        <source>Welcome to the Kore Core RPC console.</source>
         <translation>KoreÇekirdeği RPC konsoluna hoş geldiniz.</translation>
     </message>
     <message>
@@ -2264,7 +2264,7 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
+        <source>Kore Core is shutting down...</source>
         <translation>KoreÇekirdeği kapanıyor...</translation>
     </message>
     <message>
@@ -2414,11 +2414,11 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreÇekirdeği</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
+        <source>The Kore Core developers</source>
         <translation>KoreÇekirdeği geliştiricileri</translation>
     </message>
     <message>
@@ -2936,7 +2936,7 @@
         <translation>Tek cüzdan muamelesinde kullanılacak azami toplam ücret (%s olarak); bunu çok düşük olarak ayarlamak büyük muameleleri iptal edebilir (varsayılan: %s)</translation>
     </message>
     <message>
-        <source>Please check that your computer's date and time are correct! If your clock is wrong KoreCore will not work properly.</source>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong Kore Core will not work properly.</source>
         <translation>Lütfen bilgisayarınızın saat ve tarihinin doğru olduğunu kontol ediniz! Saatinizde gecikme varsa KoreÇekirdeği doğru şekilde çalışamaz.</translation>
     </message>
     <message>
@@ -3008,7 +3008,7 @@
         <translation>Bu yayın öncesi bir deneme sürümüdür - tüm riski siz üstlenmiş olursunuz - kore oluşturmak ya da ticari uygulamalar için kullanmayınız</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. KoreCore is probably already running.</source>
+        <source>Unable to bind to %s on this computer. Kore Core is probably already running.</source>
         <translation>Bu bilgisayarda %s unsuruna bağlanılamadı. KoreÇekirdeği muhtemelen hâlihazırda çalışmaktadır.</translation>
     </message>
     <message>
@@ -3216,7 +3216,7 @@
         <translation>Belirtilen adrese bağlan ve JSON RPC bağlantıları için dinlemeye geç. IPv6 için [makine]:port imlasını kullanınız. Bu seçenek birden çok kez belirtilebilir (varsayılan: tüm arayüzlere bağlan)</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</source>
+        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
         <translation>%s veri dizininde kilit elde edilemedi. KoreÇekirdeği muhtemelen hâlihazırda çalışmaktadır.</translation>
     </message>
     <message>
@@ -3316,11 +3316,11 @@
         <translation>SOCKS5 vekil sunucusu vasıtasıyla bağlan</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
         <translation>Telif hakkı 2009-%i KoreÇekirdeği Geliştiricileri</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of KoreCore</source>
+        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
         <translation>wallet.dat dosyasının yüklenmesinde hata: Cüzdan KoreÇekirdeğinin daha yeni bir sürümünü gerektirmektedir</translation>
     </message>
     <message>
@@ -3336,7 +3336,7 @@
         <translation>Bilgi</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. KoreCore is shutting down.</source>
+        <source>Initialization sanity check failed. Kore Core is shutting down.</source>
         <translation>Başlatma sınaması başarısız oldu. KoreÇekirdeği kapatılıyor.</translation>
     </message>
     <message>
@@ -3456,7 +3456,7 @@
         <translation>JSON-RPC bağlantıları için kullanıcı ismi</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart KoreCore to complete</source>
+        <source>Wallet needed to be rewritten: restart Kore Core to complete</source>
         <translation>Cüzdanın tekrar yazılması gerekmektedir: tamamlamak için KoreÇekirdeğini yeniden başlatın</translation>
     </message>
     <message>

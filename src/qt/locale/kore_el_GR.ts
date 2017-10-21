@@ -169,8 +169,8 @@
         <translation>Είστε σίγουροι ότι θέλετε να κρυπτογραφήσετε το πορτοφόλι σας;</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>Το KoreCore θα κλεισει τώρα για να τελειώσει την διαδικασία κρυπτογράφησης. Θυμήσου ότι κρυπτογραφώντας το πορτοφόλι σου δεν μπορείς να προστατέψεις πλήρως τα kores σου από κλοπή στην περίπτωση που μολυνθεί ο υπολογιστής σου με κακόβουλο λογισμικό.
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <translation>Το Kore Core θα κλεισει τώρα για να τελειώσει την διαδικασία κρυπτογράφησης. Θυμήσου ότι κρυπτογραφώντας το πορτοφόλι σου δεν μπορείς να προστατέψεις πλήρως τα kores σου από κλοπή στην περίπτωση που μολυνθεί ο υπολογιστής σου με κακόβουλο λογισμικό.
 </translation>
     </message>
     <message>
@@ -300,8 +300,8 @@
         <translation>'Ανοιγμα &amp;URI</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>Εφαρμογή KoreCore</translation>
+        <source>Kore Core client</source>
+        <translation>Εφαρμογή Kore Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -352,8 +352,8 @@
         <translation>&amp;Παραλαβή </translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Σχετικά με το KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Σχετικά με το Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -392,16 +392,16 @@
         <translation>Εργαλειοθήκη καρτελών</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
         <translation>Αίτηση πληρωμών (δημιουργεί QR codes και διευθύνσεις kore: )</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;Σχετικά με το KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;Σχετικά με το Kore Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -420,7 +420,7 @@
         <translation>&amp;Επιλογές γραμμής εντολών</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
         <translation>Εμφανιση του Kore-Qt μήνυματος βοήθειας για να πάρετε μια λίστα με τις πιθανές επιλογές Koreγραμμής εντολών.</translation>
     </message>
     <message>
@@ -822,8 +822,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
@@ -834,8 +834,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>Σχετικά με το KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>Σχετικά με το Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -857,15 +857,15 @@
         <translation>Καλώς ήρθατε</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Καλώς ήρθατε στο KoreCore.</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Καλώς ήρθατε στο Kore Core.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
-        <translation>Καθώς αυτή είναι η πρώτη φορά που εκκινείται το πρόγραμμα, μπορείτε να διαλέξετε πού θα αποθηκεύει το KoreCore τα δεδομένα του.</translation>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
+        <translation>Καθώς αυτή είναι η πρώτη φορά που εκκινείται το πρόγραμμα, μπορείτε να διαλέξετε πού θα αποθηκεύει το Kore Core τα δεδομένα του.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>O πυρήνας Koreθα κατεβάσει και να αποθηκεύσει ένα αντίγραφο της αλυσίδας μπλοκ Kore. Τουλάχιστον %1GB δεδομένων θα αποθηκευτούν σε αυτόν τον κατάλογο, και θα αυξηθεί με την πάροδο του χρόνου. Το πορτοφόλι θα αποθηκευτεί σε αυτόν τον κατάλογο.</translation>
     </message>
     <message>
@@ -877,8 +877,8 @@
         <translation>Προσαρμογή του φακέλου δεδομένων: </translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -1916,8 +1916,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
-        <translation>Το KoreCore τερματίζεται...</translation>
+        <source>Kore Core is shutting down...</source>
+        <translation>Το Kore Core τερματίζεται...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -2058,12 +2058,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>Οι προγραμματιστές του KoreCore</translation>
+        <source>The Kore Core developers</source>
+        <translation>Οι προγραμματιστές του Kore Core</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2644,7 +2644,7 @@
         <translation>Επιλογές πορτοφολιού:</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</source>
+        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
         <translation>Αδυναμία κλειδώματος του φακέλου δεδομένων %s. Πιθανώς το Koreνα είναι ήδη ενεργό.</translation>
     </message>
     <message>
@@ -2652,11 +2652,11 @@
         <translation>Σύνδεση μέσω διαμεσολαβητή SOCKS5</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
-        <translation>Πνευματικά δικαιώματα 2009-%i Οι προγραμματιστές του KoreCore</translation>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
+        <translation>Πνευματικά δικαιώματα 2009-%i Οι προγραμματιστές του Kore Core</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of KoreCore</source>
+        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
         <translation>Σφάλμα φόρτωσης wallet.dat: Το Πορτοφόλι απαιτεί μια νεότερη έκδοση του Kore</translation>
     </message>
     <message>
@@ -2668,8 +2668,8 @@
         <translation>Πληροφορία</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. KoreCore is shutting down.</source>
-        <translation>Η εκκίνηση ελέγχου ορθότητας απέτυχε.  Γίνεται τερματισμός του KoreCore.</translation>
+        <source>Initialization sanity check failed. Kore Core is shutting down.</source>
+        <translation>Η εκκίνηση ελέγχου ορθότητας απέτυχε.  Γίνεται τερματισμός του Kore Core.</translation>
     </message>
     <message>
         <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s'</source>

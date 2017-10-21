@@ -286,8 +286,8 @@
         <translation>Atidaryti &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore klientas</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core klientas</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -338,8 +338,8 @@
         <translation>&amp;Gauti</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Rodyti informaciją apie KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Rodyti informaciją apie Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -370,12 +370,12 @@
         <translation>Kortelių įrankinė</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Korebranduolys</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;Apie KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;Apie Kore Core</translation>
     </message>
     <message>
         <source>&amp;Command-line options</source>
@@ -637,7 +637,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Korebranduolys</translation>
     </message>
     <message>
@@ -645,8 +645,8 @@
         <translation>versija</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>Apie KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>Apie Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -668,11 +668,11 @@
         <translation>Sveiki</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Sveiki atvykę į KoreCore.</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Sveiki atvykę į Kore Core.</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Korebranduolys</translation>
     </message>
     <message>
@@ -1360,7 +1360,7 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Korebranduolys</translation>
     </message>
     <message>

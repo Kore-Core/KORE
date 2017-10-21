@@ -262,7 +262,7 @@
         <translation>Abrir y url...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
+        <source>Kore Core client</source>
         <translation>cliente kore core</translation>
     </message>
     <message>
@@ -310,8 +310,8 @@
         <translation>y recibir</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Mostrar informacion sobre KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Mostrar informacion sobre Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -338,7 +338,7 @@
         <translation>Barra de pestañas</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>kore core</translation>
     </message>
     <message>
@@ -346,11 +346,11 @@
         <translation>Pide pagos (genera codigos QR and kore: URls)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;Sobre KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;Sobre Kore Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
+        <source>Modify configuration options for Kore Core</source>
         <translation>Modifica las opciones para BitCoin Core</translation>
     </message>
     <message>
@@ -538,7 +538,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>kore core</translation>
     </message>
     <message>
@@ -561,7 +561,7 @@
         <translation>bienvenido</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>kore core</translation>
     </message>
     <message>
@@ -1072,7 +1072,7 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>kore core</translation>
     </message>
     <message>

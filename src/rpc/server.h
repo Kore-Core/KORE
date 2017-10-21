@@ -123,7 +123,7 @@ public:
 };
 
 /**
- * KoreRPC command dispatcher.
+ * Kore RPC command dispatcher.
  */
 class CRPCTable
 {

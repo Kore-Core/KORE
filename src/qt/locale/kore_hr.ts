@@ -294,8 +294,8 @@
         <translation>Otvori &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore klijent</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core klijent</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -346,8 +346,8 @@
         <translation>Pri&amp;mi</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Prikaži informacije o programu KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Prikaži informacije o programu Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -386,19 +386,19 @@
         <translation>Traka kartica</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
         <translation>Zatraži uplatu (stvara QR kod i kore: URI adresu)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;O programu KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;O programu Kore Core</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
+        <source>Modify configuration options for Kore Core</source>
         <translation>Promijeni postavke programa</translation>
     </message>
     <message>
@@ -418,7 +418,7 @@
         <translation>Opcije &amp;naredbene linije</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
         <translation>Ispis svih opcija naredbene linije programa sa kratkim opisom</translation>
     </message>
     <message numerus="yes">
@@ -747,8 +747,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
@@ -759,8 +759,8 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>O programu KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>O programu Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -782,12 +782,12 @@
         <translation>Dobrodošli</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Dobrodošli u programu KoreCore.</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Dobrodošli u programu Kore Core.</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -864,11 +864,11 @@
         <translation>&amp;Mreža</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
+        <source>Automatically start Kore Core after logging in to the system.</source>
         <translation>Program se automatski pokrene po prijavi u sustav.</translation>
     </message>
     <message>
-        <source>&amp;Start KoreCore on system login</source>
+        <source>&amp;Start Kore Core on system login</source>
         <translation>&amp;Pokreni program kod prijave u sustav</translation>
     </message>
     <message>
@@ -1086,7 +1086,7 @@
         <translation>Očisti konzolu</translation>
     </message>
     <message>
-        <source>Welcome to the KoreCore RPC console.</source>
+        <source>Welcome to the Kore Core RPC console.</source>
         <translation>Dobrodošli u KoreRPC konzolu.</translation>
     </message>
     <message>
@@ -1406,8 +1406,8 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>[testnet]</source>

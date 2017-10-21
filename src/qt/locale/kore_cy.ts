@@ -230,7 +230,7 @@
         <translation>&amp;Derbyn</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
+        <source>Show information about Kore Core</source>
         <translation>Dangos gwybodaeth am Graidd Kore</translation>
     </message>
     <message>
@@ -254,11 +254,11 @@
         <translation>Bar offer tabiau</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Craidd Kore</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>&amp;Ynghylch Craidd Kore</translation>
     </message>
     <message numerus="yes">
@@ -425,11 +425,11 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Craidd Kore</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>Ynghylch Craidd Kore</translation>
     </message>
     <message>
@@ -444,11 +444,11 @@
         <translation>Croeso</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
+        <source>Welcome to Kore Core.</source>
         <translation>Croeso i Graidd Kore</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Craidd Kore</translation>
     </message>
     <message>
@@ -664,11 +664,11 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Craidd Kore</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
+        <source>The Kore Core developers</source>
         <translation>Datblygwyr Graidd Kore</translation>
     </message>
     <message>

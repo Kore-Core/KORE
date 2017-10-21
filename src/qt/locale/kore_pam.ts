@@ -310,7 +310,7 @@
         <translation>Gamit para king Tabs</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Kapilubluban ning Kore</translation>
     </message>
     <message>
@@ -457,7 +457,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Kapilubluban ning Kore</translation>
     </message>
     <message>
@@ -484,7 +484,7 @@
         <translation>Malaus ka</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Kapilubluban ning Kore</translation>
     </message>
     <message>
@@ -1008,7 +1008,7 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Kapilubluban ning Kore</translation>
     </message>
     <message>

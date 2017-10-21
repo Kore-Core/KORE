@@ -66,7 +66,7 @@ using namespace std;
 
 extern "C" { int tor_main(int argc, char *argv[]);
 	
-	void process_signal(uintptr_t sig);
+	//void process_signal(uintptr_t sig);
 }
 
 namespace {
@@ -822,6 +822,10 @@ void SocketSendData(CNode *pnode)
 }
 
 void ThreadTorNet() {
+	
+    try
+    {	
+    boost::this_thread::interruption_point();
     std::string logDecl = "notice file " + GetDataDir().string() + "/tor/tor.log";
     char *argvLogDecl = (char*) logDecl.c_str();
 
@@ -831,8 +835,19 @@ void ThreadTorNet() {
         (char*)"--Log",
         argvLogDecl
     };
-    boost::this_thread::interruption_point();
+
     tor_main(4, argv);
+    }
+    catch (const boost::thread_interrupted&)
+    {
+        LogPrintf("Tor terminated\n");
+        throw;
+    }
+    catch (const std::runtime_error &e)
+    {
+        LogPrintf("Tor runtime error: %s\n", e.what());
+        return;
+    }
 }
 
 static list<CNode*> vNodesDisconnected;
@@ -2084,7 +2099,7 @@ void StartTor(boost::thread_group& threadGroup)
 
 void StopTor()
 {
-    process_signal(2);
+    //int a = check_interrupted();
 }
 
 void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)

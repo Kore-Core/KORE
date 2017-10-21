@@ -32,7 +32,7 @@ int check_interrupted(
 
 static boost::mutex initializing;
 
-static std::auto_ptr<boost::unique_lock<boost::mutex> > uninitialized(
+static std::unique_ptr<boost::unique_lock<boost::mutex> > uninitialized(
     new boost::unique_lock<boost::mutex>(initializing)
 );
 

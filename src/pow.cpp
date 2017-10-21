@@ -62,11 +62,12 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
     if (bnNew <= 0 || bnNew > bnPowLimit)
         bnNew = bnPowLimit;
 
-    // debug print
-    LogPrintf("GetNextWorkRequired RETARGET\n");
-    LogPrintf("params.nTargetSpacing = %d    nActualSpacing = %d\n", params.nTargetTimespan, nActualSpacing);
-    LogPrintf("Before: %x  %s\n", pindexLast->nBits, bnOld.ToString());
-    LogPrintf("After:  %x  %s\n", bnNew.GetCompact(), bnNew.ToString());
+    if (fDebug){
+        LogPrintf("RETARGET\n");
+        LogPrintf("params.nTargetSpacing = %d    nActualSpacing = %d\n", params.nTargetTimespan, nActualSpacing);
+        LogPrintf("Before: %x  %s\n", pindexLast->nBits, bnOld.ToString());
+        LogPrintf("After:  %x  %s\n", bnNew.GetCompact(), bnNew.ToString());
+    }
 
     return bnNew.GetCompact();
 }

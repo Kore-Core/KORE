@@ -215,7 +215,7 @@ void PrepareShutdown()
     DumpBudgets();
     DumpMasternodePayments();
     StopTorControl();
-    StopTor();
+    //StopTor();
     UnregisterNodeSignals(GetNodeSignals());
 
     if (fFeeEstimatesInitialized)

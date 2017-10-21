@@ -42,7 +42,7 @@ QT_TRANSLATE_NOOP("kore-core", ""
 "notation for IPv6. This option can be specified multiple times (default: "
 "bind to all interfaces)"),
 QT_TRANSLATE_NOOP("kore-core", ""
-"Cannot obtain a lock on data directory %s. KoreCore is probably already "
+"Cannot obtain a lock on data directory %s. Kore Core is probably already "
 "running."),
 QT_TRANSLATE_NOOP("kore-core", ""
 "Change automatic finalized budget voting behavior. mode=auto: Vote for only "
@@ -128,7 +128,7 @@ QT_TRANSLATE_NOOP("kore-core", ""
 "low fees)"),
 QT_TRANSLATE_NOOP("kore-core", ""
 "Please check that your computer's date and time are correct! If your clock "
-"is wrong KoreCore will not work properly."),
+"is wrong Kore Core will not work properly."),
 QT_TRANSLATE_NOOP("kore-core", ""
 "Prune configured below the minimum of %d MiB.  Please use a higher number."),
 QT_TRANSLATE_NOOP("kore-core", ""
@@ -185,7 +185,7 @@ QT_TRANSLATE_NOOP("kore-core", ""
 "Tries to keep outbound traffic under the given target (in MiB per 24h), 0 = "
 "no limit (default: %d)"),
 QT_TRANSLATE_NOOP("kore-core", ""
-"Unable to bind to %s on this computer. KoreCore is probably already "
+"Unable to bind to %s on this computer. Kore Core is probably already "
 "running."),
 QT_TRANSLATE_NOOP("kore-core", ""
 "Unsupported argument -socks found. Setting SOCKS version isn't possible "
@@ -265,7 +265,7 @@ QT_TRANSLATE_NOOP("kore-core", "Connect only to the specified node(s)"),
 QT_TRANSLATE_NOOP("kore-core", "Connect through SOCKS5 proxy"),
 QT_TRANSLATE_NOOP("kore-core", "Connect to a node to retrieve peer addresses, and disconnect"),
 QT_TRANSLATE_NOOP("kore-core", "Connection options:"),
-QT_TRANSLATE_NOOP("kore-core", "Copyright (C) 2009-%i The KoreCore Developers"),
+QT_TRANSLATE_NOOP("kore-core", "Copyright (C) 2009-%i The Kore Core Developers"),
 QT_TRANSLATE_NOOP("kore-core", "Corrupted block database detected"),
 QT_TRANSLATE_NOOP("kore-core", "Debugging/Testing options:"),
 QT_TRANSLATE_NOOP("kore-core", "Do not load the wallet and disable wallet RPC calls"),
@@ -287,7 +287,7 @@ QT_TRANSLATE_NOOP("kore-core", "Error initializing wallet database environment %
 QT_TRANSLATE_NOOP("kore-core", "Error loading block database"),
 QT_TRANSLATE_NOOP("kore-core", "Error loading wallet.dat"),
 QT_TRANSLATE_NOOP("kore-core", "Error loading wallet.dat: Wallet corrupted"),
-QT_TRANSLATE_NOOP("kore-core", "Error loading wallet.dat: Wallet requires newer version of KoreCore"),
+QT_TRANSLATE_NOOP("kore-core", "Error loading wallet.dat: Wallet requires newer version of Kore Core"),
 QT_TRANSLATE_NOOP("kore-core", "Error opening block database"),
 QT_TRANSLATE_NOOP("kore-core", "Error reading from database, shutting down."),
 QT_TRANSLATE_NOOP("kore-core", "Error recovering public key."),
@@ -313,7 +313,7 @@ QT_TRANSLATE_NOOP("kore-core", "Incompatible mode."),
 QT_TRANSLATE_NOOP("kore-core", "Incompatible version."),
 QT_TRANSLATE_NOOP("kore-core", "Incorrect or no genesis block found. Wrong datadir for network?"),
 QT_TRANSLATE_NOOP("kore-core", "Information"),
-QT_TRANSLATE_NOOP("kore-core", "Initialization sanity check failed. KoreCore is shutting down."),
+QT_TRANSLATE_NOOP("kore-core", "Initialization sanity check failed. Kore Core is shutting down."),
 QT_TRANSLATE_NOOP("kore-core", "Input is not valid."),
 QT_TRANSLATE_NOOP("kore-core", "Insufficient funds"),
 QT_TRANSLATE_NOOP("kore-core", "Invalid -onion address: '%s'"),
@@ -463,7 +463,7 @@ QT_TRANSLATE_NOOP("kore-core", "Verifying blocks..."),
 QT_TRANSLATE_NOOP("kore-core", "Verifying wallet..."),
 QT_TRANSLATE_NOOP("kore-core", "Wallet %s resides outside data directory %s"),
 QT_TRANSLATE_NOOP("kore-core", "Wallet is locked."),
-QT_TRANSLATE_NOOP("kore-core", "Wallet needed to be rewritten: restart KoreCore to complete"),
+QT_TRANSLATE_NOOP("kore-core", "Wallet needed to be rewritten: restart Kore Core to complete"),
 QT_TRANSLATE_NOOP("kore-core", "Wallet options:"),
 QT_TRANSLATE_NOOP("kore-core", "Warning"),
 QT_TRANSLATE_NOOP("kore-core", "Warning: unknown new rules activated (versionbit %i)"),

@@ -165,7 +165,7 @@ void DebugMessageHandler(QtMsgType type, const QMessageLogContext& context, cons
 }
 #endif
 
-/** Class encapsulating KoreCore startup and shutdown.
+/** Class encapsulating Kore Core startup and shutdown.
  * Allows running startup and shutdown in a different thread from the UI thread.
  */
 class KoreCore: public QObject

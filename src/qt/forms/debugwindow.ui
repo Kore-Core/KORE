@@ -263,7 +263,7 @@
          <item>
           <widget class="QPushButton" name="openDebugLogfileButton">
            <property name="toolTip">
-            <string>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</string>
+            <string>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</string>
            </property>
            <property name="text">
             <string>&amp;Open</string>
@@ -417,7 +417,7 @@
        <item row="10" column="0">
         <widget class="QLabel" name="masternodeCountLabel">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Number of Masternodes</string>
          </property>
         </widget>
        </item>

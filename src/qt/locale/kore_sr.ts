@@ -222,7 +222,7 @@
         <translation>Трака са картицама</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>O KoreCoru</translation>
     </message>
     <message>
@@ -321,7 +321,7 @@
         <translation>верзија</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>O KoreCoru</translation>
     </message>
     <message>

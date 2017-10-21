@@ -302,7 +302,7 @@
         <translation>Tabella instrumentorum "Tabs"</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreNucleus</translation>
     </message>
     <message>
@@ -461,7 +461,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreNucleus</translation>
     </message>
     <message>
@@ -484,7 +484,7 @@
 <context>
     <name>Intro</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreNucleus</translation>
     </message>
     <message>
@@ -1032,7 +1032,7 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>KoreNucleus</translation>
     </message>
     <message>

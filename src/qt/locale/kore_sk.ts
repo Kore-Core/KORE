@@ -168,7 +168,7 @@
         <translation>Ste si istí, že si želáte zašifrovať peňaženku?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
         <translation>Jadro Koresa teraz ukončí pre dokončenie procesu šifrovania. Pamätaj, že šifrovanie peňaženky Ťa nemôže úplne ochrániť pred krádežou koreov pomocou škodlivého software.</translation>
     </message>
     <message>
@@ -306,8 +306,8 @@
         <translation>Otvoriť &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore klient</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core klient</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -358,8 +358,8 @@
         <translation>&amp;Prijať</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Zobraziť informácie o KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Zobraziť informácie o Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -398,7 +398,7 @@
         <translation>Lišta záložiek</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Jadro Kore</translation>
     </message>
     <message>
@@ -406,11 +406,11 @@
         <translation>Vyžiadať platby (vygeneruje QR kódy a kore: URI)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>O jadre Kore</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
+        <source>Modify configuration options for Kore Core</source>
         <translation>Upraviť možnosti nastavenia pre Jadro Kore</translation>
     </message>
     <message>
@@ -430,7 +430,7 @@
         <translation>Možnosti príkazového riadku</translation>
     </message>
     <message>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
         <translation>Zobraziť pomocnú správu od KoreJadra pre získanie zoznamu dostupných možností príkazového riadku</translation>
     </message>
     <message numerus="yes">
@@ -855,7 +855,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Jadro Kore</translation>
     </message>
     <message>
@@ -867,7 +867,7 @@
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>O jadre Kore</translation>
     </message>
     <message>
@@ -918,15 +918,15 @@
         <translation>Vitajte</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
+        <source>Welcome to Kore Core.</source>
         <translation>Vitajte v jadre Kore.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
         <translation>Keďže spúštate program prvý krát, môžte si vybrať kde bude KoreJadro ukladať svoje dáta.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>Jadro Korestiahne zo siete a uloží kópiu Koreblockchain. Aspoň %1GB dát bude uložených v tomto priečinku a časom porastie. Peňaženka bude tiež uložená v tomto priečinku.</translation>
     </message>
     <message>
@@ -938,7 +938,7 @@
         <translation>Použiť vlastný dátový adresár:</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Jadro Kore</translation>
     </message>
     <message>
@@ -1020,7 +1020,7 @@
         <translation>Minimalizovať namiesto ukončenia aplikácie keď sa okno zavrie. Keď je zvolená táto možnosť, aplikácia sa zavrie len po zvolení Ukončiť v menu.</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting KoreCore.</source>
+        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
         <translation>Tu sa dá nastaviť jazyk užívateľského rozhrania. Toto nastavenie bude účinné po reštartovaní Jadra Kore.</translation>
     </message>
     <message>
@@ -1048,11 +1048,11 @@
         <translation>&amp;Sieť</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
+        <source>Automatically start Kore Core after logging in to the system.</source>
         <translation>Automaticky spustiť Jadro Korepo prihlásení do systému</translation>
     </message>
     <message>
-        <source>&amp;Start KoreCore on system login</source>
+        <source>&amp;Start Kore Core on system login</source>
         <translation>&amp;Spustiť Korepri spustení systému správy okien</translation>
     </message>
     <message>
@@ -1518,7 +1518,7 @@
         <translation>Využitie pamäte</translation>
     </message>
     <message>
-        <source>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <source>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Otvoriť Korelog súbor pre ladenie z aktuálneho dátového adresára. Toto môže trvať niekoľko sekúnd pre veľké súbory.</translation>
     </message>
     <message>
@@ -1675,7 +1675,7 @@
         <translation>&amp;odblokovať uzol</translation>
     </message>
     <message>
-        <source>Welcome to the KoreCore RPC console.</source>
+        <source>Welcome to the Kore Core RPC console.</source>
         <translation>Vitajte v RPC konzole pre Jadro Kore.</translation>
     </message>
     <message>
@@ -2257,7 +2257,7 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
+        <source>Kore Core is shutting down...</source>
         <translation>Jadro Koresa ukončuje...</translation>
     </message>
     <message>
@@ -2399,11 +2399,11 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Jadro Kore</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
+        <source>The Kore Core developers</source>
         <translation>Vývojári jadra Kore</translation>
     </message>
     <message>
@@ -2905,7 +2905,7 @@
         <translation>Prijímať príkazy z príkazového riadku a JSON-RPC</translation>
     </message>
     <message>
-        <source>Please check that your computer's date and time are correct! If your clock is wrong KoreCore will not work properly.</source>
+        <source>Please check that your computer's date and time are correct! If your clock is wrong Kore Core will not work properly.</source>
         <translation>Skontrolujte správnosť nastavenia dátumu a času na vašom počítači! Ak je čas nesprávny Jadro Korenebude správne fungovať.</translation>
     </message>
     <message>
@@ -2957,7 +2957,7 @@
         <translation>Toto je pred-testovacia verzia - použitie je na vlastné riziko - nepoužívajte na tvorbu kore ani obchodovanie.</translation>
     </message>
     <message>
-        <source>Unable to bind to %s on this computer. KoreCore is probably already running.</source>
+        <source>Unable to bind to %s on this computer. Kore Core is probably already running.</source>
         <translation>Nepodarilo sa pripojiť na %s na tomto počítači. KoreJadro je už pravdepodobne spustené.</translation>
     </message>
     <message>
@@ -3151,7 +3151,7 @@ The network does not appear to fully agree! Some miners appear to be experiencin
         <translation>Spojiť s danou adresou pre počúvanie JSON-RPC spojení. Použite zápis [host]:port pre IPv6. Táto možnosť môže byt zadaná niekoľko krát (predvolené: spojiť so všetkými rozhraniami)</translation>
     </message>
     <message>
-        <source>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</source>
+        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
         <translation>Neviem uzamknúť data adresár %s. Jadro Koreje pravdepodobne už spustené.</translation>
     </message>
     <message>
@@ -3235,11 +3235,11 @@ The network does not appear to fully agree! Some miners appear to be experiencin
         <translation>Pripojiť cez proxy server SOCKS5</translation>
     </message>
     <message>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
         <translation>Autorské práva (C) 2009-%i Vývojári jadra Kore</translation>
     </message>
     <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of KoreCore</source>
+        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
         <translation>Chyba pri čítaní wallet.dat: Peňaženka vyžaduje vyššiu verziu Jadra Kore</translation>
     </message>
     <message>
@@ -3255,7 +3255,7 @@ The network does not appear to fully agree! Some miners appear to be experiencin
         <translation>Informácia</translation>
     </message>
     <message>
-        <source>Initialization sanity check failed. KoreCore is shutting down.</source>
+        <source>Initialization sanity check failed. Kore Core is shutting down.</source>
         <translation>Inicializačná kontrola zlyhala. Jadro Koresa ukončuje.</translation>
     </message>
     <message>
@@ -3359,7 +3359,7 @@ The network does not appear to fully agree! Some miners appear to be experiencin
         <translation>Užívateľské meno pre JSON-RPC spojenia</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart KoreCore to complete</source>
+        <source>Wallet needed to be rewritten: restart Kore Core to complete</source>
         <translation>Peňaženka musí byť prepísaná: pre dokončenie reštartujte Jadro Kore</translation>
     </message>
     <message>

@@ -350,7 +350,7 @@
         <translation>Barra de ferramentas</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Core de Kore</translation>
     </message>
     <message>
@@ -358,8 +358,8 @@
         <translation>Solicitar pagos (xenera códigos QR e kore: URIs)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>&amp;Sobre KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>&amp;Sobre Kore Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -681,7 +681,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Core de Kore</translation>
     </message>
     <message>
@@ -689,7 +689,7 @@
         <translation>versión</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>Sobre Korecore</translation>
     </message>
     <message>
@@ -720,7 +720,7 @@
         <translation>Empregar un directorio de datos personalizado</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Core de Kore</translation>
     </message>
     <message>
@@ -1520,12 +1520,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Core de Kore</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>Os desarrolladores de KoreCore</translation>
+        <source>The Kore Core developers</source>
+        <translation>Os desarrolladores de Kore Core</translation>
     </message>
     <message>
         <source>[testnet]</source>

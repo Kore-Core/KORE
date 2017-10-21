@@ -164,8 +164,8 @@
         <translation>Vai tu tiešām vēlies šifrēt savu maciņu?</translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>KoreCore tiks aizvērts, lai pabeigtu šifrēšansa procesu. Atcerieties, ka jūsu maka šifrēšana nevar pilnībā pasargāt jūsu monētas no to nozagašanas, inficējot datoru ar ļaunprātīgām programmām.</translation>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <translation>Kore Core tiks aizvērts, lai pabeigtu šifrēšansa procesu. Atcerieties, ka jūsu maka šifrēšana nevar pilnībā pasargāt jūsu monētas no to nozagašanas, inficējot datoru ar ļaunprātīgām programmām.</translation>
     </message>
     <message>
         <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
@@ -290,8 +290,8 @@
         <translation>Atvērt &amp;URI...</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>KoreCore klients</translation>
+        <source>Kore Core client</source>
+        <translation>Kore Core klients</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -342,8 +342,8 @@
         <translation>&amp;Saņemt</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Parādīt informāciju par KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Parādīt informāciju par Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -382,16 +382,16 @@
         <translation>Ciļņu rīkjosla</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
         <translation>Pieprasīt maksājumus (izveido QR kodu un kore: URIs)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
-        <translation>Par &amp;KoreCore</translation>
+        <source>&amp;About Kore Core</source>
+        <translation>Par &amp;Kore Core</translation>
     </message>
     <message>
         <source>Open a kore: URI or payment request</source>
@@ -705,8 +705,8 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
@@ -717,8 +717,8 @@
         <translation>(%1-biti)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>Par KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>Par Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -740,8 +740,8 @@
         <translation>Sveiciens</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Sveicināts KoreCore</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Sveicināts Kore Core</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -752,8 +752,8 @@
         <translation>Izmantot pielāgotu datu mapi:</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error</source>
@@ -1542,8 +1542,8 @@
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>KoreCore is shutting down...</source>
-        <translation>KoreCore tiek izslēgta...</translation>
+        <source>Kore Core is shutting down...</source>
+        <translation>Kore Core tiek izslēgta...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
@@ -1672,12 +1672,12 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>KoreCore izstrādātāji</translation>
+        <source>The Kore Core developers</source>
+        <translation>Kore Core izstrādātāji</translation>
     </message>
     <message>
         <source>[testnet]</source>

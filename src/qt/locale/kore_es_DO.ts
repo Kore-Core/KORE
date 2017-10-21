@@ -362,7 +362,7 @@
         <translation>Barra de pestañas</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Núcleo de Kore</translation>
     </message>
     <message>
@@ -370,7 +370,7 @@
         <translation>Solicitar pagos (genera codigo QR y URL's de Kore)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>&amp;Acerca del Núcleo de Kore</translation>
     </message>
     <message>
@@ -717,7 +717,7 @@
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Núcleo de Kore</translation>
     </message>
     <message>
@@ -725,7 +725,7 @@
         <translation>versión</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation>Acerca del Núcleo de Kore</translation>
     </message>
     <message>
@@ -748,15 +748,15 @@
         <translation>Bienvenido</translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
+        <source>Welcome to Kore Core.</source>
         <translation>Bienvenido al Núcleo de Kore</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
         <translation>Al ser la primera vez que se ejecuta el programa, puede elegir dónde almacenará sus datos Kore-Qt.</translation>
     </message>
     <message>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation>Kore-Qt va a descargar y guardar una copia de la cadena de bloques de Kore. Se almacenará al menos %1GB de datos en este directorio, que irá creciendo con el tiempo. El monedero se guardará también en este directorio.</translation>
     </message>
     <message>
@@ -768,7 +768,7 @@
         <translation>Utilice un directorio de datos personalizado:</translation>
     </message>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Núcleo de Kore</translation>
     </message>
     <message>
@@ -1672,11 +1672,11 @@
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
+        <source>Kore Core</source>
         <translation>Núcleo de Kore</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
+        <source>The Kore Core developers</source>
         <translation>Los desarrolladores del Núcleo de Kore</translation>
     </message>
     <message>

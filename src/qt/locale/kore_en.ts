@@ -211,7 +211,7 @@
     </message>
     <message>
         <location line="+11"/>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -390,7 +390,7 @@
     </message>
     <message>
         <location line="+183"/>
-        <source>KoreCore client</source>
+        <source>Kore Core client</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -455,7 +455,7 @@
     </message>
     <message>
         <location line="+40"/>
-        <source>Show information about KoreCore</source>
+        <source>Show information about Kore Core</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -505,8 +505,8 @@
     </message>
     <message>
         <location line="-314"/>
-        <source>KoreCore</source>
-        <translation type="unfinished">KoreCore</translation>
+        <source>Kore Core</source>
+        <translation type="unfinished">Kore Core</translation>
     </message>
     <message>
         <location line="+160"/>
@@ -515,12 +515,12 @@
     </message>
     <message>
         <location line="+38"/>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+7"/>
-        <source>Modify configuration options for KoreCore</source>
+        <source>Modify configuration options for Kore Core</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -545,7 +545,7 @@
     </message>
     <message>
         <location line="+2"/>
-        <source>Show the KoreCore help message to get a list with possible Korecommand-line options</source>
+        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
         <translation type="unfinished"></translation>
     </message>
     <message numerus="yes">
@@ -1087,8 +1087,8 @@
     <name>HelpMessageDialog</name>
     <message>
         <location filename="../utilitydialog.cpp" line="+36"/>
-        <source>KoreCore</source>
-        <translation type="unfinished">KoreCore</translation>
+        <source>Kore Core</source>
+        <translation type="unfinished">Kore Core</translation>
     </message>
     <message>
         <location line="+0"/>
@@ -1103,7 +1103,7 @@
     </message>
     <message>
         <location line="+5"/>
-        <source>About KoreCore</source>
+        <source>About Kore Core</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1166,17 +1166,17 @@
     </message>
     <message>
         <location line="+9"/>
-        <source>Welcome to KoreCore.</source>
+        <source>Welcome to Kore Core.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+26"/>
-        <source>As this is the first time the program is launched, you can choose where KoreCore will store its data.</source>
+        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+10"/>
-        <source>KoreCore will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
+        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1191,8 +1191,8 @@
     </message>
     <message>
         <location filename="../intro.cpp" line="+86"/>
-        <source>KoreCore</source>
-        <translation type="unfinished">KoreCore</translation>
+        <source>Kore Core</source>
+        <translation type="unfinished">Kore Core</translation>
     </message>
     <message>
         <location line="+1"/>
@@ -1299,7 +1299,7 @@
     </message>
     <message>
         <location line="+45"/>
-        <source>The user interface language can be set here. This setting will take effect after restarting KoreCore.</source>
+        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1335,12 +1335,12 @@
     </message>
     <message>
         <location line="-153"/>
-        <source>Automatically start KoreCore after logging in to the system.</source>
+        <source>Automatically start Kore Core after logging in to the system.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+3"/>
-        <source>&amp;Start KoreCore on system login</source>
+        <source>&amp;Start Kore Core on system login</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1962,7 +1962,7 @@
     </message>
     <message>
         <location line="+48"/>
-        <source>Open the KoreCore debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <source>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2170,7 +2170,7 @@
     </message>
     <message>
         <location line="+74"/>
-        <source>Welcome to the KoreCore RPC console.</source>
+        <source>Welcome to the Kore Core RPC console.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -2918,7 +2918,7 @@
     <name>ShutdownWindow</name>
     <message>
         <location filename="../utilitydialog.cpp" line="+78"/>
-        <source>KoreCore is shutting down...</source>
+        <source>Kore Core is shutting down...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3113,12 +3113,12 @@
     <name>SplashScreen</name>
     <message>
         <location filename="../splashscreen.cpp" line="+41"/>
-        <source>KoreCore</source>
-        <translation type="unfinished">KoreCore</translation>
+        <source>Kore Core</source>
+        <translation type="unfinished">Kore Core</translation>
     </message>
     <message>
         <location line="+2"/>
-        <source>The KoreCore developers</source>
+        <source>The Kore Core developers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3785,7 +3785,7 @@
     </message>
     <message>
         <location line="+7"/>
-        <source>Please check that your computer&apos;s date and time are correct! If your clock is wrong KoreCore will not work properly.</source>
+        <source>Please check that your computer&apos;s date and time are correct! If your clock is wrong Kore Core will not work properly.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -3895,7 +3895,7 @@
     </message>
     <message>
         <location line="+13"/>
-        <source>Unable to bind to %s on this computer. KoreCore is probably already running.</source>
+        <source>Unable to bind to %s on this computer. Kore Core is probably already running.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4190,7 +4190,7 @@
     </message>
     <message>
         <location line="+4"/>
-        <source>Cannot obtain a lock on data directory %s. KoreCore is probably already running.</source>
+        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4310,12 +4310,12 @@
     </message>
     <message>
         <location line="+3"/>
-        <source>Copyright (C) 2009-%i The KoreCore Developers</source>
+        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location line="+16"/>
-        <source>Error loading wallet.dat: Wallet requires newer version of KoreCore</source>
+        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4335,7 +4335,7 @@
     </message>
     <message>
         <location line="+1"/>
-        <source>Initialization sanity check failed. KoreCore is shutting down.</source>
+        <source>Initialization sanity check failed. Kore Core is shutting down.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4485,7 +4485,7 @@
     </message>
     <message>
         <location line="+4"/>
-        <source>Wallet needed to be rewritten: restart KoreCore to complete</source>
+        <source>Wallet needed to be rewritten: restart Kore Core to complete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>

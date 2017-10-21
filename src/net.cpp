@@ -66,7 +66,7 @@ using namespace std;
 
 extern "C" { int tor_main(int argc, char *argv[]);
 	
-	void tor_cleanup(void);
+	void process_signal(uintptr_t sig);
 }
 
 namespace {
@@ -2084,7 +2084,7 @@ void StartTor(boost::thread_group& threadGroup)
 
 void StopTor()
 {
-    tor_cleanup();
+    process_signal(2);
 }
 
 void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)

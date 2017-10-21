@@ -161,8 +161,8 @@ Réessayez.</translation>
         <translation>Êtes-vous sûr de de vouloir crypter votre portefeuille ? </translation>
     </message>
     <message>
-        <source>KoreCore will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>KoreCore fermera maintenant pour finir le processus de chiffrement. Rappelez-vous que crypter votre portefeuille ne protége pas totalement vos kores d'être volé par un malware ayant infecté votre ordinateur. </translation>
+        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
+        <translation>Kore Core fermera maintenant pour finir le processus de chiffrement. Rappelez-vous que crypter votre portefeuille ne protége pas totalement vos kores d'être volé par un malware ayant infecté votre ordinateur. </translation>
     </message>
     <message>
         <source>Warning: The Caps Lock key is on!</source>
@@ -291,8 +291,8 @@ Réessayez.</translation>
         <translation>Ouvrir &amp;URI</translation>
     </message>
     <message>
-        <source>KoreCore client</source>
-        <translation>Client KoreCore</translation>
+        <source>Kore Core client</source>
+        <translation>Client Kore Core</translation>
     </message>
     <message>
         <source>Importing blocks from disk...</source>
@@ -343,8 +343,8 @@ Réessayez.</translation>
         <translation>&amp;Réception</translation>
     </message>
     <message>
-        <source>Show information about KoreCore</source>
-        <translation>Montrer les informations à propos de KoreCore</translation>
+        <source>Show information about Kore Core</source>
+        <translation>Montrer les informations à propos de Kore Core</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -379,20 +379,20 @@ Réessayez.</translation>
         <translation>Barre d'outils des onglets</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
         <translation>Demander des paiements (générer QR codes et kore: URIs)</translation>
     </message>
     <message>
-        <source>&amp;About KoreCore</source>
+        <source>&amp;About Kore Core</source>
         <translation>&amp;À propos de Kore</translation>
     </message>
     <message>
-        <source>Modify configuration options for KoreCore</source>
-        <translation>Modifier les options de configuration de KoreCore</translation>
+        <source>Modify configuration options for Kore Core</source>
+        <translation>Modifier les options de configuration de Kore Core</translation>
     </message>
     <message>
         <source>Show the list of used sending addresses and labels</source>
@@ -804,8 +804,8 @@ Réessayez.</translation>
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>version</source>
@@ -816,8 +816,8 @@ Réessayez.</translation>
         <translation>(%1-bit)</translation>
     </message>
     <message>
-        <source>About KoreCore</source>
-        <translation>À propos de KoreCore</translation>
+        <source>About Kore Core</source>
+        <translation>À propos de Kore Core</translation>
     </message>
     <message>
         <source>Command-line options</source>
@@ -847,8 +847,8 @@ Réessayez.</translation>
         <translation>Bienvenue </translation>
     </message>
     <message>
-        <source>Welcome to KoreCore.</source>
-        <translation>Bienvenue sur KoreCore.</translation>
+        <source>Welcome to Kore Core.</source>
+        <translation>Bienvenue sur Kore Core.</translation>
     </message>
     <message>
         <source>Use the default data directory</source>
@@ -859,8 +859,8 @@ Réessayez.</translation>
         <translation>Utiliser votre propre répertoire</translation>
     </message>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
         <source>Error: Specified data directory "%1" cannot be created.</source>
@@ -945,8 +945,8 @@ Réessayez.</translation>
         <translation>&amp;Réseau</translation>
     </message>
     <message>
-        <source>Automatically start KoreCore after logging in to the system.</source>
-        <translation>Démarrer automatiquement KoreCore après s'être connecté au système. </translation>
+        <source>Automatically start Kore Core after logging in to the system.</source>
+        <translation>Démarrer automatiquement Kore Core après s'être connecté au système. </translation>
     </message>
     <message>
         <source>Expert</source>
@@ -1879,12 +1879,12 @@ Réessayez.</translation>
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>KoreCore</source>
-        <translation>KoreCore</translation>
+        <source>Kore Core</source>
+        <translation>Kore Core</translation>
     </message>
     <message>
-        <source>The KoreCore developers</source>
-        <translation>Les développeurs de KoreCore</translation>
+        <source>The Kore Core developers</source>
+        <translation>Les développeurs de Kore Core</translation>
     </message>
     <message>
         <source>[testnet]</source>

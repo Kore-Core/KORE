@@ -114,52 +114,49 @@ void AskPassphraseDialog::accept()
             break;
         }
         QMessageBox::StandardButton retval = QMessageBox::question(this, tr("Confirm wallet encryption"),
-                 tr("Warning: If you encrypt your wallet and lose your passphrase, you will <b>LOSE ALL OF YOUR KORECOINS</b>!") + "<br><br>" + tr("Are you sure you wish to encrypt your wallet?"),
-                 QMessageBox::Yes|QMessageBox::Cancel,
-                 QMessageBox::Cancel);
-        if(retval == QMessageBox::Yes)
-        {
-            if(newpass1 == newpass2)
-            {
-                if(model->setWalletEncrypted(true, newpass1))
-                {
+            tr("Warning: If you encrypt your wallet and lose your passphrase, you will <b>LOSE ALL OF YOUR KORECOINS</b>!") + "<br><br>" + tr("Are you sure you wish to encrypt your wallet?"),
+            QMessageBox::Yes | QMessageBox::Cancel,
+            QMessageBox::Cancel);
+        if (retval == QMessageBox::Yes) {
+            if (newpass1 == newpass2) {
+                if (model->setWalletEncrypted(true, newpass1)) {
                     QMessageBox::warning(this, tr("Wallet encrypted"),
-                                         "<qt>" +
-                                         tr("Kore Core will close now to finish the encryption process. "
-                                         "Remember that encrypting your wallet cannot fully protect "
-                                         "your kores from being stolen by malware infecting your computer.") +
-                                         "<br><br><b>" +
-                                         tr("IMPORTANT: Any previous backups you have made of your wallet file "
-                                         "should be replaced with the newly generated, encrypted wallet file. "
-                                         "For security reasons, previous backups of the unencrypted wallet file "
-                                         "will become useless as soon as you start using the new, encrypted wallet.") +
-                                         "</b></qt>");
+                        "<qt>" +
+                            tr("Kore Core will close now to finish the encryption process. "
+                               "Remember that encrypting your wallet cannot fully protect "
+                               "your kores from being stolen by malware infecting your computer.") +
+                            "<br><br><b>" +
+                            tr("IMPORTANT: Any previous backups you have made of your wallet file "
+                               "should be replaced with the newly generated, encrypted wallet file. "
+                               "For security reasons, previous backups of the unencrypted wallet file "
+                               "will become useless as soon as you start using the new, encrypted wallet.") +
+                            "</b></qt>");
                     QApplication::quit();
                 }
                 else
                 {
                     QMessageBox::critical(this, tr("Wallet encryption failed"),
-                                         tr("Wallet encryption failed due to an internal error. Your wallet was not encrypted."));
+                        tr("Wallet encryption failed due to an internal error. Your wallet was not encrypted."));
                 }
                 QDialog::accept(); // Success
             }
             else
             {
                 QMessageBox::critical(this, tr("Wallet encryption failed"),
-                                     tr("The supplied passphrases do not match."));
+                    tr("The supplied passphrases do not match."));
             }
         }
         else
         {
             QDialog::reject(); // Cancelled
         }
-        } break;
+    } break;
     case UnlockAnonymize:
     case Unlock:
         if(!model->setWalletLocked(false, oldpass, ui->anonymizationCheckBox->isChecked()))
         {
             QMessageBox::critical(this, tr("Wallet unlock failed"),
-                                  tr("The passphrase entered for the wallet decryption was incorrect."));
+                tr("The passphrase entered for the wallet decryption was incorrect."));
         }
         else
         {
@@ -170,7 +167,7 @@ void AskPassphraseDialog::accept()
         if(!model->setWalletEncrypted(false, oldpass))
         {
             QMessageBox::critical(this, tr("Wallet decryption failed"),
-                                  tr("The passphrase entered for the wallet decryption was incorrect."));
+                tr("The passphrase entered for the wallet decryption was incorrect."));
         }
         else
         {
@@ -183,19 +180,19 @@ void AskPassphraseDialog::accept()
             if(model->changePassphrase(oldpass, newpass1))
             {
                 QMessageBox::information(this, tr("Wallet encrypted"),
-                                     tr("Wallet passphrase was successfully changed."));
+                    tr("Wallet passphrase was successfully changed."));
                 QDialog::accept(); // Success
             }
             else
             {
                 QMessageBox::critical(this, tr("Wallet encryption failed"),
-                                     tr("The passphrase entered for the wallet decryption was incorrect."));
+                    tr("The passphrase entered for the wallet decryption was incorrect."));
             }
         }
         else
         {
             QMessageBox::critical(this, tr("Wallet encryption failed"),
-                                 tr("The supplied passphrases do not match."));
+                tr("The supplied passphrases do not match."));
         }
         break;
     }

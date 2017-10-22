@@ -135,10 +135,10 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xb3;
+        pchMessageStart[0] = 0xe3;
         pchMessageStart[1] = 0x7b;
-        pchMessageStart[2] = 0xa7;
-        pchMessageStart[3] = 0xd6;
+        pchMessageStart[2] = 0xbb;
+        pchMessageStart[3] = 0xd8;
         vAlertPubKey = ParseHex("042b0fb78026380244cc458a914dae461899b121f53bc42105d134158b9773e3fdadca67ca3015dc9c4ef9b9df91f2ef05b890a15cd2d2b85930d37376b2196002");
         nDefaultPort = 10743; // 8333;
         nMaxTipAge = 24 * 60 * 60;

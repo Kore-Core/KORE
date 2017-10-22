@@ -3161,8 +3161,6 @@ uint64_t CWallet::GetStakeWeight() const
     // Choose coins to use
     int64_t nBalance = GetBalance();
 
-    nReserveBalance =GetArg("-reservebalance", fMasterNode ? 500 : 0) * COIN;
-
     if (nBalance <= nReserveBalance)
         return 0;
 
@@ -3199,7 +3197,6 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
     // Choose coins to use
     int64_t nBalance = GetBalance();
-    nReserveBalance =GetArg("-reservebalance", fMasterNode ? 500 : 0) * COIN;
 
     if (nBalance <= nReserveBalance)
         return false;

@@ -139,7 +139,7 @@ public:
 };
 
 bool IsCompressedOrUncompressedPubKey(const std::vector<unsigned char> &vchPubKey);
-bool IsLowDERSignature(const std::vector<unsigned char> &vchSig, ScriptError* serror);
+bool IsLowDERSignature(const std::vector<unsigned char> &vchSig, ScriptError* serror, bool haveHashType = true);
 bool IsValidSignatureEncoding(const std::vector<unsigned char> &sig, bool haveHashType = true);
 bool EvalScript(std::vector<std::vector<unsigned char> >& stack, const CScript& script, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* error = NULL);
 bool VerifyScript(const CScript& scriptSig, const CScript& scriptPubKey, unsigned int flags, const BaseSignatureChecker& checker, ScriptError* error = NULL);

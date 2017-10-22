@@ -160,14 +160,19 @@ bool IsValidSignatureEncoding(const std::vector<unsigned char> &sig, bool haveHa
     return true;
 }
 
-bool IsLowDERSignature(const valtype &vchSig, ScriptError* serror) {
-    if (!IsValidSignatureEncoding(vchSig)) {
+bool IsLowDERSignature(const valtype &vchSig, ScriptError* serror, bool haveHashType) {
+    if (!IsValidSignatureEncoding(vchSig, haveHashType)) {
         return set_error(serror, SCRIPT_ERR_SIG_DER);
     }
-    std::vector<unsigned char> vchSigCopy(vchSig.begin(), vchSig.begin() + vchSig.size() - 1);
-    if (!CPubKey::CheckLowS(vchSigCopy)) {
+    unsigned int nLenR = vchSig[3];
+    unsigned int nLenS = vchSig[5+nLenR];
+    const unsigned char *S = &vchSig[6+nLenR];
+    // If the S value is above the order of the curve divided by two, its
+    // complement modulo the order could have been used instead, which is
+    // one byte shorter when encoded correctly.
+    if (!CPubKey::CheckSignatureElement(S, nLenS, true))
         return set_error(serror, SCRIPT_ERR_SIG_HIGH_S);
-    }
+
     return true;
 }
 

@@ -33,6 +33,14 @@ std::string static EncodeDumpTime(int64_t nTime) {
     return DateTimeStrFormat("%Y-%m-%dT%H:%M:%SZ", nTime);
 }
 
+std::string convertAddress(const char address[], char newVersionByte){
+    std::vector<unsigned char> v;
+    DecodeBase58Check(address,v);
+    v[0]=newVersionByte;
+    string result = EncodeBase58Check(v);
+    return result;
+}
+
 int64_t static DecodeDumpTime(const std::string &str) {
     static const boost::posix_time::ptime epoch = boost::posix_time::from_time_t(0);
     static const std::locale loc(std::locale::classic(),
@@ -114,6 +122,8 @@ UniValue importprivkey(const UniValue& params, bool fHelp)
 
     if (fRescan && fPruneMode)
         throw JSONRPCError(RPC_WALLET_ERROR, "Rescan is disabled in pruned mode");
+
+    strSecret = convertAddress(strSecret.c_str(),128);
 
     CKoreSecret vchSecret;
     bool fGood = vchSecret.SetString(strSecret);
@@ -353,7 +363,8 @@ UniValue importwallet(const UniValue& params, bool fHelp)
         if (vstr.size() < 2)
             continue;
         CKoreSecret vchSecret;
-        if (!vchSecret.SetString(vstr[0]))
+        
+        if (!vchSecret.SetString(convertAddress(vstr[0].c_str(),128)))
             continue;
         CKey key = vchSecret.GetKey();
         CPubKey pubkey = key.GetPubKey();

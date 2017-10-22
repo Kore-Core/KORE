@@ -89,30 +89,34 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
 bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTime, const COutPoint& prevout, int64_t* pBlockTime)
 {
     uint256 hashProofOfStake, targetProofOfStake;
-    CValidationState state;
-    const CChainParams& chainparams = Params();
-    CCoinsViewCache &view = *pcoinsTip;
-    const CCoins *coins = view.AccessCoins(prevout.hash);
-    if (!coins)
+
+    CTransaction prevtx;
+    uint256 hashBlock;
+    if (!GetTransaction(prevout.hash, prevtx, Params().GetConsensus(), hashBlock, true))
         return false;
+
+    CBlockIndex* pIndex = NULL;
+    BlockMap::iterator iter = mapBlockIndex.find(hashBlock);
+    if (iter != mapBlockIndex.end()) 
+        pIndex = iter->second;
 
     // Read block header
     CBlock block;
-    if (!ReadBlockFromDisk(block, pindexPrev, chainparams.GetConsensus()))
+    if (!ReadBlockFromDisk(block, pIndex, Params().GetConsensus()))
         return false;
 
     // Maturity requirement
-    if (pindexPrev->nHeight - coins->nHeight < STAKE_MIN_CONFIRMATIONS)
+    if (pindexPrev->nHeight - pIndex->nHeight < STAKE_MIN_CONFIRMATIONS)
         return false;
 
     if (pBlockTime)
         *pBlockTime = block.GetBlockTime();
 
     // Min age requirement
-    if (coins->nTime + Params().GetConsensus().nStakeMinAge > nTime) // Min age requirement
+    if (prevtx.nTime + Params().GetConsensus().nStakeMinAge > nTime) // Min age requirement
         return false;
 
-    return CheckStakeKernelHash(pindexPrev->pprev, block.nBits, coins, prevout, nTime);
+    return CheckStakeKernelHash(pindexPrev, nBits, new CCoins(prevtx, pindexPrev->nHeight), prevout, nTime);
 }
 
 // Check kernel hash target and coinstake signature

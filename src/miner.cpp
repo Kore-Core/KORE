@@ -365,7 +365,6 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
 {
 
-    uint256 proofHash , hashTarget;
     CValidationState state;
 
     // Found a solution
@@ -378,7 +377,7 @@ static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainpar
     if (fDebug)LogPrintf("%s \n ", pblock->ToString());
 
     // verify hash target and signature of coinstake tx
-    if (pblock->IsProofOfStake() && !CheckProofOfStake(mapBlockIndex[pblock->hashPrevBlock], pblock->vtx[1], pblock->nBits, proofHash, hashTarget))
+    if (pblock->IsProofOfStake() && !CheckProofOfStake(mapBlockIndex[pblock->hashPrevBlock], pblock->vtx[1], pblock->nBits, state))
         return false;
    
     LogPrintf("%s %s\n", pblock->IsProofOfStake() ? "Stake " : "Mined " , pblock->IsProofOfStake() ? FormatMoney(pblock->vtx[1].GetValueOut()) : FormatMoney(pblock->vtx[0].GetValueOut()));

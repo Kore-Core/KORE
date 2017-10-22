@@ -14,12 +14,11 @@
 #include <QMessageBox>
 #include <QPushButton>
 
-AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::AskPassphraseDialog),
-    mode(mode),
-    model(0),
-    fCapsLock(false)
+AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel* model) : QDialog(parent),
+                                                                                           ui(new Ui::AskPassphraseDialog),
+                                                                                           mode(mode),
+                                                                                           model(model),
+                                                                                           fCapsLock(false)
 {
     ui->setupUi(this);
 
@@ -35,6 +34,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget *parent) :
     ui->passEdit1->installEventFilter(this);
     ui->passEdit2->installEventFilter(this);
     ui->passEdit3->installEventFilter(this);
+
+    this->model = model;
 
     switch(mode)
     {
@@ -84,11 +85,6 @@ AskPassphraseDialog::~AskPassphraseDialog()
     ui->passEdit2->setText(QString(" ").repeated(ui->passEdit2->text().size()));
     ui->passEdit3->setText(QString(" ").repeated(ui->passEdit3->text().size()));
     delete ui;
-}
-
-void AskPassphraseDialog::setModel(WalletModel *model)
-{
-    this->model = model;
 }
 
 void AskPassphraseDialog::accept()

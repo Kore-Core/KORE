@@ -2616,6 +2616,9 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         if (pindex->nHeight - coins->nHeight < STAKE_MIN_CONFIRMATIONS)
             return state.DoS(100, error("%s: tried to stake at depth %d", __func__, pindex->nHeight - coins->nHeight), REJECT_INVALID, "bad-cs-premature");
 
+    if (coins->nTime + Params().GetConsensus().nStakeMinAge > block.vtx[1].nTime) // Min age requirement
+        return error("CheckProofOfStake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d \n", coins->nTime, Params().GetConsensus().nStakeMinAge, block.vtx[1].nTime);
+
         if (!CheckStakeKernelHash(pindex->pprev, block.nBits, coins, prevout, block.vtx[1].nTime))
             return state.DoS(100, error("%s: proof-of-stake hash doesn't match nBits", __func__), REJECT_INVALID, "bad-cs-proofhash");
     }

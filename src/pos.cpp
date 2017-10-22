@@ -69,8 +69,7 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
         return false;
 
     // Base target
-    arith_uint256 bnTarget;
-    bnTarget.SetCompact(nBits);
+    arith_uint256 bnTarget = arith_uint256().SetCompact(nBits);
 
     // Calculate hash
     CHashWriter ss(SER_GETHASH, 0);
@@ -79,7 +78,7 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
 
     // Now check if proof-of-stake hash meets target protocol
     if (UintToArith256(hashProofOfStake) / nValueIn > bnTarget){
-		LogPrintf("CheckStakeKernelHash() : hash does not meet protocol target \n");
+		if(fDebug)LogPrintf("CheckStakeKernelHash() : hash does not meet protocol target   previous = %x  target = %x\n", nBits, bnTarget.GetCompact());
         return false;
 	}
 

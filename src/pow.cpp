@@ -13,12 +13,7 @@
 
 static arith_uint256 GetTargetLimit(int64_t nTime, bool fProofOfStake, const Consensus::Params& params)
 {
-    uint256 nLimit;
-
-    if (fProofOfStake)
-       nLimit = params.posLimit;
-    else 
-       nLimit = params.powLimit;    
+    uint256 nLimit = fProofOfStake ? params.posLimit : params.powLimit;
 
     return UintToArith256(nLimit);
 }
@@ -65,8 +60,8 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
     if (fDebug){
         LogPrintf("RETARGET\n");
         LogPrintf("params.nTargetSpacing = %d    nActualSpacing = %d\n", params.nTargetTimespan, nActualSpacing);
-        LogPrintf("Before: %x  %s\n", pindexLast->nBits, bnOld.ToString());
-        LogPrintf("After:  %x  %s\n", bnNew.GetCompact(), bnNew.ToString());
+        LogPrintf("Before: %08x  %s\n", pindexLast->nBits, bnOld.ToString());
+        LogPrintf("After:  %08x  %s\n", bnNew.GetCompact(), bnNew.ToString());
     }
 
     return bnNew.GetCompact();

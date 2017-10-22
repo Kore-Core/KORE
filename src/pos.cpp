@@ -78,9 +78,9 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     uint256 hashProofOfStake = ss.GetHash();
 
     // Now check if proof-of-stake hash meets target protocol
-    if ((UintToArith256(hashProofOfStake) / nValueIn ) > bnTarget){
+    if (UintToArith256(hashProofOfStake) / nValueIn > bnTarget){
 		LogPrintf("CheckStakeKernelHash() : hash does not meet protocol target \n");
-        return false;        
+        return false;
 	}
 
     return true;
@@ -116,9 +116,8 @@ bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTime, con
 }
 
 // Check kernel hash target and coinstake signature
-bool CheckProofOfStake(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned int nBits, uint256& hashProofOfStake, uint256& targetProofOfStake)
+bool CheckProofOfStake(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned int nBits, CValidationState &state)
 {
-    CValidationState state;
     const CChainParams& chainparams = Params();
 
     if (!tx.IsCoinStake())
@@ -128,44 +127,49 @@ bool CheckProofOfStake(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned
     const CTxIn& txin = tx.vin[0];
 
     // First try finding the previous transaction in database
-    CCoinsViewCache &view = *pcoinsTip;
-    const COutPoint &prevout = txin.prevout;
-    const CCoins *coins = view.AccessCoins(prevout.hash);
-    if (!coins)
-        return state.DoS(100, error("%s: kernel input unavailable", __func__), REJECT_INVALID, "bad-cs-kernel");
-
     CTransaction prevtx;
     uint256 hashBlock;
-    const uint256& hash = txin.prevout.hash;
-    
-    if (!GetTransaction(hash, prevtx, Params().GetConsensus(), hashBlock, true))
-        return state.DoS(1, false, REJECT_INVALID, "read-txPrev-failed");
+
+    if (!GetTransaction(txin.prevout.hash, prevtx, Params().GetConsensus(), hashBlock, true))
+       return state.DoS(1, false, REJECT_INVALID, "read-txPrev-failed");
 
     // Verify signature
-    const CTxOut& txout = prevtx.vout[txin.prevout.n];
-    if (txin.prevout.n >= prevtx.vout.size()) return false;
-    if (txin.prevout.hash != prevtx.GetHash()) return false;
-    ScriptError serror = SCRIPT_ERR_OK;
-
-    if (!VerifyScript(txin.scriptSig, txout.scriptPubKey, SCRIPT_VERIFY_NONE, TransactionSignatureChecker(&tx, 0), &serror))
-       return state.DoS(100, error("CheckProofOfStake() : VerifySignature failed on coinstake %s, scriptsig = %s,  scriptPubKey=%s , extsiting errors = %s \n",
-			tx.GetHash().ToString(), txin.scriptSig.ToString(), txout.scriptPubKey.ToString(), std::string(ScriptErrorString(serror)).c_str()));
+    if (!VerifySignature(prevtx, tx, 0, SCRIPT_VERIFY_NONE, 0))
+       return state.DoS(100, error("CheckProofOfStake() : VerifySignature failed on coinstake %s", tx.GetHash().ToString()));
 
     // Read block header
     CBlock block;
     if (!ReadBlockFromDisk(block, pindexPrev, chainparams.GetConsensus()))
        return fDebug? error("CheckProofOfStake(): *** ReadBlockFromDisk failed at %d, hash=%s \n", pindexPrev->nHeight, pindexPrev->GetBlockHash().ToString()) : false;
 
+    CBlockIndex* pIndex = NULL;
+    BlockMap::iterator iter = mapBlockIndex.find(hashBlock);
+    if (iter != mapBlockIndex.end()) 
+        pIndex = iter->second;
+
     // Min age requirement
-    if (pindexPrev->nHeight - coins->nHeight < STAKE_MIN_CONFIRMATIONS)
-       return state.DoS(100, error("%s: tried to stake at depth %d \n", __func__, pindexPrev->nHeight - coins->nHeight), REJECT_INVALID, "bad-cs-premature");
+    if (pindexPrev->nHeight - pIndex->nHeight < STAKE_MIN_CONFIRMATIONS)
+       return state.DoS(100, error("%s: tried to stake at depth %d \n", __func__, pindexPrev->nHeight - pIndex->nHeight), REJECT_INVALID, "bad-cs-premature");
 
     if (prevtx.nTime + Params().GetConsensus().nStakeMinAge > tx.nTime) // Min age requirement
-        return error("CheckProofOfStake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d \n", coins->nTime, Params().GetConsensus().nStakeMinAge, tx.nTime);
+        return error("CheckProofOfStake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d \n", prevtx.nTime, Params().GetConsensus().nStakeMinAge, tx.nTime);
 
-    if (!CheckStakeKernelHash(pindexPrev->pprev, block.nBits, coins, prevout, block.vtx[1].nTime))
-       return state.DoS(1, error("%s: pos hash doesn't match nBits \n", __func__), REJECT_INVALID, "bad-cs-proofhash");
+    if (!CheckStakeKernelHash(pindexPrev, nBits, new CCoins(prevtx, pindexPrev->nHeight), txin.prevout, tx.nTime))
+       return state.DoS(1, error("%s: CheckStakeKernelHash failed \n", __func__), REJECT_INVALID, "bad-cs-proofhash");
 
     return true;
 }
 
+bool VerifySignature(const CTransaction& txFrom, const CTransaction& txTo, unsigned int nIn, unsigned int flags, int nHashType)
+{
+    assert(nIn < txTo.vin.size());
+    const CTxIn& txin = txTo.vin[nIn];
+    if (txin.prevout.n >= txFrom.vout.size())
+        return false;
+    const CTxOut& txout = txFrom.vout[txin.prevout.n];
+
+    if (txin.prevout.hash != txFrom.GetHash())
+        return false;
+
+    return VerifyScript(txin.scriptSig, txout.scriptPubKey, flags, TransactionSignatureChecker(&txTo, nIn),  NULL);
+}

@@ -438,12 +438,10 @@ WalletModel::EncryptionStatus WalletModel::getEncryptionStatus() const
     if(!wallet->IsCrypted())
     {
         return Unencrypted;
-    }
-    else if(wallet->IsLocked())
-    {
-        return Locked;
     } else if (wallet->fWalletUnlockAnonymizeOnly) {
         return UnlockedForAnonymizationOnly;
+    } else if (wallet->IsLocked()) {
+        return Locked;
     } else {
         return Unlocked;
     }

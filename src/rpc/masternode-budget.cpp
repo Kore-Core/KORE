@@ -235,43 +235,49 @@ UniValue mnbudget(const UniValue& params, bool fHelp)
 
             if (!obfuScationSigner.SetKey(mne.getPrivKey(), errorMessage, keyMasternode, pubKeyMasternode)) {
                 failed++;
+                statusObj.push_back(Pair("node", mne.getAlias()));
                 statusObj.push_back(Pair("result", "failed"));
-                statusObj.push_back(Pair("errorMessage", "Masternode signing error, could not set key correctly: " + errorMessage));
-                resultsObj.push_back(Pair(mne.getAlias(), statusObj));
+                statusObj.push_back(Pair("error", "Masternode signing error, could not set key correctly: " + errorMessage));
+                resultsObj.push_back(statusObj);
                 continue;
             }
 
             CMasternode* pmn = mnodeman.Find(pubKeyMasternode);
             if (pmn == NULL) {
                 failed++;
+                statusObj.push_back(Pair("node", mne.getAlias()));
                 statusObj.push_back(Pair("result", "failed"));
-                statusObj.push_back(Pair("errorMessage", "Can't find masternode by pubkey"));
-                resultsObj.push_back(Pair(mne.getAlias(), statusObj));
+                statusObj.push_back(Pair("error", "Can't find masternode by pubkey"));
+                resultsObj.push_back(statusObj);
                 continue;
             }
 
             CBudgetVote vote(pmn->vin, hash, nVote);
             if (!vote.Sign(keyMasternode, pubKeyMasternode)) {
                 failed++;
+                statusObj.push_back(Pair("node", mne.getAlias()));
                 statusObj.push_back(Pair("result", "failed"));
-                statusObj.push_back(Pair("errorMessage", "Failure to sign."));
-                resultsObj.push_back(Pair(mne.getAlias(), statusObj));
+                statusObj.push_back(Pair("error", "Failure to sign."));
+                resultsObj.push_back(statusObj);
                 continue;
             }
-
 
             std::string strError = "";
             if (budget.UpdateProposal(vote, NULL, strError)) {
                 budget.mapSeenMasternodeBudgetVotes.insert(make_pair(vote.GetHash(), vote));
                 vote.Relay();
                 success++;
+                statusObj.push_back(Pair("node", mne.getAlias()));
                 statusObj.push_back(Pair("result", "success"));
+                statusObj.push_back(Pair("error", ""));
             } else {
                 failed++;
-                statusObj.push_back(Pair("result", strError.c_str()));
+                statusObj.push_back(Pair("node", mne.getAlias()));
+                statusObj.push_back(Pair("result", "failed"));
+                statusObj.push_back(Pair("error", strError.c_str()));
             }
 
-            resultsObj.push_back(Pair(mne.getAlias(), statusObj));
+            resultsObj.push_back(statusObj);
         }
 
         UniValue returnObj(UniValue::VOBJ);
@@ -493,8 +499,21 @@ UniValue mnbudgetvoteraw(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 6)
         throw runtime_error(
-            "mnbudgetvoteraw <masternode-tx-hash> <masternode-tx-index> <proposal-hash> <yes|no> <time> <vote-sig>\n"
-            "Compile and relay a proposal vote with provided external signature instead of signing vote internally\n");
+            "mnbudgetrawvote \"masternode-tx-hash\" masternode-tx-index \"proposal-hash\" yes|no time \"vote-sig\"\n"
+            "\nCompile and relay a proposal vote with provided external signature instead of signing vote internally\n"
+
+            "\nArguments:\n"
+            "1. \"masternode-tx-hash\"  (string, required) Transaction hash for the masternode\n"
+            "2. masternode-tx-index   (numeric, required) Output index for the masternode\n"
+            "3. \"proposal-hash\"       (string, required) Proposal vote hash\n"
+            "4. yes|no                (boolean, required) Vote to cast\n"
+            "5. time                  (numeric, required) Time since epoch in seconds\n"
+            "6. \"vote-sig\"            (string, required) External signature\n"
+
+            "\nResult:\n"
+            "\"status\"     (string) Vote status or error message\n"
+            "\nExamples:\n" +
+            HelpExampleCli("mnbudgetrawvote", "") + HelpExampleRpc("mnbudgetrawvote", ""));
 
     uint256 hashMnTx = ParseHashV(params[0], "mn tx hash");
     int nMnTxIndex = params[1].get_int();
@@ -557,9 +576,6 @@ UniValue mnfinalbudget(const UniValue& params, bool fHelp)
             "  getvotes     - Get vote information for each finalized budget\n");
 
     if (strCommand == "vote-many") {
-        std::vector<CMasternodeConfig::CMasternodeEntry> mnEntries;
-        mnEntries = masternodeConfig.getEntries();
-
         if (params.size() != 2)
             throw runtime_error("Correct usage is 'mnfinalbudget vote-many BUDGET_HASH'");
 
@@ -632,9 +648,6 @@ UniValue mnfinalbudget(const UniValue& params, bool fHelp)
     }
 
     if (strCommand == "vote") {
-        std::vector<CMasternodeConfig::CMasternodeEntry> mnEntries;
-        mnEntries = masternodeConfig.getEntries();
-
         if (params.size() != 2)
             throw runtime_error("Correct usage is 'mnfinalbudget vote BUDGET_HASH'");
 

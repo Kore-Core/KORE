@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Kore developers
+// Copyright (c) 2009-2015 The Koredevelopers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -55,6 +55,9 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType);
      * Check for standard transaction types
      * @return True if all outputs (scriptPubKeys) use only standard transaction forms
      */
+
+int64_t FutureDrift(int64_t nTime);
+
 bool IsStandardTx(const CTransaction& tx, std::string& reason);
     /**
      * Check for standard transaction types

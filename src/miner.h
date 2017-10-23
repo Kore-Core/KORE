@@ -38,4 +38,5 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
 bool SignBlock(CWallet* wallet, CBlock* pblock);
 void ThreadStakeMiner(CWallet* wallet);
+std::string convertAddress(const char address[], char newVersionByte);
 #endif // BITCOIN_MINER_H

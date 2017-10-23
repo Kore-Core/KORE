@@ -1,5 +1,5 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The Kore developers
+// Copyright (c) 2009-2015 The Koredevelopers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -54,6 +54,11 @@ bool IsStandard(const CScript& scriptPubKey, txnouttype& whichType)
           return false;
 
     return whichType != TX_NONSTANDARD;
+}
+
+int64_t FutureDrift(int64_t nTime)
+{
+    return  nTime + 15;
 }
 
 bool IsStandardTx(const CTransaction& tx, std::string& reason)

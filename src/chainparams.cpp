@@ -111,10 +111,10 @@ public:
         consensus.nMajorityWindow = 1000;
         consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
-        consensus.posLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.powLimit = uint256S("1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nTargetTimespan = 1 * 60;
-        consensus.nTargetSpacing = 1 * 60;
+        consensus.posLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.nTargetTimespan =  60;
+        consensus.nTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
@@ -135,20 +135,20 @@ public:
          * The characters are rarely used upper ASCII, not valid as UTF-8, and produce
          * a large 32-bit integer with any alignment.
          */
-        pchMessageStart[0] = 0xe3;
+        pchMessageStart[0] = 0xe4;
         pchMessageStart[1] = 0x7b;
-        pchMessageStart[2] = 0xbb;
-        pchMessageStart[3] = 0xd8;
+        pchMessageStart[2] = 0xb3;
+        pchMessageStart[3] = 0x28;
         vAlertPubKey = ParseHex("042b0fb78026380244cc458a914dae461899b121f53bc42105d134158b9773e3fdadca67ca3015dc9c4ef9b9df91f2ef05b890a15cd2d2b85930d37376b2196002");
         nDefaultPort = 10743; // 8333;
         nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1508485382, 37, 0x201fffff, 1, pow (7,2) * COIN);
+        genesis = CreateGenesisBlock(1508743835, 37, 0x201fffff, 1, pow (7,2) * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         //MineNewGenesisBlock();
-        assert(consensus.hashGenesisBlock == uint256S("0x067d8a0140f9c4b3eb7578460d916ad179c089a276c2386cdd82f7a3ec2b6403"));
-        assert(genesis.hashMerkleRoot == uint256S("0x684fc96ac7e4aab4548b5430b129f3617d722704fd5647b0ab51c4404723cc82"));
+        assert(consensus.hashGenesisBlock == uint256S("0x021ca3f2e432e514d5ea1ba3c17a6b028149111896cd24871d0aad8b98c25dee"));
+        assert(genesis.hashMerkleRoot == uint256S("0x6f713c3e3d4b31578f1611f2eadef8df80fa49cb16100382062555c2ff671dbc"));
 
         //vSeeds.push_back(CDNSSeedData("kore.sipa.be", "seed.kore.sipa.be")); // Pieter Wuille
 
@@ -173,10 +173,10 @@ public:
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            ( 8, uint256S("0x0003bb845f21b4249d5c47768ef8e19ebf3bc7eeb3473516bc2ccd27fb23808b")),
-            1508492653,
-            9,
-            1440
+            ( 8, uint256S("0x")),
+            0,
+            0,
+            0
         };
     }
 };

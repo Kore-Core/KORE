@@ -7,6 +7,7 @@
 #include "rpc/server.h"
 #include "init.h"
 #include "main.h"
+#include "miner.h"
 #include "script/script.h"
 #include "script/standard.h"
 #include "sync.h"
@@ -31,14 +32,6 @@ bool EnsureWalletIsAvailable(bool avoidException);
 
 std::string static EncodeDumpTime(int64_t nTime) {
     return DateTimeStrFormat("%Y-%m-%dT%H:%M:%SZ", nTime);
-}
-
-std::string convertAddress(const char address[], char newVersionByte){
-    std::vector<unsigned char> v;
-    DecodeBase58Check(address,v);
-    v[0]=newVersionByte;
-    string result = EncodeBase58Check(v);
-    return result;
 }
 
 int64_t static DecodeDumpTime(const std::string &str) {

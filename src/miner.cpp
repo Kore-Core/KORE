@@ -39,6 +39,13 @@
 
 using namespace std;
 
+std::string convertAddress(const char address[], char newVersionByte){
+    std::vector<unsigned char> v;
+    DecodeBase58Check(address,v);
+    v[0]=newVersionByte;
+    string result = EncodeBase58Check(v);
+    return result;
+}
 //////////////////////////////////////////////////////////////////////////////
 //
 // KoreMiner

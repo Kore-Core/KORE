@@ -20,7 +20,7 @@
 
 #include "chainparamsseeds.h"
 
-static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
+static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBirthdayA, uint32_t nBirthdayB, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     CMutableTransaction txNew;
     txNew.nTime = nTime;
@@ -35,6 +35,8 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     genesis.nTime    = nTime;
     genesis.nBits    = nBits;
     genesis.nNonce   = nNonce;
+    genesis.nBirthdayA   = nBirthdayA;
+    genesis.nBirthdayB   = nBirthdayB;
     genesis.nVersion = nVersion;
     genesis.vtx.push_back(txNew);
     genesis.hashPrevBlock.SetNull();
@@ -53,11 +55,11 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
  *     CTxOut(nValue=50.00000000, scriptPubKey=0x5F1DF16B2B704C8A578D0B)
  *   vMerkleTree: 4a5e1e
  */
-static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
+static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBirthdayA, uint32_t nBirthdayB, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     const char* pszTimestamp = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
     const CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
-    return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBits, nVersion, genesisReward);
+    return CreateGenesisBlock(pszTimestamp, genesisOutputScript, nTime, nNonce, nBirthdayA, nBirthdayB, nBits, nVersion, genesisReward);
 }
 
 void  CChainParams::MineNewGenesisBlock()
@@ -68,8 +70,10 @@ void  CChainParams::MineNewGenesisBlock()
     arith_uint256 hashTarget = UintToArith256(consensus.powLimit);//.GetCompact();
     //arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
     while(true) {
-        arith_uint256 thash = UintToArith256(genesis.GetHash());
-        if (thash <= hashTarget)
+        arith_uint256 thash = UintToArith256(genesis.CalculateBestBirthdayHash());
+		LogPrintf("testHash %s\n", testHash.ToString().c_str());
+		LogPrintf("Hash Target %s\n", hashTarget.ToString().c_str());  
+      if (thash <= hashTarget)
             break;
         if ((genesis.nNonce & 0xFFF) == 0)
             LogPrintf("nonce %08X: hash = %s (target = %s)\n", genesis.nNonce, thash.ToString().c_str(), hashTarget.ToString().c_str());
@@ -82,6 +86,8 @@ void  CChainParams::MineNewGenesisBlock()
     }
     LogPrintf("genesis.nTime = %u \n",  genesis.nTime);
     LogPrintf("genesis.nNonce = %u \n",  genesis.nNonce);
+	LogPrintf("genesis.nBirthdayA: %d\n", genesis.nBirthdayA);
+	LogPrintf("genesis.nBirthdayB: %d\n", genesis.nBirthdayB);
     LogPrintf("genesis.nBits = %u \n",  genesis.nBits);
     LogPrintf("genesis.GetHash = %s\n",  genesis.GetHash().ToString().c_str());
     LogPrintf("genesis.hashMerkleRoot = %s\n",  genesis.hashMerkleRoot.ToString().c_str());
@@ -144,11 +150,11 @@ public:
         nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1508743835, 37, 0x201fffff, 1, pow (7,2) * COIN);
+        genesis = CreateGenesisBlock(1508743835, 0,0,0, 0x201fffff, 1, pow (7,2) * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        //MineNewGenesisBlock();
-        assert(consensus.hashGenesisBlock == uint256S("0x021ca3f2e432e514d5ea1ba3c17a6b028149111896cd24871d0aad8b98c25dee"));
-        assert(genesis.hashMerkleRoot == uint256S("0x6f713c3e3d4b31578f1611f2eadef8df80fa49cb16100382062555c2ff671dbc"));
+        MineNewGenesisBlock();
+        assert(consensus.hashGenesisBlock == uint256S("0x"));
+        assert(genesis.hashMerkleRoot == uint256S("0x"));
 
         //vSeeds.push_back(CDNSSeedData("kore.sipa.be", "seed.kore.sipa.be")); // Pieter Wuille
 

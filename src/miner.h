@@ -39,4 +39,6 @@ int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParam
 bool SignBlock(CWallet* wallet, CBlock* pblock);
 void ThreadStakeMiner(CWallet* wallet);
 std::string convertAddress(const char address[], char newVersionByte);
+extern double dHashesPerMin;
+extern int64_t nHPSTimerStart;
 #endif // BITCOIN_MINER_H

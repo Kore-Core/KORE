@@ -387,6 +387,25 @@ UniValue checkkernel(const UniValue& params, bool fHelp)
     return result;
 }
 
+UniValue gethashespermin(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+        throw runtime_error(
+            "gethashespermin\n"
+            "\nReturns a recent hashes per second performance measurement while generating.\n"
+            "See the getgenerate and setgenerate calls to turn generation on and off.\n"
+            "\nResult:\n"
+            "n            (numeric) The recent hashes per second when generation is on (will return 0 if generation is off)\n"
+            "\nExamples:\n"
+            + HelpExampleCli("gethashespermin", "")
+            + HelpExampleRpc("gethashespermin", "")
+        );
+
+    if (GetTimeMillis() - nHPSTimerStart > 8000 *60)
+        return 0.0;
+    return dHashesPerMin;
+}
+
 UniValue getmininginfo(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)
@@ -402,6 +421,7 @@ UniValue getmininginfo(const UniValue& params, bool fHelp)
             "  \"errors\": \"...\"          (string) Current errors\n"
             "  \"generate\": true|false     (boolean) If the generation is on or off (see getgenerate or setgenerate calls)\n"
             "  \"genproclimit\": n          (numeric) The processor limit for generation. -1 if no generation. (see getgenerate or setgenerate calls)\n"
+            "  \"hashespermin\": n          (numeric) The hashes per second of the generation, or 0 if no generation.\n"
             "  \"pooledtx\": n              (numeric) The size of the mem pool\n"
             "  \"testnet\": true|false      (boolean) If using testnet or not\n"
             "  \"chain\": \"xxxx\",         (string) current network name as defined in BIP70 (main, test, regtest)\n"
@@ -441,6 +461,7 @@ UniValue getmininginfo(const UniValue& params, bool fHelp)
     obj.push_back(Pair("testnet",          Params().TestnetToBeDeprecatedFieldRPC()));
     obj.push_back(Pair("chain",            Params().NetworkIDString()));
     obj.push_back(Pair("generate",         getgenerate(params, false)));
+    obj.push_back(Pair("hashespermin",     gethashespermin(params, false)));
     return obj;
 }
 
@@ -476,6 +497,160 @@ UniValue prioritisetransaction(const UniValue& params, bool fHelp)
     return true;
 }
 
+Value getwork(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() > 1)
+        throw runtime_error(
+            "getwork [data]\n"
+            "If [data] is not specified, returns formatted hash data to work on:\n"
+            "  \"midstate\" : precomputed hash state after hashing the first half of the data (DEPRECATED)\n" // deprecated
+            "  \"data\" : block data\n"
+            "  \"hash1\" : formatted hash buffer for second hash (DEPRECATED)\n" // deprecated
+            "  \"target\" : little endian hash target\n"
+            "If [data] is specified, tries to solve the block and returns true if it was successful.");
+
+    if (vNodes.empty())
+        throw JSONRPCError(RPC_CLIENT_NOT_CONNECTED, "Bitcredit is not connected!");
+
+    if (IsInitialBlockDownload())
+        throw JSONRPCError(RPC_CLIENT_IN_INITIAL_DOWNLOAD, "Bitcredit is downloading blocks...");
+
+    typedef map<uint256, pair<CBlock*, CScript> > mapNewBlock_t;
+    static mapNewBlock_t mapNewBlock;    // FIXME: thread safety
+    static vector<CBlockTemplate*> vNewBlockTemplate;
+
+    if (params.size() == 0)
+    {
+        // Update block
+        static unsigned int nTransactionsUpdatedLast;
+        static CBlockIndex* pindexPrev;
+        static int64_t nStart;
+        static CBlockTemplate* pblocktemplate;
+
+	static uint32_t prevNTime = 0;
+	static uint32_t prevNNonce = 0;
+
+        if (pindexPrev != chainActive.Tip() ||
+            (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60))
+        {
+            if (pindexPrev != chainActive.Tip())
+            {
+                // Deallocate old blocks since they're obsolete now
+                mapNewBlock.clear();
+                BOOST_FOREACH(CBlockTemplate* pblocktemplate, vNewBlockTemplate)
+                    delete pblocktemplate;
+                vNewBlockTemplate.clear();
+            }
+
+            // Clear pindexPrev so future getworks make a new block, despite any failures from here on
+            pindexPrev = NULL;
+
+            // Store the pindexBest used before CreateNewBlock, to avoid races
+            nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
+            CBlockIndex* pindexPrevNew = chainActive.Tip();
+            nStart = GetTime();
+
+            // Create new block
+            pblocktemplate = CreateNewBlockWithKey();
+
+            if (!pblocktemplate)
+                throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
+            vNewBlockTemplate.push_back(pblocktemplate);
+
+            // Need to update only after we know CreateNewBlock succeeded
+            pindexPrev = pindexPrevNew;
+
+            // YVG: Only increment extra nonce upon block creation, otherwise it will kill merkle hash
+		CBlock* pblock_new = &pblocktemplate->block; // pointer for convenience
+            static unsigned int nExtraNonce = 0;
+            IncrementExtraNonce(pblock_new, pindexPrev, nExtraNonce);
+        }
+        
+		CBlock* pblock = &pblocktemplate->block; // pointer for convenience
+		
+        // Update nTime
+        UpdateTime(pblock, pindexPrev);
+
+	if (pblock->nTime == prevNTime)
+	{
+		prevNNonce += 0x00100000;
+	}
+	else
+	{
+		prevNTime = pblock->nTime;
+		prevNNonce = 0;
+	}
+
+
+		pblock->nNonce = prevNNonce;
+
+        // Save
+        mapNewBlock[pblock->hashMerkleRoot] = make_pair(pblock, pblock->vtx[0].vin[0].scriptSig);
+        
+		
+        char pdata[128];
+        
+        pblock->nBirthdayA = 0;
+        pblock->nBirthdayB = 0;
+
+        uint256 hashTarget = uint256().SetCompact(pblock->nBits);
+		
+		memcpy( pdata, (char*)pblock, 88);
+
+        Object result;
+
+        if(fDebug)LogPrintf("Getwork Block Send %s\n", HexStr(BEGIN(pdata), END(pdata)));
+        if (fDebug)LogPrintf("Getwork Target Send %s\n", HexStr(BEGIN(hashTarget), END(hashTarget)));
+
+
+        result.push_back(Pair("data",     HexStr(BEGIN(pdata), END(pdata))));
+
+        result.push_back(Pair("target",   HexStr(BEGIN(hashTarget), END(hashTarget))));
+        return result;
+        
+        
+    }
+    else
+    {
+        // Parse parameters
+        vector<unsigned char> vchData = ParseHex(params[0].get_str());
+
+        if (fDebug)LogPrintf("Getwork Block   %d bytes\n", vchData.size());
+
+        if (vchData.size() != 88)
+            throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter");
+
+        
+		CBlock* pdata = (CBlock*)vchData.data();//&vchData[0];
+        
+        LogPrintf("Getwork Block Recvd %s\n", HexStr(BEGIN(*pdata), 88+BEGIN(*pdata)));
+
+        // Get saved block
+        if (!mapNewBlock.count(pdata->hashMerkleRoot))
+            return false;
+
+        if (fDebug)LogPrintf("Getwork Block R %d bytes\n", vchData.size());
+
+        CBlock* pblock = mapNewBlock[pdata->hashMerkleRoot].first;
+
+        if (fDebug)LogPrintf("Getwork Block Mappd %s\n", HexStr(BEGIN(*pblock), 88+BEGIN(*pblock)));
+
+        pblock->nTime = pdata->nTime;
+        pblock->nNonce = pdata->nNonce;
+        pblock->nBirthdayA = pdata->nBirthdayA;
+        pblock->nBirthdayB = pdata->nBirthdayB;     
+        pblock->hashMerkleRoot = pblock->BuildMerkleTree();
+
+        if (fDebug)LogPrintf("Getwork Block Rebld %s\n", HexStr(BEGIN(*pblock), 88+BEGIN(*pblock)));
+
+		uint256 posthash = pblock->GetHash();
+
+        if (fDebug)LogPrintf("posthash   %s\n", posthash.ToString());
+
+        return ProcessBlockFound(pblock, *pwalletMain);
+
+    }
+}
 
 // NOTE: Assumes a conclusive result; if result is inconclusive, it must be handled by caller
 static UniValue BIP22ValidationResult(const CValidationState& state)

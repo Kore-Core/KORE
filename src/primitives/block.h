@@ -27,6 +27,8 @@ public:
     uint32_t nTime;
     uint32_t nBits;
     uint32_t nNonce;
+    uint32_t nBirthdayA;
+    uint32_t nBirthdayB;
 
     CBlockHeader()
     {
@@ -44,6 +46,8 @@ public:
         READWRITE(nTime);
         READWRITE(nBits);
         READWRITE(nNonce);
+        READWRITE(nBirthdayA);
+        READWRITE(nBirthdayB);
     }
 
     void SetNull()
@@ -54,16 +58,22 @@ public:
         nTime = 0;
         nBits = 0;
         nNonce = 0;
+        nBirthdayA = 0;
+		nBirthdayB = 0;
     }
 
     bool IsNull() const
     {
         return (nBits == 0);
     }
-
-    uint256 GetSHA256() const;
-    uint256 GetMemHash() const;
+    
     uint256 GetHash() const;
+	
+    uint256 GetVerifiedHash() const;
+
+    uint256 CalculateBestBirthdayHash();
+
+    uint256 GetMidHash() const;
     int64_t GetBlockTime() const
     {
         return (int64_t)nTime;
@@ -136,6 +146,8 @@ public:
         block.nTime          = nTime;
         block.nBits          = nBits;
         block.nNonce         = nNonce;
+		block.nBirthdayA     = nBirthdayA;
+        block.nBirthdayB     = nBirthdayB;         
         return block;
     }
 

@@ -7,27 +7,56 @@
 
 #include "hash.h"
 #include "tinyformat.h"
+#include "momentum.h"
 #include "utilstrencodings.h"
 #include "crypto/common.h"
-#include "axiom.h"
-
-uint256 CBlockHeader::GetSHA256() const
-{
-    return SerializeHash(*this);
-}
-
-uint256 CBlockHeader::GetMemHash() const
-{
-    return AxiomHash(BEGIN(nVersion), END(nNonce));
-}
 
 uint256 CBlockHeader::GetHash() const
 {
-#ifdef DISABLE_MEM_HASH_ALGO
-    return GetSHA256();
-#else
-    return GetMemHash();
-#endif
+    return Hash(BEGIN(nVersion), END(nBirthdayB));
+}
+
+uint256 CBlock::GetMidHash() const
+{
+    return Hash(BEGIN(nVersion), END(nNonce));
+}
+
+uint256 CBlock::GetVerifiedHash() const
+{
+ 
+ 	uint256 midHash = GetMidHash();
+ 		    	
+	uint256 r = Hash(BEGIN(nVersion), END(nBirthdayB));
+
+ 	if(!bts::momentum_verify( midHash, nBirthdayA, nBirthdayB)){
+ 		return uint256("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffeeee");
+ 	}
+   
+     return r;
+}
+ 
+uint256 CBlock::CalculateBestBirthdayHash() {
+ 				
+	uint256 midHash = GetMidHash();		
+	std::vector< std::pair<uint32_t,uint32_t> > results =bts::momentum_search( midHash );
+	uint32_t candidateBirthdayA=0;
+	uint32_t candidateBirthdayB=0;
+	uint256 smallestHashSoFar("0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffffffdddd");
+	for (unsigned i=0; i < results.size(); i++) {
+	nBirthdayA = results[i].first;
+	nBirthdayB = results[i].second;
+	uint256 fullHash = Hash(BEGIN(nVersion), END(nBirthdayB));
+		if(fullHash<smallestHashSoFar){
+	
+				smallestHashSoFar=fullHash;
+				candidateBirthdayA=results[i].first;
+				candidateBirthdayB=results[i].second;
+			}
+			nBirthdayA = candidateBirthdayA;
+ 			nBirthdayB = candidateBirthdayB;
+ 		}
+ 		
+ 		return GetHash();
 }
 
 std::string CBlockHeader::ToString() const

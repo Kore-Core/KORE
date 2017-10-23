@@ -241,6 +241,8 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
                 pindexNew->nTime          = diskindex.nTime;
                 pindexNew->nBits          = diskindex.nBits;
                 pindexNew->nNonce         = diskindex.nNonce;
+                pindexNew->nBirthdayA     = diskindex.nBirthdayA;
+                pindexNew->nBirthdayB     = diskindex.nBirthdayB;
                 pindexNew->nStatus        = diskindex.nStatus;
                 pindexNew->nStakeModifier = diskindex.nStakeModifier;
                 pindexNew->nMoneySupply   = diskindex.nMoneySupply;

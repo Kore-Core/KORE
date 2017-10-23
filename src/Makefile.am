@@ -114,6 +114,7 @@ BITCOIN_CORE_H = \
   memusage.h \
   merkleblock.h \
   miner.h \
+  momentum.h \
   net.h \
   netbase.h \
   noui.h \
@@ -139,6 +140,7 @@ BITCOIN_CORE_H = \
   script/sigcache.h \
   script/sign.h \
   script/standard.h \
+  semiOrderedMap.h \
   serialize.h \
   spork.h \
   streams.h \
@@ -452,6 +454,7 @@ libkore_common_a_SOURCES = \
   chainparams.cpp \
   coins.cpp \
   compressor.cpp \
+  momentum.cpp \
   consensus/merkle.cpp \
   core_read.cpp \
   core_write.cpp \

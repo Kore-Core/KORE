@@ -313,7 +313,7 @@ static const CRPCCommand vRPCCommands[] =
     { "rawtransactions",    "decodescript",           &decodescript,           true  },
     { "rawtransactions",    "getrawtransaction",      &getrawtransaction,      true  },
     { "rawtransactions",    "sendrawtransaction",     &sendrawtransaction,     false },
-    { "rawtransactions",    "searchrawtransactions",     &searchrawtransactions,     false },
+    { "rawtransactions",    "searchrawtransactions",  &searchrawtransactions,  false },
     { "rawtransactions",    "signrawtransaction",     &signrawtransaction,     false }, /* uses wallet if enabled */
 #ifdef ENABLE_WALLET
     { "rawtransactions",    "fundrawtransaction",     &fundrawtransaction,     false },
@@ -357,7 +357,7 @@ static const CRPCCommand vRPCCommands[] =
     { "wallet",             "getwalletinfo",          &getwalletinfo,          false },
     { "wallet",             "importprivkey",          &importprivkey,          true  },
     { "wallet",             "importwallet",           &importwallet,           true  },
-    { "wallet",             "importwalletfile",       &importwalletfile,           true  },
+    { "wallet",             "importwalletfile",       &importwalletfile,       true  },
     { "wallet",             "importaddress",          &importaddress,          true  },
     { "wallet",             "importpubkey",           &importpubkey,           true  },
     { "wallet",             "keypoolrefill",          &keypoolrefill,          true  },
@@ -368,7 +368,7 @@ static const CRPCCommand vRPCCommands[] =
     { "wallet",             "listreceivedbyaddress",  &listreceivedbyaddress,  false },
     { "wallet",             "listsinceblock",         &listsinceblock,         false },
     { "wallet",             "listtransactions",       &listtransactions,       false },
-    { "wallet",             "listunspent",            &listunspent,            false },
+    { "wallet",             "listunspent",            &listunspent,            true  },
     { "wallet",             "lockunspent",            &lockunspent,            true  },
     { "wallet",             "move",                   &movecmd,                false },
     { "wallet",             "sendfrom",               &sendfrom,               false },
@@ -380,12 +380,13 @@ static const CRPCCommand vRPCCommands[] =
     { "wallet",             "walletlock",             &walletlock,             true  },
     { "wallet",             "walletpassphrasechange", &walletpassphrasechange, true  },
     { "wallet",             "walletpassphrase",       &walletpassphrase,       true  },
-        {"wallet", "setstakesplitthreshold", &setstakesplitthreshold, true},
-        {"wallet", "sendtoaddressix", &sendtoaddressix,  true},
-        {"wallet", "multisend", &multisend,  true},
-        {"wallet", "getstakesplitthreshold", &getstakesplitthreshold,  true},
-        {"wallet", "autocombinerewards", &autocombinerewards,  true},
-{"wallet", "sendtoaddressix", &sendtoaddressix,  true},
+    { "wallet",             "setstakesplitthreshold", &setstakesplitthreshold, true  },
+    { "wallet",             "sendtoaddressix",        &sendtoaddressix,        true  },
+    { "wallet",             "multisend",              &multisend,              true  },
+    { "wallet",             "getstakesplitthreshold", &getstakesplitthreshold, true  },
+    { "wallet",             "autocombinerewards",     &autocombinerewards,     true  },
+    { "wallet",             "reservebalance",         &reservebalance,         true  },        
+    { "wallet",             "sendtoaddressix",        &sendtoaddressix,        true  },
     /* Master features */
     {"masternode",          "masternode",             &masternode,             true  },
     {"masternode",          "masternodelist",         &masternodelist,         true  },
@@ -395,7 +396,7 @@ static const CRPCCommand vRPCCommands[] =
     {"masternode",          "mnsync",                 &mnsync,                 true  },
 
     /* Dark Send */
-    { "Dark",               "darksend",               &obfuscation,               false },
+    { "Dark",               "darksend",               &obfuscation,            false },
 
 #endif // ENABLE_WALLET
 };

@@ -367,6 +367,8 @@ void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned
 //
 // Internal miner
 //
+double dHashesPerMin = 0.0;
+int64_t nHPSTimerStart = 0;
 
 //
 static bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
@@ -576,53 +578,88 @@ void static KoreMiner(const CChainParams& chainparams)
             //
             int64_t nStart = GetTime();
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
-            pblock->nNonce = 1;
-            uint256 hash = pblock->GetHash();
-            while (UintToArith256(hash) > hashTarget)
+            uint256 testHash;
+            for (;;)
             {
-                // Check for stop or if block needs to be rebuilt
-                boost::this_thread::interruption_point();
-                // Regtest mode doesn't require peers
-                if (vNodes.empty() && chainparams.MiningRequiresPeers())
-                    break;
-                if (pblock->nNonce >= 0xffff0000)
-                    break;
-                if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
-                    break;
-                if (pindexPrev != chainActive.Tip())
-                    break;
+                unsigned int nHashesDone = 0;
+                unsigned int nNonceFound = (unsigned int) -1;
 
+                for(int i=0;i<1;i++){
+                    pblock->nNonce=pblock->nNonce+1;
+                    testHash=pblock->GetHash();
+                    nHashesDone++;
+                    LogPrintf("testHash %s\n", testHash.ToString().c_str());
+                    LogPrintf("Hash Target %s\n", hashTarget.ToString().c_str());
+
+                    if(UintToArith256(testHash)<hashTarget){
+                        nNonceFound=pblock->nNonce;
+                        LogPrintf("Found Hash %s\n", testHash.ToString().c_str());
+                        break;
+                    }
+                 }
                 // Update nTime every few seconds
-                if (UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev) < 0)
-                    break; // Recreate the block if the clock has run backwards,
-                           // so that we can use the correct time.
-                if (chainparams.GetConsensus().fPowAllowMinDifficultyBlocks)
+                if (nNonceFound != (unsigned int) -1)
                 {
-                    // Changing pblock->nTime can change work required on testnet:
-                    hashTarget.SetCompact(pblock->nBits);
+
+                    if (UintToArith256(testHash) <= hashTarget)
+                    {
+                        // Found a solution
+
+                        LogPrintf("hash %s\n", testHash.ToString().c_str());
+                        LogPrintf("hash2 %s\n", pblock->GetHash().ToString().c_str());
+                        assert(testHash == pblock->GetHash());
+
+                        SetThreadPriority(THREAD_PRIORITY_NORMAL);
+                        ProcessBlockFound(pblock, chainparams);
+                        SetThreadPriority(THREAD_PRIORITY_LOWEST);
+                        break;
+                    }
                 }
 
-                while (((const uint8_t*)hash.begin())[31] && pblock->nNonce & 0xfff)
-                {
-                    pblock->nNonce++;
-                    hash = pblock->GetHash();
-                }
-            }
-            if (UintToArith256(hash) <= hashTarget)
-            {
-                // Found a solution
-                assert(hash == pblock->GetHash());
+                    // Meter hashes/sec
+                    static int64_t nHashCounter;
+                    if (nHPSTimerStart == 0)
+                    {
+                        nHPSTimerStart = GetTimeMillis();
+                        nHashCounter = 0;
+                    }
+                    else
+                        nHashCounter += nHashesDone;
+                    if (GetTimeMillis() - nHPSTimerStart > 4000*60)
+                    {
+                        static CCriticalSection cs;
+                        {
+                            LOCK(cs);
+                            if (GetTimeMillis() - nHPSTimerStart > 4000*60)
+                            {
+                                dHashesPerMin = 1000.0 * nHashCounter *60 / (GetTimeMillis() - nHPSTimerStart);
+                                nHPSTimerStart = GetTimeMillis();
+                                nHashCounter = 0;
+                                static int64_t nLogTime;
+                                if (GetTime() - nLogTime > 30 * 60)
+                                {
+                                    nLogTime = GetTime();
+                                    LogPrintf("hashmeter %6.0f khash/s\n", dHashesPerMin/1000.0);
+                                }
+                            }
+                        }
+                    }
 
-                SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                LogPrintf("KoreMiner:\n");
-                LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex(), hashTarget.GetHex());
-                ProcessBlockFound(pblock, chainparams);
-                SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                coinbaseScript->KeepScript();
-                // In regression test mode, stop mining after a block is found.
-                if (chainparams.MineBlocksOnDemand())
-                    throw boost::thread_interrupted();
-            }
+                    // Check for stop or if block needs to be rebuilt
+                    boost::this_thread::interruption_point();
+                    // Regtest mode doesn't require peers
+                    if (vNodes.empty() && Params().MiningRequiresPeers())
+                        break;
+                    if (nNonceFound >= 0xffff0000)
+                        break;
+                    if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
+                        break;
+                    if (pindexPrev != chainActive.Tip())
+                        break;
+
+                    // Update nTime every few seconds
+                    UpdateTime(pblock, chainparams.GetConsensus(), pindexPrev);
+                }
         }
     }
     catch (const boost::thread_interrupted&)

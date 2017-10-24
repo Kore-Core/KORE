@@ -71,7 +71,7 @@ void  CChainParams::MineNewGenesisBlock()
     //arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
     while(true) {
         arith_uint256 thash = UintToArith256(genesis.CalculateBestBirthdayHash());
-		LogPrintf("testHash %s\n", testHash.ToString().c_str());
+		LogPrintf("teHash %s\n", thash.ToString().c_str());
 		LogPrintf("Hash Target %s\n", hashTarget.ToString().c_str());  
       if (thash <= hashTarget)
             break;
@@ -226,7 +226,7 @@ public:
         nMaxTipAge = 0x7fffffff;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1453993470, 414098458, 0x1d00ffff, 1, 48 * COIN); // 50 * COIN);
+        genesis = CreateGenesisBlock(1453993470, 414098458, 0, 0, 0x1d00ffff, 1, 48 * COIN); // 50 * COIN);
         // MineBlock(&genesis); // REMOVE
         consensus.hashGenesisBlock = genesis.GetHash();
 
@@ -301,7 +301,7 @@ public:
         nDefaultPort = 18444;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1453993470, 2, 0x207fffff, 1, 48 * COIN); // 50 * COIN);
+        genesis = CreateGenesisBlock(1453993470, 2,0,0, 0x207fffff, 1, 48 * COIN); // 50 * COIN);
 //        MineBlock(&genesis); // REMOVE
         consensus.hashGenesisBlock = genesis.GetHash();
 

@@ -7,6 +7,7 @@
 #include "chain.h"
 #include "chainparams.h"
 #include "consensus/consensus.h"
+#include "consensus/merkle.h"
 #include "consensus/params.h"
 #include "consensus/validation.h"
 #include "core_io.h"
@@ -497,7 +498,7 @@ UniValue prioritisetransaction(const UniValue& params, bool fHelp)
     return true;
 }
 
-Value getwork(const Array& params, bool fHelp)
+UniValue getwork(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() > 1)
         throw runtime_error(
@@ -551,7 +552,9 @@ Value getwork(const Array& params, bool fHelp)
             nStart = GetTime();
 
             // Create new block
-            pblocktemplate = CreateNewBlockWithKey();
+            boost::shared_ptr<CReserveScript> coinstakeScript;
+            GetMainSignals().ScriptForMining(coinstakeScript);
+            pblocktemplate = CreateNewBlock(Params(), coinstakeScript->reserveScript, pwalletMain, false);
 
             if (!pblocktemplate)
                 throw JSONRPCError(RPC_OUT_OF_MEMORY, "Out of memory");
@@ -561,7 +564,7 @@ Value getwork(const Array& params, bool fHelp)
             pindexPrev = pindexPrevNew;
 
             // YVG: Only increment extra nonce upon block creation, otherwise it will kill merkle hash
-		CBlock* pblock_new = &pblocktemplate->block; // pointer for convenience
+		    CBlock* pblock_new = &pblocktemplate->block; // pointer for convenience
             static unsigned int nExtraNonce = 0;
             IncrementExtraNonce(pblock_new, pindexPrev, nExtraNonce);
         }
@@ -569,7 +572,7 @@ Value getwork(const Array& params, bool fHelp)
 		CBlock* pblock = &pblocktemplate->block; // pointer for convenience
 		
         // Update nTime
-        UpdateTime(pblock, pindexPrev);
+        UpdateTime(pblock, Params().GetConsensus(), pindexPrev);
 
 	if (pblock->nTime == prevNTime)
 	{
@@ -593,11 +596,11 @@ Value getwork(const Array& params, bool fHelp)
         pblock->nBirthdayA = 0;
         pblock->nBirthdayB = 0;
 
-        uint256 hashTarget = uint256().SetCompact(pblock->nBits);
+                    arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
 		
 		memcpy( pdata, (char*)pblock, 88);
 
-        Object result;
+        UniValue result(UniValue::VOBJ);
 
         if(fDebug)LogPrintf("Getwork Block Send %s\n", HexStr(BEGIN(pdata), END(pdata)));
         if (fDebug)LogPrintf("Getwork Target Send %s\n", HexStr(BEGIN(hashTarget), END(hashTarget)));
@@ -639,7 +642,7 @@ Value getwork(const Array& params, bool fHelp)
         pblock->nNonce = pdata->nNonce;
         pblock->nBirthdayA = pdata->nBirthdayA;
         pblock->nBirthdayB = pdata->nBirthdayB;     
-        pblock->hashMerkleRoot = pblock->BuildMerkleTree();
+        pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
 
         if (fDebug)LogPrintf("Getwork Block Rebld %s\n", HexStr(BEGIN(*pblock), 88+BEGIN(*pblock)));
 
@@ -647,7 +650,7 @@ Value getwork(const Array& params, bool fHelp)
 
         if (fDebug)LogPrintf("posthash   %s\n", posthash.ToString());
 
-        return ProcessBlockFound(pblock, *pwalletMain);
+        return ProcessBlockFound(pblock, Params());
 
     }
 }

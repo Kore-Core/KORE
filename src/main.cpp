@@ -1829,9 +1829,6 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
 
 CAmount GetProofOfWorkSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
-    if (nHeight > consensusParams.nLastPOWBlock)
-    	return 0.001 * COIN;
-
     return 5 * COIN;
 }
 
@@ -3892,8 +3889,8 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
     const int nHeight = pindexPrev == NULL ? 0 : pindexPrev->nHeight + 1;
     const Consensus::Params& consensusParams = Params().GetConsensus();
 
-    //if (block.IsProofOfWork() && nHeight > consensusParams.nLastPOWBlock)
-    //	return state.DoS(100, error("%s : reject proof-of-work at height %d", __func__, nHeight), REJECT_INVALID, "bad-pow-height");
+    if (block.IsProofOfWork() && nHeight > consensusParams.nLastPOWBlock)
+    	return state.DoS(100, error("%s : reject proof-of-work at height %d", __func__, nHeight), REJECT_INVALID, "bad-pow-height");
 
     // Start enforcing BIP113 (Median Time Past) using versionbits logic.
     int nLockTimeFlags = 0;

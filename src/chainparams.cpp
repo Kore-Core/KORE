@@ -118,7 +118,7 @@ public:
         consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x000000000000024b89b42a942fe0d9fea3bb44ab7bd1b19115dd6a759c0808b8");
         consensus.powLimit = uint256S("1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.posLimit = uint256S("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.posLimit = uint256S("000000000000ffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nTargetTimespan =  60;
         consensus.nTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
@@ -129,7 +129,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
         consensus.nStakeTimestampMask = 0xf;
-        consensus.nLastPOWBlock = 6000;
+        consensus.nLastPOWBlock = 1000;
         consensus.nStakeMinAge = 4 * 60 * 60;
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
@@ -144,17 +144,17 @@ public:
         pchMessageStart[0] = 0xe4;
         pchMessageStart[1] = 0x7b;
         pchMessageStart[2] = 0xb3;
-        pchMessageStart[3] = 0x28;
+        pchMessageStart[3] = 0x4a;
         vAlertPubKey = ParseHex("042b0fb78026380244cc458a914dae461899b121f53bc42105d134158b9773e3fdadca67ca3015dc9c4ef9b9df91f2ef05b890a15cd2d2b85930d37376b2196002");
         nDefaultPort = 10743; // 8333;
         nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1508743835, 8, 30807677, 54712834, 0x201fffff, 1, pow (7,2) * COIN);
+        genesis = CreateGenesisBlock(1508884606, 22, 12624920, 58284520, 0x201fffff, 1, pow (7,2) * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         //MineNewGenesisBlock();
-        assert(consensus.hashGenesisBlock == uint256S("0x14c268fab65e5b729e704fddd6c0787a14192eff8cab61ed54dacdd086c9e814"));
-        assert(genesis.hashMerkleRoot == uint256S("0x6f713c3e3d4b31578f1611f2eadef8df80fa49cb16100382062555c2ff671dbc"));
+        assert(consensus.hashGenesisBlock == uint256S("0x0aab10677b4fe0371a67f99e78a69e7d9fa03a1c7d48747978da405dc5abeb99"));
+        assert(genesis.hashMerkleRoot == uint256S("0x53e2105c87e985ab3a3a3b3c6921f660f18535f935e447760758d4ed7c4c748c"));
 
         //vSeeds.push_back(CDNSSeedData("kore.sipa.be", "seed.kore.sipa.be")); // Pieter Wuille
 
@@ -175,14 +175,14 @@ public:
         nPoolMaxTransactions = 3;
         strSporkKey = "0427E31B51989DB4DFEAB8C3901FB1862A621E6B0D4CF556E5C9AAD7283A46C915EC4508FB4F248534C3A03FC0475ED3785086B9C217E0F42ED4C8BF80ED2296C8";
         strObfuscationPoolDummyAddress = "KWFvN4Gb55dzG95cq3k5jXFmNVkJLftyjZ";
-        nStartMasternodePayments = 1507806542; //Genesis time
+        nStartMasternodePayments = 1508884606; //Genesis time
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of
-            ( 5, uint256S("0x005cfbc88c7d1aa71401b3872dcd1c60bc35e17bc048e0075d354fc52f72a790")),
-            1508811375,
-            6,
-            1440
+            ( 0, uint256S("0x")),
+            0,
+            0,
+            0
         };
     }
 };

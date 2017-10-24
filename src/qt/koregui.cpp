@@ -225,12 +225,12 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
     QSpinBox *opacitySpinBox = new QSpinBox();
     opacitySpinBox->setRange(40, 100);
     
-    QLabel *minerLabel = new QLabel("Miner Threads: 0");
-	QSlider *miner = new QSlider(Qt::Horizontal, this);
-	int cores = GetNumCores();
-	miner->setRange(0, cores);
-	QString minermax = QString::number(cores);
-	QLabel *maxminer = new QLabel(minermax);	
+    //QLabel *minerLabel = new QLabel("Miner Threads: 0");
+	//QSlider *miner = new QSlider(Qt::Horizontal, this);
+	//int cores = GetNumCores();
+	//miner->setRange(0, cores);
+	//QString minermax = QString::number(cores);
+	//QLabel *maxminer = new QLabel(minermax);	
 	labelStakingIcon = new QLabel();
 
     frameBlocksLayout->addWidget(labelBtclabel);
@@ -272,9 +272,9 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
     statusBar()->addWidget(progressBarLabel);
     statusBar()->addWidget(progressBar);
     
-    statusBar()->addWidget(minerLabel);
-    statusBar()->addWidget(miner);
-    statusBar()->addWidget(maxminer);
+    //statusBar()->addWidget(minerLabel);
+    //statusBar()->addWidget(miner);
+    //statusBar()->addWidget(maxminer);
     statusBar()->addWidget(opacityLabel);
     statusBar()->addWidget(opacitySpinBox);
     
@@ -304,7 +304,7 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
 
     opacitySpinBox->setValue(static_cast<int>(windowOpacity() * 100));
     connect(opacitySpinBox, SIGNAL(valueChanged(int)), this, SLOT(on_opacitySpinBox_valueChanged(int)));
-    connect(miner, SIGNAL(valueChanged(int)), this, SLOT(engageDisengageMining(int)));
+    //connect(miner, SIGNAL(valueChanged(int)), this, SLOT(engageDisengageMining(int)));
 
     QTimer* timerStakingIcon = new QTimer(labelStakingIcon);
     connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(setStakingStatus()));
@@ -543,6 +543,10 @@ void KoreGUI::createMenuBar()
 
     // Configure the menus
     QMenu *file = appMenuBar->addMenu(tr("&File"));
+#if defined(Q_OS_WIN)
+        file->setStyleSheet("font-weight: bold; color: black, background-color: transparent");
+#endif
+
     if(walletFrame)
     {
         file->addAction(openAction);
@@ -557,6 +561,9 @@ void KoreGUI::createMenuBar()
     file->addAction(quitAction);
 
     QMenu *settings = appMenuBar->addMenu(tr("&Settings"));
+#if defined(Q_OS_WIN)
+        settings->setStyleSheet("font-weight: bold; color: black, background-color: transparent");
+#endif
     if(walletFrame)
     {
         settings->addAction(encryptWalletAction);
@@ -569,7 +576,11 @@ void KoreGUI::createMenuBar()
     settings->addAction(optionsAction);
 
     if (walletFrame) {
+
         QMenu* tools = appMenuBar->addMenu(tr("&Tools"));
+#if defined(Q_OS_WIN)
+        tools->setStyleSheet("font-weight: bold; color: black, background-color: transparent");
+#endif
         tools->addAction(openRepairAction);
         tools->addAction(openConfEditorAction);
         tools->addAction(openMNConfEditorAction);
@@ -577,6 +588,10 @@ void KoreGUI::createMenuBar()
     }
 
     QMenu *help = appMenuBar->addMenu(tr("&Help"));
+#if defined(Q_OS_WIN)
+        help->setStyleSheet("font-weight: bold; color: black, background-color: transparent");
+#endif
+
     if(walletFrame)
     {
         help->addAction(openRPCConsoleAction);

@@ -201,11 +201,15 @@ typedef unsigned __int64 uint64_t;
 #endif
 #endif
 
+// Probably should define HAVE_SSIZE_T elsewhere
+// and remove the test for WIN32
 #ifndef HAVE_SSIZE_T
 #if SIZEOF_SIZE_T == 8
 typedef int64_t ssize_t;
 #elif SIZEOF_SIZE_T == 4
+#ifndef WIN32
 typedef int32_t ssize_t;
+#endif
 #else
 #error "Can't define ssize_t."
 #endif

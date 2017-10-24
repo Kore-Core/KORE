@@ -28,8 +28,9 @@ NetworkStyle::NetworkStyle(const QString &appName, const int iconColorHueShift, 
 {
     // load pixmap
     QPixmap pixmap(":/icons/kore");
+    splashImage = pixmap;
 
-    if(iconColorHueShift != 0 && iconColorSaturationReduction != 0)
+    /*if(iconColorHueShift != 0 && iconColorSaturationReduction != 0)
     {
         // generate QImage from QPixmap
         QImage img = pixmap.toImage();
@@ -73,7 +74,7 @@ NetworkStyle::NetworkStyle(const QString &appName, const int iconColorHueShift, 
 #else
         pixmap = QPixmap::fromImage(img);
 #endif
-    }
+    }*/
 
     appIcon             = QIcon(pixmap);
     trayAndWindowIcon   = QIcon(pixmap.scaled(QSize(256,256)));

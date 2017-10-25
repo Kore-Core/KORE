@@ -18,6 +18,35 @@
 
 using namespace std;
 
+void budgetToJSON(CBudgetProposal* pbudgetProposal, UniValue& bObj)
+{
+    CTxDestination address1;
+    ExtractDestination(pbudgetProposal->GetPayee(), address1);
+    CKoreAddress address2(address1);
+
+    bObj.push_back(Pair("Name", pbudgetProposal->GetName()));
+    bObj.push_back(Pair("URL", pbudgetProposal->GetURL()));
+    bObj.push_back(Pair("Hash", pbudgetProposal->GetHash().ToString()));
+    bObj.push_back(Pair("FeeHash", pbudgetProposal->nFeeTXHash.ToString()));
+    bObj.push_back(Pair("BlockStart", (int64_t)pbudgetProposal->GetBlockStart()));
+    bObj.push_back(Pair("BlockEnd", (int64_t)pbudgetProposal->GetBlockEnd()));
+    bObj.push_back(Pair("TotalPaymentCount", (int64_t)pbudgetProposal->GetTotalPaymentCount()));
+    bObj.push_back(Pair("RemainingPaymentCount", (int64_t)pbudgetProposal->GetRemainingPaymentCount()));
+    bObj.push_back(Pair("PaymentAddress", address2.ToString()));
+    bObj.push_back(Pair("Ratio", pbudgetProposal->GetRatio()));
+    bObj.push_back(Pair("Yeas", (int64_t)pbudgetProposal->GetYeas()));
+    bObj.push_back(Pair("Nays", (int64_t)pbudgetProposal->GetNays()));
+    bObj.push_back(Pair("Abstains", (int64_t)pbudgetProposal->GetAbstains()));
+    bObj.push_back(Pair("TotalPayment", ValueFromAmount(pbudgetProposal->GetAmount() * pbudgetProposal->GetTotalPaymentCount())));
+    bObj.push_back(Pair("MonthlyPayment", ValueFromAmount(pbudgetProposal->GetAmount())));
+    bObj.push_back(Pair("IsEstablished", pbudgetProposal->IsEstablished()));
+
+    std::string strError = "";
+    bObj.push_back(Pair("IsValid", pbudgetProposal->IsValid(strError)));
+    bObj.push_back(Pair("IsValidReason", strError.c_str()));
+    bObj.push_back(Pair("fValid", pbudgetProposal->fValid));
+}
+
 UniValue mnbudget(const UniValue& params, bool fHelp)
 {
     string strCommand;

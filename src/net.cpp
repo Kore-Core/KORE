@@ -825,18 +825,18 @@ void ThreadTorNet() {
 	
     try
     {	
-    boost::this_thread::interruption_point();
-    std::string logDecl = "notice file " + GetDataDir().string() + "/tor/tor.log";
-    char *argvLogDecl = (char*) logDecl.c_str();
+		boost::this_thread::interruption_point();
+		std::string logDecl = "notice file " + GetDataDir().string() + "/tor/tor.log";
+		char *argvLogDecl = (char*) logDecl.c_str();
 
-    char* argv[] = {
-        (char*)"tor",
-        (char*)"--hush",
-        (char*)"--Log",
-        argvLogDecl
-    };
+		char* argv[] = {
+			(char*)"tor",
+			(char*)"--hush",
+			(char*)"--Log",
+			argvLogDecl
+		};
 
-    tor_main(4, argv);
+		tor_main(4, argv);
     }
     catch (const boost::thread_interrupted&)
     {

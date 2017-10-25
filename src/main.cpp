@@ -2699,7 +2699,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
             if (tx.IsCoinStake())
                 nActualStakeReward = tx.GetValueOut()-view.GetValueIn(tx);
             else{
-            nFees += view.GetValueIn(tx)-tx.GetValueOut();
+                nFees += view.GetValueIn(tx)-tx.GetValueOut();
             }
 
             std::vector<CScriptCheck> vChecks;
@@ -2740,18 +2740,15 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     if (block.IsProofOfStake()) {
 
-        //uint64_t nCoinAge;
-        //if (!GetCoinAge(pindex, nCoinAge, block.vtx[1] ))
-          //  return state.DoS(100, error("ConnectBlock(): coinstake cant get coinage"), REJECT_INVALID, "no-coin-age");
 
         CAmount nValueIns = 0;
-	CTransaction tx2;
-	uint256 hash;        
+        CTransaction tx2;
+        uint256 hash;
         BOOST_FOREACH(const CTxIn &txin, block.vtx[1].vin)
         {
-	    if (GetTransaction(txin.prevout.hash, tx2, Params().GetConsensus(), hash, true))
-	        if (tx2.vout.size() > txin.prevout.n)				
-		    nValueIns += tx2.vout[txin.prevout.n].nValue;					
+        if (GetTransaction(txin.prevout.hash, tx2, Params().GetConsensus(), hash, true))
+            if (tx2.vout.size() > txin.prevout.n)
+            nValueIns += tx2.vout[txin.prevout.n].nValue;
         }
 
         CAmount blockReward = nFees + GetProofOfStakeSubsidy(pindex->nHeight, nValueIns);
@@ -2759,6 +2756,15 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         if (nActualStakeReward > blockReward)
             return state.DoS(100, error("ConnectBlock(): coinstake pays too much (actual=%d vs limit=%d)", nActualStakeReward, blockReward), REJECT_INVALID, "bad-cs-amount");
     }
+
+    CAmount reward = block.IsProofOfStake() ? nActualStakeReward : block.vtx[0].GetValueOut();
+
+    if(block.IsProofOfStake()) pindex->SetProofOfStake();
+
+    pindex->nMoneySupply = (pindex->pprev ? pindex->pprev->nMoneySupply : 0) + reward;
+
+    if (!fJustCheck)
+        pindex->nStakeModifier = ComputeStakeModifier(pindex->pprev, block.IsProofOfStake() ? block.vtx[1].vin[0].prevout.hash : pindex->GetBlockHash());
 
     if (fJustCheck)
         return true;
@@ -3530,8 +3536,8 @@ CBlockIndex* AddToBlockIndex(const CBlockHeader& block)
 /** Mark a block as having its data received and checked (up to BLOCK_VALID_TRANSACTIONS). */
 bool ReceivedBlockTransactions(const CBlock &block, CValidationState& state, CBlockIndex *pindexNew, const CDiskBlockPos& pos)
 {
-	if (block.IsProofOfStake())
-	        pindexNew->SetProofOfStake();
+    if (block.IsProofOfStake())
+            pindexNew->SetProofOfStake();
     pindexNew->nTx = block.vtx.size();
     pindexNew->nChainTx = 0;
     pindexNew->nFile = pos.nFile;
@@ -3890,7 +3896,7 @@ bool ContextualCheckBlock(const CBlock& block, CValidationState& state, CBlockIn
     const Consensus::Params& consensusParams = Params().GetConsensus();
 
     if (block.IsProofOfWork() && nHeight > consensusParams.nLastPOWBlock)
-    	return state.DoS(100, error("%s : reject proof-of-work at height %d", __func__, nHeight), REJECT_INVALID, "bad-pow-height");
+        return state.DoS(100, error("%s : reject proof-of-work at height %d", __func__, nHeight), REJECT_INVALID, "bad-pow-height");
 
     // Start enforcing BIP113 (Median Time Past) using versionbits logic.
     int nLockTimeFlags = 0;
@@ -4005,38 +4011,7 @@ static bool AcceptBlock(const CBlock& block, CValidationState& state, const CCha
     }
 
     int nHeight = pindex->nHeight;
-
-    CAmount nActualStakeReward = 0;
-    for (unsigned int i = 0; i < block.vtx.size(); i++)
-    {
-        const CTransaction &tx = block.vtx[i];
-
-        if (tx.IsCoinStake()){
-			int64_t nValueIn =0;
-			BOOST_FOREACH (const CTxIn& txin, tx.vin) {
-				// First try finding the previous transaction in database
-				CTransaction txPrev;
-				uint256 hashBlockPrev;
-				if (!GetTransaction(txin.prevout.hash, txPrev, Params().GetConsensus(), hashBlockPrev, true)) {
-					LogPrintf("GetTransactio: failed to find vin transaction \n");
-					continue; // previous transaction not in main chain
-				}
-
-
-				nValueIn += txPrev.vout[txin.prevout.n].nValue;				
-			}
-			nActualStakeReward = tx.GetValueOut()-nValueIn;
-		}
-    }
-
-    CAmount reward = block.IsProofOfStake() ? nActualStakeReward : block.vtx[0].GetValueOut();
-
-    pindex->nStakeModifier =  block.IsProofOfStake() ? ComputeStakeModifier(pindex->pprev, block.vtx[1].vin[0].prevout.hash) : (pindex->pprev ? ComputeStakeModifier(pindex->pprev, pindex->GetBlockHash()) : uint256());
-   
     if(block.IsProofOfStake()) pindex->SetProofOfStake();
-
-    pindex->nMoneySupply = (pindex->pprev ? pindex->pprev->nMoneySupply : 0) + reward;
-
     // Write block to history file
     try {
         unsigned int nBlockSize = ::GetSerializeSize(block, SER_DISK, CLIENT_VERSION);

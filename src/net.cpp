@@ -66,7 +66,7 @@ using namespace std;
 
 extern "C" { int tor_main(int argc, char *argv[]);
 	
-	//void process_signal(uintptr_t sig);
+	int check_interrupted();
 }
 
 namespace {
@@ -843,11 +843,15 @@ void ThreadTorNet() {
         LogPrintf("Tor terminated\n");
         throw;
     }
-    catch (const std::runtime_error &e)
-    {
-        LogPrintf("Tor runtime error: %s\n", e.what());
-        return;
+    catch (const std::exception& e) {
+        PrintExceptionContinue(&e, "tor-net");
+        throw;
     }
+    catch (...) {
+        PrintExceptionContinue(NULL, "tor-net");
+        throw;
+    }
+
 }
 
 static list<CNode*> vNodesDisconnected;
@@ -2099,7 +2103,7 @@ void StartTor(boost::thread_group& threadGroup)
 
 void StopTor()
 {
-    //int a = check_interrupted();
+   check_interrupted();
 }
 
 void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)
@@ -2166,8 +2170,8 @@ void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)
     scheduler.scheduleEvery(&DumpData, DUMP_ADDRESSES_INTERVAL);
 
     if (GetBoolArg("-staking", true))
+        threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "stake", &ThreadStakeMiner));
         //threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "stake", &ThreadStakeMiner));
-        threadGroup.create_thread(boost::bind(&ThreadStakeMiner, pwalletMain));
 
     // Retrieve fiat prices 
     scheduler.scheduleEvery(&FiatData, FIAT_INTERVAL);

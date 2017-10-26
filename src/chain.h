@@ -320,6 +320,8 @@ public:
     //! Efficiently find an ancestor of this block.
     CBlockIndex* GetAncestor(int height);
     const CBlockIndex* GetAncestor(int height) const;
+    double GetBlockDifficulty() const;
+
 };
 
 /** Used to marshal pointers into hashes for db storage. */
@@ -453,5 +455,4 @@ public:
 };
 
 const CBlockIndex* GetLastBlockIndex(const CBlockIndex* pindex, bool fProofOfStake);
-
 #endif // BITCOIN_CHAIN_H

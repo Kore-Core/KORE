@@ -64,6 +64,7 @@ private:
     QString strPad(QString, int, QString);
     void sortView(int, Qt::SortOrder);
     void updateView();
+    void unselectSpent();
 
     enum
     {
@@ -74,6 +75,7 @@ private:
         COLUMN_OBFUSCATION_ROUNDS,
         COLUMN_DATE,
         COLUMN_CONFIRMATIONS,
+        COLUMN_COINAGE,
         COLUMN_PRIORITY,
         COLUMN_TXHASH,
         COLUMN_VOUT_INDEX,

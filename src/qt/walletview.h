@@ -24,6 +24,7 @@ class AddressBookPage;
 class tradingDialog;
 class BlockExplorer;
 class MasternodeList;
+class MintingView;
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -66,6 +67,7 @@ private:
 
     OverviewPage *overviewPage;
     QWidget *transactionsPage;
+    QWidget *mintingPage;
     ReceiveCoinsDialog *receiveCoinsPage;
     SendCoinsDialog *sendCoinsPage;
     AddressBookPage *usedSendingAddressesPage;
@@ -74,6 +76,7 @@ private:
     BlockExplorer* explorerWindow;
     MasternodeList* masternodeListPage;
     TransactionView *transactionView;
+    MintingView *mintingView;
 //    QjSimple *phone;
 
     QProgressDialog *progressDialog;
@@ -85,6 +88,8 @@ public Q_SLOTS:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+    /** Switch to minting page */
+    void gotoMintingPage();
     /** Switch to masternode page */
     void gotoMasternodePage();
     /** Switch to Bittrex trading page */

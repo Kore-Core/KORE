@@ -108,6 +108,7 @@ private:
     QMenuBar *appMenuBar;
     QAction *overviewAction;
     QAction *historyAction;
+    QAction *mintingAction;
     QAction* masternodeAction;
     QAction *quitAction;
     QAction *sendCoinsAction;
@@ -220,6 +221,8 @@ private Q_SLOTS:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
+    /** Switch to minting page */
+    void gotoMintingPage();
     /** Switch to Trading Page */
     void gotoTradingPage();
     /** Switch to Explorer Page */

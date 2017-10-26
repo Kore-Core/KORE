@@ -113,7 +113,6 @@ inline CMutableTransaction CreateCoinbaseTransaction(const CScript& scriptPubKey
         txNew.vout[1].nValue = devsubsidy;
         txNew.vout[1].scriptPubKey = CScript() << ParseHex("02f391f21dd01129757e2bb37318309c4453ecbbeaed6bb15b97d2f800e888058b") << OP_CHECKSIG;;
     }
-
     //Masternode and general budget payments
     if (!fProofOfStake)
         FillBlockPayee(txNew, 0, fProofOfStake);
@@ -400,7 +399,7 @@ bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
     return true;
 }
 
-void ThreadStakeMiner(CWallet* pwallet)
+void ThreadStakeMiner()
 {
 
     LogPrintf("StakeMiner started\n");
@@ -418,7 +417,7 @@ void ThreadStakeMiner(CWallet* pwallet)
 
     while (true)
     {
-        while (pwallet->IsLocked())
+        while (pwalletMain->IsLocked())
         {
             nLastCoinStakeSearchInterval = 0;
             MilliSleep(1000);
@@ -444,12 +443,12 @@ void ThreadStakeMiner(CWallet* pwallet)
         //
         // Create new block
         //
-        unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock(chainparams, coinstakeScript->reserveScript, pwallet, true));
+        unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock(chainparams, coinstakeScript->reserveScript, pwalletMain, true));
         if (!pblocktemplate.get())
              return;
 
         CBlock *pblock = &pblocktemplate->block;
-        if(SignBlock(pwallet, pblock))
+        if(SignBlock(pwalletMain, pblock))
         {
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             ProcessBlockFound(pblock, chainparams);

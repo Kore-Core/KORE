@@ -51,4 +51,7 @@ static const int MAX_URI_LENGTH = 255;
 #define QAPP_APP_NAME_DEFAULT "Kore-Qt"
 #define QAPP_APP_NAME_TESTNET "Kore-Qt-testnet"
 
+#define COLOR_MINT_YOUNG QColor(127, 127, 240)
+#define COLOR_MINT_MATURE QColor(0x3c, 0xb0, 0x54)
+#define COLOR_MINT_OLD QColor(240, 127, 127)
 #endif // BITCOIN_QT_GUICONSTANTS_H

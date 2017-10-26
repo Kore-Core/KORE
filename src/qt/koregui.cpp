@@ -388,6 +388,12 @@ void KoreGUI::createActions()
     historyAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_4));
     tabGroup->addAction(historyAction);
 
+    mintingAction = new QAction(platformStyle->SingleColorIcon(":/icons/tx_mined"), tr("&Minting"), this);
+    mintingAction->setStatusTip(tr("Show your minting capacity"));
+    mintingAction->setToolTip(mintingAction->statusTip());
+    mintingAction->setCheckable(true);
+    tabGroup->addAction(mintingAction);
+
 #ifdef ENABLE_WALLET
 
 
@@ -419,6 +425,8 @@ void KoreGUI::createActions()
     connect(receiveCoinsMenuAction, SIGNAL(triggered()), this, SLOT(gotoReceiveCoinsPage()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
+    connect(mintingAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
+    connect(mintingAction, SIGNAL(triggered()), this, SLOT(gotoMintingPage()));
 #endif // ENABLE_WALLET
 
     quitAction = new QAction(platformStyle->TextColorIcon(":/icons/quit"), tr("E&xit"), this);
@@ -640,6 +648,7 @@ void KoreGUI::createToolBars()
         toolbar->addAction(sendCoinsAction);
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
+        //toolbar->addAction(mintingAction);
         toolbar->addAction(masternodeAction);
         toolbar->addAction(openBlockExplorerAction);
         toolbar->addAction(openTradingwindowAction);
@@ -728,6 +737,7 @@ void KoreGUI::setWalletActionsEnabled(bool enabled)
     receiveCoinsAction->setEnabled(enabled);
     receiveCoinsMenuAction->setEnabled(enabled);
     historyAction->setEnabled(enabled);
+    mintingAction->setEnabled(enabled);
     masternodeAction->setEnabled(enabled);
     encryptWalletAction->setEnabled(enabled);
     backupWalletAction->setEnabled(enabled);
@@ -872,6 +882,12 @@ void KoreGUI::gotoOverviewPage()
 {
     overviewAction->setChecked(true);
     if (walletFrame) walletFrame->gotoOverviewPage();
+}
+
+void KoreGUI::gotoMintingPage()
+{
+    mintingAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoMintingPage();
 }
 
 void KoreGUI::gotoHistoryPage()

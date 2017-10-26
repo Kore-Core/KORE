@@ -161,7 +161,10 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp \
-  qt/moc_blockexplorer.cpp 
+  qt/moc_blockexplorer.cpp \
+  qt/moc_mintingview.cpp \
+  qt/moc_mintingtablemodel.cpp \
+  qt/moc_mintingfilterproxy.cpp  
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -239,7 +242,10 @@ BITCOIN_QT_H = \
   qt/walletmodel.h \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
-  qt/winshutdownmonitor.h 
+  qt/winshutdownmonitor.h \
+  qt/mintingview.h \
+  qt/mintingtablemodel.h \
+  qt/mintingfilterproxy.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -352,7 +358,10 @@ BITCOIN_QT_CPP += \
   qt/walletframe.cpp \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
-  qt/walletview.cpp 
+  qt/walletview.cpp \
+  qt/mintingview.cpp \
+  qt/mintingtablemodel.cpp \
+  qt/mintingfilterproxy.cpp   
 endif
 
 RES_IMAGES =

@@ -100,6 +100,7 @@ BITCOIN_CORE_H = \
   httpserver.h \
   init.h \
   swifttx.h \
+  kernelrecord.h \
   key.h \
   keystore.h \
   dbwrapper.h \
@@ -407,6 +408,7 @@ libkore_wallet_a_SOURCES = \
   obfuscation.cpp \
   obfuscation-relay.cpp \
   swifttx.cpp \
+  kernelrecord.cpp \
   masternode.cpp \
   masternode-budget.cpp \
   masternode-payments.cpp \

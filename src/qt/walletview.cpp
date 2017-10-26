@@ -12,6 +12,7 @@
 #include "guiutil.h"
 #include "masternodeconfig.h"
 #include "masternodelist.h"
+#include "mintingview.h"
 #include "multisenddialog.h"
 #include "optionsmodel.h"
 #include "overviewpage.h"
@@ -56,6 +57,14 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
     }
     hbox_buttons->addStretch();
 
+
+    mintingPage = new QWidget(this);
+    QVBoxLayout *vboxMinting = new QVBoxLayout();
+    QHBoxLayout *hbox_buttons2 = new QHBoxLayout();
+    mintingView = new MintingView(this);
+    vboxMinting->addWidget(mintingView);
+    mintingPage->setLayout(vboxMinting);
+
     // Sum of selected transactions
     QLabel* transactionSumLabel = new QLabel();                // Label
     transactionSumLabel->setObjectName("transactionSumLabel"); // Label ID as CSS-reference
@@ -84,6 +93,7 @@ WalletView::WalletView(const PlatformStyle *platformStyle, QWidget *parent):
 
     addWidget(overviewPage);
     addWidget(transactionsPage);
+    addWidget(mintingPage);
     addWidget(receiveCoinsPage);
     addWidget(sendCoinsPage);
     addWidget(tradingPage);
@@ -147,6 +157,7 @@ void WalletView::setWalletModel(WalletModel *walletModel)
 
     // Put transaction list in tabs
     transactionView->setModel(walletModel);
+    mintingView->setModel(walletModel);
     overviewPage->setWalletModel(walletModel);
     masternodeListPage->setWalletModel(walletModel);
     receiveCoinsPage->setModel(walletModel);
@@ -203,6 +214,11 @@ void WalletView::gotoOverviewPage()
 void WalletView::gotoHistoryPage()
 {
     setCurrentWidget(transactionsPage);
+}
+
+void WalletView::gotoMintingPage()
+{
+    setCurrentWidget(mintingPage);
 }
 
 void WalletView::gotoTradingPage()

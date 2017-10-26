@@ -37,7 +37,7 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
 void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
 int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
 bool SignBlock(CWallet* wallet, CBlock* pblock);
-void ThreadStakeMiner(CWallet* wallet);
+void ThreadStakeMiner();
 std::string convertAddress(const char address[], char newVersionByte);
 bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams);
 extern double dHashesPerMin;

@@ -115,7 +115,7 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
     openAction(0),
     browserAction(0),
     multiSendAction(0),
-    pbxclientAction(0), 
+    pbxclientAction(0),
     showHelpMessageAction(0),
     trayIcon(0),
     trayIconMenu(0),
@@ -220,18 +220,19 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
     QLabel *labelBtclabel = new QLabel("BTC/USD");
     labelUsdIcon = new QLabel();
     labelBtcIcon = new QLabel();
-    
+
     QLabel *opacityLabel = new QLabel("Opacity:");
     QSpinBox *opacitySpinBox = new QSpinBox();
     opacitySpinBox->setRange(40, 100);
+
     
     //QLabel *minerLabel = new QLabel("Miner Threads: 0");
-	//QSlider *miner = new QSlider(Qt::Horizontal, this);
-	//int cores = GetNumCores();
-	//miner->setRange(0, cores);
-	//QString minermax = QString::number(cores);
-	//QLabel *maxminer = new QLabel(minermax);	
-	labelStakingIcon = new QLabel();
+    //QSlider *miner = new QSlider(Qt::Horizontal, this);
+    //int cores = GetNumCores();
+    //miner->setRange(0, cores);
+    //QString minermax = QString::number(cores);
+    //QLabel *maxminer = new QLabel(minermax);	
+    labelStakingIcon = new QLabel();
 
     frameBlocksLayout->addWidget(labelBtclabel);
     frameBlocksLayout->addWidget(labelBtcIcon);
@@ -271,13 +272,13 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
 
     statusBar()->addWidget(progressBarLabel);
     statusBar()->addWidget(progressBar);
-    
+
     //statusBar()->addWidget(minerLabel);
     //statusBar()->addWidget(miner);
     //statusBar()->addWidget(maxminer);
     statusBar()->addWidget(opacityLabel);
     statusBar()->addWidget(opacitySpinBox);
-    
+
     statusBar()->addPermanentWidget(frameBlocks);
 
     connect(openRepairAction, SIGNAL(triggered()), rpcConsole, SLOT(showRepair()));
@@ -296,11 +297,10 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
 
     // Subscribe to notifications from core
     subscribeToCoreSignals();
-    
-	timer = new QTimer();
-	connect(this->timer,SIGNAL(timeout()),this,SLOT(setprice()));
-	
-	timer->start(180000);
+
+    timer = new QTimer();
+    connect(this->timer,SIGNAL(timeout()),this,SLOT(setprice()));
+    timer->start(180000);
 
     opacitySpinBox->setValue(static_cast<int>(windowOpacity() * 100));
     connect(opacitySpinBox, SIGNAL(valueChanged(int)), this, SLOT(on_opacitySpinBox_valueChanged(int)));
@@ -320,7 +320,7 @@ void KoreGUI::on_opacitySpinBox_valueChanged(int i)
 }
 
 void KoreGUI::setprice(){
-   
+
    QString xprice = QString::number(usdprice, 'f',2);
    labelBtcIcon->setStyleSheet("font-weight: bold; color: black");
    this->labelBtcIcon->setText(xprice);
@@ -409,7 +409,7 @@ void KoreGUI::createActions()
     tabGroup->addAction(masternodeAction);
     connect(masternodeAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(masternodeAction, SIGNAL(triggered()), this, SLOT(gotoMasternodePage()));
-    
+
 
     // These showNormalIfMinimized are needed because Send Coins and Receive Coins
     // can be triggered from the tray menu, and need to show the GUI to be useful.
@@ -625,7 +625,7 @@ void KoreGUI::createToolBars()
     labelLogo = new QLabel();
     labelLogo->show();
     labelLogo->setPixmap(QPixmap(":icons/banner"));
-    
+
     QToolBar *toolbar = addToolBar(tr("Tabs toolbar"));
     addToolBar(Qt::LeftToolBarArea, toolbar);
     toolbar->setOrientation(Qt::Vertical);
@@ -898,11 +898,8 @@ void KoreGUI::gotoHistoryPage()
 
 void KoreGUI::gotoMasternodePage()
 {
-    QSettings settings;
-    if (settings.value("fShowMasternodesTab").toBool()) {
-        masternodeAction->setChecked(true);
-        if (walletFrame) walletFrame->gotoMasternodePage();
-    }
+    masternodeAction->setChecked(true);
+    if (walletFrame) walletFrame->gotoMasternodePage();
 }
 
 void KoreGUI::gotoReceiveCoinsPage()

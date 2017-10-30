@@ -1,6 +1,7 @@
 <!DOCTYPE RCC><RCC version="1.0">
     <qresource prefix="/icons">
         <file alias="kore">res/icons/kore.png</file>
+        <file alias="splash">res/icons/splash.png</file>
         <file alias="browser">res/icons/browser.png</file>
         <file alias="banner">res/icons/banner.png</file>
         <file alias="address-book">res/icons/address-book.png</file>

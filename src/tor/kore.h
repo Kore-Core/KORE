@@ -13,20 +13,15 @@
 extern "C" {
 #endif
 
-    char const* kore_tor_data_directory(
-    );
+    char const* kore_tor_data_directory();
 
-    char const* kore_service_directory(
-    );
+    char const* kore_service_directory();
 
-    int check_interrupted(
-    );
+    int check_interrupted();
 
-    void set_initialized(
-    );
+    void set_initialized();
 
-    void wait_initialized(
-    );
+    void wait_initialized();
 
     extern int coin_port_num;
 

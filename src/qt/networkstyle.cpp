@@ -28,7 +28,8 @@ NetworkStyle::NetworkStyle(const QString &appName, const int iconColorHueShift, 
 {
     // load pixmap
     QPixmap pixmap(":/icons/kore");
-    splashImage = pixmap;
+    QPixmap pixmapr(":/icons/splash");
+    splashImage = pixmapr;
 
     /*if(iconColorHueShift != 0 && iconColorSaturationReduction != 0)
     {

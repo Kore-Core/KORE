@@ -27,7 +27,7 @@
 using namespace boost::xpressive;
 using namespace std;
 
-//Coinbase API, latest BTC orice
+//Coinbase API, latest BTC price
 const QString apiCoinbasePrice = "https://www.bitstamp.net/api/ticker/";
 
 //Bittrex API
@@ -807,7 +807,7 @@ void tradingDialog::on_UpdateKeys_clicked()
     if (ResponseObject.value("success").toBool() == false)
 
     {
-        QMessageBox::information(this, "API Configuration Failed", "Api configuration was unsuccesful.");
+        QMessageBox::information(this, "API Configuration Failed", "Api configuration was unsuccessful.");
 
     } else if (ResponseObject.value("success").toBool() == true) {
         QMessageBox::information(this, "API Configuration Complete", "Api connection has been successfully configured and tested.");

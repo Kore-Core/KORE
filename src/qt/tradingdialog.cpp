@@ -687,7 +687,7 @@ void tradingDialog::ActionsOnSwitch(int index = -1)
         Response = GetBalance("KORE");
 
         if (Response.size() > 0 && Response != "Error") {
-            DisplayBalance(*ui->KOREBalanceLabel, *ui->KOREAvailableLabel, *ui->KOREPendingLabel, QString::fromUtf8("KORE"), Response);
+            DisplayBalance(*ui->KOREBalanceLabel, *ui->KOREAvailableLabel_2, *ui->KOREPendingLabel, QString::fromUtf8("KORE"), Response);
         }
         break;
 

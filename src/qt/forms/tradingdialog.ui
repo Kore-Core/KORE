@@ -123,7 +123,7 @@
         <enum>QTabWidget::North</enum>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="OrderBook">
         <attribute name="title">
@@ -375,7 +375,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>KORE</string>
+          <string>BTC</string>
          </property>
         </widget>
         <widget class="QLabel" name="label_6">
@@ -470,7 +470,7 @@
            <x>21</x>
            <y>11</y>
            <width>251</width>
-           <height>19</height>
+           <height>20</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -483,7 +483,7 @@
              </font>
             </property>
             <property name="text">
-             <string>KORE Available:</string>
+             <string>BTC Available:</string>
             </property>
            </widget>
           </item>
@@ -927,7 +927,7 @@
              </font>
             </property>
             <property name="text">
-             <string>KORE</string>
+             <string>BTC</string>
             </property>
            </widget>
           </item>
@@ -939,7 +939,7 @@
            <x>11</x>
            <y>301</y>
            <width>269</width>
-           <height>19</height>
+           <height>20</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -1399,7 +1399,7 @@
              </font>
             </property>
             <property name="text">
-             <string>KORE</string>
+             <string>BTC</string>
             </property>
            </widget>
           </item>
@@ -1436,7 +1436,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>KORE</string>
+          <string>BTC</string>
          </property>
         </widget>
         <widget class="QComboBox" name="SellBidcomboBox">
@@ -1614,7 +1614,7 @@
            <x>22</x>
            <y>12</y>
            <width>258</width>
-           <height>19</height>
+           <height>20</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
@@ -2083,7 +2083,7 @@
            <x>10</x>
            <y>300</y>
            <width>278</width>
-           <height>19</height>
+           <height>20</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -2543,7 +2543,7 @@
              </font>
             </property>
             <property name="text">
-             <string> KORE</string>
+             <string>BTC</string>
             </property>
            </widget>
           </item>
@@ -2631,7 +2631,7 @@
           </font>
          </property>
          <property name="text">
-          <string>KORE Balance:</string>
+          <string>BTC Balance</string>
          </property>
         </widget>
         <widget class="QLabel" name="KOREAvailableLabel_2">
@@ -2714,7 +2714,7 @@
           </font>
          </property>
          <property name="text">
-          <string>KORE Available:</string>
+          <string>BTC Available:</string>
          </property>
         </widget>
         <widget class="QLabel" name="CodexAvailableLabel">
@@ -2746,7 +2746,7 @@
           </font>
          </property>
          <property name="text">
-          <string>KORE Pending:</string>
+          <string>BTC Pending:</string>
          </property>
         </widget>
         <widget class="QLabel" name="CodexPendingLabel">

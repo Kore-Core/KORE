@@ -123,7 +123,7 @@
         <enum>QTabWidget::North</enum>
        </property>
        <property name="currentIndex">
-        <number>4</number>
+        <number>0</number>
        </property>
        <widget class="QWidget" name="OrderBook">
         <attribute name="title">
@@ -470,7 +470,7 @@
            <x>21</x>
            <y>11</y>
            <width>251</width>
-           <height>20</height>
+           <height>19</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_3">
@@ -939,7 +939,7 @@
            <x>11</x>
            <y>301</y>
            <width>269</width>
-           <height>20</height>
+           <height>19</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
@@ -1614,7 +1614,7 @@
            <x>22</x>
            <y>12</y>
            <width>258</width>
-           <height>20</height>
+           <height>19</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
@@ -2083,7 +2083,7 @@
            <x>10</x>
            <y>300</y>
            <width>278</width>
-           <height>20</height>
+           <height>19</height>
           </rect>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -2631,7 +2631,7 @@
           </font>
          </property>
          <property name="text">
-          <string>BTC Balance</string>
+          <string>BTC Balance:</string>
          </property>
         </widget>
         <widget class="QLabel" name="KOREAvailableLabel_2">

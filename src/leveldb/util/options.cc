@@ -20,7 +20,7 @@ Options::Options()
       max_open_files(1000),
       block_cache(NULL),
       block_size(4096),
-      block_restart_interval(16),
+      block_restart_interval(32),
       compression(kSnappyCompression),
       filter_policy(NULL) {
 }

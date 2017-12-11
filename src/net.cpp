@@ -70,7 +70,7 @@ extern "C" { int tor_main(int argc, char *argv[]);
 }
 
 namespace {
-    const int MAX_OUTBOUND_CONNECTIONS = 16;
+    const int MAX_OUTBOUND_CONNECTIONS = 23;
 
     struct ListenSocket {
         SOCKET socket;

@@ -824,7 +824,7 @@ void InitLogging()
     LogPrintf("Koreversion %s (%s)\n", FormatFullVersion(), CLIENT_DATE);
 }
 
-std::vector<std::string> onionseeds ={"fzmjhi7xbapufts6.onion","p6sfbaw762mcqyxg.onion", "b5gacg24h6licg5m.onion", "skrivht2uj3yjluv.onion", "yylyof6avhsmb327.onion"};
+std::vector<std::string> onionseeds ={"bqr7zsfgpztd4m4q.onion", "vg7ehwp3wqw5qhs4.onion", "w255vedxjjlkwyi6.onion", "2n2b37o67zz7js7r.onion", "hxgchjn2dom3teev.onion", "pkxpp7wwbztw6sno.onion", "sww64jno2bjcgrb7.onion", "pz4sc5yzqwbdzxgo.onion", "w255vedxjjlkwyi6.onion", "hggmh3vhkjebz4j5.onion", "k75pshpf226ra65s.onion", "dxu7ejy43diap2xd.onion", "wsulig7es3koaae3.onion", "nxqy67ypynebp4ip.onion", "73zwmk4bpsig4pme.onion", "yylyof6avhsmb327.onion"};
 
 /** Initialize kore.
  *  @pre Parameters should be parsed and config file should be read.
@@ -897,8 +897,13 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     if (!boost::filesystem::exists(pathConfig)){
 		std::ofstream configfile;
 		configfile.open(pathConfig.string().c_str(),fstream::out);
+		configfile<<"zapwallettxes=1"<<std::endl;
+		configfile<<"staking=1"<<std::endl;
 		for (auto a:onionseeds)
 		configfile<<"addnode="<< a <<std::endl;
+
+		configfile<<"txindex=1"<<std::endl;
+		configfile<<"addrindex=1"<<std::endl;
 	}
 
     // if using block pruning, then disable txindex

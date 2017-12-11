@@ -1834,14 +1834,14 @@ CAmount GetProofOfWorkSubsidy(int nHeight, const Consensus::Params& consensusPar
 
 CAmount GetProofOfStakeSubsidy(int nHeight, CAmount input)
 {
-    CAmount subsidy = input + input * 0.00024;
+    CAmount subsidy = input + input * 0.00029;
 
     return subsidy;
 }
 
 CAmount GetMasternodePayment(int nHeight, CAmount blockValue)
 {
-    return blockValue * 0.4;
+    return blockValue * 0.63;
 }
 
 double coinyearreward(){

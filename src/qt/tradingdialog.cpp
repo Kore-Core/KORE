@@ -60,6 +60,7 @@ tradingDialog::tradingDialog(QWidget* parent) : QWidget(parent),
 
     QPalette sample_palette;
     sample_palette.setColor(QPalette::Window, Qt::green);
+    connect(ui->enable, SIGNAL(toggled(bool)), this, SLOT(enableTradingWindow(bool)));
 
     InitTrading();
 
@@ -205,16 +206,30 @@ void tradingDialog::InitTrading()
     }
 }
 
+
+void tradingDialog::enableTradingWindow(bool state)
+{
+    if (state){
+        
+        InitTrading();
+    }
+    else
+        ui->enable->setChecked(false);
+}
+
 void tradingDialog::UpdaterFunction()
 {
     //First get the main exchange info in order to populate qLabels in maindialog. then get data
     //required for the current tab.
+    if(ui->enable->isChecked())
+    {
+        int Retval = SetExchangeInfoTextLabels();
 
-    int Retval = SetExchangeInfoTextLabels();
-
-    if (Retval == 0) {
-        ActionsOnSwitch(-1);
+        if (Retval == 0) {
+            ActionsOnSwitch(-1);
+        }
     }
+    
 }
 
 QString tradingDialog::GetNonce()

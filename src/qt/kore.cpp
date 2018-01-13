@@ -289,7 +289,7 @@ void KoreCore::restart(QStringList args)
 {
     if (execute_restart) { // Only restart 1x, no matter how often a user clicks on a restart-button
         execute_restart = false;
-        try {
+        /*try {
             qDebug() << __func__ << ": Running Restart in thread";
             threadGroup.interrupt_all();
             threadGroup.join_all();
@@ -304,7 +304,7 @@ void KoreCore::restart(QStringList args)
             handleRunawayException(&e);
         } catch (...) {
             handleRunawayException(NULL);
-        }
+        }*/
     }
 }
 

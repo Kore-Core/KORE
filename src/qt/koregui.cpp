@@ -308,7 +308,7 @@ KoreGUI::KoreGUI(const PlatformStyle *platformStyle, const NetworkStyle *network
 
     QTimer* timerStakingIcon = new QTimer(labelStakingIcon);
     connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(setStakingStatus()));
-    timerStakingIcon->start(10000);
+    timerStakingIcon->start(99999);
 
 }
 
@@ -1235,7 +1235,6 @@ void KoreGUI::setStakingStatus()
 {
     if (pwalletMain)
         fMultiSend = pwalletMain->isMultiSendEnabled();
-
     if (nLastCoinStakeSearchInterval) {
         labelStakingIcon->show();
         labelStakingIcon->setPixmap(QIcon(":/icons/staking_active").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
@@ -1273,6 +1272,7 @@ void KoreGUI::setEncryptionStatus(int status)
         encryptWalletAction->setEnabled(true);
         break;
     case WalletModel::Unlocked:
+        nLastCoinStakeSearchInterval = 1;
         labelEncryptionIcon->show();
         labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
         labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b>"));
@@ -1283,6 +1283,7 @@ void KoreGUI::setEncryptionStatus(int status)
         encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
         break;
     case WalletModel::UnlockedForAnonymizationOnly:
+        nLastCoinStakeSearchInterval = 1;
         labelEncryptionIcon->show();
         labelEncryptionIcon->setPixmap(QIcon(":/icons/lock_open").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
         labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>unlocked</b> for anonimization and staking only"));
@@ -1293,6 +1294,8 @@ void KoreGUI::setEncryptionStatus(int status)
         encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
         break;
     case WalletModel::Locked:
+        nLastCoinStakeSearchInterval = 0;
+        //printf("nLastCoinStakeSearchInterval ===== %d\n", nLastCoinStakeSearchInterval);
         labelEncryptionIcon->show();
         labelEncryptionIcon->setPixmap(platformStyle->SingleColorIcon(":/icons/lock_closed").pixmap(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
         labelEncryptionIcon->setToolTip(tr("Wallet is <b>encrypted</b> and currently <b>locked</b>"));
@@ -1303,6 +1306,8 @@ void KoreGUI::setEncryptionStatus(int status)
         encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
         break;
     }
+
+    
 }
 #endif // ENABLE_WALLET
 

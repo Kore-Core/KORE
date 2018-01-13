@@ -415,19 +415,20 @@ void ThreadStakeMiner(CWallet* pwallet)
         throw std::runtime_error("No coinstake script available (staking requires a wallet)");
 
     bool fTryToSync = true;
-
+    
     while (true)
     {
+    
         while (pwallet->IsLocked())
         {
-            nLastCoinStakeSearchInterval = 0;
+            // nLastCoinStakeSearchInterval = 0;
             MilliSleep(1000);
         }
-
+        
         while (vNodes.empty() || IsInitialBlockDownload())
         {
 			fTryToSync = true;
-            nLastCoinStakeSearchInterval = 0;
+            // nLastCoinStakeSearchInterval = 0;
             MilliSleep(1000);
         }
 
@@ -464,6 +465,7 @@ void ThreadStakeMiner(CWallet* pwallet)
 // attempt to generate suitable proof-of-stake
 bool SignBlock(CWallet* pwallet, CBlock* pblock)
 {
+    
     // if we are trying to sign
     //    something except proof-of-stake block template
     if (!pblock->vtx[0].vout[0].IsEmpty()){

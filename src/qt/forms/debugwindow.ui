@@ -1298,7 +1298,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_repair">
+    <!--widget class="QWidget" name="tab_repair">
       <attribute name="title">
        <string>&amp;Wallet Repair</string>
       </attribute>
@@ -1565,7 +1565,7 @@
         </spacer>
        </item>
       </layout>
-     </widget>
+     </widget-->
     </widget>
    </item>
   </layout>

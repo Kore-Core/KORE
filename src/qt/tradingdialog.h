@@ -60,6 +60,7 @@ private Q_SLOTS:
     void on_UnitsInputKORE_textChanged(const QString& arg1);
     void on_SellBidPriceEdit_textChanged(const QString& arg1);
     void on_AdvancedView_stateChanged(int arg1);
+    void enableTradingWindow(bool state);
 
     int SetExchangeInfoTextLabels();
     QString BittrexTimeStampToReadable(QString DateTime);

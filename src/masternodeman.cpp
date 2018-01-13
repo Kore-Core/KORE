@@ -91,7 +91,7 @@ CMasternodeDB::ReadResult CMasternodeDB::Read(CMasternodeMan& mnodemanToLoad, bo
     FILE* file = fopen(pathMN.string().c_str(), "rb");
     CAutoFile filein(file, SER_DISK, CLIENT_VERSION);
     if (filein.IsNull()) {
-        error("%s : Failed to open file %s", __func__, pathMN.string());
+        error("%s : Failed to open file %s, debug: %s", __func__, pathMN.string(),pathMN.string().c_str());
         return FileError;
     }
 

@@ -11,6 +11,8 @@
 #include "recentrequeststablemodel.h"
 #include "transactiontablemodel.h"
 
+#include "miner.h"
+
 #include "base58.h"
 #include "keystore.h"
 #include "main.h"
@@ -465,13 +467,16 @@ bool WalletModel::setWalletLocked(bool locked, const SecureString &passPhrase, b
 {
     if(locked)
     {
+        
         // Lock
+        wallet->fWalletUnlockAnonymizeOnly = false;
         return wallet->Lock();
     }
     else
     {
         // Unlock
         return wallet->Unlock(passPhrase, anonymizeOnly);
+        //nLastCoinStakeSearchInterval = 1;
     }
 }
 
@@ -568,6 +573,7 @@ WalletModel::UnlockContext WalletModel::requestUnlock(bool relock)
     bool was_locked = getEncryptionStatus() == Locked;
 
     if (!was_locked && isAnonymizeOnlyUnlocked()) {
+ 
         setWalletLocked(true);
         wallet->fWalletUnlockAnonymizeOnly = false;
         was_locked = getEncryptionStatus() == Locked;

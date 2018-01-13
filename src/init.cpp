@@ -824,7 +824,7 @@ void InitLogging()
     LogPrintf("Koreversion %s (%s)\n", FormatFullVersion(), CLIENT_DATE);
 }
 
-std::vector<std::string> onionseeds ={"bqr7zsfgpztd4m4q.onion", "vg7ehwp3wqw5qhs4.onion", "w255vedxjjlkwyi6.onion", "2n2b37o67zz7js7r.onion", "hxgchjn2dom3teev.onion", "pkxpp7wwbztw6sno.onion", "sww64jno2bjcgrb7.onion", "pz4sc5yzqwbdzxgo.onion", "w255vedxjjlkwyi6.onion", "hggmh3vhkjebz4j5.onion", "k75pshpf226ra65s.onion", "dxu7ejy43diap2xd.onion", "wsulig7es3koaae3.onion", "nxqy67ypynebp4ip.onion", "73zwmk4bpsig4pme.onion", "yylyof6avhsmb327.onion"};
+std::vector<std::string> onionseeds ={"73zwmk4bpsig4pme.onion", "4aynkbwmoje6p27p.onion", "hxgchjn2dom3teev.onion", "hzvrfa5xa2qulysi.onion", "hggmh3vhkjebz4j5.onion", "hvjjqjjajii2ycix.onion", "gameldrtkm4u4ds2.onion", "k75pshpf226ra65s.onion", "zdwnbnrwty33uuev.onion", "l4meqo3zi74h7edw.onion", "k6a5ebhrkfxbwqvl.onion", "bqr7zsfgpztd4m4q.onion", "hvjjqjjajii2ycix.onion", "bqr7zsfgpztd4m4q.onion", "hzvrfa5xa2qulysi.onion"};
 
 /** Initialize kore.
  *  @pre Parameters should be parsed and config file should be read.

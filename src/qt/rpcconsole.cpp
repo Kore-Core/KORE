@@ -270,18 +270,18 @@ RPCConsole::RPCConsole(const PlatformStyle *platformStyle, QWidget *parent) :
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(clear()));
     connect(ui->btnClearTrafficGraph, SIGNAL(clicked()), ui->trafficGraph, SLOT(clear()));
 
-    // Wallet Repair Buttons
+/*    // Wallet Repair Buttons
     connect(ui->btn_salvagewallet, SIGNAL(clicked()), this, SLOT(walletSalvage()));
     connect(ui->btn_rescan, SIGNAL(clicked()), this, SLOT(walletRescan()));
     connect(ui->btn_zapwallettxes1, SIGNAL(clicked()), this, SLOT(walletZaptxes1()));
     connect(ui->btn_zapwallettxes2, SIGNAL(clicked()), this, SLOT(walletZaptxes2()));
     connect(ui->btn_upgradewallet, SIGNAL(clicked()), this, SLOT(walletUpgrade()));
     connect(ui->btn_reindex, SIGNAL(clicked()), this, SLOT(walletReindex()));
-
+*/
     // set library version labels
 #ifdef ENABLE_WALLET
     ui->berkeleyDBVersion->setText(DbEnv::version(0, 0, 0));
-    ui->wallet_path->setText(QString::fromStdString(GetDataDir().string() + QDir::separator().toLatin1() + GetArg("-wallet", "wallet.dat")));
+//    ui->wallet_path->setText(QString::fromStdString(GetDataDir().string() + QDir::separator().toLatin1() + GetArg("-wallet", "wallet.dat")));
 #else
     ui->label_berkeleyDBVersion->hide();
     ui->berkeleyDBVersion->hide();
@@ -518,7 +518,7 @@ void RPCConsole::buildParameterlist(QString arg)
 {
     // Get command-line arguments and remove the application name
     QStringList args = QApplication::arguments();
-    args.removeFirst();
+//    args.removeFirst();
 
     // Remove existing repair-options
     args.removeAll(SALVAGEWALLET);
@@ -529,7 +529,7 @@ void RPCConsole::buildParameterlist(QString arg)
     args.removeAll(REINDEX);
 
     // Append repair parameter to command line.
-    args.append(arg);
+   // args.append(arg);
 
     // Send command-line arguments to KoreGUI::handleRestart()
     Q_EMIT handleRestart(args);

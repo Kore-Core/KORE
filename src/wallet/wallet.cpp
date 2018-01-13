@@ -44,7 +44,7 @@ unsigned int nTxConfirmTarget = DEFAULT_TX_CONFIRM_TARGET;
 bool bSpendZeroConfChange = DEFAULT_SPEND_ZEROCONF_CHANGE;
 bool fSendFreeTransactions = DEFAULT_SEND_FREE_TRANSACTIONS;
 CAmount nReserveBalance = 0;
-static CAmount GetStakeCombineThreshold() { return 200 * COIN; }
+static CAmount GetStakeCombineThreshold() { return 450 * COIN; }
 static CAmount GetStakeSplitThreshold() { return 2 * GetStakeCombineThreshold(); }
 
 /**

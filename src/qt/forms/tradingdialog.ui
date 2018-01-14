@@ -375,7 +375,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>KORE</string>
+          <string>BTC</string>
          </property>
         </widget>
         <widget class="QLabel" name="label_6">
@@ -483,7 +483,7 @@
              </font>
             </property>
             <property name="text">
-             <string>KORE Available:</string>
+             <string>BTC Available:</string>
             </property>
            </widget>
           </item>
@@ -927,7 +927,7 @@
              </font>
             </property>
             <property name="text">
-             <string>KORE</string>
+             <string>BTC</string>
             </property>
            </widget>
           </item>
@@ -1399,7 +1399,7 @@
              </font>
             </property>
             <property name="text">
-             <string>KORE</string>
+             <string>BTC</string>
             </property>
            </widget>
           </item>
@@ -1436,7 +1436,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>KORE</string>
+          <string>BTC</string>
          </property>
         </widget>
         <widget class="QComboBox" name="SellBidcomboBox">
@@ -2543,7 +2543,7 @@
              </font>
             </property>
             <property name="text">
-             <string> KORE</string>
+             <string>BTC</string>
             </property>
            </widget>
           </item>
@@ -2631,7 +2631,7 @@
           </font>
          </property>
          <property name="text">
-          <string>KORE Balance:</string>
+          <string>BTC Balance:</string>
          </property>
         </widget>
         <widget class="QLabel" name="KOREAvailableLabel_2">
@@ -2714,7 +2714,7 @@
           </font>
          </property>
          <property name="text">
-          <string>KORE Available:</string>
+          <string>BTC Available:</string>
          </property>
         </widget>
         <widget class="QLabel" name="CodexAvailableLabel">
@@ -2746,7 +2746,7 @@
           </font>
          </property>
          <property name="text">
-          <string>KORE Pending:</string>
+          <string>BTC Pending:</string>
          </property>
         </widget>
         <widget class="QLabel" name="CodexPendingLabel">

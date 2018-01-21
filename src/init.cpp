@@ -904,6 +904,7 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 
 		configfile<<"txindex=1"<<std::endl;
 		configfile<<"addrindex=1"<<std::endl;
+	    	configfile<<"reservebalance=0.00000001"<<std::endl;
 	}
 
     // if using block pruning, then disable txindex

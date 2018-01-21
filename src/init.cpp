@@ -824,7 +824,7 @@ void InitLogging()
     LogPrintf("Koreversion %s (%s)\n", FormatFullVersion(), CLIENT_DATE);
 }
 
-std::vector<std::string> onionseeds ={"73zwmk4bpsig4pme.onion", "4aynkbwmoje6p27p.onion", "hxgchjn2dom3teev.onion", "hzvrfa5xa2qulysi.onion", "hggmh3vhkjebz4j5.onion", "hvjjqjjajii2ycix.onion", "gameldrtkm4u4ds2.onion", "k75pshpf226ra65s.onion", "zdwnbnrwty33uuev.onion", "l4meqo3zi74h7edw.onion", "k6a5ebhrkfxbwqvl.onion", "bqr7zsfgpztd4m4q.onion", "hvjjqjjajii2ycix.onion", "bqr7zsfgpztd4m4q.onion", "hzvrfa5xa2qulysi.onion"};
+std::vector<std::string> onionseeds ={"jsfoupaz7kwoibq2.onion", "4aynkbwmoje6p27p.onion", "hxgchjn2dom3teev.onion", "hzvrfa5xa2qulysi.onion", "hggmh3vhkjebz4j5.onion", "gameldrtkm4u4ds2.onion", "k75pshpf226ra65s.onion", "zdwnbnrwty33uuev.onion", "l4meqo3zi74h7edw.onion", "k6a5ebhrkfxbwqvl.onion", "5j6hwetvycvjzdur.onion", "hvjjqjjajii2ycix.onion", "bqr7zsfgpztd4m4q.onion"};
 
 /** Initialize kore.
  *  @pre Parameters should be parsed and config file should be read.

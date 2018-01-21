@@ -377,7 +377,7 @@ void DumpBudgets()
             return;
         }
     }
-    LogPrintf("Writting info to budget.dat...\n");
+    LogPrintf("Writing info to budget.dat...\n");
     budgetdb.Write(budget);
 
     LogPrintf("Budget dump finished  %dms\n", GetTimeMillis() - nStart);

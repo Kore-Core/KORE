@@ -27,7 +27,7 @@
  * \section intro_sec Introduction
  *
  * This is the developer documentation of the reference client for an experimental new digital currency called Kore(https://www.kore.org/),
- * which enables instant payments to anyone, anywhere in the world. Koreuses peer-to-peer technology to operate
+ * which enables instant payments to anyone, anywhere in the world. Kore uses peer-to-peer technology to operate
  * with no central authority: managing transactions and issuing money are carried out collectively by the network.
  *
  * The software is a community-driven open source project, released under the MIT license.

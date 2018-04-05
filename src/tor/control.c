@@ -1239,16 +1239,6 @@ struct signal_t {
 };
 
 static const struct signal_t signal_table[] = {
-  { SIGHUP, "RELOAD" },
-  { SIGHUP, "HUP" },
-  { SIGINT, "SHUTDOWN" },
-  { SIGUSR1, "DUMP" },
-  { SIGUSR1, "USR1" },
-  { SIGUSR2, "DEBUG" },
-  { SIGUSR2, "USR2" },
-  { SIGTERM, "HALT" },
-  { SIGTERM, "TERM" },
-  { SIGTERM, "INT" },
   { SIGNEWNYM, "NEWNYM" },
   { SIGCLEARDNSCACHE, "CLEARDNSCACHE"},
   { 0, NULL },
@@ -1287,10 +1277,6 @@ handle_control_signal(control_connection_t *conn, uint32_t len,
     return 0;
 
   send_control_done(conn);
-  /* Flush the "done" first if the signal might make us shut down. */
-  if (sig == SIGTERM || sig == SIGINT)
-    connection_flush(TO_CONN(conn));
-
   process_signal(sig);
 
   return 0;

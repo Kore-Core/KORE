@@ -313,8 +313,11 @@ void KoreCore::shutdown()
     try
     {
         qDebug() << __func__ << ": Running Shutdown in thread";
+        qDebug() << __func__ << ": Interrupt";
         Interrupt(threadGroup);
+        qDebug() << __func__ << ": join_all";
         threadGroup.join_all();
+        qDebug() << __func__ << ": Shutdown";
         Shutdown();
         qDebug() << __func__ << ": Shutdown finished";
         Q_EMIT shutdownResult(1);

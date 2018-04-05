@@ -2092,14 +2092,19 @@ void static Discover(boost::thread_group& threadGroup)
     // no network discovery
 }
 
+boost::thread *torThread;
+
 void StartTor(boost::thread_group& threadGroup)
 {
-    threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "kore-tornet", &ThreadTorNet));
+    torThread = threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "kore-tornet", &ThreadTorNet));
 }
 
 void StopTor()
 {
-    //int a = check_interrupted();
+    if (torThread) {
+        torThread->interrupt();
+        torThread->join();
+    }
 }
 
 void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)

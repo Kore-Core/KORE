@@ -3,7 +3,7 @@ Kore Core integration/staging tree
 
 [![Build Status](https://travis-ci.org/kore/kore.svg?branch=master)](https://travis-ci.org/kore/kore)
 
-https://korecore.org
+https://kore.life
 
 What is Kore?
 ----------------
@@ -13,10 +13,6 @@ anyone, anywhere in the world. Kore uses peer-to-peer technology to operate
 with no central authority: managing transactions and issuing money are carried
 out collectively by the network. Kore Core is the name of open source
 software which enables the use of this currency.
-
-For more information, as well as an immediately useable, binary version of
-the Kore Core software, see https://kore.org/en/download, or read the
-[original whitepaper](https://korecore.org/kore.pdf).
 
 License
 -------

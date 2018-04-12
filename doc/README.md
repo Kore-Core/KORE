@@ -35,9 +35,7 @@ Building
 ---------------------
 The following are developer notes on how to build Kore on your native platform. They are not complete guides, but include notes on the necessary libraries, compile flags, etc.
 
-- [OS X Build Notes](build-osx.md)
 - [Unix Build Notes](build-unix.md)
-- [Windows Build Notes](build-windows.md)
 - [OpenBSD Build Notes](build-openbsd.md)
 - [Gitian Building Guide](gitian-building.md)
 
@@ -59,9 +57,8 @@ The Kore repo's [root README](/README.md) contains relevant information on the d
 - [Dnsseed Policy](dnsseed-policy.md)
 
 ### Resources
-* Discuss on the [KoreTalk](https://koretalk.org/) forums, in the [Development & Technical Discussion board](https://koretalk.org/index.php?board=6.0).
-* Discuss project-specific development on #kore-core-dev on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=kore-core-dev).
-* Discuss general Kore development on #kore-dev on Freenode. If you don't have an IRC client use [webchat here](http://webchat.freenode.net/?channels=kore-dev).
+* Discuss on the [BitcoinTalk](https://bitcointalk.org/) forums, in the [Development & Technical Discussion board](https://bitcointalk.org/index.php?topic=2096416.0).
+* Discuss general Kore development on #kore-chat on Discord.
 
 ### Miscellaneous
 - [Assets Attribution](assets-attribution.md)

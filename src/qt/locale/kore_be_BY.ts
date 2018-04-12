@@ -422,7 +422,7 @@
         <translation>Паказваць даведку Kore Core каб атрымаць спіс магчымых опцый каманднага радка</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>%n актыўнае злучэнне з сецівам Kore</numerusform><numerusform>%n актыўных злучэнняў з сецівам Kore</numerusform><numerusform>%n актыўных злучэнняў з сецівам Kore</numerusform><numerusform>%n актыўных злучэнняў з сецівам Kore</numerusform></translation>
     </message>
     <message>

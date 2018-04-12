@@ -414,7 +414,7 @@
         <translation>Мавжуд Koreбуйруқлар матни мосламалари билан  Kore Core ёрдам хабарларини олиш рўйхатини кўрсатиш</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>%n та Koreтармоғига фаол уланиш мавжуд</numerusform></translation>
     </message>
     <message>
@@ -993,7 +993,7 @@
         <translation>Шакл</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Korenetwork after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
         <translation>Кўрсатилган маълумот эскирган бўлиши мумкин. Ҳамёнингиз алоқа ўрнатилгандан сўнг Koreтармоқ билан автоматик тарзда синхронланади, аммо жараён ҳалигача тугалланмади.</translation>
     </message>
     <message>

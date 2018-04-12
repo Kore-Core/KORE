@@ -434,7 +434,7 @@
         <translation>Vis Kore Core hjælpebesked for at få en liste over mulige tilvalg for Korekommandolinje</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>%n aktiv forbindelse til Kore-netværket</numerusform><numerusform>%n aktive forbindelser til Kore-netværket</numerusform></translation>
     </message>
     <message>
@@ -1088,7 +1088,7 @@
         <translation>Konfigurér port vha. &amp;UPnP</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a SOCKS5 proxy.</source>
+        <source>Connect to the KORE network through a SOCKS5 proxy.</source>
         <translation>Forbind til Kore-netværket gennem en SOCKS5-proxy.</translation>
     </message>
     <message>
@@ -1128,7 +1128,7 @@
         <translation>Tor</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <source>Connect to the KORE network through a separate SOCKS5 proxy for Tor hidden services.</source>
         <translation>Forbind til Kore-netværket gennem en separat SOCKS5-proxy for skjulte Tor-tjenester.</translation>
     </message>
     <message>
@@ -1215,7 +1215,7 @@
         <translation>Formular</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Korenetwork after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
         <translation>Den viste information kan være forældet. Din tegnebog synkroniserer automatisk med Kore-netværket, når en forbindelse etableres, men denne proces er ikke gennemført endnu.</translation>
     </message>
     <message>
@@ -1761,7 +1761,7 @@
         <translation>&amp;Genbrug en eksisterende modtagelsesadresse (anbefales ikke)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Korenetwork.</source>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the KORE network.</source>
         <translation>En valgfri besked, der føjes til betalingsanmodningen, og som vil vises, når anmodningen åbnes. Bemærk: Beskeden vil ikke sendes sammen med betalingen over Kore-netværket.</translation>
     </message>
     <message>
@@ -2249,7 +2249,7 @@
         <translation>Indtast et mærkat for denne adresse for at føje den til listen over brugte adresser</translation>
     </message>
     <message>
-        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Korenetwork.</source>
+        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</source>
         <translation>En besked, som blev føjet til "bitcon:"-URI'en, som vil gemmes med transaktionen til din reference. Bemærk: Denne besked vil ikke blive sendt over Kore-netværket.</translation>
     </message>
     <message>

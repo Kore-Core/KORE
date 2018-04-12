@@ -434,7 +434,7 @@
         <translation>사용할 수 있는 비트코인 명령어 옵션 목록을 가져오기 위해 Kore-Qt 도움말 메시지를 표시합니다.</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>비트코인 네트워크에 %n개의 연결이 활성화되어 있습니다.</numerusform></translation>
     </message>
     <message>
@@ -988,7 +988,7 @@
         <translation>사용중인 UPnP 포트 매핑(&amp;U)</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a SOCKS5 proxy.</source>
+        <source>Connect to the KORE network through a SOCKS5 proxy.</source>
         <translation>SOCKS5 프록시를 통해 비트코인 네트워크 연결</translation>
     </message>
     <message>
@@ -1095,7 +1095,7 @@
         <translation>유형</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Korenetwork after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
         <translation>표시한 정보가 오래된 것 같습니다. 비트코인 네트워크에 연결하고 난 다음에 지갑을 자동으로 동기화 하지만, 아직 과정이 끝나지는 않았습니다.</translation>
     </message>
     <message>
@@ -1781,7 +1781,7 @@
         <translation>사용된 주소 목록에 새 주소를 추가하기 위해 제목을 입력합니다. </translation>
     </message>
     <message>
-        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Korenetwork.</source>
+        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</source>
         <translation>비트코인에 첨부된 메시지: 참고용으로 거래와 함께 저장될 URI. 메모: 이 메시지는 비트코인 네트워크로 전송되지 않습니다.</translation>
     </message>
     <message>

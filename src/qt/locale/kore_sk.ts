@@ -434,7 +434,7 @@
         <translation>Zobraziť pomocnú správu od KoreJadra pre získanie zoznamu dostupných možností príkazového riadku</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>%n aktívne pripojenie do siete Kore</numerusform><numerusform>%n aktívne pripojenia do siete Kore</numerusform><numerusform>%n aktívnych pripojení do siete Kore</numerusform></translation>
     </message>
     <message>
@@ -1088,7 +1088,7 @@
         <translation>Mapovať port pomocou &amp;UPnP</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a SOCKS5 proxy.</source>
+        <source>Connect to the KORE network through a SOCKS5 proxy.</source>
         <translation>Pripojiť do siete Korecez proxy server SOCKS5.</translation>
     </message>
     <message>
@@ -1128,7 +1128,7 @@
         <translation>Tor</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <source>Connect to the KORE network through a separate SOCKS5 proxy for Tor hidden services.</source>
         <translation>Pripojiť k Koreovej sieti cez separované SOCKS5 proxy pre skrytú službu Tor.</translation>
     </message>
     <message>
@@ -1215,7 +1215,7 @@
         <translation>Forma</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Korenetwork after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
         <translation>Zobrazené informácie môžu byť neaktuálne. Vaša peňaženka sa automaticky synchronizuje so sieťou Korepo nadviazaní spojenia, ale tento proces ešte nie je ukončený.</translation>
     </message>
     <message>
@@ -1758,7 +1758,7 @@
         <translation>Znovu použiť jestvujúcu prijímaciu adresu (neodporúča sa)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Korenetwork.</source>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the KORE network.</source>
         <translation>Pridať voliteľnú správu k výzve na zaplatenie, ktorá sa zobrazí keď bude výzva otvorená. Poznámka: Správa nebude poslaná s platbou cez sieť Kore.</translation>
     </message>
     <message>
@@ -2242,7 +2242,7 @@
         <translation>Vložte popis pre túto adresu aby sa uložila do zoznamu použitých adries</translation>
     </message>
     <message>
-        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Korenetwork.</source>
+        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</source>
         <translation>Správa ktorá bola pripojená k kore: URI a ktorá bude uložená s transakcou pre Vaše potreby. Poznámka: Táto správa nebude poslaná cez sieť Kore.</translation>
     </message>
     <message>

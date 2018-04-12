@@ -434,7 +434,7 @@
         <translation>Korekomut satırı seçeneklerinin listesini elde etmek için KoreÇekirdeği yardım mesajını göster</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>Koreşebekesine %n faal bağlantı</numerusform><numerusform>Koreşebekesine %n faal bağlantı</numerusform></translation>
     </message>
     <message>
@@ -1088,7 +1088,7 @@
         <translation>Portları &amp;UPnP kullanarak haritala</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a SOCKS5 proxy.</source>
+        <source>Connect to the KORE network through a SOCKS5 proxy.</source>
         <translation>Koreşebekesine SOCKS5 vekil sunucusu vasıtasıyla bağlan.</translation>
     </message>
     <message>
@@ -1128,7 +1128,7 @@
         <translation>Tor</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <source>Connect to the KORE network through a separate SOCKS5 proxy for Tor hidden services.</source>
         <translation>Koreşebekesine gizli Tor servisleri için ayrı bir SOCKS5 vekil sunucusu vasıtasıyla bağlan.</translation>
     </message>
     <message>
@@ -1215,7 +1215,7 @@
         <translation>Form</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Korenetwork after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
         <translation>Görüntülenen veriler zaman aşımına uğramış olabilir. Bağlantı kurulduğunda cüzdanınız otomatik olarak şebeke ile eşleşir ancak bu işlem henüz tamamlanmamıştır.</translation>
     </message>
     <message>
@@ -1761,7 +1761,7 @@
         <translation>&amp;Hâlihazırda bulunan bir alım adresini kullan (önerilmez)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Korenetwork.</source>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the KORE network.</source>
         <translation>Talep açıldığında gösterilecek, isteğinize dayalı, ödeme talebi ile ilişkilendirilecek bir mesaj. Not: Bu mesaj ödeme ile birlikte Koreşebekesi üzerinden gönderilmeyecektir.</translation>
     </message>
     <message>
@@ -2249,7 +2249,7 @@
         <translation>Kullanılmış adres listesine eklemek için bu adrese bir etiket girin</translation>
     </message>
     <message>
-        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Korenetwork.</source>
+        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</source>
         <translation>Kore: URI'siyle ilişkili ve bilginiz için muameleyle saklanacak bir mesaj. Not: Bu mesaj Koreşebekesi üzerinden gönderilmeyecektir.</translation>
     </message>
     <message>

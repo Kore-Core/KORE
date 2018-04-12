@@ -270,7 +270,7 @@
         <translation>แถบเครื่องมือ</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>%n ที่ใช้งานการเชื่อมต่อกับเครือข่าย Kore</numerusform></translation>
     </message>
     <message>

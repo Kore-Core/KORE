@@ -434,7 +434,7 @@
         <translation>Afficher le message d'aide de Kore Core pour obtenir une liste des options de ligne de commande Korepossibles.</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>%n connexion active avec le réseau Kore</numerusform><numerusform>%n connexions actives avec le réseau Kore</numerusform></translation>
     </message>
     <message>
@@ -1088,7 +1088,7 @@
         <translation>Mapper le port avec l'&amp;UPnP</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a SOCKS5 proxy.</source>
+        <source>Connect to the KORE network through a SOCKS5 proxy.</source>
         <translation>Se connecter au réseau Korepar un mandataire SOCKS5.</translation>
     </message>
     <message>
@@ -1128,7 +1128,7 @@
         <translation>Tor</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <source>Connect to the KORE network through a separate SOCKS5 proxy for Tor hidden services.</source>
         <translation>Se connecter au réseau Koreau travers d'un mandataire SOCKS5 séparé pour les services cachés de Tor.</translation>
     </message>
     <message>
@@ -1215,7 +1215,7 @@
         <translation>Formulaire</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Korenetwork after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
         <translation>Les informations affichées peuvent être obsolètes. Votre portefeuille est automatiquement synchronisé avec le réseau Korelorsque la connexion s'établit, or ce processus n'est pas encore terminé.</translation>
     </message>
     <message>
@@ -1761,7 +1761,7 @@
         <translation>Ré&amp;utiliser une adresse de réception existante (non recommandé)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Korenetwork.</source>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the KORE network.</source>
         <translation>Un message optionnel à joindre à la demande de paiement qui sera affiché à l'ouverture de celle-ci. Note : le message ne sera pas envoyé avec le paiement par le réseau Kore.</translation>
     </message>
     <message>
@@ -2249,7 +2249,7 @@
         <translation>Saisir une étiquette pour cette adresse afin de l'ajouter à la liste d'adresses utilisées</translation>
     </message>
     <message>
-        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Korenetwork.</source>
+        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</source>
         <translation>Un message qui était joint à l'URI Koreet qui sera stocké avec la transaction pour référence. Note : ce message ne sera pas envoyé par le réseau Kore.</translation>
     </message>
     <message>

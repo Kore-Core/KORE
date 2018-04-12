@@ -434,8 +434,8 @@
         <translation>Show the Kore Core help message to get a list with possible Korecommand-line options</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
-        <translation><numerusform>%n active connection to Korenetwork</numerusform><numerusform>%n active connections to Korenetwork</numerusform></translation>
+        <source>%n active connection(s) to KORE network</source>
+        <translation><numerusform>%n active connection to KORE network</numerusform><numerusform>%n active connections to KORE network</numerusform></translation>
     </message>
     <message>
         <source>No block source available...</source>
@@ -1088,8 +1088,8 @@
         <translation>Map port using &amp;UPnP</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a SOCKS5 proxy.</source>
-        <translation>Connect to the Korenetwork through a SOCKS5 proxy.</translation>
+        <source>Connect to the KORE network through a SOCKS5 proxy.</source>
+        <translation>Connect to the KORE network through a SOCKS5 proxy.</translation>
     </message>
     <message>
         <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
@@ -1128,8 +1128,8 @@
         <translation>Tor</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a separate SOCKS5 proxy for Tor hidden services.</source>
-        <translation>Connect to the Korenetwork through a separate SOCKS5 proxy for Tor hidden services.</translation>
+        <source>Connect to the KORE network through a separate SOCKS5 proxy for Tor hidden services.</source>
+        <translation>Connect to the KORE network through a separate SOCKS5 proxy for Tor hidden services.</translation>
     </message>
     <message>
         <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
@@ -1215,7 +1215,7 @@
         <translation>Form</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Korenetwork after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
         <translation>The displayed information may be out of date. Your Wallet automatically synchronises with the KoreNetwork after a connection is established, but this process has not been completed yet.</translation>
     </message>
     <message>
@@ -1761,8 +1761,8 @@
         <translation>R&amp;euse an existing receiving address (not recommended)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Korenetwork.</source>
-        <translation>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Korenetwork.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the KORE network.</source>
+        <translation>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the KORE network.</translation>
     </message>
     <message>
         <source>An optional label to associate with the new receiving address.</source>
@@ -2249,8 +2249,8 @@
         <translation>Enter a label for this address to add it to the list of used addresses</translation>
     </message>
     <message>
-        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Korenetwork.</source>
-        <translation>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Korenetwork.</translation>
+        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</source>
+        <translation>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</translation>
     </message>
     <message>
         <source>Pay To:</source>

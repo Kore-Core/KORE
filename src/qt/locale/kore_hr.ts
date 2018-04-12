@@ -422,7 +422,7 @@
         <translation>Ispis svih opcija naredbene linije programa sa kratkim opisom</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>%n aktivna veza na Koremrežu</numerusform><numerusform>%n aktivnih veza na Koremrežu</numerusform><numerusform>%n aktivnih veza na Koremrežu</numerusform></translation>
     </message>
     <message numerus="yes">
@@ -955,7 +955,7 @@
         <translation>Oblik</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Korenetwork after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
         <translation>Prikazani podatci mogu biti zastarjeli. Vaš novčanik se automatski sinkronizira s Koremrežom kada je veza uspostavljena, ali taj proces još nije završen.</translation>
     </message>
     <message>

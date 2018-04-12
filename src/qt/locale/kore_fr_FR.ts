@@ -407,7 +407,7 @@ Réessayez.</translation>
         <translation>&amp;Options de ligne de commande</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>%n connexion active au réseau Kore</numerusform><numerusform>%n connexions actives au réseau Kore</numerusform></translation>
     </message>
     <message>

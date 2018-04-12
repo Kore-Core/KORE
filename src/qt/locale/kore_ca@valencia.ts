@@ -426,7 +426,7 @@
         <translation>Mostra el missatge d'ajuda del Kore Core per obtindre una llista amb les possibles opcions de línia d'ordes de Kore</translation>
     </message>
     <message numerus="yes">
-        <source>%n active connection(s) to Korenetwork</source>
+        <source>%n active connection(s) to KORE network</source>
         <translation><numerusform>%n connexió activa a la xarxa Kore</numerusform><numerusform>%n connexions actives a la xarxa Kore</numerusform></translation>
     </message>
     <message>
@@ -1052,7 +1052,7 @@
         <translation>Port obert amb &amp;UPnP</translation>
     </message>
     <message>
-        <source>Connect to the Korenetwork through a SOCKS5 proxy.</source>
+        <source>Connect to the KORE network through a SOCKS5 proxy.</source>
         <translation>Connecta a la xarxa Korea través d'un proxy SOCKS5.</translation>
     </message>
     <message>
@@ -1155,7 +1155,7 @@
         <translation>Formulari</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the Korenetwork after a connection is established, but this process has not completed yet.</source>
+        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
         <translation>La informació mostrada pot no estar al día. El teu moneder es sincronitza automàticament amb la xarxa Koreun cop s'ha establit connexió, però este proces no s'ha completat encara.</translation>
     </message>
     <message>
@@ -1629,7 +1629,7 @@
         <translation>R&amp;eutilitza una adreça de recepció anterior (no recomanat)</translation>
     </message>
     <message>
-        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the Korenetwork.</source>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the KORE network.</source>
         <translation>Un missatge opcional que s'adjuntarà a la sol·licitud de pagament, que es mostrarà quan s'òbriga la sol·licitud. Nota: El missatge no s'enviarà amb el pagament per la xarxa Kore.</translation>
     </message>
     <message>
@@ -2109,7 +2109,7 @@
         <translation>Introduïu una etiqueta per a esta adreça per afegir-la a la llista d'adreces utilitzades</translation>
     </message>
     <message>
-        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the Korenetwork.</source>
+        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</source>
         <translation>Un missatge que s'ha adjuntat al kore: URI que s'emmagatzemarà amb la transacció per a la vostra referència. Nota: el missatge no s'enviarà a través de la xarxa Kore.</translation>
     </message>
     <message>

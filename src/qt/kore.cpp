@@ -666,7 +666,7 @@ int main(int argc, char *argv[])
     /// 8. URI IPC sending
     string strErr;
     if (!masternodeConfig.read(strErr)) {
-        QMessageBox::critical(0, QObject::tr("PIVX Core"),
+        QMessageBox::critical(0, QObject::tr("KORE Core"),
             QObject::tr("Error reading masternode configuration file: %1").arg(strErr.c_str()));
         return false;
     }

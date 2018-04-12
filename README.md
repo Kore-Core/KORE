@@ -24,16 +24,10 @@ Development Process
 -------------------
 
 The `master` branch is regularly built and tested, but is not guaranteed to be
-completely stable. [Tags](https://github.com/kore/kore/tags) are created
+completely stable. [Tags](https://github.com/kore-core/kore/tags) are created
 regularly to indicate new official, stable release versions of Kore Core.
 
 The contribution workflow is described in [CONTRIBUTING.md](CONTRIBUTING.md).
-
-The developer [mailing list](https://lists.linuxfoundation.org/mailman/listinfo/kore-dev)
-should be used to discuss complicated or controversial changes before working
-on a patch set.
-
-Developer IRC can be found on Freenode at #kore-core-dev.
 
 Testing
 -------
@@ -66,40 +60,7 @@ not straightforward.
 Translations
 ------------
 
-Changes to translations as well as new translations can be submitted to
-[Kore Core's Transifex page](https://www.transifex.com/projects/p/kore/).
-
-Translations are periodically pulled from Transifex and merged into the git repository. See the
-[translation process](doc/translation_process.md) for details on how this works.
-
 **Important**: We do not accept translation changes as GitHub pull requests because the next
 pull from Transifex would automatically overwrite them again.
 
-Translators should also subscribe to the [mailing list](https://groups.google.com/forum/#!forum/kore-translators).
-
-Wallet Updates
---------------
-
-1-11-2018 - v0.12.4.0
-
-NOTE: The wallet still has the disappearing coins and reindexing
-issues experienced by many PoSv3 coins at this current time.
-The KORE wallet update to version 0.12.4.0 includes:
-Partial memory leak fixes, other mods and fixes.
-Rather than remove the Bittrex trading window the wallet has been updated with 
-a check box toggle to "Enable Trading," found at the bottom of the page.
-The wallet opens with the trading window disabled. Click to enable it.
-Once finished with trades it is recommended to disable it.
-The box to unlock for staking only is auto checked.
-The staking icon remains on for a longer period of time when coins are sent out to stake.
-Various links and spelling corrections.
-Commented out a buggy non functioning wallet repair option.
-Updated nodes list.
-Added zapwallettxes to the kore.conf file.
-Windows 32bit version.
-Updated curl and dependency lists.
-Increased outbound connections.
-Increased the stake split threshold.
-Lowered difficulty.
-Updated ssl.
-Various other bug fixes.
+If you have a translation request please reach out via email or through Discord or through Telegram.

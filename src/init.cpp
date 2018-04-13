@@ -893,12 +893,14 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
     // also see: InitParameterInteraction()
 
     // create a conf file , add seeds (workaround to seed node issue and quick connectivity)
+	//Added seednode, once I make more I will create seednode array. ~Matrix
     boost::filesystem::path pathConfig = GetConfigFile();
     if (!boost::filesystem::exists(pathConfig)){
 		std::ofstream configfile;
 		configfile.open(pathConfig.string().c_str(),fstream::out);
 		configfile<<"zapwallettxes=1"<<std::endl;
 		configfile<<"staking=1"<<std::endl;
+	    	configfile<<"seednode=agqiamu7sbter6vy.onion"<<std::endl;
 		for (auto a:onionseeds)
 		configfile<<"addnode="<< a <<std::endl;
 

@@ -1,5 +1,7 @@
 DIST_SUBDIRS = secp256k1 univalue
-LIBS+=  -lssl -lcrypto -lcurl
+TOR_LIBS=  -ltor -lor -lor-ctime -lor-crypto -lor-event -lor-trunnel \
+	-lcurve25519_donna -led25519_donna -led25519_ref10 -lkeccak-tiny
+LIBS+=  -lcurl -lssl -lcrypto
 AM_LDFLAGS = $(PTHREAD_CFLAGS) $(LIBTOOL_LDFLAGS) $(HARDENED_LDFLAGS)
 AM_CXXFLAGS = $(HARDENED_CXXFLAGS)
 AM_CPPFLAGS = $(HARDENED_CPPFLAGS)
@@ -173,92 +175,8 @@ BITCOIN_CORE_H = \
   zmq/zmqabstractnotifier.h \
   zmq/zmqconfig.h\
   zmq/zmqnotificationinterface.h \
-  zmq/zmqpublishnotifier.h \
-  tor/ht.h \
-  tor/or.h \
-  tor/aes.h \
-  tor/dns.h \
-  tor/geoip.h \
-  tor/onion.h \
-  tor/relay.h \
-  tor/config.h \
-  tor/crypto.h \
-  tor/di_ops.h \
-  tor/ntmain.h \
-  tor/router.h \
-  tor/status.h \
-  tor/torint.h \
-  tor/torlog.h \
-  tor/tortls.h \
-  tor/address.h \
-  tor/buffers.h \
-  tor/channel.h \
-  tor/command.h \
-  tor/control.h \
-  tor/dirserv.h \
-  tor/dirvote.h \
-  tor/dnsserv.h \
-  tor/fp_pair.h \
-  tor/memarea.h \
-  tor/mempool.h \
-  tor/procmon.h \
-  tor/reasons.h \
-  tor/rendmid.h \
-  tor/rephist.h \
-  tor/sandbox.h \
-  tor/torgzip.h \
-  tor/eventdns.h \
-  tor/kore.h \
-  tor/nodelist.h \
-  tor/orconfig.h \
-  tor/policies.h \
-  tor/tinytest.h \
-  tor/tor_util.h \
-  tor/backtrace.h \
-  tor/confparse.h \
-  tor/container.h \
-  tor/cpuworker.h \
-  tor/directory.h \
-  tor/hibernate.h \
-  tor/microdesc.h \
-  tor/onion_tap.h \
-  tor/routerset.h \
-  tor/statefile.h \
-  tor/tor_queue.h \
-  tor/addressmap.h \
-  tor/channeltls.h \
-  tor/circuitmux.h \
-  tor/circuituse.h \
-  tor/connection.h \
-  tor/entrynodes.h \
-  tor/ext_orport.h \
-  tor/onion_fast.h \
-  tor/onion_main.h \
-  tor/onion_ntor.h \
-  tor/rendclient.h \
-  tor/rendcommon.h \
-  tor/routerlist.h \
-  tor/tor_compat.h \
-  tor/transports.h \
-  tor/circuitlist.h \
-  tor/rendservice.h \
-  tor/replaycache.h \
-  tor/routerparse.h \
-  tor/testsupport.h \
-  tor/circpathbias.h \
-  tor/circuitbuild.h \
-  tor/circuitstats.h \
-  tor/eventdns_tor.h \
-  tor/connection_or.h \
-  tor/networkstatus.h \
-  tor/orconfig_apple.h \
-  tor/orconfig_linux.h \
-  tor/orconfig_win32.h \
-  tor/circuitmux_ewma.h \
-  tor/compat_libevent.h \
-  tor/connection_edge.h \
-  tor/tinytest_macros.h \
-  tor/crypto_curve25519.h 
+  zmq/zmqpublishnotifier.h
+
 
 obj/build.h: FORCE
 	@$(MKDIR_P) $(builddir)/obj
@@ -300,83 +218,6 @@ libkore_server_a_SOURCES = \
   rpc/server.cpp \
   script/sigcache.cpp \
   timedata.cpp \
-  tor/address.c \
-  tor/addressmap.c \
-  tor/aes.c \
-  tor/backtrace.c \
-  tor/buffers.c \
-  tor/channel.c \
-  tor/channeltls.c \
-  tor/circpathbias.c \
-  tor/circuitbuild.c \
-  tor/circuitlist.c \
-  tor/circuitmux.c \
-  tor/circuitmux_ewma.c \
-  tor/circuitstats.c \
-  tor/circuituse.c \
-  tor/command.c \
-  tor/compat.c \
-  tor/compat_libevent.c \
-  tor/config.c \
-  tor/config_codedigest.c \
-  tor/confparse.c \
-  tor/connection.c \
-  tor/connection_edge.c \
-  tor/connection_or.c \
-  tor/container.c \
-  tor/control.c \
-  tor/cpuworker.c \
-  tor/crypto.c \
-  tor/crypto_curve25519.c \
-  tor/crypto_format.c \
-  tor/curve25519-donna.c \
-  tor/di_ops.c \
-  tor/directory.c \
-  tor/dirserv.c \
-  tor/dirvote.c \
-  tor/dns.c \
-  tor/dnsserv.c \
-  tor/entrynodes.c \
-  tor/ext_orport.c \
-  tor/fp_pair.c \
-  tor/geoip.c \
-  tor/hibernate.c \
-  tor/log.c \
-  tor/memarea.c \
-  tor/mempool.c \
-  tor/microdesc.c \
-  tor/networkstatus.c \
-  tor/nodelist.c \
-  tor/onion.c \
-  tor/onion_fast.c \
-  tor/onion_main.c \
-  tor/onion_ntor.c \
-  tor/onion_tap.c \
-  tor/policies.c \
-  tor/kore.cpp \
-  tor/procmon.c \
-  tor/reasons.c \
-  tor/relay.c \
-  tor/rendclient.c \
-  tor/rendcommon.c \
-  tor/rendmid.c \
-  tor/rendservice.c \
-  tor/rephist.c \
-  tor/replaycache.c \
-  tor/router.c \
-  tor/routerlist.c \
-  tor/routerparse.c \
-  tor/routerset.c \
-  tor/sandbox.c \
-  tor/statefile.c \
-  tor/status.c \
-  tor/strlcat.c \
-  tor/strlcpy.c \
-  tor/tor_util.c \
-  tor/torgzip.c \
-  tor/tortls.c \
-  tor/transports.c \
-  tor/util_codedigest.c \
   tor/kore.cpp \
   torcontrol.cpp \
   txdb.cpp \
@@ -539,7 +380,7 @@ if ENABLE_WALLET
 kored_LDADD += libkore_wallet.a
 endif
 
-kored_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+kored_LDADD += $(BOOST_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(TOR_LIBS)
 
 # kore-cli binary #
 kore_cli_SOURCES = kore-cli.cpp

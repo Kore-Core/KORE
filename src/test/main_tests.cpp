@@ -10,6 +10,11 @@
 #include <boost/signals2/signal.hpp>
 #include <boost/test/unit_test.hpp>
 
+extern const char tor_git_revision[];
+/* Ordinarily defined in tor_main.c; this bit is just here to provide one
+ * since we're not linking to tor_main.c */
+const char tor_git_revision[] = "";
+
 BOOST_FIXTURE_TEST_SUITE(main_tests, TestingSetup)
 
 static void TestBlockSubsidyHalvings(const Consensus::Params& consensusParams)

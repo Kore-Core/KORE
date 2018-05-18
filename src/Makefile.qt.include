@@ -1,7 +1,7 @@
 bin_PROGRAMS += qt/kore-qt
 EXTRA_LIBRARIES += qt/libkoreqt.a
 
-LIBS+= 
+LIBS+=
 
 # kore qt core #
 QT_TS = \
@@ -110,7 +110,7 @@ QT_FORMS_UI = \
   qt/forms/sendcoinsentry.ui \
   qt/forms/signverifymessagedialog.ui \
   qt/forms/tradingdialog.ui \
-  qt/forms/transactiondescdialog.ui 
+  qt/forms/transactiondescdialog.ui
 
 QT_MOC_CPP = \
   qt/moc_addressbookpage.cpp \
@@ -161,7 +161,7 @@ QT_MOC_CPP = \
   qt/moc_walletframe.cpp \
   qt/moc_walletmodel.cpp \
   qt/moc_walletview.cpp \
-  qt/moc_blockexplorer.cpp 
+  qt/moc_blockexplorer.cpp
 
 BITCOIN_MM = \
   qt/macdockiconhandler.mm \
@@ -239,7 +239,7 @@ BITCOIN_QT_H = \
   qt/walletmodel.h \
   qt/walletmodeltransaction.h \
   qt/walletview.h \
-  qt/winshutdownmonitor.h 
+  qt/winshutdownmonitor.h
 
 RES_ICONS = \
   qt/res/icons/add.png \
@@ -316,7 +316,7 @@ BITCOIN_QT_CPP = \
   qt/splashscreen.cpp \
   qt/tradingdialog.cpp \
   qt/trafficgraphwidget.cpp \
-  qt/utilitydialog.cpp 
+  qt/utilitydialog.cpp
 
 if TARGET_WINDOWS
 BITCOIN_QT_CPP += qt/winshutdownmonitor.cpp
@@ -352,7 +352,7 @@ BITCOIN_QT_CPP += \
   qt/walletframe.cpp \
   qt/walletmodel.cpp \
   qt/walletmodeltransaction.cpp \
-  qt/walletview.cpp 
+  qt/walletview.cpp
 endif
 
 RES_IMAGES =
@@ -408,7 +408,7 @@ qt_kore_qt_LDADD += $(LIBBITCOIN_ZMQ) $(ZMQ_LIBS)
 endif
 qt_kore_qt_LDADD += $(LIBBITCOIN_CLI) $(LIBBITCOIN_COMMON) $(LIBBITCOIN_UTIL) $(LIBBITCOIN_CRYPTO) $(LIBUNIVALUE) $(LIBLEVELDB) $(LIBMEMENV) \
   $(BOOST_LIBS) $(QT_LIBS) $(QT_DBUS_LIBS) $(QR_LIBS) $(PROTOBUF_LIBS) $(BDB_LIBS) $(SSL_LIBS) $(CRYPTO_LIBS) $(MINIUPNPC_LIBS) $(LIBSECP256K1) \
-  $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS)
+  $(EVENT_PTHREADS_LIBS) $(EVENT_LIBS) $(TOR_LIBS)
 qt_kore_qt_LDFLAGS = $(RELDFLAGS) $(AM_LDFLAGS) $(QT_LDFLAGS) $(LIBTOOL_APP_LDFLAGS)
 qt_kore_qt_LIBTOOLFLAGS = --tag CXX
 

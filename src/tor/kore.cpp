@@ -13,6 +13,12 @@
 
 int coin_port_num = 0;
 
+
+extern const char tor_git_revision[];
+/* Ordinarily defined in tor_main.c; this bit is just here to provide one
+ * since we're not linking to tor_main.c */
+const char tor_git_revision[] = "";
+
 char const* kore_tor_data_directory(
 ) {
     static std::string const retrieved = (GetDataDir() / "tor").string();

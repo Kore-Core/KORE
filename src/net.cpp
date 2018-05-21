@@ -22,6 +22,7 @@
 #include "ui_interface.h"
 #include "utilstrencodings.h"
 #include <curl/curl.h>
+#include <curl/easy.h>
 
 #ifdef WIN32
 #include <string.h>
@@ -65,7 +66,7 @@
 using namespace std;
 
 extern "C" { int tor_main(int argc, char *argv[]);
-	
+
 	//void process_signal(uintptr_t sig);
 }
 
@@ -822,11 +823,11 @@ void SocketSendData(CNode *pnode)
 }
 
 void ThreadTorNet() {
-	
+
     try
-    {	
+    {
 		boost::this_thread::interruption_point();
-		std::string logDecl = "notice file " + GetDataDir().string() + "/tor/tor.log";
+		std::string logDecl = "notice file " + GetDataDir().string() + "/tor.log";
 		char *argvLogDecl = (char*) logDecl.c_str();
 
 		char* argv[] = {
@@ -2047,7 +2048,7 @@ void koregetprice()
 			readBuffer = replacestring(readBuffer, "resultBid", "");
 			readBuffer = remove(readBuffer, '\n');
 			}
-		
+
 		if ( ! (istringstream(readBuffer) >> price) ) price = 0;
 
       if (price > 0)
@@ -2075,7 +2076,7 @@ void btcusdprice()
         curl_easy_cleanup(curl);
     }
     double price = atof(readBuffer.c_str());
-    
+
     if (price > 0)
        usdprice = price;
 }
@@ -2174,7 +2175,7 @@ void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)
         //threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "stake", &ThreadStakeMiner));
         threadGroup.create_thread(boost::bind(&ThreadStakeMiner, pwalletMain));
 
-    // Retrieve fiat prices 
+    // Retrieve fiat prices
     scheduler.scheduleEvery(&FiatData, FIAT_INTERVAL);
 }
 
@@ -2813,14 +2814,14 @@ bool CBanDB::Read(banmap_t& banSet)
         // ... verify the network matches ours
         if (memcmp(pchMsgTmp, Params().MessageStart(), sizeof(pchMsgTmp)))
             return error("%s: Invalid network magic number", __func__);
-        
+
         // de-serialize address data into one CAddrMan object
         ssBanlist >> banSet;
     }
     catch (const std::exception& e) {
         return error("%s: Deserialize or I/O error - %s", __func__, e.what());
     }
-    
+
     return true;
 }
 

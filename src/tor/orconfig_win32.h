@@ -86,18 +86,10 @@
 #define HAVE_STRING_H
 
 /* Define to 1 if you have the `strlcat' function. */
-#if defined (WINCE)
 #define HAVE_STRLCAT
-#else
-#undef HAVE_STRLCAT
-#endif
 
 /* Define to 1 if you have the `strlcpy' function. */
-#if defined (WINCE)
 #define HAVE_STRLCPY
-#else
-#undef HAVE_STRLCPY
-#endif
 /* Define to 1 if you have the `strptime' function. */
 #undef HAVE_STRPTIME
 
@@ -218,8 +210,11 @@
 #undef SIZEOF_UINT8_T
 
 /* The size of a `void *', as computed by sizeof. */
+#ifdef __MINGW64__ // best way to check for mingw-w64
+#define SIZEOF_VOID_P 8
+#else
 #define SIZEOF_VOID_P 4
-
+#endif
 /* The size of a `__int64', as computed by sizeof. */
 #define SIZEOF___INT64 8
 

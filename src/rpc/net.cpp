@@ -445,6 +445,34 @@ static UniValue GetNetworksInfo()
     return networks;
 }
 
+UniValue getonion(const UniValue& params, bool fHelp)
+{
+    if (fHelp || params.size() != 0)
+        throw runtime_error(
+	    "getonion\n"
+	    "Returns your current onion address"
+            "\nExamples:\n"
+            + HelpExampleCli("getonion", "")
+            + HelpExampleRpc("getonion", "")
+        );
+
+    LOCK(cs_main);
+    UniValue obj(UniValue::VOBJ);
+    UniValue localAddresses(UniValue::VARR);
+    {
+        LOCK(cs_mapLocalHost);
+        BOOST_FOREACH(const PAIRTYPE(CNetAddr, LocalServiceInfo) &item, mapLocalHost)
+        {
+            UniValue rec(UniValue::VOBJ);
+            rec.push_back(Pair("address", item.first.ToString()));
+            localAddresses.push_back(rec);
+        }
+    }
+    obj.push_back(Pair("onion", localAddresses));
+    return obj;
+
+}
+
 UniValue getnetworkinfo(const UniValue& params, bool fHelp)
 {
     if (fHelp || params.size() != 0)

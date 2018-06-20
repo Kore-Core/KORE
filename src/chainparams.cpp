@@ -157,7 +157,7 @@ public:
         assert(consensus.hashGenesisBlock == uint256S("0x0aab10677b4fe0371a67f99e78a69e7d9fa03a1c7d48747978da405dc5abeb99"));
         assert(genesis.hashMerkleRoot == uint256S("0x53e2105c87e985ab3a3a3b3c6921f660f18535f935e447760758d4ed7c4c748c"));
 
-        //vSeeds.push_back(CDNSSeedData("kore.sipa.be", "seed.kore.sipa.be")); // Pieter Wuille
+        vSeeds.push_back(CDNSSeedData("kore.life", "dnsseed.kore.life"));
 
         base58Prefixes[PUBKEY_ADDRESS] = std::vector<unsigned char>(1,45);
         base58Prefixes[SCRIPT_ADDRESS] = std::vector<unsigned char>(1,85);

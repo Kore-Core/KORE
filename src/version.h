@@ -9,7 +9,7 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 70012;
+static const int PROTOCOL_VERSION = 70100;
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -18,10 +18,10 @@ static const int INIT_PROTO_VERSION = 209;
 static const int GETHEADERS_VERSION = 31800;
 
 //! demand canonical block signatures starting from this version
-static const int CANONICAL_BLOCK_SIG_VERSION = PROTOCOL_VERSION;
+static const int CANONICAL_BLOCK_SIG_VERSION = 70012;
 
 //! disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = PROTOCOL_VERSION;
+static const int MIN_PEER_PROTO_VERSION = 70012;
 
 //! minimum peer version accepted by DarksendPool
 static const int MIN_POOL_PEER_PROTO_VERSION = 70012;
@@ -47,6 +47,9 @@ static const int NOBLKS_VERSION_END = 32400;
 
 //! BIP 0031, pong message, is enabled for all versions AFTER this one
 static const int BIP0031_VERSION = 60000;
+
+//! ping includes block height for all versions AFTER this one
+static const int PING_INCLUDES_HEIGHT_VERSION = 70100;
 
 //! "mempool" command, enhanced "getdata" behavior starts with this version
 static const int MEMPOOL_GD_VERSION = 60002;

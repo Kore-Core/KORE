@@ -8,6 +8,7 @@
 #include "amount.h"
 #include "chain.h"
 #include "chainparams.h"
+#include "checkpoints.h"
 #include "coins.h"
 #include "consensus/consensus.h"
 #include "consensus/merkle.h"
@@ -392,7 +393,10 @@ bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams)
     LogPrintf("%s %s\n", pblock->IsProofOfStake() ? "Stake " : "Mined " , pblock->IsProofOfStake() ? FormatMoney(pblock->vtx[1].GetValueOut()) : FormatMoney(pblock->vtx[0].GetValueOut()));
 
     // Inform about the new block
+    if (fDebug) LogPrintf("signalling BlockFound\n");
     GetMainSignals().BlockFound(pblock->GetHash());
+    if (fDebug) LogPrintf("signalled BlockFound\n");
+
     // Process this block the same as if we had received it from another node
     if (!ProcessNewBlock(state, chainparams, NULL, pblock, true, NULL))
         return error("KoreMiner: ProcessNewBlock, block not accepted");
@@ -418,29 +422,38 @@ void ThreadStakeMiner(CWallet* pwallet)
     
     while (true)
     {
+        boost::this_thread::interruption_point();
     
         while (pwallet->IsLocked())
         {
             // nLastCoinStakeSearchInterval = 0;
-            MilliSleep(1000);
+            MilliSleep(2000);
+            boost::this_thread::interruption_point();
         }
         
         while (vNodes.empty() || IsInitialBlockDownload())
         {
 			fTryToSync = true;
             // nLastCoinStakeSearchInterval = 0;
-            MilliSleep(1000);
+            MilliSleep(2000);
+            boost::this_thread::interruption_point();
         }
 
 		if (fTryToSync)
 		{
 			fTryToSync = false;
-			if (vNodes.size() < 6 || pindexBestHeader->GetBlockTime() < GetTime() - 10 * 60)
+			if (vNodes.size() < 3 || nChainHeight < GetBestPeerHeight())
 			{
 				MilliSleep(60000);
 				continue;
 			}
 		}
+
+        if (nChainHeight < GetBestPeerHeight() - 1)
+        {
+            MilliSleep(2000);
+            continue;
+        }
 
         //
         // Create new block
@@ -455,10 +468,9 @@ void ThreadStakeMiner(CWallet* pwallet)
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             ProcessBlockFound(pblock, chainparams);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);
-            MilliSleep(500);
         }
-        else
-            MilliSleep(500);
+
+        MilliSleep(500);
     }
 }
 

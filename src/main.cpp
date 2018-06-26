@@ -86,6 +86,9 @@ uint64_t nPruneTarget = 0;
 bool fAlerts = DEFAULT_ALERTS;
 bool fEnableReplacement = DEFAULT_ENABLE_REPLACEMENT;
 
+int nChainHeight = -1;
+CMedianFilter<int> cPeerBlockCounts(5, 0);
+
 /** Fees smaller than this (in satoshi) are considered zero fee (for relaying, mining and transaction creation) */
 CFeeRate minRelayTxFee = CFeeRate(DEFAULT_MIN_RELAY_TX_FEE);
 
@@ -1899,6 +1902,11 @@ bool GetCoinAge(const CBlockIndex* pindexPrev, uint64_t& nCoinAge, const CTransa
     return true;
 }
 
+int GetBestPeerHeight()
+{
+    return std::max(cPeerBlockCounts.median(), Checkpoints::GetTotalBlocksEstimate(Params().Checkpoints()));
+}
+
 bool IsInitialBlockDownload()
 {
     const CChainParams& chainParams = Params();
@@ -2946,6 +2954,7 @@ void static UpdateTip(CBlockIndex *pindexNew) {
     chainActive.SetTip(pindexNew);
 
     // New best block
+    nChainHeight = pindexNew->nHeight;
     nTimeBestReceived = GetTime();
     mempool.AddTransactionsUpdated(1);
 
@@ -4058,6 +4067,8 @@ bool static IsCanonicalBlockSignature(const CBlock* pblock)
 
 bool ProcessNewBlock(CValidationState& state, const CChainParams& chainparams, const CNode* pfrom, const CBlock* pblock, bool fForceProcessing, CDiskBlockPos* dbp)
 {
+
+    if (fDebug) LogPrintf("ProcessNewBlock starts\n");
 
     if (!IsCanonicalBlockSignature(pblock)) {
         if (pfrom && pfrom->nVersion >= CANONICAL_BLOCK_SIG_VERSION)
@@ -5343,8 +5354,10 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             vRecv >> LIMITED_STRING(pfrom->strSubVer, MAX_SUBVERSION_LENGTH);
             pfrom->cleanSubVer = SanitizeString(pfrom->strSubVer);
         }
-        if (!vRecv.empty())
+        if (!vRecv.empty()) {
             vRecv >> pfrom->nStartingHeight;
+            pfrom->nChainHeight = pfrom->nStartingHeight;
+        }
         if (!vRecv.empty())
             vRecv >> pfrom->fRelayTxes; // set to true after we get the first filter* message
         else
@@ -5424,6 +5437,8 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
 
         LogPrintf("receive version message: %s: version %d, blocks=%d, us=%s, peer=%d%s\n",
             pfrom->cleanSubVer, pfrom->nVersion, pfrom->nStartingHeight, addrMe.ToString(), pfrom->id, remoteAddr);
+
+        cPeerBlockCounts.input(pfrom->nChainHeight);
 
         int64_t nTimeOffset = nTime - GetTime();
         pfrom->nTimeOffset = nTimeOffset;
@@ -6112,6 +6127,18 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             // seconds to respond to each, the 5th ping the remote sends would appear to
             // return very quickly.
             pfrom->PushMessage(NetMsgType::PONG, nonce);
+
+            if (pfrom->nVersion >= PING_INCLUDES_HEIGHT_VERSION)
+            {
+                int nPeerHeight;
+                vRecv >> nPeerHeight;
+
+                LOCK(cs_main);
+                cPeerBlockCounts.input(nPeerHeight);
+                pfrom->nChainHeight = nPeerHeight;
+
+                LogPrint("net", "%s has chain height %d\n", pfrom->addr.ToString().c_str(), nPeerHeight);
+            }
         }
     }
 
@@ -6443,7 +6470,12 @@ bool SendMessages(CNode* pto)
             pto->nPingUsecStart = GetTimeMicros();
             if (pto->nVersion > BIP0031_VERSION) {
                 pto->nPingNonceSent = nonce;
-                pto->PushMessage(NetMsgType::PING, nonce);
+                if (pto->nVersion >= PING_INCLUDES_HEIGHT_VERSION) {
+                    pto->PushMessage(NetMsgType::PING, nonce, nChainHeight);
+                }
+                else {
+                    pto->PushMessage(NetMsgType::PING, nonce);
+                }
             } else {
                 // Peer is too old to support ping command with nonce, pong will never arrive.
                 pto->nPingNonceSent = 0;

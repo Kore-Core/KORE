@@ -398,6 +398,7 @@ protected:
 public:
     uint256 hashContinue;
     int nStartingHeight;
+    int nChainHeight; // updates with ping
 
     // flood relay
     std::vector<CAddress> vAddrToSend;

@@ -900,7 +900,6 @@ bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler)
 		configfile.open(pathConfig.string().c_str(),fstream::out);
 		configfile<<"zapwallettxes=1"<<std::endl;
 		configfile<<"staking=1"<<std::endl;
-	    	configfile<<"seednode=agqiamu7sbter6vy.onion"<<std::endl;
 		for (auto a:onionseeds)
 		configfile<<"addnode="<< a <<std::endl;
 

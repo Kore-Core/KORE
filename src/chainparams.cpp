@@ -65,7 +65,7 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBirt
 void  CChainParams::MineNewGenesisBlock()
 {
     fPrintToConsole = true;
-    LogPrintStr("Searching for genesis block...\n");
+    LogPrintf("Searching for genesis block...\n");
 
     arith_uint256 hashTarget = UintToArith256(consensus.powLimit);//.GetCompact();
     //arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
@@ -180,8 +180,8 @@ public:
 
         static MapCheckpoints mapCheckpoints =
             boost::assign::map_list_of
-            (0, uint256S("0x0aab10677b4fe0371a67f99e78a69e7d9fa03a1c7d48747978da405dc5abeb99"))
-             static const CCheckpointData data = {
+            (0, uint256S("0x0aab10677b4fe0371a67f99e78a69e7d9fa03a1c7d48747978da405dc5abeb99"));
+        static const CCheckpointData data = {
             mapCheckpoints,
             1529501760, // * UNIX timestamp of last checkpoint block
             422518,    // * total number of transactions between genesis and last checkpoint

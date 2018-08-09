@@ -104,7 +104,7 @@ void MasternodeList::StartAlias(std::string strAlias)
             bool fSuccess = CMasternodeBroadcast::Create(mne.getIp(), mne.getPrivKey(), mne.getTxHash(), mne.getOutputIndex(), strError, mnb);
 
             if (fSuccess) {
-                strStatusHtml += "<br>Successfully started masternode.";
+                strStatusHtml += "<br>No error detected, sent masternode activation request. Please wait for request to propagate (this can take minutes or hours depending on network speed)";
                 mnodeman.UpdateMasternodeList(mnb);
                 mnb.Relay();
             } else {
@@ -151,7 +151,7 @@ void MasternodeList::StartAll(std::string strCommand)
     pwalletMain->Lock();
 
     std::string returnObj;
-    returnObj = strprintf("Successfully started %d masternodes, failed to start %d, total %d", nCountSuccessful, nCountFailed, nCountFailed + nCountSuccessful);
+    returnObj = strprintf("Successfully sent activation request to %d masternodes, failed to start %d, total %d", nCountSuccessful, nCountFailed, nCountFailed + nCountSuccessful);
     if (nCountFailed > 0) {
         returnObj += strFailedHtml;
     }

@@ -151,11 +151,11 @@ public:
         nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 100000;
 
-        genesis = CreateGenesisBlock(1533841307, 22, 12624920, 58284520, 0x201fffff, 1, pow (7,2) * COIN);
+        genesis = CreateGenesisBlock(1533841307, 22, 21828300, 63688767, 0x201fffff, 1, pow (7,2) * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        MineNewGenesisBlock();
-        assert(consensus.hashGenesisBlock == uint256S("0x0aab10677b4fe0371a67f99e78a69e7d9fa03a1c7d48747978da405dc5abeb99"));
-        assert(genesis.hashMerkleRoot == uint256S("0x53e2105c87e985ab3a3a3b3c6921f660f18535f935e447760758d4ed7c4c748c"));
+        //MineNewGenesisBlock();
+        assert(consensus.hashGenesisBlock == uint256S("0x0ba6c4977e9da831f14ff9180b37e30a96e78cb3581029907eb24c55cf079fc5"));
+        assert(genesis.hashMerkleRoot == uint256S("0x73bf9a836ff7c2fc79445a622ce5154bfde2811c57c397d6a3909bc97390174a"));
 
         vSeeds.push_back(CDNSSeedData("kore.life", "dnsseed.kore.life"));
 

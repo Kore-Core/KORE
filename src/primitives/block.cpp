@@ -70,17 +70,24 @@ std::string CBlockHeader::ToString() const
 std::string CBlock::ToString() const
 {
     std::stringstream s;
-    s << strprintf("CBlock(hash=%s, ver=%d, hashPrevBlock=%s, hashMerkleRoot=%s, nTime=%u, nBits=%08x, nNonce=%u, vtx=%u, vchBlockSig=%s)\n",
-        GetHash().ToString(),
-        nVersion,
-        hashPrevBlock.ToString(),
-        hashMerkleRoot.ToString(),
-        nTime, nBits, nNonce,
-        vtx.size(),
-        HexStr(vchBlockSig.begin(), vchBlockSig.end()));
+    s << "CBlock ============================>>>>\n";
+    s << strprintf("    hash=%s \n", GetHash().ToString());
+    s << strprintf("    ver=%d \n", nVersion);
+    s << strprintf("    hashPrevBlock=%s, \n", hashPrevBlock.ToString());
+    s << strprintf("    hashMerkleRoot=%s, \n", hashMerkleRoot.ToString());
+    s << strprintf("    nTime=%u, \n", nTime);
+    s << strprintf("    nBits=%x, \n", nBits);
+    s << strprintf("    nNonce=%u, \n", nNonce);
+    s << strprintf("    nBirthdayA=%u, \n", nBirthdayA);
+    s << strprintf("    nBirthdayB=%u, \n", nBirthdayB);
+	s << strprintf("    vchBlockSig=%s, \n", HexStr(vchBlockSig.begin(), vchBlockSig.end()));
+	
+    s << strprintf("    Vtx : size %u \n",vtx.size());
     for (unsigned int i = 0; i < vtx.size(); i++)
     {
-        s << "  " << vtx[i].ToString() << "\n";
+        s << "    " << vtx[i].ToString() << "\n";
     }
+
+    s << "CBlock <<<<============================\n";
     return s.str();
 }

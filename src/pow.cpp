@@ -75,9 +75,18 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params&
 
     bnTarget.SetCompact(nBits, &fNegative, &fOverflow);
 
+    LogPrintf("CheckProofOfWork negative ? = %d \n",  fNegative ? "true" : "false");
     // Check range
     if (fNegative || bnTarget == 0 || fOverflow || bnTarget > UintToArith256(params.powLimit))
         return error("CheckProofOfWork(): nBits below minimum work");
+
+    // Check proof of work matches claimed amount
+    if (fDebug) {        
+        LogPrintf("CheckProofOfWork \n");
+        LogPrintf("nBits = %u \n",  nBits);
+        LogPrintf("hash    : %s \n", hash.ToString().c_str());
+        LogPrintf("bnTarget: %s \n", bnTarget.ToString().c_str());
+    }
 
     // Check proof of work matches claimed amount
     if (UintToArith256(hash) > bnTarget)

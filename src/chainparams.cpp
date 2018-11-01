@@ -65,13 +65,25 @@ static CBlock CreateGenesisBlock(uint32_t nTime, uint32_t nNonce, uint32_t nBirt
 void  CChainParams::MineNewGenesisBlock()
 {
     fPrintToConsole = true;
+    bool fNegative;
+    bool fOverflow;
+    genesis.nNonce = 0;
     LogPrintStr("Searching for genesis block...\n");
 
-    arith_uint256 hashTarget = UintToArith256(consensus.powLimit);//.GetCompact();
-    //arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits);
+    //arith_uint256 hashTarget = UintToArith256(consensus.powLimit).GetCompact();
+    LogPrintStr("Start to Find the Genesis \n");
+    arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits, &fNegative, &fOverflow);
+
+    if (fNegative || fOverflow) {
+        LogPrintf("Please check nBits, negative or overflow value");
+        LogPrintf("genesis.nBits = %x \n",  genesis.nBits);
+        exit(1);
+    }
+
     while(true) {
+        LogPrintf("nNonce = %u \n",  genesis.nNonce);
         arith_uint256 thash = UintToArith256(genesis.CalculateBestBirthdayHash());
-		LogPrintf("teHash %s\n", thash.ToString().c_str());
+		LogPrintf("theHash %s\n", thash.ToString().c_str());
 		LogPrintf("Hash Target %s\n", hashTarget.ToString().c_str());  
       if (thash <= hashTarget)
             break;
@@ -82,13 +94,13 @@ void  CChainParams::MineNewGenesisBlock()
         if (genesis.nNonce == 0) {
             LogPrintf("NONCE WRAPPED, incrementing time\n");
             ++genesis.nTime;
-        }
+        }        
     }
     LogPrintf("genesis.nTime = %u \n",  genesis.nTime);
     LogPrintf("genesis.nNonce = %u \n",  genesis.nNonce);
 	LogPrintf("genesis.nBirthdayA: %d\n", genesis.nBirthdayA);
 	LogPrintf("genesis.nBirthdayB: %d\n", genesis.nBirthdayB);
-    LogPrintf("genesis.nBits = %u \n",  genesis.nBits);
+    LogPrintf("genesis.nBits = %x \n",  genesis.nBits);
     LogPrintf("genesis.GetHash = %s\n",  genesis.GetHash().ToString().c_str());
     LogPrintf("genesis.hashMerkleRoot = %s\n",  genesis.hashMerkleRoot.ToString().c_str());
 
@@ -174,6 +186,7 @@ public:
         fTestnetToBeDeprecatedFieldRPC = false;
 
         nPoolMaxTransactions = 3;
+        strDevFundPubKey = "02f391f21dd01129757e2bb37318309c4453ecbbeaed6bb15b97d2f800e888058b";
         strSporkKey = "0427E31B51989DB4DFEAB8C3901FB1862A621E6B0D4CF556E5C9AAD7283A46C915EC4508FB4F248534C3A03FC0475ED3785086B9C217E0F42ED4C8BF80ED2296C8";
         strObfuscationPoolDummyAddress = "KWFvN4Gb55dzG95cq3k5jXFmNVkJLftyjZ";
         nStartMasternodePayments = 1508884606; //Genesis time
@@ -210,9 +223,9 @@ public:
         consensus.nMajorityWindow = 100;
         consensus.BIP34Height = 21111;
         consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
-        consensus.powLimit = uint256S("00ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nTargetTimespan = 12 * 60; // two weeks
-        consensus.nTargetSpacing = 3 * 60;
+        consensus.powLimit  = uint256S("1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.nTargetTimespan = 1 * 60;
+        consensus.nTargetSpacing = 1 * 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
@@ -235,12 +248,16 @@ public:
         nMaxTipAge = 0x7fffffff;
         nPruneAfterHeight = 1000;
 
-        genesis = CreateGenesisBlock(1453993470, 414098458, 0, 0, 0x1d00ffff, 1, 48 * COIN); // 50 * COIN);
-        // MineBlock(&genesis); // REMOVE
+        //genesis = CreateGenesisBlock(1453993470, 414098458, 0, 0, 0x1d00ffff, 1, 48 * COIN); // 50 * COIN);
+        genesis = CreateGenesisBlock(1541080950, 202, 3414527, 10162826, 0x1f7fffff, 1, 49 * COIN);
+        MineNewGenesisBlock(); // REMOVE
         consensus.hashGenesisBlock = genesis.GetHash();
 
-        //assert(consensus.hashGenesisBlock == uint256S("0x9cc9b3b19831e0bfde990f1c2dd9c655fa4414a47c9c7d4a6843b0994febb419"));
-        //assert(genesis.hashMerkleRoot == uint256S("0xaab825e79a76eff348a54e8dcfadcc6a1e93b00fad9ff5d4971367d367e60b2d"));
+        LogPrintf("genesis.GetHash = %s\n",  genesis.GetHash().ToString().c_str());
+        LogPrintf("genesis.hashMerkleRoot = %s\n",  genesis.hashMerkleRoot.ToString().c_str());
+
+        assert(consensus.hashGenesisBlock == uint256S("0x007d15c6fae41074e70bb8a78d8d301e705a1d0c11c0d8ce4a438d283079ea7c"));
+        assert(genesis.hashMerkleRoot == uint256S("0x05f52634c417f226734231cbd54ad97b0ad524b59fe40add53648a3f27ccbd02"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -262,6 +279,10 @@ public:
         fRequireStandard = false;
         fMineBlocksOnDemand = false;
         fTestnetToBeDeprecatedFieldRPC = true;
+
+        strDevFundPubKey = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
+        strSporkKey = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
+        nStartMasternodePayments = 1541080950; //Genesis time
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of

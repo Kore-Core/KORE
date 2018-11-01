@@ -78,6 +78,7 @@ public:
     const CCheckpointData& Checkpoints() const { return checkpointData; }
     int PoolMaxTransactions() const { return nPoolMaxTransactions; }
     std::string SporkKey() const { return strSporkKey; }
+    std::string DevFundPubKey() const { return strDevFundPubKey; }
     std::string ObfuscationPoolDummyAddress() const { return strObfuscationPoolDummyAddress; }
     int64_t StartMasternodePayments() const { return nStartMasternodePayments; }
 
@@ -104,6 +105,7 @@ protected:
     CCheckpointData checkpointData;
     int nPoolMaxTransactions;
     std::string strSporkKey;
+    std::string strDevFundPubKey;
     std::string strObfuscationPoolDummyAddress;
     int64_t nStartMasternodePayments;
     void MineNewGenesisBlock();

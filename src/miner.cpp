@@ -550,14 +550,17 @@ void static KoreMiner(const CChainParams& chainparams)
         // Throw an error if no script was provided.  This can happen
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
-        if (!coinbaseScript || coinbaseScript->reserveScript.empty())
+        if (!coinbaseScript || coinbaseScript->reserveScript.empty()) {
+            LogPrintf("No coinbase script available (mining requires a wallet)\n");
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
+        }
 
         while (true) {
             if (chainparams.MiningRequiresPeers()) {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do {
+                     if (fDebug) LogPrintf("Waiting for a Peer!!! \n" );
                     bool fvNodesEmpty;
                     {
                         LOCK(cs_vNodes);

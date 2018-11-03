@@ -249,14 +249,14 @@ public:
         nPruneAfterHeight = 1000;
 
         //genesis = CreateGenesisBlock(1453993470, 414098458, 0, 0, 0x1d00ffff, 1, 48 * COIN); // 50 * COIN);
-        genesis = CreateGenesisBlock(1541080950, 202, 3414527, 10162826, 0x1f7fffff, 1, 49 * COIN);
-        MineNewGenesisBlock(); // REMOVE
+        genesis = CreateGenesisBlock(1541080950, 1237, 2500634, 64441706, 0x1f7fffff, 1, 49 * COIN);
+        //MineNewGenesisBlock(); // REMOVE
         consensus.hashGenesisBlock = genesis.GetHash();
 
         LogPrintf("genesis.GetHash = %s\n",  genesis.GetHash().ToString().c_str());
         LogPrintf("genesis.hashMerkleRoot = %s\n",  genesis.hashMerkleRoot.ToString().c_str());
 
-        assert(consensus.hashGenesisBlock == uint256S("0x007d15c6fae41074e70bb8a78d8d301e705a1d0c11c0d8ce4a438d283079ea7c"));
+        assert(consensus.hashGenesisBlock == uint256S("0x000cab5a4c6dc2ada269cf1bf70a4f8e146b140514a104c36de2976328f8419d"));
         assert(genesis.hashMerkleRoot == uint256S("0x05f52634c417f226734231cbd54ad97b0ad524b59fe40add53648a3f27ccbd02"));
 
         vFixedSeeds.clear();

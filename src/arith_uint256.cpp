@@ -205,28 +205,28 @@ arith_uint256& arith_uint256::SetCompact(uint32_t nCompact, bool* pfNegative, bo
 {
     int nSize = nCompact >> 24;
     uint32_t nWord = nCompact & 0x007fffff;
-    printf("SetCompact nSize %d \n", nSize);
-    printf("SetCompact nSize %x \n", nSize);
-    printf("SetCompact nWord %x \n", nWord);
+    //printf("SetCompact nSize %d \n", nSize);
+    //printf("SetCompact nSize %x \n", nSize);
+    //printf("SetCompact nWord %x \n", nWord);
     if (nSize <= 3) {
-        printf("shiffiting right %d \n",8 * (3 - nSize));
+        //printf("shiffiting right %d \n",8 * (3 - nSize));
         nWord >>= 8 * (3 - nSize);
         *this = nWord;
     } else {
-        printf("shiffiting left %d \n",8 * (3 - nSize));
+        //printf("shiffiting left %d \n",8 * (3 - nSize));
         *this = nWord;
         *this <<= 8 * (nSize - 3);
 
     }
-    printf("Hash Target %s\n", (*this).ToString().c_str());  
+    //printf("Hash Target %s\n", (*this).ToString().c_str());  
     if (pfNegative)
         *pfNegative = nWord != 0 && (nCompact & 0x00800000) != 0;
     if (pfOverflow)
         *pfOverflow = nWord != 0 && ((nSize > 34) ||
                                      (nWord > 0xff && nSize > 33) ||
                                      (nWord > 0xffff && nSize > 32));
-    printf("Negative : %s \n", *pfNegative ? "true" : "false");
-    printf("Overflow : %s \n", *pfOverflow ? "true" : "false");
+    //printf("Negative : %s \n", *pfNegative ? "true" : "false");
+    //printf("Overflow : %s \n", *pfOverflow ? "true" : "false");
     return *this;
 }
 

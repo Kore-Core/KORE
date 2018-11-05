@@ -250,7 +250,7 @@ public:
         pchMessageStart[3] = 0x88;
         vAlertPubKey = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         nDefaultPort = 11743; // 18333;
-        nMaxTipAge = 24 * 60 * 60;
+        nMaxTipAge = 0x7fffffff;
         nPruneAfterHeight = 1000;
 
         //genesis = CreateGenesisBlock(1453993470, 414098458, 0, 0, 0x1d00ffff, 1, 48 * COIN); // 50 * COIN);

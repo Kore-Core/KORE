@@ -40,7 +40,7 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
 {
     int64_t nActualSpacing = pindexLast->GetBlockTime() - nFirstBlockTime;
     int64_t nTargetSpacing = params.nTargetSpacing;
-            
+
     // Limit adjustment step    
     
     if (nActualSpacing < 0)
@@ -49,6 +49,9 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
     // Retarget
     const arith_uint256 bnPowLimit = GetTargetLimit(pindexLast->GetBlockTime(), pindexLast->IsProofOfStake(), params);
     arith_uint256 bnNew, bnOld;
+    if ((Params().NetworkIDString() == CBaseChainParams::TESTNET) && pindexLast->nHeight < 20) {
+        return bnPowLimit.GetCompact();
+    }
     bnNew.SetCompact(pindexLast->nBits);
     bnOld = bnNew;
     bnNew *= ((params.DifficultyAdjustmentInterval() - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);

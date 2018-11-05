@@ -324,15 +324,7 @@ void CMasternodePayments::FillBlockPayee(CMutableTransaction& txNew, int64_t nFe
         CKoreAddress address2(address1);
 
         LogPrintf("Masternode payment of %s to %s\n", FormatMoney(masternodePayment).c_str(), address2.ToString().c_str());
-    } else {
-        // Lico
-        // no masternode active, however when mining
-        // need to have a value like the old code.
-        if ((Params().NetworkIDString() == CBaseChainParams::TESTNET) && !fProofOfStake) {
-            txNew.vout[0].nValue = blockValue;
-            LogPrint("masternode", "No MasterNode to pay, but blockValue is %d\n", blockValue);
-        }
-    }
+    } 
 }
 
 int CMasternodePayments::GetMinMasternodePaymentsProto()

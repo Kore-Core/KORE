@@ -112,7 +112,7 @@ inline CMutableTransaction CreateCoinbaseTransaction(const CScript& scriptPubKey
         txNew.vout[0].nValue = reward - devsubsidy;
         txNew.vout[0].scriptPubKey = scriptPubKeyIn;
         txNew.vout[1].nValue = devsubsidy;
-        txNew.vout[1].scriptPubKey = CScript() << ParseHex("02f391f21dd01129757e2bb37318309c4453ecbbeaed6bb15b97d2f800e888058b") << OP_CHECKSIG;;
+        txNew.vout[1].scriptPubKey = CScript() << ParseHex(Params().DevFundPubKey().c_str()) << OP_CHECKSIG;;
     }
 
     //Masternode and general budget payments

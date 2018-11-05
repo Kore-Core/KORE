@@ -217,22 +217,27 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
-        consensus.nSubsidyHalvingInterval = 131250;
-        consensus.nMajorityEnforceBlockUpgrade = 51;
-        consensus.nMajorityRejectBlockOutdated = 75;
+        consensus.nSubsidyHalvingInterval = 4000;
+        consensus.nMaxReorganizationDepth = 25;
+        consensus.nMajorityEnforceBlockUpgrade = 75;
+        consensus.nMajorityRejectBlockOutdated = 95;
         consensus.nMajorityWindow = 100;
-        consensus.BIP34Height = 21111;
+        consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
         consensus.powLimit  = uint256S("1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
+        consensus.posLimit  = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
         consensus.nTargetTimespan = 1 * 60;
         consensus.nTargetSpacing = 1 * 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
         consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
+        consensus.nRuleChangeActivationThreshold = 1916; // 75% for testchains
+        consensus.nMinerConfirmationWindow = 50; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
+        consensus.nStakeTimestampMask = 0xf;
+        consensus.nLastPOWBlock = 1000;
+        consensus.nStakeMinAge = 4 * 60 * 60;
 
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
@@ -245,7 +250,7 @@ public:
         pchMessageStart[3] = 0x88;
         vAlertPubKey = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         nDefaultPort = 11743; // 18333;
-        nMaxTipAge = 0x7fffffff;
+        nMaxTipAge = 24 * 60 * 60;
         nPruneAfterHeight = 1000;
 
         //genesis = CreateGenesisBlock(1453993470, 414098458, 0, 0, 0x1d00ffff, 1, 48 * COIN); // 50 * COIN);

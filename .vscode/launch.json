@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "attach",
             "program": "${workspaceFolder}/src/kored",
-            "processId": "111916",
+            "processId": "30804",
             "MIMode": "gdb",
             "setupCommands": [
                 {
@@ -17,6 +17,28 @@
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
+            ]
+        },
+        {
+            "name": "(gdb) Daemon - Single",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/kored",
+            "args": ["-testnet","-debug","-par=1"],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerArgs": "",
+            "additionalSOLibSearchPath": "/home/kore/KORE/depends/x86_64-pc-linux-gnu/lib;/usr/lib/x86_64-linux-gnu",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                { "text": "handle all nostop pass", "description": "Sending Signals to Application", "ignoreFailures": false }
             ]
         }
     ]

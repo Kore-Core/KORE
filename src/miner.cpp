@@ -177,7 +177,8 @@ CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& s
         pblock->nTime = GetAdjustedTime();
         const int64_t nMedianTimePast = pindexPrev->GetMedianTimePast();
 
-        pblock->nVersion =  1; //ComputeBlockVersion(pindexPrev, chainparams.GetConsensus());
+        // Setting the first bit, fork preparation and setting the version as 1
+        pblock->nVersion =  0x80000001UL; //ComputeBlockVersion(pindexPrev, chainparams.GetConsensus());
         // -regtest only: allow overriding block.nVersion with
         // -blockversion=N to test forking scenarios
         if (chainparams.MineBlocksOnDemand())

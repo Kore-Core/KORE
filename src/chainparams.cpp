@@ -338,7 +338,7 @@ public:
         genesis = CreateGenesisBlock(1453993470, 2,0,0, 0x207fffff, 1, 48 * COIN); // 50 * COIN);
 //        MineBlock(&genesis); // REMOVE
         consensus.hashGenesisBlock = genesis.GetHash();
-
+        
         //3779f8aeb763c0b383376497dd7fb83686cae0d78b7630096baaec404b0d6754
         //assert(consensus.hashGenesisBlock == uint256S("0xa2a8e906aec004c6be800f3769c184721de7ce926e4918ecdbe611f13b047f7b"));
         //0fef9c33f77531f903de86949cbc89740da74c88e28a1386f6b70bdb58a35429

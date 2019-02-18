@@ -290,7 +290,7 @@ public:
         strSporkKey = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
         nStartMasternodePayments = 1541080950; //Genesis time
 
-        nMasternodeMinConfirmations   = 6;
+        nMasternodeMinConfirmations   = 2;
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of

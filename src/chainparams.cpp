@@ -191,6 +191,8 @@ public:
         strObfuscationPoolDummyAddress = "KWFvN4Gb55dzG95cq3k5jXFmNVkJLftyjZ";
         nStartMasternodePayments = 1508884606; //Genesis time
 
+        nMasternodeMinConfirmations   = 15;
+
         static MapCheckpoints mapCheckpoints =
             boost::assign::map_list_of
             (5, uint256S("0x00eaaa465402e6bcf745c00c38c0033a26e4dea19448d9109e4555943d677a31"))
@@ -287,6 +289,8 @@ public:
         strDevFundPubKey = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
         strSporkKey = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
         nStartMasternodePayments = 1541080950; //Genesis time
+
+        nMasternodeMinConfirmations   = 6;
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of

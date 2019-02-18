@@ -931,24 +931,24 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         }
 
         if (fAcceptable) {
-            if (GetInputAge(vin) < MASTERNODE_MIN_CONFIRMATIONS) {
-                LogPrintf("dsee - Input must have least %d confirmations\n", MASTERNODE_MIN_CONFIRMATIONS);
+            if (GetInputAge(vin) < Params().MasternodeMinConfirmations()) {
+                LogPrintf("dsee - Input must have least %d confirmations\n", Params().MasternodeMinConfirmations());
                 Misbehaving(pfrom->GetId(), 2);
                 return;
             }
 
             // verify that sig time is legit in past
-            // should be at least not earlier than block when 500 KORE tx got MASTERNODE_MIN_CONFIRMATIONS
+            // should be at least not earlier than block when 500 KORE tx got Params().MasternodeMinConfirmations()
             uint256 hashBlock ;
             CTransaction tx2;
             GetTransaction(vin.prevout.hash, tx2,Params().GetConsensus(), hashBlock, true);
             BlockMap::iterator mi = mapBlockIndex.find(hashBlock);
             if (mi != mapBlockIndex.end() && (*mi).second) {
                 CBlockIndex* pMNIndex = (*mi).second;                                                        // block for 1000 KORE tx -> 1 confirmation
-                CBlockIndex* pConfIndex = chainActive[pMNIndex->nHeight + MASTERNODE_MIN_CONFIRMATIONS - 1]; // block where tx got MASTERNODE_MIN_CONFIRMATIONS
+                CBlockIndex* pConfIndex = chainActive[pMNIndex->nHeight + Params().MasternodeMinConfirmations() - 1]; // block where tx got Params().MasternodeMinConfirmations()
                 if (pConfIndex->GetBlockTime() > sigTime) {
                     LogPrintf("mnb - Bad sigTime %d for Masternode %20s %105s (%i conf block is at %d)\n",
-                        sigTime, addr.ToString(), vin.ToString(), MASTERNODE_MIN_CONFIRMATIONS, pConfIndex->GetBlockTime());
+                        sigTime, addr.ToString(), vin.ToString(), Params().MasternodeMinConfirmations(), pConfIndex->GetBlockTime());
                     return;
                 }
             }

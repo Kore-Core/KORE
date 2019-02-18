@@ -82,6 +82,8 @@ public:
     std::string ObfuscationPoolDummyAddress() const { return strObfuscationPoolDummyAddress; }
     int64_t StartMasternodePayments() const { return nStartMasternodePayments; }
 
+    int64_t MasternodeMinConfirmations() const { return nMasternodeMinConfirmations; }
+
 protected:
     CChainParams() {}
 
@@ -109,6 +111,9 @@ protected:
     std::string strObfuscationPoolDummyAddress;
     int64_t nStartMasternodePayments;
     void MineNewGenesisBlock();
+
+    int64_t nMasternodeMinConfirmations;
+
 };
 
 /**

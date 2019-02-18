@@ -591,8 +591,8 @@ bool CMasternodeBroadcast::CheckInputsAndAdd(int& nDoS)
 
     LogPrint("masternode", "mnb - Accepted Masternode entry\n");
 
-    if (GetInputAge(vin) < MASTERNODE_MIN_CONFIRMATIONS) {
-        LogPrintf("mnb - Input must have at least %d confirmations\n", MASTERNODE_MIN_CONFIRMATIONS);
+    if (GetInputAge(vin) < Params().MasternodeMinConfirmations()) {
+        LogPrintf("mnb - Input must have at least %d confirmations\n", Params().MasternodeMinConfirmations());
         // maybe we miss few blocks, let this mnb to be checked again later
         mnodeman.mapSeenMasternodeBroadcast.erase(GetHash());
         masternodeSync.mapSeenSyncMNB.erase(GetHash());
@@ -600,17 +600,17 @@ bool CMasternodeBroadcast::CheckInputsAndAdd(int& nDoS)
     }
 
     // verify that sig time is legit in past
-    // should be at least not earlier than block when 500 KORE tx got MASTERNODE_MIN_CONFIRMATIONS
+    // should be at least not earlier than block when 500 KORE tx got Params().MasternodeMinConfirmations()
     uint256 hashBlock;
     CTransaction tx2;
     GetTransaction(vin.prevout.hash, tx2,Params().GetConsensus(), hashBlock, true);
     BlockMap::iterator mi = mapBlockIndex.find(hashBlock);
     if (mi != mapBlockIndex.end() && (*mi).second) {
         CBlockIndex* pMNIndex = (*mi).second;                                                        // block for 500 KORE tx -> 1 confirmation
-        CBlockIndex* pConfIndex = chainActive[pMNIndex->nHeight + MASTERNODE_MIN_CONFIRMATIONS - 1]; // block where tx got MASTERNODE_MIN_CONFIRMATIONS
+        CBlockIndex* pConfIndex = chainActive[pMNIndex->nHeight + Params().MasternodeMinConfirmations() - 1]; // block where tx got Params().MasternodeMinConfirmations()
         if (pConfIndex->GetBlockTime() > sigTime) {
             LogPrintf("mnb - Bad sigTime %d for Masternode %20s %105s (%i conf block is at %d)\n",
-                sigTime, addr.ToString(), vin.ToString(), MASTERNODE_MIN_CONFIRMATIONS, pConfIndex->GetBlockTime());
+                sigTime, addr.ToString(), vin.ToString(), Params().MasternodeMinConfirmations(), pConfIndex->GetBlockTime());
             return false;
         }
     }

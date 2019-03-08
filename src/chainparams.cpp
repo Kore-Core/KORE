@@ -238,7 +238,7 @@ public:
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
         consensus.nStakeTimestampMask = 0xf;
-        consensus.nLastPOWBlock = 100;
+        consensus.nLastPOWBlock = 1000;
         consensus.nStakeMinAge = 30 * 60;
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;

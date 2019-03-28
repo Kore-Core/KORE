@@ -60,6 +60,7 @@ More information at [kore.org](http://www.kore.org) Visit our ANN thread at [Bit
 Note1: that you can speed up the compilation using the option -j when using make, for example: make -j3
 
 Note2: If you machine has less than 3G memory, you should use a swapfile.
+
 a) enabling swap
 ```bash
     sudo dd if=/dev/zero of=/swapfile bs,=4096 count=1048576

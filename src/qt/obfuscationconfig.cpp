@@ -1,7 +1,12 @@
+// Copyright (c) 2014-2016 The Dash Developers
+// Copyright (c) 2016-2017 The KORE developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #include "obfuscationconfig.h"
 #include "ui_obfuscationconfig.h"
 
-#include "koreunits.h"
+#include "bitcoinunits.h"
 #include "guiconstants.h"
 #include "init.h"
 #include "optionsmodel.h"
@@ -37,7 +42,7 @@ void ObfuscationConfig::clickBasic()
 {
     configure(true, 1000, 2);
 
-    QString strAmount(KoreUnits::formatWithUnit(
+    QString strAmount(BitcoinUnits::formatWithUnit(
         model->getOptionsModel()->getDisplayUnit(), 1000 * COIN));
     QMessageBox::information(this, tr("Obfuscation Configuration"),
         tr(
@@ -51,7 +56,7 @@ void ObfuscationConfig::clickHigh()
 {
     configure(true, 1000, 8);
 
-    QString strAmount(KoreUnits::formatWithUnit(
+    QString strAmount(BitcoinUnits::formatWithUnit(
         model->getOptionsModel()->getDisplayUnit(), 1000 * COIN));
     QMessageBox::information(this, tr("Obfuscation Configuration"),
         tr(
@@ -65,7 +70,7 @@ void ObfuscationConfig::clickMax()
 {
     configure(true, 1000, 16);
 
-    QString strAmount(KoreUnits::formatWithUnit(
+    QString strAmount(BitcoinUnits::formatWithUnit(
         model->getOptionsModel()->getDisplayUnit(), 1000 * COIN));
     QMessageBox::information(this, tr("Obfuscation Configuration"),
         tr(

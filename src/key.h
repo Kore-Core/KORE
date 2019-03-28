@@ -8,7 +8,7 @@
 
 #include "pubkey.h"
 #include "serialize.h"
-#include "support/allocators/secure.h"
+#include "allocators.h"
 #include "uint256.h"
 
 #include <stdexcept>
@@ -107,6 +107,8 @@ public:
 
     //! Generate a new private key using a cryptographic PRNG.
     void MakeNewKey(bool fCompressed);
+    
+    uint256 GetPrivKey_256();
 
     /**
      * Convert the private key to a CPrivKey (serialized OpenSSL private key data).

@@ -16,12 +16,12 @@ BEGIN
     BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
-            VALUE "CompanyName",        "Kore"
-            VALUE "FileDescription",    "kored (Korenode with a JSON-RPC server)"
+            VALUE "CompanyName",        "KORE"
+            VALUE "FileDescription",    "kored (OSS daemon/client for KORE)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "kored"
             VALUE "LegalCopyright",     COPYRIGHT_STR
-            VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
+            VALUE "LegalTrademarks1",   "Distributed under the MIT/X11 software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
             VALUE "OriginalFilename",   "kored.exe"
             VALUE "ProductName",        "kored"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR

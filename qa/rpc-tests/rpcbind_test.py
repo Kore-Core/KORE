@@ -1,17 +1,24 @@
-#!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Kore Core developers
+#!/usr/bin/env python2
+# Copyright (c) 2014 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 # Test for -rpcbind, as well as -rpcallowip and -rpcconnect
 
-# TODO extend this test from the test framework (like all other tests)
+# Add python-bitcoinrpc to module search path:
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "python-bitcoinrpc"))
 
+import json
+import shutil
+import subprocess
 import tempfile
 import traceback
 
-from test_framework.util import *
-from test_framework.netutil import *
+from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from util import *
+from netutil import *
 
 def run_bind_test(tmpdir, allow_ips, connect_to, addresses, expected):
     '''
@@ -26,11 +33,11 @@ def run_bind_test(tmpdir, allow_ips, connect_to, addresses, expected):
     binds = ['-rpcbind='+addr for addr in addresses]
     nodes = start_nodes(1, tmpdir, [base_args + binds], connect_to)
     try:
-        pid = kored_processes[0].pid
+        pid = bitcoind_processes[0].pid
         assert_equal(set(get_bind_addrs(pid)), set(expected))
     finally:
         stop_nodes(nodes)
-        wait_koreds()
+        wait_bitcoinds()
 
 def run_allowip_test(tmpdir, allow_ips, rpchost, rpcport):
     '''
@@ -42,16 +49,16 @@ def run_allowip_test(tmpdir, allow_ips, rpchost, rpcport):
     try:
         # connect to node through non-loopback interface
         url = "http://rt:rt@%s:%d" % (rpchost, rpcport,)
-        node = get_rpc_proxy(url, 1)
+        node = AuthServiceProxy(url)
         node.getinfo()
     finally:
         node = None # make sure connection will be garbage collected and closed
         stop_nodes(nodes)
-        wait_koreds()
+        wait_bitcoinds()
 
 
 def run_test(tmpdir):
-    assert(sys.platform.startswith('linux')) # due to OS-specific network stats queries, this test works only on Linux
+    assert(sys.platform == 'linux2') # due to OS-specific network stats queries, this test works only on Linux
     # find the first non-loopback interface for testing
     non_loopback_ip = None
     for name,ip in all_interfaces():
@@ -102,9 +109,9 @@ def main():
 
     parser = optparse.OptionParser(usage="%prog [options]")
     parser.add_option("--nocleanup", dest="nocleanup", default=False, action="store_true",
-                      help="Leave koreds and test.* datadir on exit or error")
+                      help="Leave bitcoinds and test.* datadir on exit or error")
     parser.add_option("--srcdir", dest="srcdir", default="../../src",
-                      help="Source directory containing kored/kore-cli (default: %default%)")
+                      help="Source directory containing bitcoind/bitcoin-cli (default: %default%)")
     parser.add_option("--tmpdir", dest="tmpdir", default=tempfile.mkdtemp(prefix="test"),
                       help="Root directory for datadirs")
     (options, args) = parser.parse_args()
@@ -133,7 +140,7 @@ def main():
 
     if not options.nocleanup:
         print("Cleaning up")
-        wait_koreds()
+        wait_bitcoinds()
         shutil.rmtree(options.tmpdir)
 
     if success:

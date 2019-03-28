@@ -13,9 +13,8 @@ can be found in the contrib/init folder.
 1. Service User
 ---------------------------------
 
-All three Linux startup configurations assume the existence of a "kore" user
+All three startup configurations assume the existence of a "kore" user
 and group.  They must be created before attempting to use these scripts.
-The OS X configuration assumes kored will be set up for the current user.
 
 2. Configuration
 ---------------------------------
@@ -30,34 +29,27 @@ file, however it is recommended that a strong and secure password be used
 as this password is security critical to securing the wallet should the
 wallet be enabled.
 
-If kored is run with the "-server" flag (set by default), and no rpcpassword is set,
-it will use a special cookie file for authentication. The cookie is generated with random
-content when the daemon starts, and deleted when it exits. Read access to this file
-controls who can access it through RPC.
+If kored is run with "-daemon" flag, and no rpcpassword is set, it will
+print a randomly generated suitable password to stderr.  You can also
+generate one from the shell yourself like this:
 
-By default the cookie is stored in the data directory, but it's location can be overridden
-with the option '-rpccookiefile'.
+bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'
 
-This allows for running kored without having to do any manual configuration.
-
-`conf`, `pid`, and `wallet` accept relative paths which are interpreted as
-relative to the data directory. `wallet` *only* supports relative paths.
+Once you have a password in hand, set rpcpassword= in /etc/kore/kore.conf
 
 For an example configuration file that describes the configuration settings,
-see `contrib/debian/examples/kore.conf`.
+see contrib/debian/examples/kore.conf.
 
 3. Paths
 ---------------------------------
 
-3a) Linux
-
 All three configurations assume several paths that might need to be adjusted.
 
-Binary:              `/usr/bin/kored`  
-Configuration file:  `/etc/kore/kore.conf`  
-Data directory:      `/var/lib/kored`  
-PID file:            `/var/run/kored/kored.pid` (OpenRC and Upstart) or `/var/lib/kored/kored.pid` (systemd)  
-Lock file:           `/var/lock/subsys/kored` (CentOS)  
+Binary:              /usr/bin/kored
+Configuration file:  /etc/kore/kore.conf
+Data directory:      /var/lib/kored
+PID file:            /var/run/kored/kored.pid (OpenRC and Upstart)
+                     /var/lib/kored/kored.pid (systemd)
 
 The configuration file, PID directory (if applicable) and data directory
 should all be owned by the kore user and group.  It is advised for security
@@ -65,58 +57,40 @@ reasons to make the configuration file and data directory only readable by the
 kore user and group.  Access to kore-cli and other kored rpc clients
 can then be controlled by group membership.
 
-3b) Mac OS X
-
-Binary:              `/usr/local/bin/kored`  
-Configuration file:  `~/Library/Application Support/Kore/kore.conf`  
-Data directory:      `~/Library/Application Support/Kore`
-Lock file:           `~/Library/Application Support/Kore/.lock`
-
 4. Installing Service Configuration
 -----------------------------------
 
 4a) systemd
 
-Installing this .service file consists of just copying it to
+Installing this .service file consists on just copying it to
 /usr/lib/systemd/system directory, followed by the command
-`systemctl daemon-reload` in order to update running systemd configuration.
+"systemctl daemon-reload" in order to update running systemd configuration.
 
-To test, run `systemctl start kored` and to enable for system startup run
-`systemctl enable kored`
+To test, run "systemctl start kored" and to enable for system startup run
+"systemctl enable kored"
 
 4b) OpenRC
 
 Rename kored.openrc to kored and drop it in /etc/init.d.  Double
 check ownership and permissions and make it executable.  Test it with
-`/etc/init.d/kored start` and configure it to run on startup with
-`rc-update add kored`
+"/etc/init.d/kored start" and configure it to run on startup with
+"rc-update add kored"
 
 4c) Upstart (for Debian/Ubuntu based distributions)
 
-Drop kored.conf in /etc/init.  Test by running `service kored start`
+Drop kored.conf in /etc/init.  Test by running "service kored start"
 it will automatically start on reboot.
 
 NOTE: This script is incompatible with CentOS 5 and Amazon Linux 2014 as they
-use old versions of Upstart and do not supply the start-stop-daemon utility.
+use old versions of Upstart and do not supply the start-stop-daemon uitility.
 
 4d) CentOS
 
-Copy kored.init to /etc/init.d/kored. Test by running `service kored start`.
+Copy kored.init to /etc/init.d/kored. Test by running "service kored start".
 
 Using this script, you can adjust the path and flags to the kored program by
-setting the BITCOIND and FLAGS environment variables in the file
+setting the KORED and FLAGS environment variables in the file
 /etc/sysconfig/kored. You can also use the DAEMONOPTS environment variable here.
-
-4e) Mac OS X
-
-Copy org.kore.kored.plist into ~/Library/LaunchAgents. Load the launch agent by
-running `launchctl load ~/Library/LaunchAgents/org.kore.kored.plist`.
-
-This Launch Agent will cause kored to start whenever the user logs in.
-
-NOTE: This approach is intended for those wanting to run kored as the current user.
-You will need to modify org.kore.kored.plist if you intend to use it as a
-Launch Daemon with a dedicated kore user.
 
 5. Auto-respawn
 -----------------------------------

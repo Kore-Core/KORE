@@ -1,3 +1,23 @@
+.gitignore
+*.sublime-project
+*.sublime-workspace
+todo.txt
+reset-files.bash
+
+#QtCreator
+*.config
+*.creator
+*.creator.user
+*.files
+*.includes
+EXPRESSKORE.config
+EXPRESSKORE.creator
+EXPRESSKORE.creator.user
+EXPRESSKORE.files
+EXPRESSKORE.includes
+EXPRESSKORE.pro
+EXPRESSKORE.pro.user
+
 *.tar.gz
 
 *.exe
@@ -28,12 +48,16 @@ build-aux/test-driver
 config.log
 config.status
 configure
+confdefs.h
+conftest.cpp
+conftest.err
 libtool
-src/config/kore-config.h
-src/config/kore-config.h.in
+src/config/bitcoin-config.h
+src/config/bitcoin-config.h.in
 src/config/stamp-h1
 share/setup.nsi
 share/qt/Info.plist
+contrib/devtools/split-debug.sh
 
 src/univalue/gen
 
@@ -42,6 +66,10 @@ src/qt/moc_*.cpp
 src/qt/forms/ui_*.h
 
 src/qt/test/moc*.cpp
+tools/masternode/jq
+tools/masternode/*.conf
+tools/masternode/*.readme
+tools/masternode/*.activation
 
 .deps
 .dirstamp
@@ -54,7 +82,6 @@ src/qt/test/moc*.cpp
 *.pyc
 *.o
 *.o-*
-*.patch
 .kore
 *.a
 *.pb.cc
@@ -75,15 +102,23 @@ src/qt/test/moc*.cpp
 *.qm
 Makefile
 kore-qt
-Kore-Qt.app
+KORE-Qt.app
 
 # Unit-tests
 Makefile.test
 kore-qt_test
 src/test/buildenv.py
+src/test/delete-me
+delete-me
 
 # Resources cpp
 qrc_*.cpp
+
+# Qt creator
+*.pro.user
+EXPRESSKORE.creator.user
+EXPRESSKORE.pro
+EXPRESSKORE.pro.user
 
 # Mac specific
 .DS_Store
@@ -91,7 +126,6 @@ build
 
 #lcov
 *.gcno
-*.gcda
 /*.info
 test_kore.coverage/
 total.coverage/
@@ -101,16 +135,20 @@ coverage_percent.txt
 linux-coverage-build
 linux-build
 win32-build
-qa/pull-tester/run-kored-for-test.sh
-qa/pull-tester/tests_config.py
+qa/pull-tester/run-bitcoind-for-test.sh
+qa/pull-tester/tests-config.sh
 qa/pull-tester/cache/*
 qa/pull-tester/test.*/*
-qa/tmp
-cache/
-share/BitcoindComparisonTool.jar
 
 !src/leveldb*/Makefile
 
+.cproject
+.project
 /doc/doxygen/
+/nbproject/
 
-libkoreconsensus.pc
+.idea
+CMakeLists.txt
+cmake-build-debug
+
+\.vscode/ipch/

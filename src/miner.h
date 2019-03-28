@@ -1,45 +1,51 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2016 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_MINER_H
 #define BITCOIN_MINER_H
-
-#include "primitives/block.h"
+#include "amount.h"
 
 #include <stdint.h>
 
+class CBlock;
+class CBlockHeader;
 class CBlockIndex;
 class CChainParams;
 class CReserveKey;
 class CScript;
 class CWallet;
-namespace Consensus { struct Params; };
 
-static const bool DEFAULT_GENERATE = false;
-static const int DEFAULT_GENERATE_THREADS = 1;
+static const bool DEFAULT_PRINTPRIORITY_LEGACY = false;
 
-static const bool DEFAULT_PRINTPRIORITY = false;
-extern int64_t nLastCoinStakeSearchInterval;
-struct CBlockTemplate
-{
-    CBlock block;
-    std::vector<CAmount> vTxFees;
-    std::vector<int64_t> vTxSigOps;
-};
+struct CBlockTemplate;
+
+CAmount GetBlockReward(CBlockIndex* pindexPrev);
+uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock, bool fProofOfStake);
 
 /** Run the miner threads */
-void GenerateKores(bool fGenerate, int nThreads, const CChainParams& chainparams);
-/** Generate a new block, without valid proof-of-work */
-CBlockTemplate* CreateNewBlock(const CChainParams& chainparams, const CScript& scriptPubKeyIn, CWallet* pwallet, bool fProofOfStake = false);
+void GenerateBitcoins(bool fGenerate, CWallet* pwallet, int nThreads);
+CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, bool fProofOfStake);
+CBlockTemplate* CreateNewBlock_Legacy(const CChainParams& chainparams, const CScript& scriptPubKeyIn, CWallet* pwallet, bool fProofOfStake);
+CBlockTemplate* CreateNewBlockWithKey(CReserveKey& reservekey, CWallet* pwallet, bool fProofOfStake);
+bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock);
+bool ProcessBlockFound_Legacy(const CBlock* pblock, const CChainParams& chainparams);
+bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey);
 /** Modify the extranonce in a block */
-void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
-int64_t UpdateTime(CBlockHeader* pblock, const Consensus::Params& consensusParams, const CBlockIndex* pindexPrev);
-bool SignBlock(CWallet* wallet, CBlock* pblock);
-void ThreadStakeMiner(CWallet* wallet);
-std::string convertAddress(const char address[], char newVersionByte);
-bool ProcessBlockFound(const CBlock* pblock, const CChainParams& chainparams);
+void IncrementExtraNonce(CBlock* pblock, CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
+void IncrementExtraNonce_Legacy(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce);
+/** Check mined block */
+void UpdateTime(CBlockHeader* block, const CBlockIndex* pindexPrev, bool fProofOfStake = false);
+
+void ThreadStakeMinter_Legacy(CWallet* pwallet);
+void BitcoinMiner(CWallet* pwallet, bool fProofOfStake);
+void KoreMiner_Legacy();
+void ThreadStakeMinter();
+void StakingCoins(bool fStaking);
+
 extern double dHashesPerMin;
 extern int64_t nHPSTimerStart;
+
 #endif // BITCOIN_MINER_H

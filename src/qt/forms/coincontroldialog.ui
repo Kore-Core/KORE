@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
+    <width>954</width>
     <height>500</height>
    </rect>
   </property>
@@ -161,7 +161,7 @@
           <enum>Qt::ActionsContextMenu</enum>
          </property>
          <property name="text">
-          <string notr="true">medium</string>
+          <string>medium</string>
          </property>
          <property name="textInteractionFlags">
           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -241,7 +241,7 @@
           <enum>Qt::ActionsContextMenu</enum>
          </property>
          <property name="text">
-          <string notr="true">no</string>
+          <string>no</string>
          </property>
          <property name="textInteractionFlags">
           <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
@@ -348,7 +348,7 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayoutPanel" stretch="0,0,0,0,0">
+       <layout class="QHBoxLayout" name="horizontalLayoutPanel" stretch="0,0,0,0,0,0">
         <property name="spacing">
          <number>14</number>
         </property>
@@ -416,7 +416,7 @@
         <item>
          <widget class="QLabel" name="labelLocked">
           <property name="text">
-           <string notr="true">(1 locked)</string>
+           <string>(1 locked)</string>
           </property>
          </widget>
         </item>
@@ -447,7 +447,7 @@
       <bool>false</bool>
      </property>
      <property name="columnCount">
-      <number>12</number>
+      <number>13</number>
      </property>
      <attribute name="headerShowSortIndicator" stdset="0">
       <bool>true</bool>
@@ -477,7 +477,7 @@
      </column>
      <column>
       <property name="text">
-       <string>DS Rounds</string>
+       <string>Type</string>
       </property>
      </column>
      <column>

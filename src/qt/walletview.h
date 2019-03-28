@@ -1,4 +1,5 @@
-// Copyright (c) 2011-2015 The KoreCore developers
+// Copyright (c) 2011-2014 The Bitcoin developers
+// Copyright (c) 2017-2018 The KORE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -6,24 +7,21 @@
 #define BITCOIN_QT_WALLETVIEW_H
 
 #include "amount.h"
+#include "askpassphrasedialog.h"
 #include "masternodelist.h"
-//#include "phone/qjsimple.h"
 
 #include <QStackedWidget>
+#include <ui_interface.h>
 
-class KoreGUI;
+class BitcoinGUI;
 class ClientModel;
 class OverviewPage;
-class PlatformStyle;
 class ReceiveCoinsDialog;
 class SendCoinsDialog;
 class SendCoinsRecipient;
 class TransactionView;
 class WalletModel;
-class AddressBookPage;
-class tradingDialog;
 class BlockExplorer;
-class MasternodeList;
 
 QT_BEGIN_NAMESPACE
 class QLabel;
@@ -42,53 +40,47 @@ class WalletView : public QStackedWidget
     Q_OBJECT
 
 public:
-    explicit WalletView(const PlatformStyle *platformStyle, QWidget *parent);
+    explicit WalletView(QWidget* parent);
     ~WalletView();
 
-    void setKoreGUI(KoreGUI *gui);
+    void setBitcoinGUI(BitcoinGUI* gui);
     /** Set the client model.
         The client model represents the part of the core that communicates with the P2P network, and is wallet-agnostic.
     */
-    void setClientModel(ClientModel *clientModel);
+    void setClientModel(ClientModel* clientModel);
     /** Set the wallet model.
-        The wallet model represents a kore wallet, and offers access to the list of transactions, address book and sending
+        The wallet model represents a bitcoin wallet, and offers access to the list of transactions, address book and sending
         functionality.
     */
-    void setWalletModel(WalletModel *walletModel);
+    void setWalletModel(WalletModel* walletModel);
 
     bool handlePaymentRequest(const SendCoinsRecipient& recipient);
 
     void showOutOfSyncWarning(bool fShow);
 
 private:
-    ClientModel *clientModel;
-    WalletModel *walletModel;
+    ClientModel* clientModel;
+    WalletModel* walletModel;
 
-    OverviewPage *overviewPage;
-    QWidget *transactionsPage;
-    ReceiveCoinsDialog *receiveCoinsPage;
-    SendCoinsDialog *sendCoinsPage;
-    AddressBookPage *usedSendingAddressesPage;
-    AddressBookPage *usedReceivingAddressesPage;
-    tradingDialog* tradingPage;
+    OverviewPage* overviewPage;
+    QWidget* transactionsPage;
+    ReceiveCoinsDialog* receiveCoinsPage;
+    SendCoinsDialog* sendCoinsPage;
     BlockExplorer* explorerWindow;
     MasternodeList* masternodeListPage;
-    TransactionView *transactionView;
-//    QjSimple *phone;
 
-    QProgressDialog *progressDialog;
-    const PlatformStyle *platformStyle;
+    TransactionView* transactionView;
+
+    QProgressDialog* progressDialog;
     QLabel* transactionSum;
 
-public Q_SLOTS:
+public slots:
     /** Switch to overview (home) page */
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
     /** Switch to masternode page */
     void gotoMasternodePage();
-    /** Switch to Bittrex trading page */
-    void gotoTradingPage();
     /** Switch to explorer page */
     void gotoBlockExplorerPage();
     /** Switch to receive coins page */
@@ -102,8 +94,10 @@ public Q_SLOTS:
     void gotoVerifyMessageTab(QString addr = "");
     /** Show MultiSend Dialog */
     void gotoMultiSendDialog();
-
-    void gotoPbxClient();
+    /** Show a multisig tab **/
+    void gotoMultisigDialog(int index);
+    /** Show BIP 38 tool - default to Encryption tab */
+    void gotoBip38Tool();
 
     /** Show incoming transaction notification for new transactions.
 
@@ -117,9 +111,11 @@ public Q_SLOTS:
     /** Change encrypted wallet passphrase */
     void changePassphrase();
     /** Ask for passphrase to unlock wallet temporarily */
-    void unlockWallet();
+    void unlockWallet(AskPassphraseDialog::Context context);
     /** Lock wallet */
     void lockWallet();
+    /** Toggle wallet lock state */
+    void toggleLockWallet();
 
     /** Show used sending addresses */
     void usedSendingAddresses();
@@ -130,20 +126,20 @@ public Q_SLOTS:
     void updateEncryptionStatus();
 
     /** Show progress dialog e.g. for rescan */
-    void showProgress(const QString &title, int nProgress);
+    void showProgress(const QString& title, int nProgress);
 
     /** Update selected KORE amount from transactionview */
     void trxAmount(QString amount);
 
-Q_SIGNALS:
+signals:
     /** Signal that we want to show the main window */
     void showNormalIfMinimized();
     /**  Fired when a message should be reported to the user */
-    void message(const QString &title, const QString &message, unsigned int style);
+    void message(const QString& title, const QString& message, unsigned int style);
     /** Encryption status of wallet changed */
     void encryptionStatusChanged(int status);
     /** Notify that a new transaction appeared */
-    void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address, const QString& label);
+    void incomingTransaction(const QString& date, int unit, const CAmount& amount, const QString& type, const QString& address);
 };
 
 #endif // BITCOIN_QT_WALLETVIEW_H

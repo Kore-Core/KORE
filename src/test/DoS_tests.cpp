@@ -1,10 +1,11 @@
-// Copyright (c) 2011-2015 The Kore Core developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2011-2014 The Bitcoin Core developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+//
 // Unit tests for denial-of-service detection/prevention code
+//
 
-#include "chainparams.h"
 #include "keystore.h"
 #include "main.h"
 #include "net.h"
@@ -13,12 +14,9 @@
 #include "serialize.h"
 #include "util.h"
 
-#include "test/test_kore.h"
-
 #include <stdint.h>
 
 #include <boost/assign/list_of.hpp> // for 'map_list_of()'
-#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/foreach.hpp>
 #include <boost/test/unit_test.hpp>
 
@@ -40,7 +38,7 @@ CService ip(uint32_t i)
     return CService(CNetAddr(s), Params().GetDefaultPort());
 }
 
-BOOST_FIXTURE_TEST_SUITE(DoS_tests, TestingSetup)
+BOOST_AUTO_TEST_SUITE(DoS_tests)
 
 BOOST_AUTO_TEST_CASE(DoS_banning)
 {

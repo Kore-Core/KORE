@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 #
-# Use the raw transactions API to spend kores received on particular addresses,
+# Use the raw transactions API to spend KOREs received on particular addresses,
 # and send any change back to that same address.
 #
 # Example usage:
 #  spendfrom.py  # Lists available funds
 #  spendfrom.py --from=ADDRESS --to=ADDRESS --amount=11.00
 #
-# Assumes it will talk to a kored or Kore-Qt running
+# Assumes it will talk to a kored or kore-Qt running
 # on localhost.
 #
 # Depends on jsonrpc
@@ -35,12 +35,12 @@ def check_json_precision():
 def determine_db_dir():
     """Return the default location of the kore data directory"""
     if platform.system() == "Darwin":
-        return os.path.expanduser("~/Library/Application Support/Kore/")
+        return os.path.expanduser("~/Library/Application Support/KORE/")
     elif platform.system() == "Windows":
-        return os.path.join(os.environ['APPDATA'], "Kore")
+        return os.path.join(os.environ['APPDATA'], "KORE")
     return os.path.expanduser("~/.kore")
 
-def read_kore_config(dbdir):
+def read_bitcoin_config(dbdir):
     """Read the kore.conf file from dbdir, returns dictionary of settings"""
     from ConfigParser import SafeConfigParser
 
@@ -67,7 +67,7 @@ def connect_JSON(config):
     testnet = config.get('testnet', '0')
     testnet = (int(testnet) > 0)  # 0/1 in config file, convert to True/False
     if not 'rpcport' in config:
-        config['rpcport'] = 18332 if testnet else 8332
+        config['rpcport'] = 11742 if testnet else 10742
     connect = "http://%s:%s@127.0.0.1:%s"%(config['rpcuser'], config['rpcpassword'], config['rpcport'])
     try:
         result = ServiceProxy(connect)
@@ -114,7 +114,7 @@ def list_available(kored):
         # or pay-to-script-hash outputs right now; anything exotic is ignored.
         if pk["type"] != "pubkeyhash" and pk["type"] != "scripthash":
             continue
-        
+
         address = pk["addresses"][0]
         if address in address_summary:
             address_summary[address]["total"] += vout["value"]
@@ -160,7 +160,7 @@ def create_tx(kored, fromaddresses, toaddress, amount, fee):
     # Python's json/jsonrpc modules have inconsistent support for Decimal numbers.
     # Instead of wrestling with getting json.dumps() (used by jsonrpc) to encode
     # Decimals, I'm casting amounts to float before sending them to kored.
-    #  
+    #
     outputs = { toaddress : float(amount) }
     (inputs, change_amount) = select_coins(needed, potential_inputs)
     if change_amount > BASE_FEE:  # don't bother with zero or tiny change
@@ -221,9 +221,9 @@ def main():
 
     parser = optparse.OptionParser(usage="%prog [options]")
     parser.add_option("--from", dest="fromaddresses", default=None,
-                      help="addresses to get kores from")
+                      help="addresses to get KOREs from")
     parser.add_option("--to", dest="to", default=None,
-                      help="address to get send kores to")
+                      help="address to get send KOREs to")
     parser.add_option("--amount", dest="amount", default=None,
                       help="amount to send")
     parser.add_option("--fee", dest="fee", default="0.0",
@@ -238,7 +238,7 @@ def main():
     (options, args) = parser.parse_args()
 
     check_json_precision()
-    config = read_kore_config(options.datadir)
+    config = read_bitcoin_config(options.datadir)
     if options.testnet: config['testnet'] = True
     kored = connect_JSON(config)
 

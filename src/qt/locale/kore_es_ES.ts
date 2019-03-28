@@ -3,79 +3,79 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Haz clic derecho para editar la dirección o la etiqueta</translation>
+        <translation>Botón derecho para editar dirección o etiqueta</translation>
     </message>
     <message>
         <source>Create a new address</source>
-        <translation>Crea una nueva direccióon</translation>
+        <translation>Crear una nueva dirección</translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>&amp;Nuevo</translation>
+        <translation>&amp;Nueva</translation>
     </message>
     <message>
         <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Copia la direccón seleccionada al portapapeles del sistema</translation>
+        <translation>Copiar la dirección seleccionada al portapapeles</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
         <translation>&amp;Copiar</translation>
     </message>
     <message>
-        <source>C&amp;lose</source>
-        <translation>C&amp;errar</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Address</source>
-        <translation>&amp;Copiar Direccón</translation>
-    </message>
-    <message>
         <source>Delete the currently selected address from the list</source>
-        <translation>Elimina la dirección seleccionada de la lista</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Exporta los datos de la pestaña actual a un archivo</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Exportar</translation>
+        <translation>Quitar la dirección seleccionada de la lista</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
         <translation>&amp;Eliminar</translation>
     </message>
     <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Exportar los datos de la pestaña actual a un archivo</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Exportar</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>Cerrar</translation>
+    </message>
+    <message>
         <source>Choose the address to send coins to</source>
-        <translation>Elige la dirección a la que enviar las monedas</translation>
+        <translation>Elija la dirección a la cual enviar moneda</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>Elige la direccón con la que recibir monedas</translation>
+        <translation>Elija la dirección desde la que recibir moneda</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
-        <translation>E&amp;legir</translation>
+        <translation>Elija</translation>
     </message>
     <message>
         <source>Sending addresses</source>
-        <translation>Enviando direcciones</translation>
+        <translation>Direcciones de envío</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
-        <translation>Recibiendo direcciones</translation>
+        <translation>Direcciones de recepción</translation>
     </message>
     <message>
-        <source>These are your Koreaddresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Estas son tus direcciones de Korepara enviar pagos. Comprueba siempre la cantidad y la dirección receptora antes de enviar monedas.</translation>
+        <source>These are your KORE addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Estas son sus direcciones de KORE para enviar pagos. Compruebe siempre la cantidad así como la dirección de destino antes de enviar moneda.</translation>
     </message>
     <message>
-        <source>These are your Koreaddresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Estas son tus direcciones de Korepara recibir pagos. Se recomienda usar una nueva dirección receptora para cada transacción</translation>
+        <source>These are your KORE addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Estas son sus direcciones de KORE para recibir pagos. Es recomendable que use una dirección nueva para cada transacción.</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Copiar dirección</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation>Copiar &amp;Etiqueta</translation>
+        <translation>Copiar eti&amp;queta</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -83,19 +83,19 @@
     </message>
     <message>
         <source>Export Address List</source>
-        <translation>Exportar Lista de Direcciones</translation>
+        <translation>Exportar listado de direcciones</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>Archivo separado por comas (*.csv)</translation>
+        <translation>Archivo de valores separados por comas (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
-        <translation>Exportacón Fallida</translation>
+        <translation>La exportación falló</translation>
     </message>
     <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
-        <translation>Ha ocurrido un error intentando guardar la lista de direcciones en %1. Por favor intentalo de nuevo.</translation>
+        <translation>Se produjo un error al intentar guardar el listado de direcciones a %1. Por favor, inténtelo de nuevo.</translation>
     </message>
 </context>
 <context>
@@ -117,206 +117,200 @@
     <name>AskPassphraseDialog</name>
     <message>
         <source>Passphrase Dialog</source>
-        <translation>Dialogo de Contraseña</translation>
+        <translation>Clave de seguridad</translation>
     </message>
     <message>
         <source>Enter passphrase</source>
-        <translation>Introduzca la contraseña</translation>
+        <translation>Introduzca clave de seguridad</translation>
     </message>
     <message>
         <source>New passphrase</source>
-        <translation>Nueva contraseña</translation>
+        <translation>Nueva clave de seguridad</translation>
     </message>
     <message>
         <source>Repeat new passphrase</source>
-        <translation>Repite la nueva contraseña</translation>
+        <translation>Repita la clave de seguridad</translation>
     </message>
     <message>
-        <source>Encrypt wallet</source>
-        <translation>Encriptar cartera</translation>
+        <source>Serves to disable the trivial sendmoney when OS account compromised. Provides no real security.</source>
+        <translation>Sirve simplemente para deshabilitar el envío de dinero cuando la cuenta del SO ha sido comprometida. No suministra seguridad real.</translation>
     </message>
     <message>
-        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Esta operacón necesita tu contraseña de la cartera para desbloquear la cartera.</translation>
-    </message>
-    <message>
-        <source>Unlock wallet</source>
-        <translation>Desbloquear cartera</translation>
-    </message>
-    <message>
-        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Esta operación requiere tu contraseña de la cartera para desencriptar la cartera.</translation>
-    </message>
-    <message>
-        <source>Decrypt wallet</source>
-        <translation>Desencriptar cartera</translation>
-    </message>
-    <message>
-        <source>Change passphrase</source>
-        <translation>Cambiar contraseña</translation>
-    </message>
-    <message>
-        <source>Confirm wallet encryption</source>
-        <translation>Confirmar encriptación de la cartera</translation>
-    </message>
-    <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation>Advertencia: Si encriptas tu cartera y pierdes tu contraseña, &lt;b&gt;PERDERÁS TODOS TUS BITCOINS&lt;/B&gt;</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to encrypt your wallet?</source>
-        <translation>Estás seguro ue deseas encriptar tu cartera?</translation>
-    </message>
-    <message>
-        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>Kore Core se cerrará ahora para finalizar el proceso de encriptación. Recuerda que encriptar tu cartera no protege completamente tus kores de ser robados por malware infectando tu ordenador.</translation>
-    </message>
-    <message>
-        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
-        <translation>IMPORTANTE: Cualquier copia de seguridad anterior del archivo de tu cartera debería ser remplazado con el nuevo archivo encriptado. Por motivos de seguridad, las copias de seguridad anteriores de la cartera desencriptada quedaran inusables tan pronto como empieces a usar la nueva cartera encriptada.</translation>
-    </message>
-    <message>
-        <source>Warning: The Caps Lock key is on!</source>
-        <translation>Advertencia: La Tecla de Bloqueo de Mayusculas esta activada!</translation>
-    </message>
-    <message>
-        <source>Wallet encrypted</source>
-        <translation>Cartera encriptada</translation>
+        <source>For anonymization, and staking only</source>
+        <translation>Para solo anonimizar, automint y staking</translation>
     </message>
     <message>
         <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation>Introduzca la nueva contraseña de la cartera. &lt;br/&gt;Por favor utilice una contraseña de &lt;b&gt;diez o mas caracteres aleatorios&lt;/b&gt;, o &lt;b&gt;ocho o mas palabras&lt;/b&gt;.</translation>
+        <translation>Introduzca la nueva clave de seguridad para el monedero.&lt;br/&gt;Por favor, use una clave de seguridad de &lt;b&gt;diez o más caracteres aleatorios&lt;/b&gt;, u &lt;b&gt; ocho o más palabras.</translation>
     </message>
     <message>
-        <source>Enter the old passphrase and new passphrase to the wallet.</source>
-        <translation>Introduzca la antigua contraseña y la nueva contraseña en la cartera.</translation>
+        <source>Encrypt wallet</source>
+        <translation>Encriptar monedero</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to unlock the wallet.</source>
+        <translation>Esta operación requiere su clave de seguridad para desbloquear el monedero.</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Desbloquear monedero</translation>
+    </message>
+    <message>
+        <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
+        <translation>Esta operación requiere su clave de seguridad para desencriptar el monedero.</translation>
+    </message>
+    <message>
+        <source>Decrypt wallet</source>
+        <translation>Desencriptar monedero</translation>
+    </message>
+    <message>
+        <source>Change passphrase</source>
+        <translation>Cambio de clave de seguridad</translation>
+    </message>
+    <message>
+        <source>Enter the old and new passphrase to the wallet.</source>
+        <translation>Introduzca sus claves de seguridad antigua y nueva.</translation>
+    </message>
+    <message>
+        <source>Confirm wallet encryption</source>
+        <translation>Confirmar encriptación del monedero</translation>
+    </message>
+    <message>
+        <source>KORE will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your KOREs from being stolen by malware infecting your computer.</source>
+        <translation>KORE se cerrará ahora para completar el proceso de encriptación. Recuerde que la encriptación no le protege completamente del robo de sus KOREs frente a malware que infecte su ordenador.</translation>
+    </message>
+    <message>
+        <source>Are you sure you wish to encrypt your wallet?</source>
+        <translation>¿Está seguro de que quiere encriptar su monedero?</translation>
+    </message>
+    <message>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR KORE&lt;/b&gt;!</source>
+        <translation>Advertencia: si encripta su monedero y pierde su clave de seguridad, ¡&lt;b&gt;PERDERÁ TODOS SUS KORE&lt;/b&gt;!</translation>
+    </message>
+    <message>
+        <source>Wallet encrypted</source>
+        <translation>Monedero encriptado</translation>
+    </message>
+    <message>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>IMPORTNTE: cualquier copia de seguridad que haya efectuado de su fichero de monedero debería ser reemplazada por la que se genere ahora para el archivo de monedero encriptado. Por razones de seguridad, las copias de seguridad previas del archivo de monedero sin encriptar serán inutilizadas tan pronto como comience a ussar el nuevo archivo de monedero encriptado.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
-        <translation>Encriptación de la cartera fallida</translation>
+        <translation>La encriptación del monedero ha fallado</translation>
     </message>
     <message>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation>La encriptación de la cartera ha fallado debido a un error interno. Tu cartera no ha sido encriptada.</translation>
+        <translation>La encriptación del monedero ha fallado por un error interno. Su monedero no ha sido encriptado.</translation>
     </message>
     <message>
         <source>The supplied passphrases do not match.</source>
-        <translation>Las contraseñas proporcianadas no se corresponden.</translation>
+        <translation>Las claves de seguridad suministradas no coinciden.</translation>
     </message>
     <message>
         <source>Wallet unlock failed</source>
-        <translation>Desbloqueo de la cartera fallido</translation>
+        <translation>El desbloqueo del monedero ha fallado</translation>
     </message>
     <message>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation>La contraseña introducida para desencriptar la cartera es incorrecta.</translation>
+        <translation>La clave de seguridad introducida para la desencriptación del monedero es incorrecta.</translation>
     </message>
     <message>
         <source>Wallet decryption failed</source>
-        <translation>Desencriptación de la cartera fallida</translation>
+        <translation>La desecriptación del monedero ha fallado.</translation>
     </message>
     <message>
         <source>Wallet passphrase was successfully changed.</source>
-        <translation>Contraseña de la cartera cambiada correctamente</translation>
+        <translation>La clave de seguridad del monedero se ha cambiado correctamente.</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Advertencia: la tecla Bloq Mayús está activada!</translation>
     </message>
 </context>
 <context>
     <name>BanTableModel</name>
+    <message>
+        <source>IP/Netmask</source>
+        <translation>IP/Netmask</translation>
+    </message>
+    <message>
+        <source>Banned Until</source>
+        <translation>Prohibido hasta</translation>
+    </message>
+</context>
+<context>
+    <name>Bip38ToolDialog</name>
+    <message>
+        <source>BIP 38 Tool</source>
+        <translation>Utilidad BIP 38</translation>
+    </message>
+    <message>
+        <source>&amp;BIP 38 Encrypt</source>
+        <translation>Encriptar &amp;BIP 38</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation>Dirección:</translation>
+    </message>
+    <message>
+        <source>Enter a KORE Address that you would like to encrypt using BIP 38. Enter a passphrase in the middle box. Press encrypt to compute the encrypted private key.</source>
+        <translation>Ingrese una dirección KORE que le gustaría encriptar usando BIP 38. Ingrese una contraseña en el cuadro del medio. Presione encriptar para calcular la clave privada encriptada.</translation>
+    </message>
+    <message>
+        <source>The KORE address to encrypt</source>
+        <translation>La dirección KORE a encriptar</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>Escoja una dirección usada previamente</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pegar dirección del portapapeles</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Passphrase: </source>
+        <translation>Clave de seguridad:</translation>
+    </message>
+    <message>
+        <source>Encrypted Key:</source>
+        <translation>Clave encriptada:</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the system clipboard</source>
+        <translation>Copiar la firma actual al portapapeles del sistema</translation>
+    </message>
+    <message>
+        <source>Encrypt &amp;Key</source>
+        <translation>Encriptar Clave</translation>
+    </message>
+    <message>
+        <source>Clear &amp;All</source>
+        <translation>Limpiar todo</translation>
+    </message>
+    <message>
+        <source>&amp;BIP 38 Decrypt</source>
+        <translation>Desencriptar BIP 38</translation>
+    </message>
     </context>
 <context>
-    <name>KoreGUI</name>
+    <name>BitcoinGUI</name>
     <message>
-        <source>Sign &amp;message...</source>
-        <translation>Firmar &amp;mensaje...</translation>
+        <source>Unlock wallet</source>
+        <translation>Desbloquear monedero</translation>
     </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Sincronizando con la red...</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Vista general</translation>
-    </message>
-    <message>
-        <source>Node</source>
-        <translation>Nodo</translation>
-    </message>
-    <message>
-        <source>Show general overview of wallet</source>
-        <translation>Mostrar vista general de la cartera</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Transacciones</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Navegar historial de transacciones</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>S&amp;alir</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Salir de la aplicación</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Acerca de &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Muestra información acerca de Qt</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Opciones...</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Encriptar Cartera...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Hacer copia de seguridad de la cartera...</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Cambiar contraseña...</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Enviando direcciones...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Recibiendo direcciones..</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Abrir &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Kore Core client</source>
-        <translation>Cliente Kore Core</translation>
-    </message>
-    <message>
-        <source>Importing blocks from disk...</source>
-        <translation>Importando bloques desde disco...</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Reindexando bloques en el disco...</translation>
-    </message>
-    <message>
-        <source>Send coins to a Koreaddress</source>
-        <translation>Envia monedas a una dirección Kore</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Crea una copia de seguridad de tu cartera en otra ubicación</translation>
-    </message>
+    </context>
+<context>
+    <name>BlockExplorer</name>
     </context>
 <context>
     <name>ClientModel</name>
@@ -330,14 +324,6 @@
     </context>
 <context>
     <name>EditAddressDialog</name>
-    <message>
-        <source>&amp;Label</source>
-        <translation>Etiqueta</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation>Dirección</translation>
-    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -347,6 +333,34 @@
     </context>
 <context>
     <name>Intro</name>
+    </context>
+<context>
+    <name>MasternodeList</name>
+    <message>
+        <source>Address</source>
+        <translation>Dirección</translation>
+    </message>
+    </context>
+<context>
+    <name>MultiSendDialog</name>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation>Dirección:</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(sin etiqueta)</translation>
+    </message>
+    </context>
+<context>
+    <name>MultisigDialog</name>
+    </context>
+<context>
+    <name>ObfuscationConfig</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -364,6 +378,25 @@
     <name>PeerTableModel</name>
     </context>
 <context>
+    <name>PrivacyDialog</name>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>Escoja una dirección usada previamente</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pegar dirección del portapapeles</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    </context>
+<context>
     <name>QObject</name>
     </context>
 <context>
@@ -377,10 +410,6 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>&amp;Copiar Direccón</translation>
-    </message>
     <message>
         <source>Address</source>
         <translation>Dirección</translation>
@@ -404,18 +433,74 @@
 <context>
     <name>SendCoinsDialog</name>
     <message>
+        <source>Clear &amp;All</source>
+        <translation>Limpiar todo</translation>
+    </message>
+    <message>
         <source>(no label)</source>
         <translation>(sin etiqueta)</translation>
     </message>
-    </context>
+</context>
 <context>
     <name>SendCoinsEntry</name>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>Escoja una dirección usada previamente</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pegar dirección del portapapeles</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
     </context>
 <context>
     <name>ShutdownWindow</name>
     </context>
 <context>
     <name>SignVerifyMessageDialog</name>
+    <message>
+        <source>The KORE address to sign the message with</source>
+        <translation>Dirección KORE con la que firmar el mensaje</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>Escoja una dirección usada previamente</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Pegar dirección del portapapeles</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the system clipboard</source>
+        <translation>Copiar la firma actual al portapapeles del sistema</translation>
+    </message>
+    <message>
+        <source>Sign the message to prove you own this KORE address</source>
+        <translation>Firme el mensaje para probar que Ud. es el propietario de esta dirección KORE</translation>
+    </message>
+    <message>
+        <source>Reset all sign message fields</source>
+        <translation>Limpiar todos los campos de firma de mensaje</translation>
+    </message>
+    <message>
+        <source>Clear &amp;All</source>
+        <translation>Limpiar todo</translation>
+    </message>
     </context>
 <context>
     <name>SplashScreen</name>
@@ -432,19 +517,15 @@
 <context>
     <name>TransactionTableModel</name>
     <message>
-        <source>Label</source>
-        <translation>Etiqueta</translation>
+        <source>Address</source>
+        <translation>Dirección</translation>
     </message>
     </context>
 <context>
     <name>TransactionView</name>
     <message>
-        <source>Exporting Failed</source>
-        <translation>Exportacón Fallida</translation>
-    </message>
-    <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>Archivo separado por comas (*.csv)</translation>
+        <translation>Archivo de valores separados por comas (*.csv)</translation>
     </message>
     <message>
         <source>Label</source>
@@ -453,6 +534,10 @@
     <message>
         <source>Address</source>
         <translation>Dirección</translation>
+    </message>
+    <message>
+        <source>Exporting Failed</source>
+        <translation>La exportación falló</translation>
     </message>
     </context>
 <context>
@@ -472,10 +557,17 @@
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>Exporta los datos de la pestaña actual a un archivo</translation>
+        <translation>Exportar los datos de la pestaña actual a un archivo</translation>
     </message>
     </context>
 <context>
-    <name>kore-core</name>
+    <name>ZkoreControlDialog</name>
     </context>
+<context>
+    <name>kore-core</name>
+    <message>
+        <source>wallet.dat corrupt, salvage failed</source>
+        <translation>wallet.dat corrupto, recuperación fallida</translation>
+    </message>
+</context>
 </TS>

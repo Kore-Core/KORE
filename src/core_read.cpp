@@ -1,5 +1,6 @@
-// Copyright (c) 2009-2015 The Kore Core developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2015-2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "core_io.h"
@@ -20,9 +21,11 @@
 #include <boost/algorithm/string/split.hpp>
 #include <boost/assign/list_of.hpp>
 
+using namespace boost;
+using namespace boost::algorithm;
 using namespace std;
 
-CScript ParseScript(const std::string& s)
+CScript ParseScript(std::string s)
 {
     CScript result;
 
@@ -42,47 +45,46 @@ CScript ParseScript(const std::string& s)
             string strName(name);
             mapOpNames[strName] = (opcodetype)op;
             // Convenience: OP_ADD and just ADD are both recognized:
-            boost::algorithm::replace_first(strName, "OP_", "");
+            replace_first(strName, "OP_", "");
             mapOpNames[strName] = (opcodetype)op;
+
+            if (op == 0xb1)
+            {
+                mapOpNames["OP_NOP2"] = (opcodetype)op;
+                mapOpNames["NOP2"] = (opcodetype)op;
+            }
+            else if (op == 0xb2) 
+            {
+                mapOpNames["OP_NOP3"] = (opcodetype)op;
+                mapOpNames["NOP3"] = (opcodetype)op;
+            }
         }
     }
 
     vector<string> words;
-    boost::algorithm::split(words, s, boost::algorithm::is_any_of(" \t\n"), boost::algorithm::token_compress_on);
+    split(words, s, is_any_of(" \t\n"), token_compress_on);
 
-    for (std::vector<std::string>::const_iterator w = words.begin(); w != words.end(); ++w)
-    {
-        if (w->empty())
-        {
+    for (std::vector<std::string>::const_iterator w = words.begin(); w != words.end(); ++w) {
+        if (w->empty()) {
             // Empty string, ignore. (boost::split given '' will return one word)
-        }
-        else if (all(*w, boost::algorithm::is_digit()) ||
-            (boost::algorithm::starts_with(*w, "-") && all(string(w->begin()+1, w->end()), boost::algorithm::is_digit())))
-        {
+        } else if (all(*w, is_digit()) ||
+                   (starts_with(*w, "-") && all(string(w->begin() + 1, w->end()), is_digit()))) {
             // Number
             int64_t n = atoi64(*w);
             result << n;
-        }
-        else if (boost::algorithm::starts_with(*w, "0x") && (w->begin()+2 != w->end()) && IsHex(string(w->begin()+2, w->end())))
-        {
+        } else if (starts_with(*w, "0x") && (w->begin() + 2 != w->end()) && IsHex(string(w->begin() + 2, w->end()))) {
             // Raw hex data, inserted NOT pushed onto stack:
-            std::vector<unsigned char> raw = ParseHex(string(w->begin()+2, w->end()));
+            std::vector<unsigned char> raw = ParseHex(string(w->begin() + 2, w->end()));
             result.insert(result.end(), raw.begin(), raw.end());
-        }
-        else if (w->size() >= 2 && boost::algorithm::starts_with(*w, "'") && boost::algorithm::ends_with(*w, "'"))
-        {
+        } else if (w->size() >= 2 && starts_with(*w, "'") && ends_with(*w, "'")) {
             // Single-quoted string, pushed as data. NOTE: this is poor-man's
             // parsing, spaces/tabs/newlines in single-quoted strings won't work.
-            std::vector<unsigned char> value(w->begin()+1, w->end()-1);
+            std::vector<unsigned char> value(w->begin() + 1, w->end() - 1);
             result << value;
-        }
-        else if (mapOpNames.count(*w))
-        {
+        } else if (mapOpNames.count(*w)) {
             // opcode, e.g. OP_ADD or ADD:
             result << mapOpNames[*w];
-        }
-        else
-        {
+        } else {
             throw runtime_error("script parse error");
         }
     }
@@ -99,8 +101,7 @@ bool DecodeHexTx(CTransaction& tx, const std::string& strHexTx)
     CDataStream ssData(txData, SER_NETWORK, PROTOCOL_VERSION);
     try {
         ssData >> tx;
-    }
-    catch (const std::exception&) {
+    } catch (const std::exception&) {
         return false;
     }
 
@@ -116,8 +117,7 @@ bool DecodeHexBlk(CBlock& block, const std::string& strHexBlk)
     CDataStream ssBlock(blockData, SER_NETWORK, PROTOCOL_VERSION);
     try {
         ssBlock >> block;
-    }
-    catch (const std::exception&) {
+    } catch (const std::exception&) {
         return false;
     }
 
@@ -129,13 +129,13 @@ uint256 ParseHashUV(const UniValue& v, const string& strName)
     string strHex;
     if (v.isStr())
         strHex = v.getValStr();
-    return ParseHashStr(strHex, strName);  // Note: ParseHashStr("") throws a runtime_error
+    return ParseHashStr(strHex, strName); // Note: ParseHashStr("") throws a runtime_error
 }
 
 uint256 ParseHashStr(const std::string& strHex, const std::string& strName)
 {
     if (!IsHex(strHex)) // Note: IsHex("") is false
-        throw runtime_error(strName+" must be hexadecimal string (not '"+strHex+"')");
+        throw runtime_error(strName + " must be hexadecimal string (not '" + strHex + "')");
 
     uint256 result;
     result.SetHex(strHex);
@@ -148,6 +148,6 @@ vector<unsigned char> ParseHexUV(const UniValue& v, const string& strName)
     if (v.isStr())
         strHex = v.getValStr();
     if (!IsHex(strHex))
-        throw runtime_error(strName+" must be hexadecimal string (not '"+strHex+"')");
+        throw runtime_error(strName + " must be hexadecimal string (not '" + strHex + "')");
     return ParseHex(strHex);
 }

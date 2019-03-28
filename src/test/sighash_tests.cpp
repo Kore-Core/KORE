@@ -1,19 +1,15 @@
-// Copyright (c) 2013-2015 The Kore Core developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2013 The Bitcoin Core developers
+// Copyright (c) 2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "consensus/validation.h"
 #include "data/sighash.json.h"
-#include "hash.h"
-#include "main.h" // For CheckTransaction
+#include "main.h"
 #include "random.h"
-#include "script/interpreter.h"
-#include "script/script.h"
 #include "serialize.h"
-#include "streams.h"
-#include "test/test_kore.h"
+#include "script/script.h"
+#include "script/interpreter.h"
 #include "util.h"
-#include "utilstrencodings.h"
 #include "version.h"
 
 #include <iostream>
@@ -22,16 +18,17 @@
 
 #include <univalue.h>
 
+// #define PRINT_SIGHASH_JSON
+
 extern UniValue read_json(const std::string& jsondata);
 
 // Old script.cpp SignatureHash function
 uint256 static SignatureHashOld(CScript scriptCode, const CTransaction& txTo, unsigned int nIn, int nHashType)
 {
-    static const uint256 one(uint256S("0000000000000000000000000000000000000000000000000000000000000001"));
     if (nIn >= txTo.vin.size())
     {
-        printf("ERROR: SignatureHash(): nIn=%d out of range\n", nIn);
-        return one;
+        printf("ERROR: SignatureHash() : nIn=%d out of range\n", nIn);
+        return 1;
     }
     CMutableTransaction txTmp(txTo);
 
@@ -61,8 +58,8 @@ uint256 static SignatureHashOld(CScript scriptCode, const CTransaction& txTo, un
         unsigned int nOut = nIn;
         if (nOut >= txTmp.vout.size())
         {
-            printf("ERROR: SignatureHash(): nOut=%d out of range\n", nOut);
-            return one;
+            printf("ERROR: SignatureHash() : nOut=%d out of range\n", nOut);
+            return 1;
         }
         txTmp.vout.resize(nOut+1);
         for (unsigned int i = 0; i < nOut; i++)
@@ -118,7 +115,7 @@ void static RandomTransaction(CMutableTransaction &tx, bool fSingle) {
     }
 }
 
-BOOST_FIXTURE_TEST_SUITE(sighash_tests, BasicTestingSetup)
+BOOST_AUTO_TEST_SUITE(sighash_tests)
 
 BOOST_AUTO_TEST_CASE(sighash_test)
 {
@@ -163,12 +160,14 @@ BOOST_AUTO_TEST_CASE(sighash_test)
     }
     #if defined(PRINT_SIGHASH_JSON)
     std::cout << "]\n";
+    
     #endif
 }
 
 // Goal: check that SignatureHash generates correct hash
 BOOST_AUTO_TEST_CASE(sighash_from_data)
 {
+    LogPrintf("sighash_from_data --> \n");
     UniValue tests = read_json(std::string(json_tests::sighash, json_tests::sighash + sizeof(json_tests::sighash)));
 
     for (unsigned int idx = 0; idx < tests.size(); idx++) {
@@ -196,11 +195,15 @@ BOOST_AUTO_TEST_CASE(sighash_from_data)
           sigHashHex = test[4].get_str();
 
           uint256 sh;
+          LogPrintf(" Parsing Hex  \n");
           CDataStream stream(ParseHex(raw_tx), SER_NETWORK, PROTOCOL_VERSION);
+          LogPrintf(" Extracting Transaction  \n");
           stream >> tx;
 
           CValidationState state;
+          LogPrintf(" 1. CheckTransation  \n");
           BOOST_CHECK_MESSAGE(CheckTransaction(tx, state), strTest);
+          LogPrintf(" 2. IsValid?  \n");
           BOOST_CHECK(state.IsValid());
 
           std::vector<unsigned char> raw = ParseHex(raw_script);
@@ -213,5 +216,6 @@ BOOST_AUTO_TEST_CASE(sighash_from_data)
         sh = SignatureHash(scriptCode, tx, nIn, nHashType);
         BOOST_CHECK_MESSAGE(sh.GetHex() == sigHashHex, strTest);
     }
+    LogPrintf("sighash_from_data <-- \n");
 }
 BOOST_AUTO_TEST_SUITE_END()

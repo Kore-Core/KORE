@@ -4,25 +4,18 @@
 
 #include "versionbits.h"
 
-#include "consensus/params.h"
-
-const struct BIP9DeploymentInfo VersionBitsDeploymentInfo[Consensus::MAX_VERSION_BITS_DEPLOYMENTS] = {
+const struct BIP9DeploymentInfo VersionBitsDeploymentInfo[CChainParams::MAX_VERSION_BITS_DEPLOYMENTS] = {
     {
-        /*.name =*/ "testdummy",
-        /*.gbt_force =*/ true,
-    },
-    {
-        /*.name =*/ "csv",
-        /*.gbt_force =*/ true,
-    }
-};
+        /*.name =*/"csv",
+        /*.gbt_force =*/true,
+    }};
 
-ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex* pindexPrev, const Consensus::Params& params, ThresholdConditionCache& cache) const
+ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex* pindexPrev, ThresholdConditionCache& cache) const
 {
-    int nPeriod = Period(params);
-    int nThreshold = Threshold(params);
-    int64_t nTimeStart = BeginTime(params);
-    int64_t nTimeTimeout = EndTime(params);
+    int nPeriod = Period();
+    int nThreshold = Threshold();
+    int64_t nTimeStart = BeginTime();
+    int64_t nTimeTimeout = EndTime();
 
     // A block's state is always the same as that of the first of its period, so it is computed based on a pindexPrev whose height equals a multiple of nPeriod - 1.
     if (pindexPrev != NULL) {
@@ -57,43 +50,43 @@ ThresholdState AbstractThresholdConditionChecker::GetStateFor(const CBlockIndex*
         vToCompute.pop_back();
 
         switch (state) {
-            case THRESHOLD_DEFINED: {
-                if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
-                    stateNext = THRESHOLD_FAILED;
-                } else if (pindexPrev->GetMedianTimePast() >= nTimeStart) {
-                    stateNext = THRESHOLD_STARTED;
-                }
+        case THRESHOLD_DEFINED: {
+            if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
+                stateNext = THRESHOLD_FAILED;
+            } else if (pindexPrev->GetMedianTimePast() >= nTimeStart) {
+                stateNext = THRESHOLD_STARTED;
+            }
+            break;
+        }
+        case THRESHOLD_STARTED: {
+            if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
+                stateNext = THRESHOLD_FAILED;
                 break;
             }
-            case THRESHOLD_STARTED: {
-                if (pindexPrev->GetMedianTimePast() >= nTimeTimeout) {
-                    stateNext = THRESHOLD_FAILED;
-                    break;
+            // We need to count
+            const CBlockIndex* pindexCount = pindexPrev;
+            int count = 0;
+            for (int i = 0; i < nPeriod; i++) {
+                if (Condition(pindexCount)) {
+                    count++;
                 }
-                // We need to count
-                const CBlockIndex* pindexCount = pindexPrev;
-                int count = 0;
-                for (int i = 0; i < nPeriod; i++) {
-                    if (Condition(pindexCount, params)) {
-                        count++;
-                    }
-                    pindexCount = pindexCount->pprev;
-                }
-                if (count >= nThreshold) {
-                    stateNext = THRESHOLD_LOCKED_IN;
-                }
-                break;
+                pindexCount = pindexCount->pprev;
             }
-            case THRESHOLD_LOCKED_IN: {
-                // Always progresses into ACTIVE.
-                stateNext = THRESHOLD_ACTIVE;
-                break;
+            if (count >= nThreshold) {
+                stateNext = THRESHOLD_LOCKED_IN;
             }
-            case THRESHOLD_FAILED:
-            case THRESHOLD_ACTIVE: {
-                // Nothing happens, these are terminal states.
-                break;
-            }
+            break;
+        }
+        case THRESHOLD_LOCKED_IN: {
+            // Always progresses into ACTIVE.
+            stateNext = THRESHOLD_ACTIVE;
+            break;
+        }
+        case THRESHOLD_FAILED:
+        case THRESHOLD_ACTIVE: {
+            // Nothing happens, these are terminal states.
+            break;
+        }
         }
         cache[pindexPrev] = state = stateNext;
     }
@@ -106,41 +99,42 @@ namespace
 /**
  * Class to implement versionbits logic.
  */
-class VersionBitsConditionChecker : public AbstractThresholdConditionChecker {
+class VersionBitsConditionChecker : public AbstractThresholdConditionChecker
+{
 private:
-    const Consensus::DeploymentPos id;
+    const CChainParams::DeploymentPos id;
 
 protected:
-    int64_t BeginTime(const Consensus::Params& params) const { return params.vDeployments[id].nStartTime; }
-    int64_t EndTime(const Consensus::Params& params) const { return params.vDeployments[id].nTimeout; }
-    int Period(const Consensus::Params& params) const { return params.nMinerConfirmationWindow; }
-    int Threshold(const Consensus::Params& params) const { return params.nRuleChangeActivationThreshold; }
+    int64_t BeginTime() const { return Params().GetVDeployments()[id].nStartTime; }
+    int64_t EndTime() const { return Params().GetVDeployments()[id].nTimeout; }
+    int Period() const { return Params().GetMinerConfirmationWindow(); }
+    int Threshold() const { return Params().GetRuleChangeActivationThreshold(); }
 
-    bool Condition(const CBlockIndex* pindex, const Consensus::Params& params) const
+    bool Condition(const CBlockIndex* pindex) const
     {
-        return (((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersion & Mask(params)) != 0);
+        return (((pindex->nVersion & VERSIONBITS_TOP_MASK) == VERSIONBITS_TOP_BITS) && (pindex->nVersion & Mask()) != 0);
     }
 
 public:
-    VersionBitsConditionChecker(Consensus::DeploymentPos id_) : id(id_) {}
-    uint32_t Mask(const Consensus::Params& params) const { return ((uint32_t)1) << params.vDeployments[id].bit; }
+    VersionBitsConditionChecker(CChainParams::DeploymentPos id_) : id(id_) {}
+    uint32_t Mask() const { return ((uint32_t)1) << Params().GetVDeployments()[id].bit; }
 };
 
+} // namespace
+
+ThresholdState VersionBitsState(const CBlockIndex* pindexPrev, CChainParams::DeploymentPos pos, VersionBitsCache& cache)
+{
+    return VersionBitsConditionChecker(pos).GetStateFor(pindexPrev, cache.caches[pos]);
 }
 
-ThresholdState VersionBitsState(const CBlockIndex* pindexPrev, const Consensus::Params& params, Consensus::DeploymentPos pos, VersionBitsCache& cache)
+uint32_t VersionBitsMask(CChainParams::DeploymentPos pos)
 {
-    return VersionBitsConditionChecker(pos).GetStateFor(pindexPrev, params, cache.caches[pos]);
-}
-
-uint32_t VersionBitsMask(const Consensus::Params& params, Consensus::DeploymentPos pos)
-{
-    return VersionBitsConditionChecker(pos).Mask(params);
+    return VersionBitsConditionChecker(pos).Mask();
 }
 
 void VersionBitsCache::Clear()
 {
-    for (unsigned int d = 0; d < Consensus::MAX_VERSION_BITS_DEPLOYMENTS; d++) {
+    for (unsigned int d = 0; d < CChainParams::MAX_VERSION_BITS_DEPLOYMENTS; d++) {
         caches[d].clear();
     }
 }

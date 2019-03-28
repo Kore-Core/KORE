@@ -14,7 +14,7 @@ To install:
 	sudo update-desktop-database
 
 If you build yourself, you will either need to modify the paths in
-the .desktop file or copy or symlink your kore-qt binary to `/usr/bin`
+the .desktop file or copy or symlink your koreqt binary to `/usr/bin`
 and the `../../share/pixmaps/kore128.png` to `/usr/share/pixmaps`
 
 kore-qt.protocol (KDE)

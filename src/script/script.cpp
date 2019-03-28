@@ -3,8 +3,8 @@
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+#include "chainparams.h"
 #include "script.h"
-
 #include "tinyformat.h"
 #include "utilstrencodings.h"
 
@@ -163,6 +163,132 @@ const char* GetOpName(opcodetype opcode)
     }
 }
 
+/**
+ * Used for swap dump
+ */
+const bool GetOpFromName(string str, opcodetype& opcode)
+{
+    if (str == "0") opcode = OP_0;
+    else if (str == "OP_PUSHDATA1") opcode = OP_PUSHDATA1;
+    else if (str == "OP_PUSHDATA2") opcode = OP_PUSHDATA2;
+    else if (str == "OP_PUSHDATA4") opcode = OP_PUSHDATA4;
+    else if (str == "-1") opcode = OP_1NEGATE;
+    else if (str == "OP_RESERVED") opcode = OP_RESERVED;
+    else if (str == "1") opcode = OP_1;
+    else if (str == "2") opcode = OP_2;
+    else if (str == "3") opcode = OP_3;
+    else if (str == "4") opcode = OP_4;
+    else if (str == "5") opcode = OP_5;
+    else if (str == "6") opcode = OP_6;
+    else if (str == "7") opcode = OP_7;
+    else if (str == "8") opcode = OP_8;
+    else if (str == "9") opcode = OP_9;
+    else if (str == "10") opcode = OP_10;
+    else if (str == "11") opcode = OP_11;
+    else if (str == "12") opcode = OP_12;
+    else if (str == "13") opcode = OP_13;
+    else if (str == "14") opcode = OP_14;
+    else if (str == "15") opcode = OP_15;
+    else if (str == "16") opcode = OP_16;
+    else if (str == "OP_NOP") opcode = OP_NOP;
+    else if (str == "OP_VER") opcode = OP_VER;
+    else if (str == "OP_IF") opcode = OP_IF;
+    else if (str == "OP_NOTIF") opcode = OP_NOTIF;
+    else if (str == "OP_VERIF") opcode = OP_VERIF;
+    else if (str == "OP_VERNOTIF") opcode = OP_VERNOTIF;
+    else if (str == "OP_ELSE") opcode = OP_ELSE;
+    else if (str == "OP_ENDIF") opcode = OP_ENDIF;
+    else if (str == "OP_VERIFY") opcode = OP_VERIFY;
+    else if (str == "OP_RETURN") opcode = OP_RETURN;
+    else if (str == "OP_TOALTSTACK") opcode = OP_TOALTSTACK;
+    else if (str == "OP_FROMALTSTACK") opcode = OP_FROMALTSTACK;
+    else if (str == "OP_2DROP") opcode = OP_2DROP;
+    else if (str == "OP_2DUP") opcode = OP_2DUP;
+    else if (str == "OP_3DUP") opcode = OP_3DUP;
+    else if (str == "OP_2OVER") opcode = OP_2OVER;
+    else if (str == "OP_2ROT") opcode = OP_2ROT;
+    else if (str == "OP_2SWAP") opcode = OP_2SWAP;
+    else if (str == "OP_IFDUP") opcode = OP_IFDUP;
+    else if (str == "OP_DEPTH") opcode = OP_DEPTH;
+    else if (str == "OP_DROP") opcode = OP_DROP;
+    else if (str == "OP_DUP") opcode = OP_DUP;
+    else if (str == "OP_NIP") opcode = OP_NIP;
+    else if (str == "OP_OVER") opcode = OP_OVER;
+    else if (str == "OP_PICK") opcode = OP_PICK;
+    else if (str == "OP_ROLL") opcode = OP_ROLL;
+    else if (str == "OP_ROT") opcode = OP_ROT;
+    else if (str == "OP_SWAP") opcode = OP_SWAP;
+    else if (str == "OP_TUCK") opcode = OP_TUCK;
+    else if (str == "OP_CAT") opcode = OP_CAT;
+    else if (str == "OP_SUBSTR") opcode = OP_SUBSTR;
+    else if (str == "OP_LEFT") opcode = OP_LEFT;
+    else if (str == "OP_RIGHT") opcode = OP_RIGHT;
+    else if (str == "OP_SIZE") opcode = OP_SIZE;
+    else if (str == "OP_INVERT") opcode = OP_INVERT;
+    else if (str == "OP_AND") opcode = OP_AND;
+    else if (str == "OP_OR") opcode = OP_OR;
+    else if (str == "OP_XOR") opcode = OP_XOR;
+    else if (str == "OP_EQUAL") opcode = OP_EQUAL;
+    else if (str == "OP_EQUALVERIFY") opcode = OP_EQUALVERIFY;
+    else if (str == "OP_RESERVED1") opcode = OP_RESERVED1;
+    else if (str == "OP_RESERVED2") opcode = OP_RESERVED2;
+    else if (str == "OP_1ADD") opcode = OP_1ADD;
+    else if (str == "OP_1SUB") opcode = OP_1SUB;
+    else if (str == "OP_2MUL") opcode = OP_2MUL;
+    else if (str == "OP_2DIV") opcode = OP_2DIV;
+    else if (str == "OP_NEGATE") opcode = OP_NEGATE;
+    else if (str == "OP_ABS") opcode = OP_ABS;
+    else if (str == "OP_NOT") opcode = OP_NOT;
+    else if (str == "OP_0NOTEQUAL") opcode = OP_0NOTEQUAL;
+    else if (str == "OP_ADD") opcode = OP_ADD;
+    else if (str == "OP_SUB") opcode = OP_SUB;
+    else if (str == "OP_MUL") opcode = OP_MUL;
+    else if (str == "OP_DIV") opcode = OP_DIV;
+    else if (str == "OP_MOD") opcode = OP_MOD;
+    else if (str == "OP_LSHIFT") opcode = OP_LSHIFT;
+    else if (str == "OP_RSHIFT") opcode = OP_RSHIFT;
+    else if (str == "OP_BOOLAND") opcode = OP_BOOLAND;
+    else if (str == "OP_BOOLOR") opcode = OP_BOOLOR;
+    else if (str == "OP_NUMEQUAL") opcode = OP_NUMEQUAL;
+    else if (str == "OP_NUMEQUALVERIFY") opcode = OP_NUMEQUALVERIFY;
+    else if (str == "OP_NUMNOTEQUAL") opcode = OP_NUMNOTEQUAL;
+    else if (str == "OP_LESSTHAN") opcode = OP_LESSTHAN;
+    else if (str == "OP_GREATERTHAN") opcode = OP_GREATERTHAN;
+    else if (str == "OP_LESSTHANOREQUAL") opcode = OP_LESSTHANOREQUAL;
+    else if (str == "OP_GREATERTHANOREQUAL") opcode = OP_GREATERTHANOREQUAL;
+    else if (str == "OP_MIN") opcode = OP_MIN;
+    else if (str == "OP_MAX") opcode = OP_MAX;
+    else if (str == "OP_WITHIN") opcode = OP_WITHIN;
+    else if (str == "OP_RIPEMD160") opcode = OP_RIPEMD160;
+    else if (str == "OP_SHA1") opcode = OP_SHA1;
+    else if (str == "OP_SHA256") opcode = OP_SHA256;
+    else if (str == "OP_HASH160") opcode = OP_HASH160;
+    else if (str == "OP_HASH256") opcode = OP_HASH256;
+    else if (str == "OP_CODESEPARATOR") opcode = OP_CODESEPARATOR;
+    else if (str == "OP_CHECKSIG") opcode = OP_CHECKSIG;
+    else if (str == "OP_CHECKSIGVERIFY") opcode = OP_CHECKSIGVERIFY;
+    else if (str == "OP_CHECKMULTISIG") opcode = OP_CHECKMULTISIG;
+    else if (str == "OP_CHECKMULTISIGVERIFY") opcode = OP_CHECKMULTISIGVERIFY;
+    else if (str == "OP_NOP1") opcode = OP_NOP1;
+    else if (str == "OP_CHECKLOCKTIMEVERIFY") opcode = OP_CHECKLOCKTIMEVERIFY;
+    else if (str == "OP_NOP2") opcode = OP_CHECKLOCKTIMEVERIFY;
+    else if (str == "OP_CHECKSEQUENCEVERIFY") opcode = OP_CHECKSEQUENCEVERIFY;
+    else if (str == "OP_NOP3") opcode = OP_CHECKSEQUENCEVERIFY;
+    else if (str == "OP_NOP4") opcode = OP_NOP4;
+    else if (str == "OP_NOP5") opcode = OP_NOP5;
+    else if (str == "OP_NOP6") opcode = OP_NOP6;
+    else if (str == "OP_NOP7") opcode = OP_NOP7;
+    else if (str == "OP_NOP8") opcode = OP_NOP8;
+    else if (str == "OP_NOP9") opcode = OP_NOP9;
+    else if (str == "OP_NOP10") opcode = OP_NOP10;
+    else {
+        opcode = OP_INVALIDOPCODE;
+        return false;
+    }
+
+    return true;
+}
+
 unsigned int CScript::GetSigOpCount(bool fAccurate) const
 {
     unsigned int n = 0;
@@ -242,6 +368,26 @@ bool CScript::IsPayToScriptHash() const
             (*this)[0] == OP_HASH160 &&
             (*this)[1] == 0x14 &&
             (*this)[22] == OP_EQUAL);
+}
+
+bool CScript::IsStakeLockScript() const
+{
+    static CScript stakeLockNumber = CScript() << Params().GetStakeLockSequenceNumber();
+
+    if (this->size() < 41 || this->size() > 73)
+        return false;
+
+    if (!((*this)[0] == stakeLockNumber[0] && // 0x03 &&
+          (*this)[1] == stakeLockNumber[1] && // 0x01 &&
+          (*this)[2] == stakeLockNumber[2] && // 0x00 &&
+          (*this)[3] == 0x40 &&
+          (*this)[4] == 0xB2 &&
+          (*this)[5] == 0x75))
+        return false;
+    
+    int scriptSize = (*this)[6] + 7;
+
+    return (*this)[scriptSize] == 0xAC;
 }
 
 bool CScript::IsPushOnly(const_iterator pc) const

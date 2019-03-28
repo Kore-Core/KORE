@@ -1,5 +1,6 @@
-// Copyright (c) 2011-2015 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2011-2013 The Bitcoin developers
+// Copyright (c) 2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_QT_SENDCOINSENTRY_H
@@ -10,14 +11,14 @@
 #include <QStackedWidget>
 
 class WalletModel;
-class PlatformStyle;
 
-namespace Ui {
-    class SendCoinsEntry;
+namespace Ui
+{
+class SendCoinsEntry;
 }
 
 /**
- * A single entry in the dialog for sending kores.
+ * A single entry in the dialog for sending bitcoins.
  * Stacked widget, with different UIs for payment requests
  * with a strong payee identity.
  */
@@ -26,49 +27,46 @@ class SendCoinsEntry : public QStackedWidget
     Q_OBJECT
 
 public:
-    explicit SendCoinsEntry(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit SendCoinsEntry(QWidget* parent = 0);
     ~SendCoinsEntry();
 
-    void setModel(WalletModel *model);
+    void setModel(WalletModel* model);
     bool validate();
     SendCoinsRecipient getValue();
 
     /** Return whether the entry is still empty and unedited */
     bool isClear();
 
-    void setValue(const SendCoinsRecipient &value);
-    void setAddress(const QString &address);
+    void setValue(const SendCoinsRecipient& value);
+    void setAddress(const QString& address);
 
     /** Set up the tab chain manually, as Qt messes up the tab chain by default in some cases
      *  (issue https://bugreports.qt-project.org/browse/QTBUG-10907).
      */
-    QWidget *setupTabChain(QWidget *prev);
+    QWidget* setupTabChain(QWidget* prev);
 
     void setFocus();
 
-public Q_SLOTS:
+public slots:
     void clear();
 
-Q_SIGNALS:
-    void removeEntry(SendCoinsEntry *entry);
+signals:
+    void removeEntry(SendCoinsEntry* entry);
     void payAmountChanged();
-    void subtractFeeFromAmountChanged();
-    
-private Q_SLOTS:
+
+private slots:
     void deleteClicked();
-    void on_payTo_textChanged(const QString &address);
+    void on_payTo_textChanged(const QString& address);
     void on_addressBookButton_clicked();
     void on_pasteButton_clicked();
     void updateDisplayUnit();
-    void payAmountChange();
 
 private:
     SendCoinsRecipient recipient;
-    Ui::SendCoinsEntry *ui;
-    WalletModel *model;
-    const PlatformStyle *platformStyle;
+    Ui::SendCoinsEntry* ui;
+    WalletModel* model;
 
-    bool updateLabel(const QString &address);
+    bool updateLabel(const QString& address);
 };
 
 #endif // BITCOIN_QT_SENDCOINSENTRY_H

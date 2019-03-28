@@ -1,3 +1,7 @@
+// Copyright (c) 2017 The KORE developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #ifndef MULTISENDDIALOG_H
 #define MULTISENDDIALOG_H
 
@@ -7,7 +11,7 @@ namespace Ui
 {
 class MultiSendDialog;
 }
-class PlatformStyle;
+
 class WalletModel;
 class QLineEdit;
 class MultiSendDialog : public QDialog
@@ -16,12 +20,12 @@ class MultiSendDialog : public QDialog
     void updateCheckBoxes();
 
 public:
-    explicit MultiSendDialog(const PlatformStyle *platformStyle, QWidget* parent = 0);
+    explicit MultiSendDialog(QWidget* parent = 0);
     ~MultiSendDialog();
     void setModel(WalletModel* model);
     void setAddress(const QString& address);
     void setAddress(const QString& address, QLineEdit* addrEdit);
-private Q_SLOTS:
+private slots:
     void on_viewButton_clicked();
     void on_addButton_clicked();
     void on_deleteButton_clicked();
@@ -32,7 +36,6 @@ private Q_SLOTS:
 private:
     Ui::MultiSendDialog* ui;
     WalletModel* model;
-    const PlatformStyle *platformStyle;
 };
 
 #endif // MULTISENDDIALOG_H

@@ -1,7 +1,7 @@
 ### SpendFrom ###
 
 Use the raw transactions API to send coins received on a particular
-address (or addresses). 
+address (or addresses).
 
 ### Usage: ###
 Depends on [jsonrpc](http://json-rpc.org/).

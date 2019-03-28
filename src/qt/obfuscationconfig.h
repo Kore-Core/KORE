@@ -1,3 +1,8 @@
+// Copyright (c) 2014-2016 The Dash Developers
+// Copyright (c) 2016-2017 The KORE developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #ifndef OBFUSCATIONCONFIG_H
 #define OBFUSCATIONCONFIG_H
 
@@ -27,7 +32,7 @@ private:
     WalletModel* model;
     void configure(bool enabled, int coins, int rounds);
 
-private Q_SLOTS:
+private slots:
 
     void clickBasic();
     void clickHigh();

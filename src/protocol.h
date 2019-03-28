@@ -1,6 +1,8 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2014-2015 The Dash developers
+// Copyright (c) 2016-2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef __cplusplus
@@ -29,13 +31,13 @@
 class CMessageHeader
 {
 public:
-    typedef unsigned char MessageStartChars[MESSAGE_START_SIZE];
+    typedef unsigned char MessageStartChars[MESSAGE_START_SIZE]; // Legacy
 
-    CMessageHeader(const MessageStartChars& pchMessageStartIn);
-    CMessageHeader(const MessageStartChars& pchMessageStartIn, const char* pszCommand, unsigned int nMessageSizeIn);
+    CMessageHeader();
+    CMessageHeader(const char* pszCommand, unsigned int nMessageSizeIn);
 
     std::string GetCommand() const;
-    bool IsValid(const MessageStartChars& messageStart) const;
+    bool IsValid() const;
 
     ADD_SERIALIZE_METHODS;
 
@@ -63,6 +65,116 @@ public:
     char pchCommand[COMMAND_SIZE];
     unsigned int nMessageSize;
     unsigned int nChecksum;
+};
+
+/** nServices flags */
+enum ServiceFlags : uint64_t {
+    NODE_NETWORK = (1 << 0),
+
+    // NODE_BLOOM means the node is capable and willing to handle bloom-filtered connections.
+    // Bitcoin Core nodes used to support this by default, without advertising this bit,
+    // but no longer do as of protocol version 70011 (= NO_BLOOM_VERSION)
+    NODE_BLOOM = (1 << 2),
+
+	// NODE_BLOOM_WITHOUT_MN means the node has the same features as NODE_BLOOM with the only difference
+	// that the node doens't want to receive master nodes messages. (the 1<<3 was not picked as constant because on bitcoin 0.14 is witness and we want that update here )
+
+	 NODE_BLOOM_WITHOUT_MN = (1 << 4),
+
+    // Bits 24-31 are reserved for temporary experiments. Just pick a bit that
+    // isn't getting used, or one not being used much, and notify the
+    // bitcoin-development mailing list. Remember that service bits are just
+    // unauthenticated advertisements, so your code must be robust against
+    // collisions and other cases where nodes may be advertising a service they
+    // do not actually support. Other service bits should be allocated via the
+    // BIP process.
+};
+
+/** A CService with information about it as peer */
+class CAddress : public CService
+{
+public:
+    CAddress();
+    explicit CAddress(CService ipIn, uint64_t nServicesIn = NODE_NETWORK);
+
+    void Init();
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    {
+        if (ser_action.ForRead())
+            Init();
+        if (nType & SER_DISK)
+            READWRITE(nVersion);
+        if ((nType & SER_DISK) ||
+            (nVersion >= CADDR_TIME_VERSION && !(nType & SER_GETHASH)))
+            READWRITE(nTime);
+        READWRITE(nServices);
+        READWRITE(*(CService*)this);
+    }
+
+    // TODO: make private (improves encapsulation)
+public:
+    uint64_t nServices;
+
+    // disk and network only
+    unsigned int nTime;
+
+    // memory only
+    int64_t nLastTry;
+};
+
+/** inv message data */
+class CInv
+{
+public:
+    CInv();
+    CInv(int typeIn, const uint256& hashIn);
+    CInv(const std::string& strType, const uint256& hashIn);
+
+    ADD_SERIALIZE_METHODS;
+
+    template <typename Stream, typename Operation>
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    {
+        READWRITE(type);
+        READWRITE(hash);
+    }
+
+    friend bool operator<(const CInv& a, const CInv& b);
+
+    bool IsKnownType() const;
+    bool IsMasterNodeType() const;
+    const char* GetCommand() const;
+    std::string ToString() const;
+
+    // TODO: make private (improves encapsulation)
+public:
+    int type;
+    uint256 hash;
+};
+
+enum {
+    MSG_TX = 1,
+    MSG_BLOCK,
+    // Nodes may always request a MSG_FILTERED_BLOCK in a getdata, however,
+    // MSG_FILTERED_BLOCK should not appear in any invs except as a part of getdata.
+    MSG_FILTERED_BLOCK,
+    MSG_TXLOCK_REQUEST,
+    MSG_TXLOCK_VOTE,
+    MSG_SPORK,
+    MSG_MASTERNODE_WINNER,
+    MSG_MASTERNODE_SCANNING_ERROR,
+    MSG_BUDGET_VOTE,
+    MSG_BUDGET_PROPOSAL,
+    MSG_BUDGET_FINALIZED,
+    MSG_BUDGET_FINALIZED_VOTE,
+    MSG_MASTERNODE_QUORUM,
+    MSG_MASTERNODE_ANNOUNCE,
+    MSG_MASTERNODE_PING,
+    MSG_DSTX
 };
 
 /**
@@ -236,115 +348,4 @@ extern const char *DSTX;
 extern const char *SSC;
 extern const char *MNVS;
 };
-
-/* Get a vector of all valid message types (see above) */
-const std::vector<std::string> &getAllNetMessageTypes();
-
-/** nServices flags */
-enum {
-    // NODE_NETWORK means that the node is capable of serving the block chain. It is currently
-    // set by all KoreCore nodes, and is unset by SPV clients or other peers that just want
-    // network services but don't provide them.
-    NODE_NETWORK = (1 << 0),
-    // NODE_GETUTXO means the node is capable of responding to the getutxo protocol request.
-    // KoreCore does not support this but a patch set called KoreXT does.
-    // See BIP 64 for details on how this is implemented.
-    NODE_GETUTXO = (1 << 1),
-    // NODE_BLOOM means the node is capable and willing to handle bloom-filtered connections.
-    // KoreCore nodes used to support this by default, without advertising this bit,
-    // but no longer do as of protocol version 70011 (= NO_BLOOM_VERSION)
-    NODE_BLOOM = (1 << 2),
-
-    // Bits 24-31 are reserved for temporary experiments. Just pick a bit that
-    // isn't getting used, or one not being used much, and notify the
-    // kore-development mailing list. Remember that service bits are just
-    // unauthenticated advertisements, so your code must be robust against
-    // collisions and other cases where nodes may be advertising a service they
-    // do not actually support. Other service bits should be allocated via the
-    // BIP process.
-};
-
-/** A CService with information about it as peer */
-class CAddress : public CService
-{
-public:
-    CAddress();
-    explicit CAddress(CService ipIn, uint64_t nServicesIn = NODE_NETWORK);
-
-    void Init();
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
-    {
-        if (ser_action.ForRead())
-            Init();
-        if (nType & SER_DISK)
-            READWRITE(nVersion);
-        if ((nType & SER_DISK) ||
-            (nVersion >= CADDR_TIME_VERSION && !(nType & SER_GETHASH)))
-            READWRITE(nTime);
-        READWRITE(nServices);
-        READWRITE(*(CService*)this);
-    }
-
-    // TODO: make private (improves encapsulation)
-public:
-    uint64_t nServices;
-
-    // disk and network only
-    unsigned int nTime;
-};
-
-/** inv message data */
-class CInv
-{
-public:
-    CInv();
-    CInv(int typeIn, const uint256& hashIn);
-    CInv(const std::string& strType, const uint256& hashIn);
-
-    ADD_SERIALIZE_METHODS;
-
-    template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
-    {
-        READWRITE(type);
-        READWRITE(hash);
-    }
-
-    friend bool operator<(const CInv& a, const CInv& b);
-
-    bool IsKnownType() const;
-    const char* GetCommand() const;
-    std::string ToString() const;
-
-    // TODO: make private (improves encapsulation)
-public:
-    int type;
-    uint256 hash;
-};
-
-enum {
-    MSG_TX = 1,
-    MSG_BLOCK,
-    // Nodes may always request a MSG_FILTERED_BLOCK in a getdata, however,
-    // MSG_FILTERED_BLOCK should not appear in any invs except as a part of getdata.
-    MSG_FILTERED_BLOCK,
-    MSG_TXLOCK_REQUEST,
-    MSG_TXLOCK_VOTE,
-    MSG_SPORK,
-    MSG_MASTERNODE_WINNER,
-    MSG_MASTERNODE_SCANNING_ERROR,
-    MSG_BUDGET_VOTE,
-    MSG_BUDGET_PROPOSAL,
-    MSG_BUDGET_FINALIZED,
-    MSG_BUDGET_FINALIZED_VOTE,
-    MSG_MASTERNODE_QUORUM,
-    MSG_MASTERNODE_ANNOUNCE,
-    MSG_MASTERNODE_PING,
-    MSG_DSTX
-};
-
 #endif // BITCOIN_PROTOCOL_H

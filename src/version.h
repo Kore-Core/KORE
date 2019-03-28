@@ -1,4 +1,6 @@
-// Copyright (c) 2012-2014 The KoreCore developers
+// Copyright (c) 2012-2014 The Bitcoin developers
+// Copyright (c) 2014-2015 The Dash developers
+// Copyright (c) 2015-2018 The KORE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -9,7 +11,11 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 70101;
+static const int PROTOCOL_VERSION = 130000;
+// not using _CLIENT_VERSION_MAJOR because it is still 0
+// 13 => _CLIENT_VERSION_MINOR
+// 00 => _CLIENT_VERSION_REVISION
+// 00 => _CLIENT_VERSION_BUILD
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
@@ -17,33 +23,18 @@ static const int INIT_PROTO_VERSION = 209;
 //! In this version, 'getheaders' was introduced.
 static const int GETHEADERS_VERSION = 31800;
 
-//! demand canonical block signatures starting from this version
-static const int CANONICAL_BLOCK_SIG_VERSION = 70012;
+//! disconnect from peers older than this proto version
+static const int MIN_PEER_PROTO_VERSION_PRE_FORK = 70101;
 
 //! disconnect from peers older than this proto version
-static const int MIN_PEER_PROTO_VERSION = 70100;
+static const int MIN_PEER_PROTO_VERSION = PROTOCOL_VERSION;
 
-//! minimum peer version accepted by DarksendPool
-static const int MIN_POOL_PEER_PROTO_VERSION = 70100;
-
-//! minimum peer version for masternode budgets
-static const int MIN_BUDGET_PEER_PROTO_VERSION = 70100;
-
-//! minimum peer version for masternode winner broadcasts
-static const int MIN_MNW_PEER_PROTO_VERSION = 70100;
-
-//! minimum peer version that can receive masternode payments
-// V1 - Last protocol version before update
-// V2 - Newest protocol version
-static const int MIN_MASTERNODE_PAYMENT_PROTO_VERSION_1 = 70100;
+//! masternodes older than this proto version use old strMessage format for mnannounce
+static const int MIN_PEER_MNANNOUNCE = PROTOCOL_VERSION;
 
 //! nTime field added to CAddress, starting with this version;
 //! if possible, avoid requesting addresses nodes older than this
 static const int CADDR_TIME_VERSION = 31402;
-
-//! only request blocks from nodes outside this range of versions
-static const int NOBLKS_VERSION_START = 32000;
-static const int NOBLKS_VERSION_END = 32400;
 
 //! BIP 0031, pong message, is enabled for all versions AFTER this one
 static const int BIP0031_VERSION = 60000;
@@ -57,7 +48,14 @@ static const int MEMPOOL_GD_VERSION = 60002;
 //! "filter*" commands are disabled without NODE_BLOOM after and including this version
 static const int NO_BLOOM_VERSION = 70011;
 
+// Legacy
+//! minimum peer version for masternode budgets
+static const int MIN_BUDGET_PEER_PROTO_VERSION = 70101;
+
+//! demand canonical block signatures starting from this version
+static const int CANONICAL_BLOCK_SIG_VERSION = 70012;
+
 //! "sendheaders" command and announcing blocks with headers starts with this version
-static const int SENDHEADERS_VERSION = 70012;
+static const int SENDHEADERS_VERSION_LEGACY = 70012;
 
 #endif // BITCOIN_VERSION_H

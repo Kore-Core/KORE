@@ -1,18 +1,16 @@
-// Copyright (c) 2012-2015 The Kore Core developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2012-2013 The Bitcoin Core developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "key.h"
 #include "keystore.h"
 #include "main.h"
-#include "policy/policy.h"
 #include "script/script.h"
 #include "script/script_error.h"
 #include "script/sign.h"
-#include "test/test_kore.h"
 
 #ifdef ENABLE_WALLET
-#include "wallet/wallet_ismine.h"
+#include "wallet_ismine.h"
 #endif
 
 #include <vector>
@@ -49,7 +47,7 @@ Verify(const CScript& scriptSig, const CScript& scriptPubKey, bool fStrict, Scri
 }
 
 
-BOOST_FIXTURE_TEST_SUITE(script_P2SH_tests, BasicTestingSetup)
+BOOST_AUTO_TEST_SUITE(script_P2SH_tests)
 
 BOOST_AUTO_TEST_CASE(sign)
 {
@@ -212,7 +210,7 @@ BOOST_AUTO_TEST_CASE(set)
 BOOST_AUTO_TEST_CASE(is)
 {
     // Test CScript::IsPayToScriptHash()
-    uint160 dummy;
+    uint160 dummy(0);
     CScript p2sh;
     p2sh << OP_HASH160 << ToByteVector(dummy) << OP_EQUAL;
     BOOST_CHECK(p2sh.IsPayToScriptHash());
@@ -345,6 +343,15 @@ BOOST_AUTO_TEST_CASE(AreInputsStandard)
     BOOST_CHECK(::AreInputsStandard(txTo, coins));
     // 22 P2SH sigops for all inputs (1 for vin[0], 6 for vin[3], 15 for vin[4]
     BOOST_CHECK_EQUAL(GetP2SHSigOpCount(txTo, coins), 22U);
+
+    // Make sure adding crap to the scriptSigs makes them non-standard:
+    for (int i = 0; i < 3; i++)
+    {
+        CScript t = txTo.vin[i].scriptSig;
+        txTo.vin[i].scriptSig = (CScript() << 11) + t;
+        BOOST_CHECK(!::AreInputsStandard(txTo, coins));
+        txTo.vin[i].scriptSig = t;
+    }
 
     CMutableTransaction txToNonStd1;
     txToNonStd1.vout.resize(1);

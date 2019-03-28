@@ -1,11 +1,12 @@
-// Copyright (c) 2011-2015 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2011-2013 The Bitcoin developers
+// Copyright (c) 2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_QT_PEERTABLEMODEL_H
 #define BITCOIN_QT_PEERTABLEMODEL_H
 
-#include "main.h" // For CNodeStateStats
+#include "main.h"
 #include "net.h"
 
 #include <QAbstractTableModel>
@@ -27,9 +28,8 @@ struct CNodeCombinedStats {
 class NodeLessThan
 {
 public:
-    NodeLessThan(int nColumn, Qt::SortOrder fOrder) :
-        column(nColumn), order(fOrder) {}
-    bool operator()(const CNodeCombinedStats &left, const CNodeCombinedStats &right) const;
+    NodeLessThan(int nColumn, Qt::SortOrder fOrder) : column(nColumn), order(fOrder) {}
+    bool operator()(const CNodeCombinedStats& left, const CNodeCombinedStats& right) const;
 
 private:
     int column;
@@ -45,8 +45,8 @@ class PeerTableModel : public QAbstractTableModel
     Q_OBJECT
 
 public:
-    explicit PeerTableModel(ClientModel *parent = 0);
-    const CNodeCombinedStats *getNodeStats(int idx);
+    explicit PeerTableModel(ClientModel* parent = 0);
+    const CNodeCombinedStats* getNodeStats(int idx);
     int getRowByNodeId(NodeId nodeid);
     void startAutoRefresh();
     void stopAutoRefresh();
@@ -59,23 +59,23 @@ public:
 
     /** @name Methods overridden from QAbstractTableModel
         @{*/
-    int rowCount(const QModelIndex &parent) const;
-    int columnCount(const QModelIndex &parent) const;
-    QVariant data(const QModelIndex &index, int role) const;
+    int rowCount(const QModelIndex& parent) const;
+    int columnCount(const QModelIndex& parent) const;
+    QVariant data(const QModelIndex& index, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    QModelIndex index(int row, int column, const QModelIndex &parent) const;
-    Qt::ItemFlags flags(const QModelIndex &index) const;
+    QModelIndex index(int row, int column, const QModelIndex& parent) const;
+    Qt::ItemFlags flags(const QModelIndex& index) const;
     void sort(int column, Qt::SortOrder order);
     /*@}*/
 
-public Q_SLOTS:
+public slots:
     void refresh();
 
 private:
-    ClientModel *clientModel;
+    ClientModel* clientModel;
     QStringList columns;
-    PeerTablePriv *priv;
-    QTimer *timer;
+    PeerTablePriv* priv;
+    QTimer* timer;
 };
 
 #endif // BITCOIN_QT_PEERTABLEMODEL_H

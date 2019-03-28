@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Kore Core developers
+#!/usr/bin/env python2
+# Copyright (c) 2014 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,13 +7,13 @@
 # on chains of different lengths, and join the network together again.
 # This gives us two tips, verify that it works.
 
-from test_framework.test_framework import KoreTestFramework
-from test_framework.util import assert_equal
+from test_framework import BitcoinTestFramework
+from util import assert_equal
 
-class GetChainTipsTest (KoreTestFramework):
+class GetChainTipsTest (BitcoinTestFramework):
 
     def run_test (self):
-        KoreTestFramework.run_test (self)
+        BitcoinTestFramework.run_test (self)
 
         tips = self.nodes[0].getchaintips ()
         assert_equal (len (tips), 1)
@@ -23,8 +23,8 @@ class GetChainTipsTest (KoreTestFramework):
 
         # Split the network and build two chains of different lengths.
         self.split_network ()
-        self.nodes[0].generate(10)
-        self.nodes[2].generate(20)
+        self.nodes[0].setgenerate (True, 10);
+        self.nodes[2].setgenerate (True, 20);
         self.sync_all ()
 
         tips = self.nodes[1].getchaintips ()

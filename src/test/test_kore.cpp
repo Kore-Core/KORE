@@ -1,157 +1,66 @@
-// Copyright (c) 2011-2015 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2011-2013 The Bitcoin Core developers
+// Copyright (c) 2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#define BOOST_TEST_MODULE KoreTest Suite
+#define BOOST_TEST_MODULE Kore Test Suite
 
-#include "test_kore.h"
-
-#include "chainparams.h"
-#include "consensus/consensus.h"
-#include "consensus/validation.h"
-#include "key.h"
-#include "main.h"
-#include "miner.h"
-#include "pubkey.h"
 #include "random.h"
 #include "txdb.h"
-#include "txmempool.h"
+#include "tests_util.h"
 #include "ui_interface.h"
 #include "util.h"
 #ifdef ENABLE_WALLET
-#include "wallet/db.h"
-#include "wallet/wallet.h"
+#include "db.h"
+#include "wallet.h"
 #endif
 
 #include <boost/filesystem.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
 
-CClientUIInterface uiInterface; // Declared but not defined in ui_interface.h
-CWallet* pwalletMain;
+CClientUIInterface uiInterface;
 
 extern bool fPrintToConsole;
 extern void noui_connect();
 
-BasicTestingSetup::BasicTestingSetup(const std::string& chainName)
-{
+struct TestingSetup {
+    boost::filesystem::path pathTemp;
+    boost::thread_group threadGroup;
+    ECCVerifyHandle globalVerifyHandle;
+
+    TestingSetup() {
         ECC_Start();
         SetupEnvironment();
-        SetupNetworking();
-        fPrintToDebugLog = false; // don't want to write to debug.log file
+        fPrintToDebugLog = true; // don't want to write to debug.log file
         fCheckBlockIndex = true;
-        SelectParams(chainName);
+        fDebug = true;
+        SelectParams(CBaseChainParams::UNITTEST);
         noui_connect();
-}
-
-BasicTestingSetup::~BasicTestingSetup()
-{
-        ECC_Stop();
-}
-
-TestingSetup::TestingSetup(const std::string& chainName) : BasicTestingSetup(chainName)
-{
-    const CChainParams& chainparams = Params();
-#ifdef ENABLE_WALLET
-        bitdb.MakeMock();
-#endif
-        ClearDatadirCache();
-        pathTemp = GetTempPath() / strprintf("test_kore_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
+        //pathTemp = GetTempPath() / strprintf("test_kore_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
+        pathTemp = boost::filesystem::path("./delete-me") / strprintf("test_kore_%lu_%i", (unsigned long)GetTime(), (int)(GetRand(100000)));
+        cout << "Running at :" << pathTemp << endl;
         boost::filesystem::create_directories(pathTemp);
         mapArgs["-datadir"] = pathTemp.string();
-        pblocktree = new CBlockTreeDB(1 << 20, true);
-        pcoinsdbview = new CCoinsViewDB(1 << 23, true);
-        pcoinsTip = new CCoinsViewCache(pcoinsdbview);
-        InitBlockIndex(chainparams);
-#ifdef ENABLE_WALLET
-        bool fFirstRun;
-        pwalletMain = new CWallet("wallet.dat");
-        pwalletMain->LoadWallet(fFirstRun);
-        RegisterValidationInterface(pwalletMain);
-#endif
+        mapArgs["-printstakemodifier"] = "1";
+        InitializeDBTest(pathTemp);
         nScriptCheckThreads = 3;
         for (int i=0; i < nScriptCheckThreads-1; i++)
             threadGroup.create_thread(&ThreadScriptCheck);
         RegisterNodeSignals(GetNodeSignals());
-}
-
-TestingSetup::~TestingSetup()
-{
-        UnregisterNodeSignals(GetNodeSignals());
+    }
+    ~TestingSetup()
+    {
         threadGroup.interrupt_all();
         threadGroup.join_all();
-#ifdef ENABLE_WALLET
-        UnregisterValidationInterface(pwalletMain);
-        delete pwalletMain;
-        pwalletMain = NULL;
-#endif
-        UnloadBlockIndex();
-        delete pcoinsTip;
-        delete pcoinsdbview;
-        delete pblocktree;
-#ifdef ENABLE_WALLET
-        bitdb.Flush(true);
-        bitdb.Reset();
-#endif
-        boost::filesystem::remove_all(pathTemp);
-}
-
-TestChain100Setup::TestChain100Setup() : TestingSetup(CBaseChainParams::REGTEST)
-{
-    // Generate a 100-block chain:
-    coinbaseKey.MakeNewKey(true);
-    CScript scriptPubKey = CScript() <<  ToByteVector(coinbaseKey.GetPubKey()) << OP_CHECKSIG;
-    for (int i = 0; i < COINBASE_MATURITY; i++)
-    {
-        std::vector<CMutableTransaction> noTxns;
-        CBlock b = CreateAndProcessBlock(noTxns, scriptPubKey);
-        coinbaseTxns.push_back(b.vtx[0]);
+        UnregisterNodeSignals(GetNodeSignals());
+        FinalizeDBTest(true);
+        ECC_Stop();
+        //boost::filesystem::remove_all(pathTemp);
     }
-}
+};
 
-//
-// Create a new block with just given transactions, coinbase paying to
-// scriptPubKey, and try to add it to the current chain.
-//
-CBlock
-TestChain100Setup::CreateAndProcessBlock(const std::vector<CMutableTransaction>& txns, const CScript& scriptPubKey)
-{
-    const CChainParams& chainparams = Params();
-    CBlockTemplate *pblocktemplate = CreateNewBlock(chainparams, scriptPubKey, NULL, false);
-    CBlock& block = pblocktemplate->block;
-
-    // Replace mempool-selected txns with just coinbase plus passed-in txns:
-    block.vtx.resize(1);
-    BOOST_FOREACH(const CMutableTransaction& tx, txns)
-        block.vtx.push_back(tx);
-    // IncrementExtraNonce creates a valid coinbase and merkleRoot
-    unsigned int extraNonce = 0;
-    IncrementExtraNonce(&block, chainActive.Tip(), extraNonce);
-
-    while (!CheckProofOfWork(block.GetHash(), block.nBits, chainparams.GetConsensus())) ++block.nNonce;
-
-    CValidationState state;
-    ProcessNewBlock(state, chainparams, NULL, &block, true, NULL);
-
-    CBlock result = block;
-    delete pblocktemplate;
-    return result;
-}
-
-TestChain100Setup::~TestChain100Setup()
-{
-}
-
-
-CTxMemPoolEntry TestMemPoolEntryHelper::FromTx(CMutableTransaction &tx, CTxMemPool *pool) {
-    CTransaction txn(tx);
-    bool hasNoDependencies = pool ? pool->HasNoInputsOf(tx) : hadNoDependencies;
-    // Hack to assume either its completely dependent on other mempool txs or not at all
-    CAmount inChainValue = hasNoDependencies ? txn.GetValueOut() : 0;
-
-    return CTxMemPoolEntry(txn, nFee, nTime, dPriority, nHeight,
-                           hasNoDependencies, inChainValue, spendsCoinbase, sigOpCount, lp);
-}
+BOOST_GLOBAL_FIXTURE(TestingSetup);
 
 void Shutdown(void* parg)
 {

@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-# Copyright (c) 2015-2016 The Kore Core developers
+#!/usr/bin/env python2
+# Copyright (c) 2015 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -7,15 +7,21 @@
 # Test ZMQ interface
 #
 
-from test_framework.test_framework import KoreTestFramework
+from test_framework.test_framework import BitcoinTestFramework
 from test_framework.util import *
 import zmq
-import struct
+import binascii
 
-import http.client
-import urllib.parse
+try:
+    import http.client as httplib
+except ImportError:
+    import httplib
+try:
+    import urllib.parse as urlparse
+except ImportError:
+    import urlparse
 
-class ZMQTest (KoreTestFramework):
+class ZMQTest (BitcoinTestFramework):
 
     port = 28332
 
@@ -38,7 +44,7 @@ class ZMQTest (KoreTestFramework):
         genhashes = self.nodes[0].generate(1)
         self.sync_all()
 
-        print("listen...")
+        print "listen..."
         msg = self.zmqSubSocket.recv_multipart()
         topic = msg[0]
         body = msg[1]

@@ -5,7 +5,9 @@ Various coding styles have been used during the history of the codebase,
 and the result is not very consistent. However, we're now trying to converge to
 a single style, so please use it in new code. Old code will be converted
 gradually.
-- Basic rules specified in src/.clang-format. Use a recent clang-format-3.5 to format automatically.
+- Basic rules specified in [src/.clang-format](/src/.clang-format).
+  Use a recent clang-format to format automatically using one of the [dev scripts]
+  (/contrib/devtools/README.md#clang-formatpy).
   - Braces on new lines for namespaces, classes, functions, methods.
   - Braces on the same line for everything else.
   - 4 space indentation (no tabs) for every block except namespaces.
@@ -71,6 +73,12 @@ To describe a member or variable use:
 int var; //!< Detailed description after the member
 ```
 
+or
+```cpp
+//! Description before the member
+int var;
+```
+
 Also OK:
 ```c++
 ///
@@ -108,18 +116,14 @@ on all categories (and give you a very large debug.log file).
 The Qt code routes qDebug() output to debug.log under category "qt": run with -debug=qt
 to see it.
 
-**testnet and regtest modes**
+**testnet mode**
 
-Run with the -testnet option to run with "play kores" on the test network, if you
+Run with the -testnet option to run with "play KOREs (tKORE)" on the test network, if you
 are testing multi-machine code that needs to operate across the internet.
-
-If you are testing something that can run on one machine, run with the -regtest option.
-In regression test mode, blocks can be created on-demand; see qa/rpc-tests/ for tests
-that run in -regtest mode.
 
 **DEBUG_LOCKORDER**
 
-Kore Core is a multithreaded application, and deadlocks or other multithreading bugs
+KORE Core is a multithreaded application, and deadlocks or other multithreading bugs
 can be very difficult to track down. Compiling with -DDEBUG_LOCKORDER (configure
 CXXFLAGS="-DDEBUG_LOCKORDER -g") inserts run-time checks to keep track of which locks
 are held, and adds warnings to the debug.log file if inconsistencies are detected.
@@ -168,7 +172,7 @@ Threads
 
 - ThreadRPCServer : Remote procedure call handler, listens on port 8332 for connections and services them.
 
-- KoreMiner : Generates kores (if wallet is enabled).
+- BitcoinMiner : Generates bitcoins (if wallet is enabled).
 
 - Shutdown : Does an orderly shutdown of everything.
 
@@ -178,7 +182,7 @@ Ignoring IDE/editor files
 In closed-source environments in which everyone uses the same IDE it is common
 to add temporary files it produces to the project-wide `.gitignore` file.
 
-However, in open source software such as Kore Core, where everyone uses
+However, in open source software such as KORE Core, where everyone uses
 their own editors/IDE/tools, it is less common. Only you know what files your
 editor produces and this may change from version to version. The canonical way
 to do this is thus to create your local gitignore. Add this to `~/.gitconfig`:
@@ -208,9 +212,9 @@ Development guidelines
 ============================
 
 A few non-style-related recommendations for developers, as well as points to
-pay attention to for reviewers of Kore Core code.
+pay attention to for reviewers of KORE Core code.
 
-General Kore Core
+General KORE Core
 ----------------------
 
 - New features should be exposed on RPC first, then can be made available in the GUI
@@ -223,9 +227,9 @@ General Kore Core
   - *Rationale*: Makes sure that they pass thorough testing, and that the tester will keep passing
      on the master branch. Otherwise all new pull requests will start failing the tests, resulting in
      confusion and mayhem
- 
+
   - *Explanation*: If the test suite is to be updated for a change, this has to
-    be done first 
+    be done first
 
 Wallet
 -------
@@ -257,7 +261,7 @@ General C++
       the `.h` to the `.cpp` should not result in build errors
 
 - Use the RAII (Resource Acquisition Is Initialization) paradigm where possible. For example by using
-  `scoped_pointer` for allocations in a function.
+  `unique_ptr` for allocations in a function.
 
   - *Rationale*: This avoids memory and resource leaks, and ensures exception safety
 
@@ -276,10 +280,9 @@ C++ data structures
   - *Rationale*: Behavior is undefined. In C++ parlor this means "may reformat
     the universe", in practice this has resulted in at least one hard-to-debug crash bug
 
-- Watch out for vector out-of-bounds exceptions. `&vch[0]` is illegal for an
-  empty vector, `&vch[vch.size()]` is always illegal. Use `begin_ptr(vch)` and
-  `end_ptr(vch)` to get the begin and end pointer instead (defined in
-  `serialize.h`)
+- Watch out for out-of-bounds vector access. `&vch[vch.size()]` is illegal,
+  including `&vch[0]` for an empty vector. Use `vch.data()` and `vch.data() +
+  vch.size()` instead.
 
 - Vector bounds checking is only enabled in debug mode. Do not rely on it
 
@@ -315,20 +318,19 @@ Strings and formatting
     buffer overflows and surprises with `\0` characters. Also some C string manipulations
     tend to act differently depending on platform, or even the user locale
 
-- Use `ParseInt32`, `ParseInt64`, `ParseDouble` from `utilstrencodings.h` for number parsing
+- Use `ParseInt32`, `ParseInt64`, `ParseUInt32`, `ParseUInt64`, `ParseDouble` from `utilstrencodings.h` for number parsing
 
   - *Rationale*: These functions do overflow checking, and avoid pesky locale issues
 
 - For `strprintf`, `LogPrint`, `LogPrintf` formatting characters don't need size specifiers
 
-  - *Rationale*: Kore Core uses tinyformat, which is type safe. Leave them out to avoid confusion
+  - *Rationale*: KORE Core uses tinyformat, which is type safe. Leave them out to avoid confusion
 
 Threads and synchronization
 ----------------------------
 
 - Build and run tests with `-DDEBUG_LOCKORDER` to verify that no potential
-  deadlocks are introduced. As of 0.12, this is defined by default when
-  configuring with `--enable-debug`
+  deadlocks are introduced.
 
 - When using `LOCK`/`TRY_LOCK` be aware that the lock exists in the context of
   the current scope, so surround the statement and the code that needs the lock
@@ -373,3 +375,51 @@ GUI
   - *Rationale*: Model classes pass through events and data from the core, they
     should not interact with the user. That's where View classes come in. The converse also
     holds: try to not directly access core data structures from Views.
+
+Git and github tips
+---------------------
+
+- For resolving merge/rebase conflicts, it can be useful to enable diff3 style using
+  `git config merge.conflictstyle diff3`. Instead of
+
+        <<<
+        yours
+        ===
+        theirs
+        >>>
+
+  you will see
+
+        <<<
+        yours
+        |||
+        original
+        ===
+        theirs
+        >>>
+
+  This may make it much clearer what caused the conflict. In this style, you can often just look
+  at what changed between *original* and *theirs*, and mechanically apply that to *yours* (or the other way around).
+
+- When reviewing patches which change indentation in C++ files, use `git diff -w` and `git show -w`. This makes
+  the diff algorithm ignore whitespace changes. This feature is also available on github.com, by adding `?w=1`
+  at the end of any URL which shows a diff.
+
+- When reviewing patches that change symbol names in many places, use `git diff --word-diff`. This will instead
+  of showing the patch as deleted/added *lines*, show deleted/added *words*.
+
+- When reviewing patches that move code around, try using
+  `git diff --patience commit~:old/file.cpp commit:new/file/name.cpp`, and ignoring everything except the
+  moved body of code which should show up as neither `+` or `-` lines. In case it was not a pure move, this may
+  even work when combined with the `-w` or `--word-diff` options described above.
+
+- When looking at other's pull requests, it may make sense to add the following section to your `.git/config`
+  file:
+
+        [remote "upstream-pull"]
+                fetch = +refs/pull/*:refs/remotes/upstream-pull/*
+                url = git@github.com:KORE-Project/KORE.git
+
+  This will add an `upstream-pull` remote to your git repository, which can be fetched using `git fetch --all`
+  or `git fetch upstream-pull`. Afterwards, you can use `upstream-pull/NUMBER/head` in arguments to `git show`,
+  `git checkout` and anywhere a commit id would be acceptable to see the changes from pull request NUMBER.

@@ -1,6 +1,9 @@
+// Copyright (c) 2014-2015 The Dash developers
+// Copyright (c) 2015-2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "obfuscation-relay.h"
-
 
 CObfuScationRelay::CObfuScationRelay()
 {
@@ -11,7 +14,7 @@ CObfuScationRelay::CObfuScationRelay()
     out = CTxOut();
 }
 
-CObfuScationRelay::CObfuScationRelay(CTxIn& vinMasternodeIn, std::vector<unsigned char>& vchSigIn, int nBlockHeightIn, int nRelayTypeIn, CTxIn& in2, CTxOut& out2)
+CObfuScationRelay::CObfuScationRelay(CTxIn& vinMasternodeIn, vector<unsigned char>& vchSigIn, int nBlockHeightIn, int nRelayTypeIn, CTxIn& in2, CTxOut& out2)
 {
     vinMasternode = vinMasternodeIn;
     vchSig = vchSigIn;
@@ -79,7 +82,7 @@ bool CObfuScationRelay::VerifyMessage(std::string strSharedKey)
 
 void CObfuScationRelay::Relay()
 {
-    int nCount = std::min(mnodeman.CountEnabled(MIN_POOL_PEER_PROTO_VERSION), 20);
+    int nCount = std::min(mnodeman.CountEnabled(ActiveProtocol()), 20);
     int nRank1 = (rand() % nCount) + 1;
     int nRank2 = (rand() % nCount) + 1;
 
@@ -96,7 +99,7 @@ void CObfuScationRelay::Relay()
 
 void CObfuScationRelay::RelayThroughNode(int nRank)
 {
-    CMasternode* pmn = mnodeman.GetMasternodeByRank(nRank, nBlockHeight, MIN_POOL_PEER_PROTO_VERSION);
+    CMasternode* pmn = mnodeman.GetMasternodeByRank(nRank, nBlockHeight, ActiveProtocol());
 
     if (pmn != NULL) {
         //printf("RelayThroughNode %s\n", pmn->addr.ToString().c_str());

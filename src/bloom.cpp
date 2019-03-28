@@ -1,11 +1,12 @@
-// Copyright (c) 2012-2015 The Kore Core developers
+// Copyright (c) 2012-2014 The Bitcoin developers
+// Copyright (c) 2017 The KORE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "bloom.h"
 
-#include "primitives/transaction.h"
 #include "hash.h"
+#include "primitives/transaction.h"
 #include "script/script.h"
 #include "script/standard.h"
 #include "random.h"
@@ -22,22 +23,22 @@
 using namespace std;
 
 CBloomFilter::CBloomFilter(unsigned int nElements, double nFPRate, unsigned int nTweakIn, unsigned char nFlagsIn) :
-    /**
-     * The ideal size for a bloom filter with a given number of elements and false positive rate is:
-     * - nElements * log(fp rate) / ln(2)^2
-     * We ignore filter parameters which will create a bloom filter larger than the protocol limits
-     */
-    vData(min((unsigned int)(-1  / LN2SQUARED * nElements * log(nFPRate)), MAX_BLOOM_FILTER_SIZE * 8) / 8),
-    /**
-     * The ideal number of hash functions is filter size * ln(2) / number of elements
-     * Again, we ignore filter parameters which will create a bloom filter with more hash functions than the protocol limits
-     * See https://en.wikipedia.org/wiki/Bloom_filter for an explanation of these formulas
-     */
-    isFull(false),
-    isEmpty(false),
-    nHashFuncs(min((unsigned int)(vData.size() * 8 / nElements * LN2), MAX_HASH_FUNCS)),
-    nTweak(nTweakIn),
-    nFlags(nFlagsIn)
+ /**	
+ * The ideal size for a bloom filter with a given number of elements and false positive rate is:
+ * - nElements * log(fp rate) / ln(2)^2
+ * We ignore filter parameters which will create a bloom filter larger than the protocol limits
+ */
+	vData(min((unsigned int)(-1 / LN2SQUARED * nElements * log(nFPRate)), MAX_BLOOM_FILTER_SIZE * 8) / 8),
+ /**
+ * The ideal number of hash functions is filter size * ln(2) / number of elements
+ * Again, we ignore filter parameters which will create a bloom filter with more hash functions than the protocol limits
+ * See https://en.wikipedia.org/wiki/Bloom_filter for an explanation of these formulas
+ */
+	isFull(false),
+	isEmpty(false),
+  nHashFuncs(min((unsigned int)(vData.size() * 8 / nElements * LN2), MAX_HASH_FUNCS)),
+  nTweak(nTweakIn),
+  nFlags(nFlagsIn)
 {
 }
 
@@ -52,6 +53,7 @@ CBloomFilter::CBloomFilter(unsigned int nElements, double nFPRate, unsigned int 
 {
 }
 
+
 inline unsigned int CBloomFilter::Hash(unsigned int nHashNum, const std::vector<unsigned char>& vDataToHash) const
 {
     // 0xFBA4C795 chosen as it guarantees a reasonable bit difference between nHashNum values.
@@ -62,8 +64,7 @@ void CBloomFilter::insert(const vector<unsigned char>& vKey)
 {
     if (isFull)
         return;
-    for (unsigned int i = 0; i < nHashFuncs; i++)
-    {
+    for (unsigned int i = 0; i < nHashFuncs; i++) {
         unsigned int nIndex = Hash(i, vKey);
         // Sets bit nIndex of vData
         vData[nIndex >> 3] |= (1 << (7 & nIndex));
@@ -91,8 +92,7 @@ bool CBloomFilter::contains(const vector<unsigned char>& vKey) const
         return true;
     if (isEmpty)
         return false;
-    for (unsigned int i = 0; i < nHashFuncs; i++)
-    {
+    for (unsigned int i = 0; i < nHashFuncs; i++) {
         unsigned int nIndex = Hash(i, vKey);
         // Checks bit nIndex of vData
         if (!(vData[nIndex >> 3] & (1 << (7 & nIndex))))
@@ -117,7 +117,7 @@ bool CBloomFilter::contains(const uint256& hash) const
 
 void CBloomFilter::clear()
 {
-    vData.assign(vData.size(),0);
+    vData.assign(vData.size(), 0);
     isFull = false;
     isEmpty = true;
 }
@@ -146,31 +146,27 @@ bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
     if (contains(hash))
         fFound = true;
 
-    for (unsigned int i = 0; i < tx.vout.size(); i++)
-    {
+    for (unsigned int i = 0; i < tx.vout.size(); i++) {
         const CTxOut& txout = tx.vout[i];
         // Match if the filter contains any arbitrary script data element in any scriptPubKey in tx
         // If this matches, also add the specific output that was matched.
-        // This means clients don't have to update the filter themselves when a new relevant tx 
+        // This means clients don't have to update the filter themselves when a new relevant tx
         // is discovered in order to find spending transactions, which avoids round-tripping and race conditions.
         CScript::const_iterator pc = txout.scriptPubKey.begin();
         vector<unsigned char> data;
-        while (pc < txout.scriptPubKey.end())
-        {
+        while (pc < txout.scriptPubKey.end()) {
             opcodetype opcode;
             if (!txout.scriptPubKey.GetOp(pc, opcode, data))
                 break;
-            if (data.size() != 0 && contains(data))
-            {
+            if (data.size() != 0 && contains(data)) {
                 fFound = true;
                 if ((nFlags & BLOOM_UPDATE_MASK) == BLOOM_UPDATE_ALL)
                     insert(COutPoint(hash, i));
-                else if ((nFlags & BLOOM_UPDATE_MASK) == BLOOM_UPDATE_P2PUBKEY_ONLY)
-                {
+                else if ((nFlags & BLOOM_UPDATE_MASK) == BLOOM_UPDATE_P2PUBKEY_ONLY) {
                     txnouttype type;
                     vector<vector<unsigned char> > vSolutions;
                     if (Solver(txout.scriptPubKey, type, vSolutions) &&
-                            (type == TX_PUBKEY || type == TX_MULTISIG))
+                        (type == TX_PUBKEY || type == TX_MULTISIG))
                         insert(COutPoint(hash, i));
                 }
                 break;
@@ -181,8 +177,7 @@ bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
     if (fFound)
         return true;
 
-    BOOST_FOREACH(const CTxIn& txin, tx.vin)
-    {
+    BOOST_FOREACH (const CTxIn& txin, tx.vin) {
         // Match if the filter contains an outpoint tx spends
         if (contains(txin.prevout))
             return true;
@@ -190,8 +185,7 @@ bool CBloomFilter::IsRelevantAndUpdate(const CTransaction& tx)
         // Match if the filter contains any arbitrary script data element in any scriptSig in tx
         CScript::const_iterator pc = txin.scriptSig.begin();
         vector<unsigned char> data;
-        while (pc < txin.scriptSig.end())
-        {
+        while (pc < txin.scriptSig.end()) {
             opcodetype opcode;
             if (!txin.scriptSig.GetOp(pc, opcode, data))
                 break;
@@ -207,14 +201,14 @@ void CBloomFilter::UpdateEmptyFull()
 {
     bool full = true;
     bool empty = true;
-    for (unsigned int i = 0; i < vData.size(); i++)
-    {
+    for (unsigned int i = 0; i < vData.size(); i++) {
         full &= vData[i] == 0xff;
         empty &= vData[i] == 0;
     }
     isFull = full;
     isEmpty = empty;
 }
+
 
 CRollingBloomFilter::CRollingBloomFilter(unsigned int nElements, double fpRate) :
     b1(nElements * 2, fpRate, 0), b2(nElements * 2, fpRate, 0)

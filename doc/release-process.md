@@ -1,217 +1,271 @@
 Release Process
 ====================
 
-* Update translations (ping wumpus, Diapolo or tcatm on IRC) see [translation_process.md](https://github.com/kore/kore/blob/master/doc/translation_process.md#syncing-with-transifex)
-* Update [bips.md](bips.md) to account for changes since the last release.
-* Update hardcoded [seeds](/contrib/seeds)
+Before every release candidate:
 
-* * *
+* Update translations (ping Fuzzbawls on Slack) see [translation_process.md](https://github.com/KORE-Project/KORE/blob/master/doc/translation_process.md#synchronising-translations).
 
-###First time / New builders
+Before every minor and major release:
+
+* Update version in `configure.ac` (don't forget to set `CLIENT_VERSION_IS_RELEASE` to `true`)
+* Write release notes (see below)
+
+Before every major release:
+
+* Update hardcoded [seeds](/contrib/seeds/README.md), see [this pull request](https://github.com/bitcoin/bitcoin/pull/7415) for an example.
+* Update [`BLOCK_CHAIN_SIZE`](/src/qt/intro.cpp) to the current size plus some overhead.
+* Update `src/chainparams.cpp` with statistics about the transaction count and rate.
+* Update version of `contrib/gitian-descriptors/*.yml`: usually one'd want to do this on master after branching off the release - but be sure to at least do it before a new major release
+
+### First time / New builders
+
+If you're using the automated script (found in [contrib/gitian-build.sh](/contrib/gitian-build.sh)), then at this point you should run it with the "--setup" command. Otherwise ignore this.
+
 Check out the source code in the following directory hierarchy.
 
-	cd /path/to/your/toplevel/build
-	git clone https://github.com/kore/gitian.sigs.git
-	git clone https://github.com/kore/kore-detached-sigs.git
-	git clone https://github.com/devrandom/gitian-builder.git
-	git clone https://github.com/kore/kore.git
+    cd /path/to/your/toplevel/build
+    git clone https://github.com/kore-project/gitian.sigs.git
+    git clone https://github.com/kore-project/kore-detached-sigs.git
+    git clone https://github.com/devrandom/gitian-builder.git
+    git clone https://github.com/kore-project/kore.git
 
-###Kore maintainers/release engineers, update (commit) version in sources
+### KORE maintainers/release engineers, suggestion for writing release notes
 
-	pushd ./kore
-	contrib/verifysfbinaries/verify.sh
-	configure.ac
-	doc/README*
-	doc/Doxyfile
-	contrib/gitian-descriptors/*.yml
-	src/clientversion.h (change CLIENT_VERSION_IS_RELEASE to true)
+Write release notes. git shortlog helps a lot, for example:
 
-	# tag version in git
+    git shortlog --no-merges v(current version, e.g. 0.7.2)..v(new version, e.g. 0.8.0)
 
-	git tag -s v(new version, e.g. 0.8.0)
 
-	# write release notes. git shortlog helps a lot, for example:
+Generate list of authors:
 
-	git shortlog --no-merges v(current version, e.g. 0.7.2)..v(new version, e.g. 0.8.0)
-	popd
+    git log --format='%aN' "$*" | sort -ui | sed -e 's/^/- /'
 
-* * *
+Tag version (or release candidate) in git
 
-###Setup and perform Gitian builds
+    git tag -s v(new version, e.g. 0.8.0)
 
- Setup Gitian descriptors:
+### Setup and perform Gitian builds
 
-	pushd ./kore
-	export SIGNER=(your Gitian key, ie bluematt, sipa, etc)
-	export VERSION=(new version, e.g. 0.8.0)
-	git fetch
-	git checkout v${VERSION}
-	popd
+If you're using the automated script (found in [contrib/gitian-build.sh](/contrib/gitian-build.sh)), then at this point you should run it with the "--build" command. Otherwise ignore this.
 
-  Ensure your gitian.sigs are up-to-date if you wish to gverify your builds against other Gitian signatures.
+Setup Gitian descriptors:
 
-	pushd ./gitian.sigs
-	git pull
-	popd
+    pushd ./kore
+    export SIGNER=(your Gitian key, ie bluematt, sipa, etc)
+    export VERSION=(new version, e.g. 0.8.0)
+    git fetch
+    git checkout v${VERSION}
+    popd
 
-  Ensure gitian-builder is up-to-date to take advantage of new caching features (`e9741525c` or later is recommended).
+Ensure your gitian.sigs are up-to-date if you wish to gverify your builds against other Gitian signatures.
 
-	pushd ./gitian-builder
-	git pull
+    pushd ./gitian.sigs
+    git pull
+    popd
 
-###Fetch and create inputs: (first time, or when dependency versions change)
+Ensure gitian-builder is up-to-date:
 
-	mkdir -p inputs
-	wget -P inputs https://korecore.org/cfields/osslsigncode-Backports-to-1.7.1.patch
-	wget -P inputs http://downloads.sourceforge.net/project/osslsigncode/osslsigncode/osslsigncode-1.7.1.tar.gz
+    pushd ./gitian-builder
+    git pull
+    popd
 
- Register and download the Apple SDK: see [OS X readme](README_osx.txt) for details.
+### Fetch and create inputs: (first time, or when dependency versions change)
 
- https://developer.apple.com/devcenter/download.action?path=/Developer_Tools/xcode_6.1.1/xcode_6.1.1.dmg
+    pushd ./gitian-builder
+    mkdir -p inputs
+    wget -P inputs https://bitcoincore.org/cfields/osslsigncode-Backports-to-1.7.1.patch
+    wget -P inputs http://downloads.sourceforge.net/project/osslsigncode/osslsigncode/osslsigncode-1.7.1.tar.gz
+    popd
 
- Using a Mac, create a tarball for the 10.9 SDK and copy it to the inputs directory:
+Create the OS X SDK tarball, see the [OS X readme](README_osx.md) for details, and copy it into the inputs directory.
 
-	tar -C /Volumes/Xcode/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/ -czf MacOSX10.9.sdk.tar.gz MacOSX10.9.sdk
-
-###Optional: Seed the Gitian sources cache and offline git repositories
+### Optional: Seed the Gitian sources cache and offline git repositories
 
 By default, Gitian will fetch source files as needed. To cache them ahead of time:
 
-	make -C ../kore/depends download SOURCES_PATH=`pwd`/cache/common
+    pushd ./gitian-builder
+    make -C ../kore/depends download SOURCES_PATH=`pwd`/cache/common
+    popd
 
 Only missing files will be fetched, so this is safe to re-run for each build.
 
 NOTE: Offline builds must use the --url flag to ensure Gitian fetches only from local URLs. For example:
-```
-./bin/gbuild --url kore=/path/to/kore,signature=/path/to/sigs {rest of arguments}
-```
+
+    pushd ./gitian-builder
+    ./bin/gbuild --url kore=/path/to/kore,signature=/path/to/sigs {rest of arguments}
+    popd
+
 The gbuild invocations below <b>DO NOT DO THIS</b> by default.
 
-###Build and sign Kore Core for Linux, Windows, and OS X:
+### Build and sign KORE Core for Linux, Windows, and OS X:
 
-	./bin/gbuild --commit kore=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-linux.yml
-	./bin/gsign --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-linux.yml
+    pushd ./gitian-builder
+    ./bin/gbuild --memory 3000 --commit kore=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-linux.yml
     mv build/out/kore-*.tar.gz build/out/src/kore-*.tar.gz ../
 
-	./bin/gbuild --commit kore=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-win.yml
-	./bin/gsign --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gbuild --memory 3000 --commit kore=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-win-unsigned --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-win.yml
     mv build/out/kore-*-win-unsigned.tar.gz inputs/kore-win-unsigned.tar.gz
     mv build/out/kore-*.zip build/out/kore-*.exe ../
 
-	./bin/gbuild --commit kore=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-osx.yml
-	./bin/gsign --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gbuild --memory 3000 --commit kore=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-unsigned --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-osx.yml
     mv build/out/kore-*-osx-unsigned.tar.gz inputs/kore-osx-unsigned.tar.gz
     mv build/out/kore-*.tar.gz build/out/kore-*.dmg ../
 
-  Build output expected:
+    ./bin/gbuild --memory 3000 --commit kore=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-aarch64.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-linux --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-aarch64.yml
+    mv build/out/kore-*.tar.gz build/out/src/kore-*.tar.gz ../
+    popd
 
-  1. source tarball (kore-${VERSION}.tar.gz)
-  2. linux 32-bit and 64-bit dist tarballs (kore-${VERSION}-linux[32|64].tar.gz)
-  3. windows 32-bit and 64-bit unsigned installers and dist zips (kore-${VERSION}-win[32|64]-setup-unsigned.exe, kore-${VERSION}-win[32|64].zip)
-  4. OS X unsigned installer and dist tarball (kore-${VERSION}-osx-unsigned.dmg, kore-${VERSION}-osx64.tar.gz)
-  5. Gitian signatures (in gitian.sigs/${VERSION}-<linux|{win,osx}-unsigned>/(your Gitian key)/
+Build output expected:
 
-###Verify other gitian builders signatures to your own. (Optional)
+  1. source tarball (`kore-${VERSION}.tar.gz`)
+  2. linux 32-bit and 64-bit dist tarballs (`kore-${VERSION}-linux[32|64].tar.gz`)
+  3. windows 32-bit and 64-bit unsigned installers and dist zips (`kore-${VERSION}-win[32|64]-setup-unsigned.exe`, `kore-${VERSION}-win[32|64].zip`)
+  4. OS X unsigned installer and dist tarball (`kore-${VERSION}-osx-unsigned.dmg`, `kore-${VERSION}-osx64.tar.gz`)
+  5. Gitian signatures (in `gitian.sigs/${VERSION}-<linux|{win,osx}-unsigned>/(your Gitian key)/`)
 
-  Add other gitian builders keys to your gpg keyring
+### Verify other gitian builders signatures to your own. (Optional)
 
-	gpg --import ../kore/contrib/gitian-downloader/*.pgp
+Add other gitian builders keys to your gpg keyring, and/or refresh keys.
 
-  Verify the signatures
+    gpg --import kore/contrib/gitian-keys/*.pgp
+    gpg --refresh-keys
 
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../kore/contrib/gitian-descriptors/gitian-linux.yml
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../kore/contrib/gitian-descriptors/gitian-win.yml
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../kore/contrib/gitian-descriptors/gitian-osx.yml
+Verify the signatures
 
-	popd
+    pushd ./gitian-builder
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-linux ../kore/contrib/gitian-descriptors/gitian-linux.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-unsigned ../kore/contrib/gitian-descriptors/gitian-win.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-unsigned ../kore/contrib/gitian-descriptors/gitian-osx.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-aarch64 ../kore/contrib/gitian-descriptors/gitian-aarch64.yml
+    popd
 
-###Next steps:
+### Next steps:
 
 Commit your signature to gitian.sigs:
 
-	pushd gitian.sigs
-	git add ${VERSION}-linux/${SIGNER}
-	git add ${VERSION}-win-unsigned/${SIGNER}
-	git add ${VERSION}-osx-unsigned/${SIGNER}
-	git commit -a
-	git push  # Assuming you can push to the gitian.sigs tree
-	popd
+    pushd gitian.sigs
+    git add ${VERSION}-linux/${SIGNER}
+    git add ${VERSION}-win-unsigned/${SIGNER}
+    git add ${VERSION}-osx-unsigned/${SIGNER}
+    git add ${VERSION}-aarch64/${SIGNER}
+    git commit -a
+    git push  # Assuming you can push to the gitian.sigs tree
+    popd
 
-  Wait for Windows/OS X detached signatures:
-	Once the Windows/OS X builds each have 3 matching signatures, they will be signed with their respective release keys.
-	Detached signatures will then be committed to the [kore-detached-sigs](https://github.com/kore/kore-detached-sigs) repository, which can be combined with the unsigned apps to create signed binaries.
+Codesigner only: Create Windows/OS X detached signatures:
+- Only one person handles codesigning. Everyone else should skip to the next step.
+- Only once the Windows/OS X builds each have 3 matching signatures may they be signed with their respective release keys.
 
-  Create (and optionally verify) the signed OS X binary:
+Codesigner only: Sign the osx binary:
 
-	pushd ./gitian-builder
-	./bin/gbuild -i --commit signature=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-osx-signer.yml
-	./bin/gsign --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-osx-signer.yml
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../kore/contrib/gitian-descriptors/gitian-osx-signer.yml
-	mv build/out/kore-osx-signed.dmg ../kore-${VERSION}-osx.dmg
-	popd
+    transfer kore-osx-unsigned.tar.gz to osx for signing
+    tar xf kore-osx-unsigned.tar.gz
+    ./detached-sig-create.sh -s "Key ID"
+    Enter the keychain password and authorize the signature
+    Move signature-osx.tar.gz back to the gitian host
 
-  Create (and optionally verify) the signed Windows binaries:
+Codesigner only: Sign the windows binaries:
 
-	pushd ./gitian-builder
-	./bin/gbuild -i --commit signature=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-win-signer.yml
-	./bin/gsign --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-win-signer.yml
-	./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-signed ../kore/contrib/gitian-descriptors/gitian-win-signer.yml
-	mv build/out/kore-*win64-setup.exe ../kore-${VERSION}-win64-setup.exe
-	mv build/out/kore-*win32-setup.exe ../kore-${VERSION}-win32-setup.exe
-	popd
+    tar xf kore-win-unsigned.tar.gz
+    ./detached-sig-create.sh -key /path/to/codesign.key
+    Enter the passphrase for the key when prompted
+    signature-win.tar.gz will be created
+
+Codesigner only: Commit the detached codesign payloads:
+
+    cd ~/kore-detached-sigs
+    checkout the appropriate branch for this release series
+    rm -rf *
+    tar xf signature-osx.tar.gz
+    tar xf signature-win.tar.gz
+    git add -a
+    git commit -m "point to ${VERSION}"
+    git tag -s v${VERSION} HEAD
+    git push the current branch and new tag
+
+Non-codesigners: wait for Windows/OS X detached signatures:
+
+- Once the Windows/OS X builds each have 3 matching signatures, they will be signed with their respective release keys.
+- Detached signatures will then be committed to the [kore-detached-sigs](https://github.com/KORE-Project/kore-detached-sigs) repository, which can be combined with the unsigned apps to create signed binaries.
+
+Create (and optionally verify) the signed OS X binary:
+
+    pushd ./gitian-builder
+    ./bin/gbuild -i --commit signature=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-osx-signed --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-osx-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-osx-signed ../kore/contrib/gitian-descriptors/gitian-osx-signer.yml
+    mv build/out/kore-osx-signed.dmg ../kore-${VERSION}-osx.dmg
+    popd
+
+Create (and optionally verify) the signed Windows binaries:
+
+    pushd ./gitian-builder
+    ./bin/gbuild -i --commit signature=v${VERSION} ../kore/contrib/gitian-descriptors/gitian-win-signer.yml
+    ./bin/gsign --signer $SIGNER --release ${VERSION}-win-signed --destination ../gitian.sigs/ ../kore/contrib/gitian-descriptors/gitian-win-signer.yml
+    ./bin/gverify -v -d ../gitian.sigs/ -r ${VERSION}-win-signed ../kore/contrib/gitian-descriptors/gitian-win-signer.yml
+    mv build/out/kore-*win64-setup.exe ../kore-${VERSION}-win64-setup.exe
+    mv build/out/kore-*win32-setup.exe ../kore-${VERSION}-win32-setup.exe
+    popd
 
 Commit your signature for the signed OS X/Windows binaries:
 
-	pushd gitian.sigs
-	git add ${VERSION}-osx-signed/${SIGNER}
-	git add ${VERSION}-win-signed/${SIGNER}
-	git commit -a
-	git push  # Assuming you can push to the gitian.sigs tree
-	popd
-
--------------------------------------------------------------------------
+    pushd gitian.sigs
+    git add ${VERSION}-osx-signed/${SIGNER}
+    git add ${VERSION}-win-signed/${SIGNER}
+    git commit -a
+    git push  # Assuming you can push to the gitian.sigs tree
+    popd
 
 ### After 3 or more people have gitian-built and their results match:
 
 - Create `SHA256SUMS.asc` for the builds, and GPG-sign it:
+
 ```bash
 sha256sum * > SHA256SUMS
+```
+
+The list of files should be:
+```
+kore-${VERSION}-aarch64-linux-gnu.tar.gz
+kore-${VERSION}-arm-linux-gnueabihf.tar.gz
+kore-${VERSION}-i686-pc-linux-gnu.tar.gz
+kore-${VERSION}-x86_64-linux-gnu.tar.gz
+kore-${VERSION}-osx64.tar.gz
+kore-${VERSION}-osx.dmg
+kore-${VERSION}.tar.gz
+kore-${VERSION}-win32-setup.exe
+kore-${VERSION}-win32.zip
+kore-${VERSION}-win64-setup.exe
+kore-${VERSION}-win64.zip
+```
+The `*-debug*` files generated by the gitian build contain debug symbols
+for troubleshooting by developers. It is assumed that anyone that is interested
+in debugging can run gitian to generate the files for themselves. To avoid
+end-user confusion about which file to pick, as well as save storage
+space *do not upload these to the kore.org server*.
+
+- GPG-sign it, delete the unsigned file:
+```
 gpg --digest-algo sha256 --clearsign SHA256SUMS # outputs SHA256SUMS.asc
 rm SHA256SUMS
 ```
 (the digest algorithm is forced to sha256 to avoid confusion of the `Hash:` header that GPG adds with the SHA256 used for the files)
 Note: check that SHA256SUMS itself doesn't end up in SHA256SUMS, which is a spurious/nonsensical entry.
 
-- Upload zips and installers, as well as `SHA256SUMS.asc` from last step, to the kore.org server
-  into `/var/www/bin/kore-core-${VERSION}`
-
-- Update kore.org version
-
-  - First, check to see if the Kore.org maintainers have prepared a
-    release: https://github.com/kore-dot-org/kore.org/labels/Releases
-
-      - If they have, it will have previously failed their Travis CI
-        checks because the final release files weren't uploaded.
-        Trigger a Travis CI rebuild---if it passes, merge.
-
-  - If they have not prepared a release, follow the Kore.org release
-    instructions: https://github.com/kore-dot-org/kore.org#release-notes
-
-  - After the pull request is merged, the website will automatically show the newest version within 15 minutes, as well
-    as update the OS download links. Ping @saivann/@harding (saivann/harding on Freenode) in case anything goes wrong
+- Upload zips and installers, as well as `SHA256SUMS.asc` from last step, to the GitHub release (see below)
 
 - Announce the release:
 
-  - Release sticky on koretalk: https://koretalk.org/index.php?board=1.0
+  - bitcointalk announcement thread
 
-  - Kore-development mailing list
+  - Optionally twitter, reddit /r/kore, ... but this will usually sort out itself
 
-  - Update title of #kore on Freenode IRC
+  - Archive release notes for the new version to `doc/release-notes/` (branch `master` and branch of the release)
 
-  - Optionally reddit /r/Kore, ... but this will usually sort out itself
+  - Create a [new GitHub release](https://github.com/KORE-Project/KORE/releases/new) with a link to the archived release notes.
 
-- Notify BlueMatt so that he can start building [the PPAs](https://launchpad.net/~kore/+archive/ubuntu/kore)
-
-- Add release notes for the new version to the directory `doc/release-notes` in git master
-
-- Celebrate
+  - Celebrate

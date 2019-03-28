@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>729</width>
-    <height>152</height>
+    <height>156</height>
    </rect>
   </property>
   <property name="focusPolicy">
@@ -21,20 +21,14 @@
     <string>This is a normal payment.</string>
    </property>
    <property name="frameShape">
-    <enum>QFrame::NoFrame</enum>
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <property name="topMargin">
-     <number>8</number>
-    </property>
-    <property name="bottomMargin">
-     <number>4</number>
-    </property>
-    <property name="horizontalSpacing">
+    <property name="spacing">
      <number>12</number>
-    </property>
-    <property name="verticalSpacing">
-     <number>8</number>
     </property>
     <item row="0" column="0">
      <widget class="QLabel" name="payToLabel">
@@ -57,7 +51,7 @@
       <item>
        <widget class="QValidatedLineEdit" name="payTo">
         <property name="toolTip">
-         <string>The Kore address to send the payment to</string>
+         <string>The KORE address to send the payment to</string>
         </property>
        </widget>
       </item>
@@ -72,12 +66,6 @@
         <property name="icon">
          <iconset resource="../kore.qrc">
           <normaloff>:/icons/address-book</normaloff>:/icons/address-book</iconset>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>22</width>
-          <height>22</height>
-         </size>
         </property>
         <property name="shortcut">
          <string>Alt+A</string>
@@ -96,12 +84,6 @@
          <iconset resource="../kore.qrc">
           <normaloff>:/icons/editpaste</normaloff>:/icons/editpaste</iconset>
         </property>
-        <property name="iconSize">
-         <size>
-          <width>22</width>
-          <height>22</height>
-         </size>
-        </property>
         <property name="shortcut">
          <string>Alt+P</string>
         </property>
@@ -119,18 +101,12 @@
          <iconset resource="../kore.qrc">
           <normaloff>:/icons/remove</normaloff>:/icons/remove</iconset>
         </property>
-        <property name="iconSize">
-         <size>
-          <width>22</width>
-          <height>22</height>
-         </size>
-        </property>
        </widget>
       </item>
      </layout>
     </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="labellLabel">
+     <widget class="QLabel" name="labelLabel">
       <property name="text">
        <string>&amp;Label:</string>
       </property>
@@ -163,62 +139,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayoutAmount" stretch="0,1,0,0,0,0,0">
-      <item>
-       <widget class="KoreAmountField" name="payAmount"/>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="checkboxSubtractFeeFromAmount">
-        <property name="toolTip">
-         <string>The fee will be deducted from the amount being sent. The recipient will receive less kores than you enter in the amount field. If multiple recipients are selected, the fee is split equally.</string>
-        </property>
-        <property name="text">
-         <string>S&amp;ubtract fee from amount</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="label_3">
-        <property name="text">
-         <string>BTC : </string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="btcvalue">
-        <property name="text">
-         <string>0.0</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QLabel" name="label">
-        <property name="text">
-         <string>USD : </string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="usdvalue">
-        <property name="text">
-         <string>0.0</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
+     <widget class="BitcoinAmountField" name="payAmount"/>
     </item>
     <item row="3" column="0">
      <widget class="QLabel" name="messageLabel">
@@ -233,23 +154,16 @@
     <item row="3" column="1">
      <widget class="QLabel" name="messageTextLabel">
       <property name="toolTip">
-       <string>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</string>
+       <string>A message that was attached to the KORE: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</string>
       </property>
       <property name="textFormat">
        <enum>Qt::PlainText</enum>
       </property>
      </widget>
     </item>
-    <item row="4" column="0" colspan="2">
-     <widget class="Line" name="line">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-     </widget>
-    </item>
    </layout>
   </widget>
-  <widget class="QFrame" name="SendCoins_UnauthenticatedPaymentRequest">
+  <widget class="QFrame" name="SendCoins_InsecurePaymentRequest">
    <property name="palette">
     <palette>
      <active>
@@ -666,13 +580,16 @@
     </palette>
    </property>
    <property name="toolTip">
-    <string>This is an unauthenticated payment request.</string>
+    <string>This is an unverified payment request.</string>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
    </property>
    <property name="frameShape">
-    <enum>QFrame::NoFrame</enum>
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
    </property>
    <layout class="QGridLayout" name="gridLayout_is">
     <property name="spacing">
@@ -743,7 +660,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="KoreAmountField" name="payAmount_is">
+     <widget class="BitcoinAmountField" name="payAmount_is">
       <property name="acceptDrops">
        <bool>false</bool>
       </property>
@@ -751,7 +668,7 @@
     </item>
    </layout>
   </widget>
-  <widget class="QFrame" name="SendCoins_AuthenticatedPaymentRequest">
+  <widget class="QFrame" name="SendCoins_SecurePaymentRequest">
    <property name="palette">
     <palette>
      <active>
@@ -1195,13 +1112,16 @@
     </palette>
    </property>
    <property name="toolTip">
-    <string>This is an authenticated payment request.</string>
+    <string>This is a verified payment request.</string>
    </property>
    <property name="autoFillBackground">
     <bool>true</bool>
    </property>
    <property name="frameShape">
-    <enum>QFrame::NoFrame</enum>
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Sunken</enum>
    </property>
    <layout class="QGridLayout" name="gridLayout_s">
     <property name="spacing">
@@ -1276,7 +1196,7 @@
      </widget>
     </item>
     <item row="2" column="1">
-     <widget class="KoreAmountField" name="payAmount_s">
+     <widget class="BitcoinAmountField" name="payAmount_s">
       <property name="acceptDrops">
        <bool>false</bool>
       </property>
@@ -1292,9 +1212,9 @@
    <header>qvalidatedlineedit.h</header>
   </customwidget>
   <customwidget>
-   <class>KoreAmountField</class>
+   <class>BitcoinAmountField</class>
    <extends>QLineEdit</extends>
-   <header>koreamountfield.h</header>
+   <header>bitcoinamountfield.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

@@ -1,5 +1,5 @@
 [Unit]
-Description=Kore's distributed currency daemon
+Description=KORE's distributed currency daemon
 After=network.target
 
 [Service]
@@ -8,8 +8,12 @@ Group=kore
 
 Type=forking
 PIDFile=/var/lib/kored/kored.pid
+
 ExecStart=/usr/bin/kored -daemon -pid=/var/lib/kored/kored.pid \
--conf=/etc/kore/kore.conf -datadir=/var/lib/kored -disablewallet
+          -conf=/etc/kore/kore.conf -datadir=/var/lib/kored
+
+ExecStop=-/usr/bin/kore-cli -conf=/etc/kore/kore.conf \
+         -datadir=/var/lib/kored stop
 
 Restart=always
 PrivateTmp=true

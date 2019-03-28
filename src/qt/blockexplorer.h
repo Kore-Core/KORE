@@ -1,7 +1,11 @@
+// Copyright (c) 2017 The KORE developers
+// Distributed under the MIT software license, see the accompanying
+// file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #ifndef BLOCKEXPLORER_H
 #define BLOCKEXPLORER_H
 
-#include <QWidget>
+#include <QMainWindow>
 
 #include "base58.h"
 #include "uint256.h"
@@ -12,9 +16,9 @@ namespace Ui
 class BlockExplorer;
 }
 
+
 class CBlockIndex;
 class CTransaction;
-class PlatformStyle;
 class CBlockTreeDB;
 
 std::string getexplorerBlockHash(int64_t);
@@ -22,12 +26,12 @@ const CBlockIndex* getexplorerBlockIndex(int64_t);
 CTxOut getPrevOut(const COutPoint& out);
 void getNextIn(const COutPoint* Out, uint256* Hash, unsigned int n);
 
-class BlockExplorer : public QWidget
+class BlockExplorer : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit BlockExplorer(const PlatformStyle *platformStyle, QWidget *parent = 0);
+    explicit BlockExplorer(QWidget* parent = 0);
     ~BlockExplorer();
 
 protected:
@@ -50,7 +54,6 @@ private:
     bool switchTo(const QString& query);
     void setContent(const std::string& content);
     void updateNavButtons();
-    const PlatformStyle *platformStyle;
 };
 
 #endif // BLOCKEXPLORER_H

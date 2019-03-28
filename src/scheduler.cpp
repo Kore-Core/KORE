@@ -1,4 +1,5 @@
-// Copyright (c) 2015 The Kore Core developers
+// Copyright (c) 2015 The Bitcoin Core developers
+// Copyright (c) 2017 The KORE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -23,7 +24,7 @@ CScheduler::~CScheduler()
 #if BOOST_VERSION < 105000
 static boost::system_time toPosixTime(const boost::chrono::system_clock::time_point& t)
 {
-    return boost::posix_time::from_time_t(boost::chrono::system_clock::to_time_t(t));
+    return boost::chrono::from_time_t(boost::chrono::system_clock::to_time_t(t));
 }
 #endif
 

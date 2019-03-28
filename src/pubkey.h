@@ -146,6 +146,11 @@ public:
         return CKeyID(Hash160(vch, vch + size()));
     }
 
+    std::vector<unsigned char> Raw() const
+    {
+        return std::vector<unsigned char>(vch, vch + size());
+    }
+
     //! Get the 256-bit hash of this public key.
     uint256 GetHash() const
     {
@@ -197,6 +202,12 @@ public:
 
     //! Derive BIP32 child pubkey.
     bool Derive(CPubKey& pubkeyChild, ChainCode &ccChild, unsigned int nChild, const ChainCode& cc) const;
+
+    std::string GetHex()
+    {
+        std::string my_std_string(reinterpret_cast<const char*>(vch), 65);
+        return my_std_string;
+    }
 };
 
 struct CExtPubKey {

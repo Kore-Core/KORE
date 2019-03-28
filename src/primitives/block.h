@@ -1,14 +1,20 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2009-2013 The Bitcoin developers
+// Copyright (c) 2015-2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_PRIMITIVES_BLOCK_H
 #define BITCOIN_PRIMITIVES_BLOCK_H
 
+#include "keystore.h"
 #include "primitives/transaction.h"
 #include "serialize.h"
 #include "uint256.h"
+
+/** The maximum allowed size for a serialized block, in bytes (network rule) */
+static const unsigned int MAX_BLOCK_SIZE        = 1000000;
+static const unsigned int MAX_BLOCK_SIZE_LEGACY = 1000000;
 
 /** Nodes collect new transactions into a block, hash them into a hash tree,
  * and scan through nonce values to make the block's hash satisfy proof-of-work
@@ -21,6 +27,12 @@ class CBlockHeader
 {
 public:
     // header
+    // using the left  bit to signal a new version, not using the signal bit
+    //static const int32_t CURRENT_VERSION=0x40000001;
+    static const int32_t CURRENT_VERSION=1;
+    static const int32_t POS_FORK_VERSION=2;
+    //static const int32_t SIGNALING_NEW_VERSION_MASK=0x40000000;
+    static const int32_t SIGNALING_NEW_VERSION_MASK=0x00000000;
     int32_t nVersion;
     uint256 hashPrevBlock;
     uint256 hashMerkleRoot;
@@ -29,8 +41,15 @@ public:
     uint32_t nNonce;
     uint32_t nBirthdayA;
     uint32_t nBirthdayB;
+    bool fIsProofOfStake;
 
     CBlockHeader()
+    {
+        nVersion = CBlockHeader::CURRENT_VERSION;
+        SetNull();
+    }
+
+    CBlockHeader(int32_t nVersionIn) : nVersion(nVersionIn)
     {
         SetNull();
     }
@@ -38,7 +57,8 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    {
         READWRITE(this->nVersion);
         nVersion = this->nVersion;
         READWRITE(hashPrevBlock);
@@ -48,29 +68,31 @@ public:
         READWRITE(nNonce);
         READWRITE(nBirthdayA);
         READWRITE(nBirthdayB);
+        if (nVersion >= 2)
+            READWRITE(fIsProofOfStake);
     }
 
     void SetNull()
     {
-        nVersion = 0;
+        //nVersion = CBlockHeader::CURRENT_VERSION;
         hashPrevBlock.SetNull();
         hashMerkleRoot.SetNull();
         nTime = 0;
         nBits = 0;
         nNonce = 0;
         nBirthdayA = 0;
-		nBirthdayB = 0;
+        nBirthdayB = 0;
+        fIsProofOfStake = false;
     }
 
     bool IsNull() const
     {
         return (nBits == 0);
     }
-    
-    uint256 GetHash() const;
-	
-    uint256 GetVerifiedHash() const;
 
+    uint256 GetHash() const;
+
+    //uint256 GetVerifiedHash() const;
     uint256 CalculateBestBirthdayHash();
 
     uint256 GetMidHash() const;
@@ -78,8 +100,6 @@ public:
     {
         return (int64_t)nTime;
     }
-
-    std::string ToString() const;
 };
 
 
@@ -89,19 +109,25 @@ public:
     // network and disk
     std::vector<CTransaction> vtx;
 
-    // network and disk
+    // ppcoin: block signature - signed by one of the coin base txout[N]'s owner
     std::vector<unsigned char> vchBlockSig;
 
     // memory only
     mutable CScript payee;
+    mutable std::vector<uint256> vMerkleTree;
     mutable bool fChecked;
 
-    CBlock()
+    CBlock() : CBlockHeader()
     {
         SetNull();
     }
 
-    CBlock(const CBlockHeader &header)
+    CBlock(const int32_t nVersionIn) : CBlockHeader(nVersionIn)
+    {
+        SetNull();
+    }
+
+    CBlock(const CBlockHeader& header) : CBlockHeader(header.nVersion)
     {
         SetNull();
         *((CBlockHeader*)this) = header;
@@ -110,26 +136,52 @@ public:
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    {
         READWRITE(*(CBlockHeader*)this);
         READWRITE(vtx);
-	if(vtx.size() > 1 && vtx[1].IsCoinStake())
-		READWRITE(vchBlockSig);
+        if (vtx.size() > 1 && vtx[1].IsCoinStake())
+            READWRITE(vchBlockSig);
     }
 
     void SetNull()
     {
         CBlockHeader::SetNull();
         vtx.clear();
+        vMerkleTree.clear();
         fChecked = false;
         payee = CScript();
         vchBlockSig.clear();
     }
 
-    // two types of block: proof-of-work or proof-of-stake
+    CBlockHeader GetBlockHeader() const
+    {
+        CBlockHeader block(nVersion);
+        //block.nVersion       = nVersion;
+        block.hashPrevBlock = hashPrevBlock;
+        block.hashMerkleRoot = hashMerkleRoot;
+        block.nTime = nTime;
+        block.nBits = nBits;
+        block.nNonce = nNonce;
+        block.nBirthdayA = nBirthdayA;
+        block.nBirthdayB = nBirthdayB;
+        block.fIsProofOfStake = fIsProofOfStake;
+        return block;
+    }
+
+    // ppcoin: two types of block: proof-of-work or proof-of-stake
     bool IsProofOfStake() const
     {
-        return (vtx.size() > 1 && vtx[1].IsCoinStake());
+        bool isOldVersion = ((nVersion & ~SIGNALING_NEW_VERSION_MASK) < CBlockHeader::POS_FORK_VERSION);
+        if (vtx.size() <= 1)
+            return false;
+
+        if (vtx[0].IsCoinBase() && vtx[1].IsCoinStake())
+            return isOldVersion || fIsProofOfStake;
+        else if (vtx[1].IsCoinStake())
+            return isOldVersion || fIsProofOfStake;
+        else
+            return false;
     }
 
     bool IsProofOfWork() const
@@ -137,21 +189,21 @@ public:
         return !IsProofOfStake();
     }
 
-    CBlockHeader GetBlockHeader() const
+    std::pair<COutPoint, unsigned int> GetProofOfStake() const
     {
-        CBlockHeader block;
-        block.nVersion       = nVersion;
-        block.hashPrevBlock  = hashPrevBlock;
-        block.hashMerkleRoot = hashMerkleRoot;
-        block.nTime          = nTime;
-        block.nBits          = nBits;
-        block.nNonce         = nNonce;
-		block.nBirthdayA     = nBirthdayA;
-        block.nBirthdayB     = nBirthdayB;         
-        return block;
+        return IsProofOfStake() ? std::make_pair(vtx[1].vin[0].prevout, nTime) : std::make_pair(COutPoint(), (unsigned int)0);
     }
 
+    // Build the in-memory merkle tree for this block and return the merkle root.
+    // If non-NULL, *mutated is set to whether mutation was detected in the merkle
+    // tree (a duplication of transactions in the block leading to an identical
+    // merkle root).
+    uint256 BuildMerkleTree(bool* mutated = NULL) const;
+
+    std::vector<uint256> GetMerkleBranch(int nIndex) const;
+    static uint256 CheckMerkleBranch(uint256 hash, const std::vector<uint256>& vMerkleBranch, int nIndex);
     std::string ToString() const;
+    void print() const;
 };
 
 
@@ -159,8 +211,7 @@ public:
  * other node doesn't have the same branch, it can find a recent common trunk.
  * The further back it is, the further before the fork it may be.
  */
-struct CBlockLocator
-{
+struct CBlockLocator {
     std::vector<uint256> vHave;
 
     CBlockLocator() {}
@@ -173,7 +224,8 @@ struct CBlockLocator
     ADD_SERIALIZE_METHODS;
 
     template <typename Stream, typename Operation>
-    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion) {
+    inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
+    {
         if (!(nType & SER_GETHASH))
             READWRITE(nVersion);
         READWRITE(vHave);

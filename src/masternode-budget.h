@@ -1,8 +1,8 @@
 // Copyright (c) 2014-2015 The Dash developers
-// Copyright (c) 2015-2017 The KORE developers
-
+// Copyright (c) 2015-2018 The KORE developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
+
 #ifndef MASTERNODE_BUDGET_H
 #define MASTERNODE_BUDGET_H
 
@@ -15,6 +15,8 @@
 #include "sync.h"
 #include "util.h"
 #include <boost/lexical_cast.hpp>
+
+using namespace std;
 
 extern CCriticalSection cs_budget;
 
@@ -29,10 +31,17 @@ class CTxBudgetPayment;
 #define VOTE_YES 1
 #define VOTE_NO 2
 
+enum class TrxValidationStatus {
+    InValid,       /** Transaction verification failed */
+    Valid,         /** Transaction successfully verified */
+    DoublePayment, /** Transaction successfully verified, but includes a double-budget-payment */
+    VoteThreshold  /** If not enough masternodes have voted on a finalized budget */
+};
+
 static const CAmount PROPOSAL_FEE_TX = (50 * COIN);
-static const CAmount BUDGET_FEE_TX = (50 * COIN);
-static const int64_t BUDGET_FEE_CONFIRMATIONS = 6;
-static const int64_t BUDGET_VOTE_UPDATE_MIN = 60 * 60;
+static const CAmount BUDGET_FEE_TX_OLD = (50 * COIN);
+static const CAmount BUDGET_FEE_TX = (5 * COIN);
+static map<uint256, int> mapPayment_History;
 
 extern std::vector<CBudgetProposalBroadcast> vecImmatureBudgetProposals;
 extern std::vector<CFinalizedBudgetBroadcast> vecImmatureFinalizedBudgets;
@@ -44,7 +53,7 @@ void DumpBudgets();
 int GetBudgetPaymentCycleBlocks();
 
 //Check the collateral transaction for the budget proposal/finalized budget
-bool IsBudgetCollateralValid(uint256 nTxCollateralHash, uint256 nExpectedHash, std::string& strError, int64_t& nTime, int& nConf);
+bool IsBudgetCollateralValid(uint256 nTxCollateralHash, uint256 nExpectedHash, std::string& strError, int64_t& nTime, int& nConf, bool fBudgetFinalization = false);
 
 //
 // CBudgetVote - Allow a masternode node to vote and broadcast throughout the network
@@ -174,15 +183,15 @@ class CBudgetManager
 private:
     //hold txes until they mature enough to use
     // XX42    map<uint256, CTransaction> mapCollateral;
-    std::map<uint256, uint256> mapCollateralTxids;
+    map<uint256, uint256> mapCollateralTxids;
 
 public:
     // critical section to protect the inner data structures
     mutable CCriticalSection cs;
 
     // keep track of the scanning errors I've seen
-    std::map<uint256, CBudgetProposal> mapProposals;
-    std::map<uint256, CFinalizedBudget> mapFinalizedBudgets;
+    map<uint256, CBudgetProposal> mapProposals;
+    map<uint256, CFinalizedBudget> mapFinalizedBudgets;
 
     std::map<uint256, CBudgetProposalBroadcast> mapSeenMasternodeBudgetProposals;
     std::map<uint256, CBudgetVote> mapSeenMasternodeBudgetVotes;
@@ -225,17 +234,19 @@ public:
     std::vector<CBudgetProposal*> GetAllProposals();
     std::vector<CFinalizedBudget*> GetFinalizedBudgets();
     bool IsBudgetPaymentBlock(int nBlockHeight);
+    bool IsBudgetPaymentBlock_Legacy(int nBlockHeight);
     bool AddProposal(CBudgetProposal& budgetProposal);
     bool AddFinalizedBudget(CFinalizedBudget& finalizedBudget);
     void SubmitFinalBudget();
-    bool HasNextFinalizedBudget();
 
     bool UpdateProposal(CBudgetVote& vote, CNode* pfrom, std::string& strError);
     bool UpdateFinalizedBudget(CFinalizedBudgetVote& vote, CNode* pfrom, std::string& strError);
     bool PropExists(uint256 nHash);
-    bool IsTransactionValid(const CTransaction& txNew, int nBlockHeight);
+    TrxValidationStatus IsTransactionValid(const CTransaction& txNew, int nBlockHeight);
+    bool IsTransactionValid_Legacy(const CTransaction& txNew, int nBlockHeight);
     std::string GetRequiredPaymentsString(int nBlockHeight);
     void FillBlockPayee(CMutableTransaction& txNew, CAmount nFees, bool fProofOfStake);
+    void FillBlockPayee_Legacy(CMutableTransaction& txNew, CAmount nFees, bool fProofOfStake);
 
     void CheckOrphanVotes();
     void Clear()
@@ -285,7 +296,7 @@ public:
     {
         payee = CScript();
         nAmount = 0;
-        nProposalHash.SetNull();
+        nProposalHash = 0;
     }
 
     ADD_SERIALIZE_METHODS;
@@ -294,7 +305,7 @@ public:
     template <typename Stream, typename Operation>
     inline void SerializationOp(Stream& s, Operation ser_action, int nType, int nVersion)
     {
-        READWRITE(*(CScriptBase*)(&payee));
+        READWRITE(payee);
         READWRITE(nAmount);
         READWRITE(nProposalHash);
     }
@@ -316,7 +327,7 @@ public:
     std::string strBudgetName;
     int nBlockStart;
     std::vector<CTxBudgetPayment> vecBudgetPayments;
-    std::map<uint256, CFinalizedBudgetVote> mapVotes;
+    map<uint256, CFinalizedBudgetVote> mapVotes;
     uint256 nFeeTXHash;
     int64_t nTime;
 
@@ -335,7 +346,9 @@ public:
     int GetBlockStart() { return nBlockStart; }
     int GetBlockEnd() { return nBlockStart + (int)(vecBudgetPayments.size() - 1); }
     int GetVoteCount() { return (int)mapVotes.size(); }
-    bool IsTransactionValid(const CTransaction& txNew, int nBlockHeight);
+    bool IsPaidAlready(uint256 nProposalHash, int nBlockHeight);
+    TrxValidationStatus IsTransactionValid(const CTransaction& txNew, int nBlockHeight);
+    bool IsTransactionValid_Legacy(const CTransaction& txNew, int nBlockHeight);
     bool GetBudgetPaymentByBlock(int64_t nBlockHeight, CTxBudgetPayment& payment)
     {
         LOCK(cs);
@@ -349,12 +362,14 @@ public:
     bool GetPayeeAndAmount(int64_t nBlockHeight, CScript& payee, CAmount& nAmount)
     {
         LOCK(cs);
-
+        LogPrint("mnbudget", "CBudgetManager::GetPayeeAndAmount \n");
         int i = nBlockHeight - GetBlockStart();
         if (i < 0) return false;
         if (i > (int)vecBudgetPayments.size() - 1) return false;
         payee = vecBudgetPayments[i].payee;
         nAmount = vecBudgetPayments[i].nAmount;
+        LogPrint("mnbudget", "CBudgetManager::GetPayeeAndAmount payee %s \n", payee.ToString());
+        LogPrint("mnbudget", "CBudgetManager::GetPayeeAndAmount nAmount %d \n", nAmount);
         return true;
     }
 
@@ -366,7 +381,7 @@ public:
     void SubmitVote();
 
     //checks the hashes to make sure we know about them
-    std::string GetStatus();
+    string GetStatus();
 
     uint256 GetHash()
     {
@@ -472,7 +487,7 @@ public:
     int64_t nTime;
     uint256 nFeeTXHash;
 
-    std::map<uint256, CBudgetVote> mapVotes;
+    map<uint256, CBudgetVote> mapVotes;
     //cache object
 
     CBudgetProposal();
@@ -488,12 +503,11 @@ public:
 
     bool IsEstablished()
     {
-        //Proposals must be at least a day old to make it into a budget
+        // Proposals must be at least a day old to make it into a budget
+        if (Params().GetNetworkID() == CBaseChainParams::MAIN) return (nTime < GetTime() - (60 * 60 * 24));
 
-        if (Params().NetworkIDString() == CBaseChainParams::MAIN) return (nTime < GetTime() - (60 * 60 * 24));
-
-        //for testing purposes - 4 hours
-        return (nTime < GetTime() - (60 * 5));
+        // For testing purposes - 1 minute
+        return (nTime < GetTime() - (60 * 1));
     }
 
     std::string GetName() { return strProposalName; }
@@ -542,7 +556,7 @@ public:
         READWRITE(nBlockStart);
         READWRITE(nBlockEnd);
         READWRITE(nAmount);
-        READWRITE(*(CScriptBase*)(&address));
+        READWRITE(address);
         READWRITE(nTime);
         READWRITE(nFeeTXHash);
 
@@ -599,7 +613,7 @@ public:
         READWRITE(nBlockStart);
         READWRITE(nBlockEnd);
         READWRITE(nAmount);
-        READWRITE(*(CScriptBase*)(&address));
+        READWRITE(address);
         READWRITE(nFeeTXHash);
     }
 };

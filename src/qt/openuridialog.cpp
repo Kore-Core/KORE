@@ -1,5 +1,7 @@
-// Copyright (c) 2011-2013 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2011-2014 The Bitcoin developers
+// Copyright (c) 2014-2015 The Dash developers
+// Copyright (c) 2015-2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "openuridialog.h"
@@ -10,9 +12,8 @@
 
 #include <QUrl>
 
-OpenURIDialog::OpenURIDialog(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::OpenURIDialog)
+OpenURIDialog::OpenURIDialog(QWidget* parent) : QDialog(parent),
+                                                ui(new Ui::OpenURIDialog)
 {
     ui->setupUi(this);
 #if QT_VERSION >= 0x040700
@@ -33,8 +34,7 @@ QString OpenURIDialog::getURI()
 void OpenURIDialog::accept()
 {
     SendCoinsRecipient rcp;
-    if(GUIUtil::parseKoreURI(getURI(), &rcp))
-    {
+    if (GUIUtil::parseBitcoinURI(getURI(), &rcp)) {
         /* Only accept value URIs */
         QDialog::accept();
     } else {
@@ -45,7 +45,7 @@ void OpenURIDialog::accept()
 void OpenURIDialog::on_selectFileButton_clicked()
 {
     QString filename = GUIUtil::getOpenFileName(this, tr("Select payment request file to open"), "", "", NULL);
-    if(filename.isEmpty())
+    if (filename.isEmpty())
         return;
     QUrl fileUri = QUrl::fromLocalFile(filename);
     ui->uriEdit->setText("kore:?r=" + QUrl::toPercentEncoding(fileUri.toString()));

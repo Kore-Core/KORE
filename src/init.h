@@ -1,5 +1,6 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The KoreCore developers
+// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2017 The KORE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -10,6 +11,7 @@
 
 class CScheduler;
 class CWallet;
+class CzKOREWallet;
 
 namespace boost
 {
@@ -17,18 +19,17 @@ class thread_group;
 } // namespace boost
 
 extern CWallet* pwalletMain;
+extern CzKOREWallet* zwalletMain;
 
 void StartShutdown();
 bool ShutdownRequested();
 /** Interrupt threads */
-void Interrupt(boost::thread_group& threadGroup);
+// void Interrupt(boost::thread_group& threadGroup); //m2:
+void Interrupt();
 void Shutdown();
 void PrepareShutdown();
-//!Initialize the logging infrastructure
-void InitLogging();
-//!Parameter interaction: change current parameters depending on various rules
-void InitParameterInteraction();
-bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler);
+//bool AppInit2(boost::thread_group& threadGroup, CScheduler& scheduler); //m2:
+bool AppInit2();
 
 /** The help message mode determines what help message to show */
 enum HelpMessageMode {

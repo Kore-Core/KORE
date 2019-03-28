@@ -3,7 +3,7 @@
     <name>AddressBookPage</name>
     <message>
         <source>Right-click to edit address or label</source>
-        <translation>Valitse hiiren oikealla painikkeella muokataksesi osoitetta tai nimikettä</translation>
+        <translation>Napsauta hiiren kakkospainiketta muokataksesi osoitetta tai nimikettä</translation>
     </message>
     <message>
         <source>Create a new address</source>
@@ -22,36 +22,32 @@
         <translation>&amp;Kopioi</translation>
     </message>
     <message>
-        <source>C&amp;lose</source>
-        <translation>S&amp;ulje</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Address</source>
-        <translation>&amp;Kopioi osoite</translation>
-    </message>
-    <message>
         <source>Delete the currently selected address from the list</source>
         <translation>Poista valittu osoite listalta</translation>
-    </message>
-    <message>
-        <source>Export the data in the current tab to a file</source>
-        <translation>Vie auki olevan välilehden tiedot tiedostoon</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation>&amp;Vie</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
         <translation>&amp;Poista</translation>
     </message>
     <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Vie tiedot nykyisestä välilehdestä tiedostoon</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>&amp;Vie</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>Su&amp;lje</translation>
+    </message>
+    <message>
         <source>Choose the address to send coins to</source>
-        <translation>Valitse osoite johon kolikot lähetetään</translation>
+        <translation>Valitse osoite johon lähettää kolikot</translation>
     </message>
     <message>
         <source>Choose the address to receive coins with</source>
-        <translation>Valitse osoite johon vastaanotetaan kolikoita</translation>
+        <translation>Valitse osoite jolla vastaanottaa kolikot</translation>
     </message>
     <message>
         <source>C&amp;hoose</source>
@@ -59,23 +55,27 @@
     </message>
     <message>
         <source>Sending addresses</source>
-        <translation>Lähettävä osoite</translation>
+        <translation>Lähettävät osoitteet</translation>
     </message>
     <message>
         <source>Receiving addresses</source>
-        <translation>Vastaanottava osoite</translation>
+        <translation>Vastaanottavat osoitteet</translation>
     </message>
     <message>
-        <source>These are your Koreaddresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
-        <translation>Nämä ovat sinun Koreosoitteita maksujen lähetykseen. Tarkista aina summa ja vastaanottajan osoite ennenkuin lähetät kolikkoja.</translation>
+        <source>These are your KORE addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Nämä ovat sinun KORE osoitteesi maksujen lähetystä varten. Tarkista aina määrä ja vastaanottava osoite ennen kolikoiden lähettämistä.</translation>
     </message>
     <message>
-        <source>These are your Koreaddresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
-        <translation>Nämä ovat sinun Kore-osoitteesi suoritusten vastaanottamiseen. Suositellaan että annat uuden osoitteen kullekin transaktiolle.</translation>
+        <source>These are your KORE addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Nämä ovat sinun KORE osoitteesi maksujen vastaanottamista varten. On suositeltavaa käyttää uutta vastaanottavaa osoitetta jokaiselle uudelle rahansiirrolle.</translation>
+    </message>
+    <message>
+        <source>&amp;Copy Address</source>
+        <translation>&amp;Kopioi osoite</translation>
     </message>
     <message>
         <source>Copy &amp;Label</source>
-        <translation>Kopioi &amp;nimike</translation>
+        <translation>Kopioi &amp;Nimike</translation>
     </message>
     <message>
         <source>&amp;Edit</source>
@@ -83,11 +83,11 @@
     </message>
     <message>
         <source>Export Address List</source>
-        <translation>Vie osoitekirja</translation>
+        <translation>Vie osoitelista</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>Comma separated file (*.csv)</translation>
+        <translation>Pilkuilla eroteltu tiedosto (*.csv)</translation>
     </message>
     <message>
         <source>Exporting Failed</source>
@@ -95,14 +95,14 @@
     </message>
     <message>
         <source>There was an error trying to save the address list to %1. Please try again.</source>
-        <translation>Virhe tallentaessa osoitelistaa %1. Yritä uudelleen.</translation>
+        <translation>Tapahtui virhe osoitelistan tallennuksessa %1. Yritä uudestaan.</translation>
     </message>
 </context>
 <context>
     <name>AddressTableModel</name>
     <message>
         <source>Label</source>
-        <translation>Nimi</translation>
+        <translation>Nimike</translation>
     </message>
     <message>
         <source>Address</source>
@@ -117,19 +117,27 @@
     <name>AskPassphraseDialog</name>
     <message>
         <source>Passphrase Dialog</source>
-        <translation>Tunnuslauseen tekstinsyöttökenttä</translation>
+        <translation>Salausavain dialogi</translation>
     </message>
     <message>
         <source>Enter passphrase</source>
-        <translation>Kirjoita tunnuslause</translation>
+        <translation>Syötä salausavaimesi</translation>
     </message>
     <message>
         <source>New passphrase</source>
-        <translation>Uusi tunnuslause</translation>
+        <translation>Uusi salausavain</translation>
     </message>
     <message>
         <source>Repeat new passphrase</source>
-        <translation>Toista uusi tunnuslause</translation>
+        <translation>Toista uusi salausavain</translation>
+    </message>
+    <message>
+        <source>Serves to disable the trivial sendmoney when OS account compromised. Provides no real security.</source>
+        <translation>Ottaa pois käytöstä tavallisen sendmoneyn kun käyttöjärjestelmä on kompromisoitu. Ei tarjoa todellista turvaa.</translation>
+    </message>
+    <message>
+        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
+        <translation>Syötä uusi salausavain lompakkoon &lt;br/&gt; Käytä salausavaimena &lt;b&gt;yli kymmentä satunnaista merkkiä&lt;/b&gt;, tai &lt;b&gt; kahdeksaa tai useampaa sanaa&lt;/b&gt;.</translation>
     </message>
     <message>
         <source>Encrypt wallet</source>
@@ -137,7 +145,7 @@
     </message>
     <message>
         <source>This operation needs your wallet passphrase to unlock the wallet.</source>
-        <translation>Tätä toimintoa varten sinun täytyy antaa lompakon tunnuslause sen avaamiseksi.</translation>
+        <translation>Tämä toiminto tarvitsee sinun salausavaimesi lompakon avaamista varten.</translation>
     </message>
     <message>
         <source>Unlock wallet</source>
@@ -145,7 +153,7 @@
     </message>
     <message>
         <source>This operation needs your wallet passphrase to decrypt the wallet.</source>
-        <translation>Tätä toimintoa varten sinun täytyy antaa lompakon tunnuslause salauksen purkuun.</translation>
+        <translation>Tämä toiminto vaatii salausavaimen avataksesi lompakon.</translation>
     </message>
     <message>
         <source>Decrypt wallet</source>
@@ -153,43 +161,35 @@
     </message>
     <message>
         <source>Change passphrase</source>
-        <translation>Vaihda tunnuslause</translation>
+        <translation>Vaihda salausavain</translation>
+    </message>
+    <message>
+        <source>Enter the old and new passphrase to the wallet.</source>
+        <translation>Syötä uusi ja vanha salausavain lompakkoon.</translation>
     </message>
     <message>
         <source>Confirm wallet encryption</source>
         <translation>Vahvista lompakon salaus</translation>
     </message>
     <message>
-        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR BITCOINS&lt;/b&gt;!</source>
-        <translation>Varoitus: Jos salaat lompakkosi ja menetät tunnuslauseesi, &lt;b&gt;MENETÄT KAIKKI BITCOINISI&lt;/b&gt;!</translation>
+        <source>KORE will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your KOREs from being stolen by malware infecting your computer.</source>
+        <translation>KORE sulkeutuu salausprosessin ajaksi. Muista, että lompakon salaus ei voi täysin suojella KOREien varkaudelta, jos tietokoneesi sisältää haittaohjelmia.</translation>
     </message>
     <message>
         <source>Are you sure you wish to encrypt your wallet?</source>
-        <translation>Haluatko varmasti salata lompakkosi?</translation>
+        <translation>Oletko varma että tahdot salata lompakkosi?</translation>
     </message>
     <message>
-        <source>Kore Core will close now to finish the encryption process. Remember that encrypting your wallet cannot fully protect your kores from being stolen by malware infecting your computer.</source>
-        <translation>Kore Core sammuu nyt viimeistelläkseen kryptaamisen. Muista että lompakon kryptaaminen ei voi täysin suojata koreejasi varkaudelta malwaren saastuttamalla tietokoneella.</translation>
-    </message>
-    <message>
-        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
-        <translation>TÄRKEÄÄ: Kaikki vanhat lompakon varmuuskopiot pitäisi korvata uusilla suojatuilla varmuuskopioilla. Turvallisuussyistä edelliset varmuuskopiot muuttuvat turhiksi, kun aloitat suojatun lompakon käytön.</translation>
-    </message>
-    <message>
-        <source>Warning: The Caps Lock key is on!</source>
-        <translation>Varoitus: Caps Lock on käytössä!</translation>
+        <source>Warning: If you encrypt your wallet and lose your passphrase, you will &lt;b&gt;LOSE ALL OF YOUR KORE&lt;/b&gt;!</source>
+        <translation>Varoitus: Jos salaat lompakkosi ja unohdat salausavaimesi, &lt;b&gt;menetät kaikki KOREisi&lt;/b&gt;</translation>
     </message>
     <message>
         <source>Wallet encrypted</source>
         <translation>Lompakko salattu</translation>
     </message>
     <message>
-        <source>Enter the new passphrase to the wallet.&lt;br/&gt;Please use a passphrase of &lt;b&gt;ten or more random characters&lt;/b&gt;, or &lt;b&gt;eight or more words&lt;/b&gt;.</source>
-        <translation>Anna salauslause lompakkoon. &lt;br/&gt;Ole hyvä ja käytä lausetta jossa on &lt;b&gt;kymmenen tai enemmän satunnaista merkkiä&lt;/b&gt; tai &lt;b&gt;kahdeksan tai useampi sanaa&lt;/b&gt;.</translation>
-    </message>
-    <message>
-        <source>Enter the old passphrase and new passphrase to the wallet.</source>
-        <translation>Syötä vanha ja uusi salasana lompakolle.</translation>
+        <source>IMPORTANT: Any previous backups you have made of your wallet file should be replaced with the newly generated, encrypted wallet file. For security reasons, previous backups of the unencrypted wallet file will become useless as soon as you start using the new, encrypted wallet.</source>
+        <translation>TÄRKEÄÄ: Kaikki edelliset varmuuskopiot, jotka olet tehnyt lompakosta täytyy korvata uudella salatulla lompakko tiedostolla. Turvallisuussyistä edelliset varmuuskopiot salaamattomasta lompakosta muuttuvat hyödyttömiksi heti kun avaat uuden, salatun lompakon.</translation>
     </message>
     <message>
         <source>Wallet encryption failed</source>
@@ -197,157 +197,188 @@
     </message>
     <message>
         <source>Wallet encryption failed due to an internal error. Your wallet was not encrypted.</source>
-        <translation>Lompakon salaaminen epäonnistui sisäisen virheen vuoksi. Lompakkoasi ei salattu.</translation>
+        <translation>Lompakon salaus epäonnistui sisäisen vian vuoksi. Lompakkoa ei salattu.</translation>
     </message>
     <message>
         <source>The supplied passphrases do not match.</source>
-        <translation>Annetut tunnuslauseet eivät täsmää.</translation>
+        <translation>Syötetyt salausavaimet eivät täsmää.</translation>
     </message>
     <message>
         <source>Wallet unlock failed</source>
-        <translation>Lompakon avaaminen epäonnistui.</translation>
+        <translation>Lompakon avaaminen epäonnistui</translation>
     </message>
     <message>
         <source>The passphrase entered for the wallet decryption was incorrect.</source>
-        <translation>Annettu tunnuslause oli väärä.</translation>
+        <translation>Syöttämäsi salausavain on väärin.</translation>
     </message>
     <message>
         <source>Wallet decryption failed</source>
-        <translation>Lompakon salauksen purku epäonnistui.</translation>
+        <translation>Lompakon salauksen purku epäonnistui</translation>
     </message>
     <message>
         <source>Wallet passphrase was successfully changed.</source>
-        <translation>Lompakon tunnuslause vaihdettiin onnistuneesti.</translation>
+        <translation>Lompakon salausavaimen vaihto onnistui.</translation>
+    </message>
+    <message>
+        <source>Warning: The Caps Lock key is on!</source>
+        <translation>Varoitus: Caps Lock on päällä!</translation>
     </message>
 </context>
 <context>
     <name>BanTableModel</name>
+    </context>
+<context>
+    <name>Bip38ToolDialog</name>
     <message>
-        <source>IP/Netmask</source>
-        <translation>IP/Verkon peite</translation>
+        <source>BIP 38 Tool</source>
+        <translation>BIP 38 työkalu</translation>
     </message>
     <message>
-        <source>Banned Until</source>
-        <translation>Estetty kunnes</translation>
+        <source>&amp;BIP 38 Encrypt</source>
+        <translation>&amp;BIP 38 Salaus</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation>Osoite:</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>Valitse aikaisemmin käytetty osoite</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Liitä osoite leikepöydältä</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>Passphrase: </source>
+        <translation>Salausavain:</translation>
+    </message>
+    <message>
+        <source>Encrypted Key:</source>
+        <translation>Salattu avain:</translation>
+    </message>
+    <message>
+        <source>Copy the current signature to the system clipboard</source>
+        <translation>Kopioi nykyinen allekirjoitus järjestelmän leikepöydälle</translation>
+    </message>
+    <message>
+        <source>Encrypt &amp;Key</source>
+        <translation>Salaus &amp;Avain</translation>
+    </message>
+    <message>
+        <source>Clear &amp;All</source>
+        <translation>Tyhjennä &amp;Kaikki</translation>
+    </message>
+    <message>
+        <source>&amp;BIP 38 Decrypt</source>
+        <translation>&amp;BIP 38 salauksen avaus</translation>
+    </message>
+    <message>
+        <source>Enter the BIP 38 encrypted private key. Enter the passphrase in the middle box. Click Decrypt Key to compute the private key. After the key is decrypted, clicking 'Import Address' will add this private key to the wallet.</source>
+        <translation>Syötä BIP 38 salattu yksityisavain. Syötä salausavain laatikkoon. Paina Avaa Salaus tuottaaksesi yksityisavaimen. Kun avain on dekryptattu, painamalla "Import osoite" lisää tämän yksityisavaimen lompakkoon.</translation>
+    </message>
+    <message>
+        <source>Decrypt &amp;Key</source>
+        <translation>Salauksen avaus &amp;Avain</translation>
+    </message>
+    <message>
+        <source>Decrypted Key:</source>
+        <translation>Salauksesta avattu avain:</translation>
+    </message>
+    <message>
+        <source>Import Address</source>
+        <translation>Tuo osoite</translation>
+    </message>
+    <message>
+        <source>Click "Decrypt Key" to compute key</source>
+        <translation>Paina "Salausavaimen avaus" generoidaksesi avain</translation>
+    </message>
+    <message>
+        <source>The entered passphrase is invalid. </source>
+        <translation>Syötetty salausavain ei ole toimiva.</translation>
+    </message>
+    <message>
+        <source>Allowed: 0-9,a-z,A-Z,</source>
+        <translation>Sallittu: 0-9,a-z,A-Z,</translation>
+    </message>
+    <message>
+        <source>The entered address is invalid.</source>
+        <translation>Syötetty osoite ei ole toimiva.</translation>
+    </message>
+    <message>
+        <source>Please check the address and try again.</source>
+        <translation>Ole hyvä ja tarkista osoite ja yritä uudelleen.</translation>
+    </message>
+    <message>
+        <source>The entered address does not refer to a key.</source>
+        <translation>Syötetty osoite ei viittaa avaimeen.</translation>
+    </message>
+    <message>
+        <source>Wallet unlock was cancelled.</source>
+        <translation>Lompakon avaus peruutettiin.</translation>
+    </message>
+    <message>
+        <source>Private key for the entered address is not available.</source>
+        <translation>Yksityisavain syötetylle osoitteelle ei ole saatavilla.</translation>
+    </message>
+    <message>
+        <source>Failed to decrypt.</source>
+        <translation>Salauksen avaus ei onnistunut.</translation>
+    </message>
+    <message>
+        <source>Please check the key and passphrase and try again.</source>
+        <translation>Ole hyvä ja tarkista avain ja salausavain. Kokeile uudestaan.</translation>
+    </message>
+    <message>
+        <source>Data Not Valid.</source>
+        <translation>Data ei ole validi.</translation>
+    </message>
+    <message>
+        <source>Please try again.</source>
+        <translation>Ole hyvä ja yritä uudestaan.</translation>
+    </message>
+    <message>
+        <source>Please wait while key is imported</source>
+        <translation>Ole hyvä ja odota kun avain tuodaan</translation>
+    </message>
+    <message>
+        <source>Key Already Held By Wallet</source>
+        <translation>Lompakossa on jo avain</translation>
+    </message>
+    <message>
+        <source>Error Adding Key To Wallet</source>
+        <translation>Virhe avainta lisätessä</translation>
+    </message>
+    <message>
+        <source>Successfully Added Private Key To Wallet</source>
+        <translation>Onnistuneesti syötetty yksityisavain lompakkoon</translation>
     </message>
 </context>
 <context>
-    <name>KoreGUI</name>
+    <name>BitcoinGUI</name>
     <message>
-        <source>Sign &amp;message...</source>
-        <translation>&amp;Allekirjoita viesti...</translation>
-    </message>
-    <message>
-        <source>Synchronizing with network...</source>
-        <translation>Synkronoidaan verkon kanssa...</translation>
-    </message>
-    <message>
-        <source>&amp;Overview</source>
-        <translation>&amp;Yleisnäkymä</translation>
+        <source>Wallet</source>
+        <translation>Lompakko</translation>
     </message>
     <message>
         <source>Node</source>
         <translation>Solmu</translation>
     </message>
     <message>
+        <source>&amp;Overview</source>
+        <translation>&amp;Yleisnäkymä</translation>
+    </message>
+    <message>
         <source>Show general overview of wallet</source>
-        <translation>Lompakon tilanteen yleiskatsaus</translation>
-    </message>
-    <message>
-        <source>&amp;Transactions</source>
-        <translation>&amp;Rahansiirrot</translation>
-    </message>
-    <message>
-        <source>Browse transaction history</source>
-        <translation>Selaa rahansiirtohistoriaa</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <translation>L&amp;opeta</translation>
-    </message>
-    <message>
-        <source>Quit application</source>
-        <translation>Sulje ohjelma</translation>
-    </message>
-    <message>
-        <source>About &amp;Qt</source>
-        <translation>Tietoja &amp;Qt</translation>
-    </message>
-    <message>
-        <source>Show information about Qt</source>
-        <translation>Näytä tietoja Qt:ta</translation>
-    </message>
-    <message>
-        <source>&amp;Options...</source>
-        <translation>&amp;Asetukset...</translation>
-    </message>
-    <message>
-        <source>&amp;Encrypt Wallet...</source>
-        <translation>&amp;Salaa lompakko...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Wallet...</source>
-        <translation>&amp;Varmuuskopioi Lompakko...</translation>
-    </message>
-    <message>
-        <source>&amp;Change Passphrase...</source>
-        <translation>&amp;Vaihda Tunnuslause...</translation>
-    </message>
-    <message>
-        <source>&amp;Sending addresses...</source>
-        <translation>&amp;Lähetysosoitteet...</translation>
-    </message>
-    <message>
-        <source>&amp;Receiving addresses...</source>
-        <translation>&amp;Vastaanotto-osoitteet...</translation>
-    </message>
-    <message>
-        <source>Open &amp;URI...</source>
-        <translation>Avaa &amp;URI...</translation>
-    </message>
-    <message>
-        <source>Kore Core client</source>
-        <translation>Kore Core ohjelma</translation>
-    </message>
-    <message>
-        <source>Importing blocks from disk...</source>
-        <translation>Tuodaan lohkoja levyltä</translation>
-    </message>
-    <message>
-        <source>Reindexing blocks on disk...</source>
-        <translation>Ladataan lohkoindeksiä...</translation>
-    </message>
-    <message>
-        <source>Send coins to a Koreaddress</source>
-        <translation>Lähetä kolikoita Kore-osoitteeseen</translation>
-    </message>
-    <message>
-        <source>Backup wallet to another location</source>
-        <translation>Varmuuskopioi lompakko toiseen sijaintiin</translation>
-    </message>
-    <message>
-        <source>Change the passphrase used for wallet encryption</source>
-        <translation>Vaihda lompakon salaukseen käytettävä tunnuslause</translation>
-    </message>
-    <message>
-        <source>&amp;Debug window</source>
-        <translation>&amp;Testausikkuna</translation>
-    </message>
-    <message>
-        <source>Open debugging and diagnostic console</source>
-        <translation>Avaa debuggaus- ja diagnostiikkakonsoli</translation>
-    </message>
-    <message>
-        <source>&amp;Verify message...</source>
-        <translation>Varmista &amp;viesti...</translation>
-    </message>
-    <message>
-        <source>Kore</source>
-        <translation>Kore</translation>
-    </message>
-    <message>
-        <source>Wallet</source>
-        <translation>Lompakko</translation>
+        <translation>Näytä yleinen näkymä lompakosta</translation>
     </message>
     <message>
         <source>&amp;Send</source>
@@ -358,8 +389,32 @@
         <translation>&amp;Vastaanota</translation>
     </message>
     <message>
-        <source>Show information about Kore Core</source>
-        <translation>Näytä tietoja Kore Core:sta</translation>
+        <source>&amp;Transactions</source>
+        <translation>&amp;Rahansiirrot</translation>
+    </message>
+    <message>
+        <source>Browse transaction history</source>
+        <translation>Tarkastele rahansiirto historiaa</translation>
+    </message>
+    <message>
+        <source>E&amp;xit</source>
+        <translation>P&amp;oistu</translation>
+    </message>
+    <message>
+        <source>Quit application</source>
+        <translation>Lopeta ohjelma</translation>
+    </message>
+    <message>
+        <source>About &amp;Qt</source>
+        <translation>Tietoa &amp;Qt</translation>
+    </message>
+    <message>
+        <source>Show information about Qt</source>
+        <translation>Näytä tietoja Qt:stä</translation>
+    </message>
+    <message>
+        <source>&amp;Options...</source>
+        <translation>&amp;Vaihtoehdot...</translation>
     </message>
     <message>
         <source>&amp;Show / Hide</source>
@@ -367,19 +422,131 @@
     </message>
     <message>
         <source>Show or hide the main Window</source>
-        <translation>Näytä tai piilota Kore-ikkuna</translation>
+        <translation>Näytä tai piilota pääikkuna</translation>
+    </message>
+    <message>
+        <source>&amp;Encrypt Wallet...</source>
+        <translation>&amp;Salaa lompakko...</translation>
     </message>
     <message>
         <source>Encrypt the private keys that belong to your wallet</source>
-        <translation>Suojaa yksityiset avaimet, jotka kuuluvat lompakkoosi</translation>
+        <translation>Salaa yksityisavaimet jotka kuuluvat lompakkoosi</translation>
     </message>
     <message>
-        <source>Sign messages with your Koreaddresses to prove you own them</source>
-        <translation>Allekirjoita viestisi omalla Kore-osoitteellasi todistaaksesi, että omistat ne</translation>
+        <source>&amp;Backup Wallet...</source>
+        <translation>&amp;Varmuuskopioi lompakko...</translation>
     </message>
     <message>
-        <source>Verify messages to ensure they were signed with specified Koreaddresses</source>
-        <translation>Varmista, että viestisi on allekirjoitettu määritetyllä Kore-osoitteella</translation>
+        <source>Backup wallet to another location</source>
+        <translation>Varmuuskopioi lompakko toiseen sijaintiin</translation>
+    </message>
+    <message>
+        <source>&amp;Change Passphrase...</source>
+        <translation>&amp;Vaihda salausavain...</translation>
+    </message>
+    <message>
+        <source>Change the passphrase used for wallet encryption</source>
+        <translation>Vaihda salausavain, jota käytetään lompakon salaukseen</translation>
+    </message>
+    <message>
+        <source>&amp;Unlock Wallet...</source>
+        <translation>&amp;Avaa lompakko...</translation>
+    </message>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Avaa lompakko</translation>
+    </message>
+    <message>
+        <source>&amp;Lock Wallet</source>
+        <translation>&amp;Lukitse lompakko</translation>
+    </message>
+    <message>
+        <source>Sign &amp;message...</source>
+        <translation>Allekirjoita &amp;viesti...</translation>
+    </message>
+    <message>
+        <source>&amp;Verify message...</source>
+        <translation>Vahvista &amp;viesti...</translation>
+    </message>
+    <message>
+        <source>&amp;Information</source>
+        <translation>&amp;Informaatio</translation>
+    </message>
+    <message>
+        <source>Show diagnostic information</source>
+        <translation>Näytä diagnostiikka informaatio</translation>
+    </message>
+    <message>
+        <source>&amp;Debug console</source>
+        <translation>&amp;Debug konsoli</translation>
+    </message>
+    <message>
+        <source>Open debugging console</source>
+        <translation>Avaa debuggaus konsoli</translation>
+    </message>
+    <message>
+        <source>&amp;Network Monitor</source>
+        <translation>&amp;Verkkoliikenne monitori</translation>
+    </message>
+    <message>
+        <source>Show network monitor</source>
+        <translation>Näytä verkkoliikenne monitori</translation>
+    </message>
+    <message>
+        <source>&amp;Peers list</source>
+        <translation>&amp;Peer lista</translation>
+    </message>
+    <message>
+        <source>Show peers info</source>
+        <translation>Näytä peer info</translation>
+    </message>
+    <message>
+        <source>Wallet &amp;Repair</source>
+        <translation>Lompakko &amp;Korjaa</translation>
+    </message>
+    <message>
+        <source>Show wallet repair options</source>
+        <translation>Näytä lompakon korjausvaihtoehdot</translation>
+    </message>
+    <message>
+        <source>Open configuration file</source>
+        <translation>Avaa konfiguraatio tiedosto</translation>
+    </message>
+    <message>
+        <source>Show Automatic &amp;Backups</source>
+        <translation>Näytä automaattiset &amp;Varmuuskopiot</translation>
+    </message>
+    <message>
+        <source>Show automatically created wallet backups</source>
+        <translation>Näytä automaattisesti luodut varmuuskopiot lompakosta</translation>
+    </message>
+    <message>
+        <source>&amp;Sending addresses...</source>
+        <translation>&amp;Lähettävät osoitteet...</translation>
+    </message>
+    <message>
+        <source>Show the list of used sending addresses and labels</source>
+        <translation>Näytä lista käytettävistä lähettävistä osoitteista ja nimikkeistä</translation>
+    </message>
+    <message>
+        <source>&amp;Receiving addresses...</source>
+        <translation>&amp;Vastaanottavat osoitteet...</translation>
+    </message>
+    <message>
+        <source>Show the list of used receiving addresses and labels</source>
+        <translation>Näytä lista käytettävistä vastaanottavista osoitteista ja nimikkeistä</translation>
+    </message>
+    <message>
+        <source>Open &amp;URI...</source>
+        <translation>Avaa &amp;URI...</translation>
+    </message>
+    <message>
+        <source>&amp;Command-line options</source>
+        <translation>&amp;Komentolinja vaihtoehdot</translation>
+    </message>
+    <message>
+        <source>Synchronizing additional data: %p%</source>
+        <translation>Synkronisoidaan lisätietoja: %p%</translation>
     </message>
     <message>
         <source>&amp;File</source>
@@ -390,92 +557,136 @@
         <translation>&amp;Asetukset</translation>
     </message>
     <message>
+        <source>&amp;Tools</source>
+        <translation>&amp;Työkalut</translation>
+    </message>
+    <message>
         <source>&amp;Help</source>
         <translation>&amp;Apua</translation>
     </message>
     <message>
-        <source>Tabs toolbar</source>
-        <translation>Välilehtipalkki</translation>
+        <source>KORE Core</source>
+        <translation>KORE Ydin</translation>
     </message>
     <message>
-        <source>Kore Core</source>
-        <translation>Kore-ydin</translation>
+        <source>Send coins to a KORE address</source>
+        <translation>Lähetä kolikkoja KORE osoitteeseen</translation>
     </message>
     <message>
         <source>Request payments (generates QR codes and kore: URIs)</source>
-        <translation>Pyydä maksuja (Luo QR koodit ja kore: URIt)</translation>
+        <translation>Pyydä maksuja (Generoi QR koodeja ja kore: URIja)</translation>
     </message>
     <message>
-        <source>&amp;About Kore Core</source>
-        <translation>&amp;Tietoja Kore Core</translation>
+        <source>&amp;Masternodes</source>
+        <translation>&amp;Masternodet</translation>
     </message>
     <message>
-        <source>Modify configuration options for Kore Core</source>
-        <translation>Muokkaa kokoonpanoasetuksia Kore Corelle</translation>
+        <source>Browse masternodes</source>
+        <translation>Selaa masternodeja</translation>
     </message>
     <message>
-        <source>Show the list of used sending addresses and labels</source>
-        <translation>Näytä lähettämiseen käytettyjen osoitteiden ja nimien lista</translation>
+        <source>&amp;About KORE Core</source>
+        <translation>KORE Core &amp;ytimestä</translation>
     </message>
     <message>
-        <source>Show the list of used receiving addresses and labels</source>
-        <translation>Näytä vastaanottamiseen käytettyjen osoitteiden ja nimien lista</translation>
+        <source>Show information about KORE Core</source>
+        <translation>Näytä tietoja KORE Ytimestä</translation>
     </message>
     <message>
-        <source>Open a kore: URI or payment request</source>
-        <translation>Avaa kore: URI tai maksupyyntö</translation>
+        <source>Modify configuration options for KORE</source>
+        <translation>Muokkaa konfiguraatio vaihtoehtoja KORE:lle</translation>
     </message>
     <message>
-        <source>&amp;Command-line options</source>
-        <translation>&amp;Komentorivin valinnat</translation>
+        <source>Sign messages with your KORE addresses to prove you own them</source>
+        <translation>Allekirjoita viestejä todistaaksesi, että omistat ne.</translation>
     </message>
     <message>
-        <source>Show the Kore Core help message to get a list with possible Korecommand-line options</source>
-        <translation>Näytä Kore Core ohjeet saadaksesi listan mahdollisista Korein komentorivivalinnoista</translation>
+        <source>Verify messages to ensure they were signed with specified KORE addresses</source>
+        <translation>Vahvista viestit varmistaaksesi, että ne allekirjoitettiin tietyllä KORE osoiteella.</translation>
     </message>
-    <message numerus="yes">
-        <source>%n active connection(s) to KORE network</source>
-        <translation><numerusform>%n aktiivinen yhteys Kore-verkkoon</numerusform><numerusform>%n aktiivista yhteyttä Kore-verkkoon</numerusform></translation>
+    <message>
+        <source>&amp;BIP38 tool</source>
+        <translation>&amp;BIP38 työkalu</translation>
+    </message>
+    <message>
+        <source>Encrypt and decrypt private keys using a passphrase</source>
+        <translation>Salaa ja avaa yksityisavainten salaus käyttämällä salasanaa</translation>
+    </message>
+    <message>
+        <source>&amp;MultiSend</source>
+        <translation>&amp;MultiSend</translation>
+    </message>
+    <message>
+        <source>MultiSend Settings</source>
+        <translation>MultiSend asetukset</translation>
+    </message>
+    <message>
+        <source>Open Wallet &amp;Configuration File</source>
+        <translation>Avaa lompakko &amp;Konfiguraatiotiedosto</translation>
+    </message>
+    <message>
+        <source>Open &amp;Masternode Configuration File</source>
+        <translation>Avaa &amp;Masternode konfiguraatiotiedosto</translation>
+    </message>
+    <message>
+        <source>Open Masternode configuration file</source>
+        <translation>Avaa Masternode konfiguraatiotiedosto</translation>
+    </message>
+    <message>
+        <source>Open a KORE: URI or payment request</source>
+        <translation>Avaa KORE: URI tai pyydä maksua</translation>
+    </message>
+    <message>
+        <source>&amp;Blockchain explorer</source>
+        <translation>&amp;Blockchain tutkija</translation>
+    </message>
+    <message>
+        <source>Block explorer window</source>
+        <translation>Lohkon tutkija näkymä</translation>
+    </message>
+    <message>
+        <source>Show the KORE Core help message to get a list with possible KORE command-line options</source>
+        <translation>Näytä KORE Ydin apuviesti saadaksesi lista mahdollisista KORE komentolinja komennoista.</translation>
+    </message>
+    <message>
+        <source>KORE Core client</source>
+        <translation>KORE Ydin asiakasohjelma</translation>
+    </message>
+    <message>
+        <source>Synchronizing with network...</source>
+        <translation>Synkronoi verkon kanssa...</translation>
+    </message>
+    <message>
+        <source>Importing blocks from disk...</source>
+        <translation>Lohkojen tuonti levyltä...</translation>
+    </message>
+    <message>
+        <source>Reindexing blocks on disk...</source>
+        <translation>Indeksöidään lohkoja levyltä uudestaan</translation>
     </message>
     <message>
         <source>No block source available...</source>
-        <translation>Lohkojen lähdettä ei saatavilla...</translation>
+        <translation>Lohkon lähdettä ei saatavilla...</translation>
     </message>
-    <message numerus="yes">
-        <source>Processed %n block(s) of transaction history.</source>
-        <translation><numerusform>Prosessoitu %n lohko rahansiirtohistoriasta.</numerusform><numerusform>Prosessoitu %n lohkoa rahansiirtohistoriasta.</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n hour(s)</source>
-        <translation><numerusform>%n tunti</numerusform><numerusform>%n tuntia</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n day(s)</source>
-        <translation><numerusform>%n päivä</numerusform><numerusform>%n päivää</numerusform></translation>
-    </message>
-    <message numerus="yes">
-        <source>%n week(s)</source>
-        <translation><numerusform>%n viikko</numerusform><numerusform>%n viikkoa</numerusform></translation>
+    <message>
+        <source>Up to date</source>
+        <translation>Ajan tasalla</translation>
     </message>
     <message>
         <source>%1 and %2</source>
         <translation>%1 ja %2</translation>
     </message>
-    <message numerus="yes">
-        <source>%n year(s)</source>
-        <translation><numerusform>%n vuosi</numerusform><numerusform>%n vuotta</numerusform></translation>
-    </message>
     <message>
-        <source>%1 behind</source>
-        <translation>%1 jäljessä</translation>
+        <source>Catching up...</source>
+        <translation>Otetaan kiinni...</translation>
     </message>
     <message>
         <source>Last received block was generated %1 ago.</source>
-        <translation>Viimeisin vastaanotettu lohko tuotettu %1.</translation>
+        <translation>Viimeisin lohko generoitiin %1 sitten</translation>
     </message>
     <message>
         <source>Transactions after this will not yet be visible.</source>
-        <translation>Tämän jälkeiset rahansiirrot eivät ole vielä näkyvissä.</translation>
+        <translation>Tätä edeltävät rahansiirrot eivät ole vielä näkyvissä</translation>
     </message>
     <message>
         <source>Error</source>
@@ -487,83 +698,65 @@
     </message>
     <message>
         <source>Information</source>
-        <translation>Tietoa</translation>
-    </message>
-    <message>
-        <source>Up to date</source>
-        <translation>Rahansiirtohistoria on ajan tasalla</translation>
-    </message>
-    <message>
-        <source>Catching up...</source>
-        <translation>Saavutetaan verkkoa...</translation>
-    </message>
-    <message>
-        <source>Date: %1
-</source>
-        <translation>Päivämäärä: %1
-</translation>
-    </message>
-    <message>
-        <source>Amount: %1
-</source>
-        <translation>Määrä: %1
-</translation>
-    </message>
-    <message>
-        <source>Type: %1
-</source>
-        <translation>Tyyppi: %1
-</translation>
-    </message>
-    <message>
-        <source>Label: %1
-</source>
-        <translation>Nimike: %1
-</translation>
-    </message>
-    <message>
-        <source>Address: %1
-</source>
-        <translation>Osoite: %1
-</translation>
+        <translation>Informaatio</translation>
     </message>
     <message>
         <source>Sent transaction</source>
-        <translation>Lähetetyt rahansiirrot</translation>
+        <translation>Lähetetty rahansiirto</translation>
     </message>
     <message>
         <source>Incoming transaction</source>
         <translation>Saapuva rahansiirto</translation>
     </message>
     <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;unlocked&lt;/b&gt;</source>
-        <translation>Lompakko on &lt;b&gt;salattu&lt;/b&gt; ja tällä hetkellä &lt;b&gt;avoinna&lt;/b&gt;</translation>
+        <source>Sent MultiSend transaction</source>
+        <translation>Lähetetty MultiSend rahansiirto</translation>
     </message>
     <message>
-        <source>Wallet is &lt;b&gt;encrypted&lt;/b&gt; and currently &lt;b&gt;locked&lt;/b&gt;</source>
-        <translation>Lompakko on &lt;b&gt;salattu&lt;/b&gt; ja tällä hetkellä &lt;b&gt;lukittuna&lt;/b&gt;</translation>
+        <source>Active</source>
+        <translation>Aktiivinen</translation>
     </message>
-</context>
+    <message>
+        <source>Not Active</source>
+        <translation>Ei aktiivinen</translation>
+    </message>
+    <message>
+        <source>Staking is not active
+ MultiSend: %1</source>
+        <translation>Panostus ei ole aktiivinen MultiSend: %1</translation>
+    </message>
+    </context>
+<context>
+    <name>BlockExplorer</name>
+    <message>
+        <source>Address / Block / Transaction</source>
+        <translation>Osoite / Lohko / Rahansiirto</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Etsi</translation>
+    </message>
+    <message>
+        <source>TextLabel</source>
+        <translation>TekstiNimike</translation>
+    </message>
+    </context>
 <context>
     <name>ClientModel</name>
     <message>
         <source>Network Alert</source>
-        <translation>Verkkohälytys</translation>
+        <translation>Verkon Hälytys</translation>
     </message>
 </context>
 <context>
     <name>CoinControlDialog</name>
-    <message>
-        <source>Coin Selection</source>
-        <translation>Kolikoiden valinta</translation>
-    </message>
     <message>
         <source>Quantity:</source>
         <translation>Määrä:</translation>
     </message>
     <message>
         <source>Bytes:</source>
-        <translation>Tavuja:</translation>
+        <translation>Tavut:</translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -571,55 +764,35 @@
     </message>
     <message>
         <source>Priority:</source>
-        <translation>Prioriteetti:</translation>
+        <translation>Tärkeys:</translation>
     </message>
     <message>
         <source>Fee:</source>
-        <translation>Palkkio:</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Tomu:</translation>
+        <translation>Taksa:</translation>
     </message>
     <message>
         <source>After Fee:</source>
-        <translation>Palkkion jälkeen:</translation>
+        <translation>Taksan jälkeen:</translation>
     </message>
     <message>
         <source>Change:</source>
-        <translation>Vaihtoraha:</translation>
-    </message>
-    <message>
-        <source>(un)select all</source>
-        <translation>(epä)valitse kaikki</translation>
-    </message>
-    <message>
-        <source>Tree mode</source>
-        <translation>Puurakenne</translation>
-    </message>
-    <message>
-        <source>List mode</source>
-        <translation>Listarakenne</translation>
+        <translation>Muutos:</translation>
     </message>
     <message>
         <source>Amount</source>
         <translation>Määrä</translation>
     </message>
     <message>
-        <source>Received with label</source>
-        <translation>Vastaanotettu nimikkeellä</translation>
-    </message>
-    <message>
-        <source>Received with address</source>
-        <translation>Vastaanotettu osoitteella</translation>
+        <source>Type</source>
+        <translation>Tyyppi</translation>
     </message>
     <message>
         <source>Date</source>
-        <translation>Aika</translation>
+        <translation>Päivämäärä</translation>
     </message>
     <message>
         <source>Confirmations</source>
-        <translation>Vahvistuksia</translation>
+        <translation>Vahvistukset</translation>
     </message>
     <message>
         <source>Confirmed</source>
@@ -627,7 +800,7 @@
     </message>
     <message>
         <source>Priority</source>
-        <translation>Prioriteetti</translation>
+        <translation>Tärkeys</translation>
     </message>
     <message>
         <source>Copy address</source>
@@ -635,7 +808,7 @@
     </message>
     <message>
         <source>Copy label</source>
-        <translation>Kopioi nimi</translation>
+        <translation>Kopioi nimike</translation>
     </message>
     <message>
         <source>Copy amount</source>
@@ -643,15 +816,7 @@
     </message>
     <message>
         <source>Copy transaction ID</source>
-        <translation>Kopioi siirtotunnus</translation>
-    </message>
-    <message>
-        <source>Lock unspent</source>
-        <translation>Lukitse käyttämättömät</translation>
-    </message>
-    <message>
-        <source>Unlock unspent</source>
-        <translation>Avaa käyttämättömät</translation>
+        <translation>Kopioi rahansiirron ID</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -659,27 +824,7 @@
     </message>
     <message>
         <source>Copy fee</source>
-        <translation>Kopioi palkkio</translation>
-    </message>
-    <message>
-        <source>Copy after fee</source>
-        <translation>Kopioi palkkion jälkeen</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Kopioi tavut</translation>
-    </message>
-    <message>
-        <source>Copy priority</source>
-        <translation>Kopioi prioriteetti</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Kopioi tomu</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Kopioi vaihtoraha</translation>
+        <translation>Kopioi taksa</translation>
     </message>
     <message>
         <source>highest</source>
@@ -695,51 +840,27 @@
     </message>
     <message>
         <source>medium-high</source>
-        <translation>keski-korkea</translation>
+        <translation>kohtalainen-korkea</translation>
     </message>
     <message>
         <source>medium</source>
-        <translation>keskisuuri</translation>
+        <translation>kohtalainen</translation>
     </message>
     <message>
         <source>low-medium</source>
-        <translation>pieni-keskisuuri</translation>
+        <translation>matala-kohtalainen</translation>
     </message>
     <message>
         <source>low</source>
-        <translation>pieni</translation>
+        <translation>matala</translation>
     </message>
     <message>
         <source>lower</source>
-        <translation>pienempi</translation>
+        <translation>matalampi</translation>
     </message>
     <message>
         <source>lowest</source>
-        <translation>pienin</translation>
-    </message>
-    <message>
-        <source>(%1 locked)</source>
-        <translation>(%1 lukittu)</translation>
-    </message>
-    <message>
-        <source>none</source>
-        <translation>ei mitään</translation>
-    </message>
-    <message>
-        <source>This label turns red if the transaction size is greater than 1000 bytes.</source>
-        <translation>Tämä nimi muuttuu punaiseksi mikäli rahansiirron koko on suurempi kuin 1000 tavua.</translation>
-    </message>
-    <message>
-        <source>This label turns red if the priority is smaller than "medium".</source>
-        <translation>Tämä nimi muuttuu punaiseksi mikäli prioriteetti on pienempi kuin "medium".</translation>
-    </message>
-    <message>
-        <source>This label turns red if any recipient receives an amount smaller than %1.</source>
-        <translation>Tämä nimike muuttuu punaiseksi mikäli mikä tahansa saaja vastaanottaa pienemmän määrän kuin %1.</translation>
-    </message>
-    <message>
-        <source>Can vary +/- %1 satoshi(s) per input.</source>
-        <translation>Saattaa vaihdella +/- %1 satoshia per syöte.</translation>
+        <translation>matalin</translation>
     </message>
     <message>
         <source>yes</source>
@@ -750,47 +871,15 @@
         <translation>ei</translation>
     </message>
     <message>
-        <source>This means a fee of at least %1 per kB is required.</source>
-        <translation>Tämä tarkoittaa että vähintään %1 per kB palkkio on pakollinen.</translation>
-    </message>
-    <message>
-        <source>Can vary +/- 1 byte per input.</source>
-        <translation>Voi vaihdella +/- 1 tavu per syöte</translation>
-    </message>
-    <message>
-        <source>Transactions with higher priority are more likely to get included into a block.</source>
-        <translation>Rahansiirrot korkeammalla prioriteetilla sisällytetään varmemmin lohkoon.</translation>
-    </message>
-    <message>
         <source>(no label)</source>
-        <translation>(ei nimeä)</translation>
+        <translation>(ei nimikettä)</translation>
     </message>
-    <message>
-        <source>change from %1 (%2)</source>
-        <translation>Vaihda %1 (%2)</translation>
-    </message>
-    <message>
-        <source>(change)</source>
-        <translation>(vaihtoraha)</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>EditAddressDialog</name>
     <message>
         <source>Edit Address</source>
         <translation>Muokkaa osoitetta</translation>
-    </message>
-    <message>
-        <source>&amp;Label</source>
-        <translation>&amp;Nimi</translation>
-    </message>
-    <message>
-        <source>The label associated with this address list entry</source>
-        <translation>Tähän osoitteeseen liitetty nimi</translation>
-    </message>
-    <message>
-        <source>The address associated with this address list entry. This can only be modified for sending addresses.</source>
-        <translation>Osoite liitettynä tähän osoitekirjan alkioon. Tämä voidaan muokata vain lähetysosoitteissa.</translation>
     </message>
     <message>
         <source>&amp;Address</source>
@@ -801,116 +890,36 @@
         <translation>Uusi vastaanottava osoite</translation>
     </message>
     <message>
-        <source>New sending address</source>
-        <translation>Uusi lähettävä osoite</translation>
-    </message>
-    <message>
         <source>Edit receiving address</source>
-        <translation>Muokkaa vastaanottajan osoitetta</translation>
-    </message>
-    <message>
-        <source>Edit sending address</source>
-        <translation>Muokkaa lähtevää osoitetta</translation>
-    </message>
-    <message>
-        <source>The entered address "%1" is already in the address book.</source>
-        <translation>Osoite "%1" on jo osoitekirjassa.</translation>
-    </message>
-    <message>
-        <source>The entered address "%1" is not a valid Koreaddress.</source>
-        <translation>Antamasi osoite "%1" ei ole validi Kore-osoite.</translation>
+        <translation>Muokkaa vastaanottavia osoitteita</translation>
     </message>
     <message>
         <source>Could not unlock wallet.</source>
-        <translation>Lompakkoa ei voitu avata.</translation>
+        <translation>Ei pystynyt avaamaan lompakkoa.</translation>
     </message>
-    <message>
-        <source>New key generation failed.</source>
-        <translation>Uuden avaimen luonti epäonnistui.</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>FreespaceChecker</name>
     <message>
-        <source>A new data directory will be created.</source>
-        <translation>Luodaan uusi kansio.</translation>
-    </message>
-    <message>
         <source>name</source>
-        <translation>Nimi</translation>
+        <translation>nimi</translation>
     </message>
-    <message>
-        <source>Directory already exists. Add %1 if you intend to create a new directory here.</source>
-        <translation>Hakemisto on jo olemassa. Lisää %1 jos tarkoitus on luoda hakemisto tänne.</translation>
-    </message>
-    <message>
-        <source>Path already exists, and is not a directory.</source>
-        <translation>Polku on jo olemassa, eikä se ole kansio.</translation>
-    </message>
-    <message>
-        <source>Cannot create data directory here.</source>
-        <translation>Ei voida luoda data-hakemistoa tänne.</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>HelpMessageDialog</name>
     <message>
-        <source>Kore Core</source>
-        <translation>Kore-ydin</translation>
-    </message>
-    <message>
-        <source>version</source>
-        <translation>versio</translation>
-    </message>
-    <message>
-        <source>(%1-bit)</source>
-        <translation>(%1-bit)</translation>
-    </message>
-    <message>
-        <source>About Kore Core</source>
-        <translation>Tietoja Kore Core</translation>
-    </message>
-    <message>
-        <source>Command-line options</source>
-        <translation>Komentorivi parametrit</translation>
+        <source>KORE Core</source>
+        <translation>KORE Ydin</translation>
     </message>
     <message>
         <source>Usage:</source>
         <translation>Käyttö:</translation>
     </message>
     <message>
-        <source>command-line options</source>
-        <translation>komentorivi parametrit</translation>
-    </message>
-    <message>
-        <source>UI Options:</source>
-        <translation>Käyttöliittymän asetukset:</translation>
-    </message>
-    <message>
-        <source>Choose data directory on startup (default: %u)</source>
-        <translation>Valitse datahakemisto käynnistyksen yhteydessä (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Set language, for example "de_DE" (default: system locale)</source>
-        <translation>Aseta kieli, esimerkiksi "de_DE" (oletus: järjestelmän kieli)</translation>
-    </message>
-    <message>
         <source>Start minimized</source>
-        <translation>Käynnistä pienennettynä</translation>
+        <translation>Aloita minimoituna</translation>
     </message>
-    <message>
-        <source>Set SSL root certificates for payment request (default: -system-)</source>
-        <translation>Aseta maksupyynnöille SSL-juurivarmenteet (oletus: -system-)</translation>
-    </message>
-    <message>
-        <source>Show splash screen on startup (default: %u)</source>
-        <translation>Näytä aloitusruutu käynnistyksen yhteydessä (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Reset all settings changes made over the GUI</source>
-        <translation>Nollaa kaikki graafisen käyttöliittymän kautta tehdyt muutokset</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>Intro</name>
     <message>
@@ -918,46 +927,239 @@
         <translation>Tervetuloa</translation>
     </message>
     <message>
-        <source>Welcome to Kore Core.</source>
-        <translation>Tervetuloa Kore Core</translation>
+        <source>Welcome to KORE Core.</source>
+        <translation>Tervetuloa KORE Ytimeen.</translation>
     </message>
     <message>
-        <source>As this is the first time the program is launched, you can choose where Kore Core will store its data.</source>
-        <translation>Tämän on ensimmäinen kerta kun Kore Core on käynnistetty joten voit valita data-hakemiston paikan.</translation>
-    </message>
-    <message>
-        <source>Kore Core will download and store a copy of the Koreblock chain. At least %1GB of data will be stored in this directory, and it will grow over time. The wallet will also be stored in this directory.</source>
-        <translation>Kore Core lataa ja tallentaa kopion Korein lohkoketjusta. Vähintään %1GB dataa tullaan tallentamaan tähän hakemistoon ja tarve kasvaa ajan myötä. Lomakko tullaan myös tallentamaan tähän hakemistoon.</translation>
-    </message>
-    <message>
-        <source>Use the default data directory</source>
-        <translation>Käytä oletuskansiota</translation>
-    </message>
-    <message>
-        <source>Use a custom data directory:</source>
-        <translation>Määritä oma kansio:</translation>
-    </message>
-    <message>
-        <source>Kore Core</source>
-        <translation>Kore-ydin</translation>
-    </message>
-    <message>
-        <source>Error: Specified data directory "%1" cannot be created.</source>
-        <translation>Virhe: Annettu datahakemistoa "%1" ei voida luoda.</translation>
+        <source>KORE Core</source>
+        <translation>KORE Ydin</translation>
     </message>
     <message>
         <source>Error</source>
         <translation>Virhe</translation>
     </message>
-    <message numerus="yes">
-        <source>%n GB of free space available</source>
-        <translation><numerusform>%n Gt vapaata tilaa käytettävissä</numerusform><numerusform>%n Gt vapaata tilaa käytettävissä</numerusform></translation>
+    </context>
+<context>
+    <name>MasternodeList</name>
+    <message>
+        <source>Form</source>
+        <translation>Lomake</translation>
     </message>
-    <message numerus="yes">
-        <source>(of %n GB needed)</source>
-        <translation><numerusform>(%n Gt tarvittavasta tilasta)</numerusform><numerusform>(%n Gt tarvittavasta tilasta)</numerusform></translation>
+    <message>
+        <source>Address</source>
+        <translation>Osoite</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protokolla</translation>
+    </message>
+    <message>
+        <source>Status</source>
+        <translation>Tila</translation>
+    </message>
+    <message>
+        <source>Active</source>
+        <translation>Aktiivinen</translation>
+    </message>
+    <message>
+        <source>Start &amp;all</source>
+        <translation>Aloita &amp;kaikki</translation>
+    </message>
+    <message>
+        <source>&amp;Update status</source>
+        <translation>&amp;Päivitä tila</translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation>0</translation>
+    </message>
+    <message>
+        <source>Command is not available right now</source>
+        <translation>Komento ei ole juuri nyt saatavilla</translation>
+    </message>
+    </context>
+<context>
+    <name>MultiSendDialog</name>
+    <message>
+        <source>Add to MultiSend Vector</source>
+        <translation>Lisää MultiSend vektoriin</translation>
+    </message>
+    <message>
+        <source>Add</source>
+        <translation>Lisää</translation>
+    </message>
+    <message>
+        <source>Deactivate MultiSend</source>
+        <translation>Deaktivoi MultiSend</translation>
+    </message>
+    <message>
+        <source>Deactivate</source>
+        <translation>Deaktivoi</translation>
+    </message>
+    <message>
+        <source>Choose an address from the address book</source>
+        <translation>Valitse osoite osoitelistalta</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Percentage of stake to send</source>
+        <translation>Prosentti panoksesta, joka lähetetään</translation>
+    </message>
+    <message>
+        <source>Percentage:</source>
+        <translation>Prosentti:</translation>
+    </message>
+    <message>
+        <source>Address to send portion of stake to</source>
+        <translation>Osoite, johon osa panoksesta lähetetään</translation>
+    </message>
+    <message>
+        <source>Address:</source>
+        <translation>Osoite:</translation>
+    </message>
+    <message>
+        <source>Delete Address From MultiSend Vector</source>
+        <translation>Poista osoite MultiSend vektorista</translation>
+    </message>
+    <message>
+        <source>Delete</source>
+        <translation>Poista</translation>
+    </message>
+    <message>
+        <source>Activate MultiSend</source>
+        <translation>Aktivoi MultiSend</translation>
+    </message>
+    <message>
+        <source>Activate</source>
+        <translation>Aktivoi</translation>
+    </message>
+    <message>
+        <source>View MultiSend Vector</source>
+        <translation>Näytä MultiSend vektori</translation>
+    </message>
+    <message>
+        <source>View MultiSend</source>
+        <translation>Näytä MultiSend</translation>
+    </message>
+    <message>
+        <source>Send For Stakes</source>
+        <translation>Lähetä panoksiin</translation>
+    </message>
+    <message>
+        <source>Send For Masternode Rewards</source>
+        <translation>Lähetä Masternode palkkioihin</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ei nimikettä)</translation>
+    </message>
+    <message>
+        <source>The entered address:
+</source>
+        <translation>Syötetty osoite:</translation>
+    </message>
+    <message>
+        <source> is invalid.
+Please check the address and try again.</source>
+        <translation>on invalidi. Ole hyvä ja tarkista osoite.</translation>
+    </message>
+    <message>
+        <source>The total amount of your MultiSend vector is over 100% of your stake reward
+</source>
+        <translation>MultiSend vektorisi kokonaismäärä on yli 100% panoksesi lohkopalkkiosta.</translation>
+    </message>
+    <message>
+        <source>Please Enter 1 - 100 for percent.</source>
+        <translation>Syötä 1 - 100 prosenttia</translation>
+    </message>
+    <message>
+        <source>MultiSend Vector
+</source>
+        <translation>MultiSend vektori</translation>
+    </message>
+    <message>
+        <source>Removed </source>
+        <translation>Poistettu</translation>
+    </message>
+    <message>
+        <source>Could not locate address
+</source>
+        <translation>Osoitetta ei löytynyt</translation>
     </message>
 </context>
+<context>
+    <name>MultisigDialog</name>
+    <message>
+        <source>Status:</source>
+        <translation>Tila:</translation>
+    </message>
+    <message>
+        <source>0</source>
+        <translation>0</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Määrä:</translation>
+    </message>
+    </context>
+<context>
+    <name>ObfuscationConfig</name>
+    <message>
+        <source>Configure Obfuscation</source>
+        <translation>Konfiguroi Hämäys</translation>
+    </message>
+    <message>
+        <source>Basic Privacy</source>
+        <translation>Perus Yksityisyys</translation>
+    </message>
+    <message>
+        <source>High Privacy</source>
+        <translation>Korkea Yksityisyys</translation>
+    </message>
+    <message>
+        <source>Maximum Privacy</source>
+        <translation>Maksimi Yksityisyys</translation>
+    </message>
+    <message>
+        <source>Please select a privacy level.</source>
+        <translation>Valitse yksityisyyden taso.</translation>
+    </message>
+    <message>
+        <source>Use 2 separate masternodes to mix funds up to 10000 KORE</source>
+        <translation>Käytä 2 erillistä masternodea sekoittaaksesi enintään 10000 KORE</translation>
+    </message>
+    <message>
+        <source>Use 8 separate masternodes to mix funds up to 10000 KORE</source>
+        <translation>Käytä 8 erillistä masternodea sekoittaaksesi enintään 10000 KORE</translation>
+    </message>
+    <message>
+        <source>Use 16 separate masternodes</source>
+        <translation>Käytä 16 erillistä masternodea</translation>
+    </message>
+    <message>
+        <source>This option is the quickest and will cost about ~0.025 KORE to anonymize 10000 KORE</source>
+        <translation>Tämä vaihtoehto on nopein ja maksaa noin ~0.025 KORE anonymoidaksesi 10000 KORE</translation>
+    </message>
+    <message>
+        <source>This option is moderately fast and will cost about 0.05 KORE to anonymize 10000 KORE</source>
+        <translation>Tämä vaihtoehto on suhteellisen nopea ja maksaa 0.05 KORE anonymoidaksesi 10000 KORE</translation>
+    </message>
+    <message>
+        <source>This is the slowest and most secure option. Using maximum anonymity will cost</source>
+        <translation>Tämä on hitain ja turvallisin vaihtoehto. Täydesti anonymisoiminen ei maksa mitään.</translation>
+    </message>
+    <message>
+        <source>0.1 KORE per 10000 KORE you anonymize.</source>
+        <translation>0.1 per 10000 KORE, jotka anonymisoit.</translation>
+    </message>
+    <message>
+        <source>Obfuscation Configuration</source>
+        <translation>Hämäys konfiguraatio</translation>
+    </message>
+    </context>
 <context>
     <name>OpenURIDialog</name>
     <message>
@@ -965,175 +1167,87 @@
         <translation>Avaa URI</translation>
     </message>
     <message>
-        <source>Open payment request from URI or file</source>
-        <translation>Avaa maksupyyntö URI:sta tai tiedostosta</translation>
-    </message>
-    <message>
         <source>URI:</source>
         <translation>URI:</translation>
     </message>
-    <message>
-        <source>Select payment request file</source>
-        <translation>Valitse maksupyynnön tiedosto</translation>
-    </message>
-    <message>
-        <source>Select payment request file to open</source>
-        <translation>Valitse maksypyynnön tiedosto avattavaksi</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>OptionsDialog</name>
     <message>
         <source>Options</source>
-        <translation>Asetukset</translation>
-    </message>
-    <message>
-        <source>&amp;Main</source>
-        <translation>&amp;Yleiset</translation>
-    </message>
-    <message>
-        <source>Size of &amp;database cache</source>
-        <translation>&amp;Tietokannan välimuistin koko</translation>
+        <translation>Vaihtoehdot</translation>
     </message>
     <message>
         <source>MB</source>
         <translation>MB</translation>
     </message>
     <message>
-        <source>Number of script &amp;verification threads</source>
-        <translation>Script &amp;varmistuksen threadien määrä</translation>
+        <source>W&amp;allet</source>
+        <translation>L&amp;ompakko</translation>
     </message>
     <message>
         <source>Accept connections from outside</source>
-        <translation>Hyväksy yhteysiä ulkopuolelta</translation>
+        <translation>Hyväksy ulkopuoliset yhteydet</translation>
     </message>
     <message>
         <source>Allow incoming connections</source>
-        <translation>Hyväksy sisääntulevia yhteyksiä</translation>
+        <translation>Salli sisääntulevat yhteydet</translation>
     </message>
     <message>
-        <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
-        <translation>IP osoite proxille (esim. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
+        <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
+        <translation>&amp;Yhdistä SOCKS5 proxyn kautta (default proxy):</translation>
     </message>
     <message>
-        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Exit in the menu.</source>
-        <translation>Minimoi ikkuna ohjelman sulkemisen sijasta kun ikkuna suljetaan. Kun tämä asetus on käytössä, ohjelma suljetaan vain valittaessa valikosta Poistu.</translation>
+        <source>Expert</source>
+        <translation>Ekspertti</translation>
     </message>
     <message>
-        <source>The user interface language can be set here. This setting will take effect after restarting Kore Core.</source>
-        <translation>Käyttöliittymän kieli voidaan asettaa tässä. Tämä asetus tulee käyttöön vasta kun Kore Core käynnistetään uudelleen.</translation>
+        <source>Automatically start KORE after logging in to the system.</source>
+        <translation>Automaattisesti käynnistä KORE kun kirjaudut sisään.</translation>
     </message>
     <message>
-        <source>Third party URLs (e.g. a block explorer) that appear in the transactions tab as context menu items. %s in the URL is replaced by transaction hash. Multiple URLs are separated by vertical bar |.</source>
-        <translation>Ulkopuoliset URL-osoitteet (esim. block explorer,) jotka esiintyvät siirrot-välilehdellä valikossa. %s URL-osoitteessa korvataan siirtotunnuksella. Useampi URL-osoite on eroteltu pystyviivalla |.</translation>
+        <source>&amp;Start KORE on system login</source>
+        <translation>&amp;Aloita KORE järjestelmän kirjautumisessa</translation>
     </message>
     <message>
-        <source>Third party transaction URLs</source>
-        <translation>Kolmannen osapuolen rahansiirto URL:t</translation>
+        <source>Enable coin &amp;control features</source>
+        <translation>Ota käyttöön coin &amp;kontrolli palvelut</translation>
     </message>
     <message>
-        <source>Active command-line options that override above options:</source>
-        <translation>Aktiiviset komentorivivalinnat jotka ohittavat ylläolevat valinnat:</translation>
+        <source>Show Masternodes Tab</source>
+        <translation>Näytä Masternode välilehti</translation>
     </message>
     <message>
-        <source>Reset all client options to default.</source>
-        <translation>Palauta kaikki asetukset takaisin alkuperäisiksi.</translation>
-    </message>
-    <message>
-        <source>&amp;Reset Options</source>
-        <translation>&amp;Palauta asetukset</translation>
+        <source>&amp;Spend unconfirmed change</source>
+        <translation>&amp;Käytä vahvistamaton vaihtoraha</translation>
     </message>
     <message>
         <source>&amp;Network</source>
         <translation>&amp;Verkko</translation>
     </message>
     <message>
-        <source>Automatically start Kore Core after logging in to the system.</source>
-        <translation>Käynnistä Kore Core automaattisesti järjestelmään kirjautumisen jälkeen.</translation>
-    </message>
-    <message>
-        <source>&amp;Start Kore Core on system login</source>
-        <translation>&amp;Käynnistä Kore Core järjestelmään kirjautuessa</translation>
-    </message>
-    <message>
-        <source>(0 = auto, &lt;0 = leave that many cores free)</source>
-        <translation>(0 = auto, &lt;0 = jätä näin monta ydintä vapaaksi)</translation>
-    </message>
-    <message>
-        <source>W&amp;allet</source>
-        <translation>&amp;Lompakko</translation>
-    </message>
-    <message>
-        <source>Expert</source>
-        <translation>Expertti</translation>
-    </message>
-    <message>
-        <source>Enable coin &amp;control features</source>
-        <translation>Ota käytöön &amp;Kolikkokontrolli-ominaisuudet</translation>
-    </message>
-    <message>
-        <source>If you disable the spending of unconfirmed change, the change from a transaction cannot be used until that transaction has at least one confirmation. This also affects how your balance is computed.</source>
-        <translation>Jos poistat varmistamattomien vaihtorahojen käytön, rahansiirron vaihtorahaa ei voida käyttää ennen vähintään yhtä varmistusta. Tämä vaikuttaa myös kuinka taseesi lasketaan.</translation>
-    </message>
-    <message>
-        <source>&amp;Spend unconfirmed change</source>
-        <translation>&amp;Käytä varmistamattomia vaihtorahoja</translation>
-    </message>
-    <message>
-        <source>Automatically open the Koreclient port on the router. This only works when your router supports UPnP and it is enabled.</source>
-        <translation>Avaa Kore-asiakasohjelman portti reitittimellä automaattisesti. Tämä toimii vain, jos reitittimesi tukee UPnP:tä ja se on käytössä.</translation>
-    </message>
-    <message>
-        <source>Map port using &amp;UPnP</source>
-        <translation>Portin uudelleenohjaus &amp;UPnP:llä</translation>
+        <source>The user interface language can be set here. This setting will take effect after restarting KORE.</source>
+        <translation>Käyttöliittymän kielen voi säätää täällä. Tämä asetus tulee voimaan uudelleenkäynnistettyäsi lompakon.</translation>
     </message>
     <message>
         <source>Connect to the KORE network through a SOCKS5 proxy.</source>
-        <translation>Yhdistä Kore-verkkoon SOCKS5-välityspalvelimen kautta.</translation>
-    </message>
-    <message>
-        <source>&amp;Connect through SOCKS5 proxy (default proxy):</source>
-        <translation>&amp;Yhdistä SOCKS5-välityspalvelimen kautta (oletus välityspalvelin):</translation>
+        <translation>Yhdistä KORE verkkoon SOCKS5 proxyn kautta</translation>
     </message>
     <message>
         <source>Proxy &amp;IP:</source>
-        <translation>Proxyn &amp;IP:</translation>
+        <translation>Proxy &amp;IP:</translation>
+    </message>
+    <message>
+        <source>IP address of the proxy (e.g. IPv4: 127.0.0.1 / IPv6: ::1)</source>
+        <translation>Proxyn IP osoite  (esim. IPv4: 127.0.0.1 / IPv6: ::1)</translation>
     </message>
     <message>
         <source>&amp;Port:</source>
-        <translation>&amp;Portti</translation>
+        <translation>&amp;Portti:</translation>
     </message>
     <message>
         <source>Port of the proxy (e.g. 9050)</source>
-        <translation>Proxyn Portti (esim. 9050)</translation>
-    </message>
-    <message>
-        <source>Used for reaching peers via:</source>
-        <translation>Vertaisten saavuttamiseen käytettävät verkkotyypit:</translation>
-    </message>
-    <message>
-        <source>Shows, if the supplied default SOCKS5 proxy is used to reach peers via this network type.</source>
-        <translation>Ilmoittaa, mikäli oletetettua SOCKS5-välityspalvelinta käytetään tämän verkkotyypin kautta vertaisten saavuttamiseen.</translation>
-    </message>
-    <message>
-        <source>IPv4</source>
-        <translation>IPv4</translation>
-    </message>
-    <message>
-        <source>IPv6</source>
-        <translation>IPv6</translation>
-    </message>
-    <message>
-        <source>Tor</source>
-        <translation>Tor</translation>
-    </message>
-    <message>
-        <source>Connect to the KORE network through a separate SOCKS5 proxy for Tor hidden services.</source>
-        <translation>Yhdistä Kore-verkkoon erillisen SOCKS5-välityspalvelimen kautta piilotettuja Tor-palveluja varten.</translation>
-    </message>
-    <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services:</source>
-        <translation>Käytä erillistä SOCKS5-välityspalvelinta saavuttaaksesi vertaisia piilotettujen Tor-palveluiden kautta:</translation>
+        <translation>Proxyn portti (esim. 9050)</translation>
     </message>
     <message>
         <source>&amp;Window</source>
@@ -1141,11 +1255,15 @@
     </message>
     <message>
         <source>Show only a tray icon after minimizing the window.</source>
-        <translation>Näytä ainoastaan ilmaisinalueella ikkunan pienentämisen jälkeen.</translation>
+        <translation>Näytä vain tarjotin ikoni pienennettyäsi ikkunan.</translation>
     </message>
     <message>
         <source>&amp;Minimize to the tray instead of the taskbar</source>
-        <translation>&amp;Pienennä ilmaisinalueelle työkalurivin sijasta</translation>
+        <translation>&amp;Pienennä tarjottimelle tehtäväpalkin sijaan</translation>
+    </message>
+    <message>
+        <source>Minimize instead of exit the application when the window is closed. When this option is enabled, the application will be closed only after selecting Quit in the menu.</source>
+        <translation>Pienennä ikkuna poistumisen sijaan kun ikkuna suljetaan. Kun tämä vaihtoehto on valittuna, sovellus sulkeutuu vain kun se Lopetetaan valikosta.</translation>
     </message>
     <message>
         <source>M&amp;inimize on close</source>
@@ -1153,23 +1271,35 @@
     </message>
     <message>
         <source>&amp;Display</source>
-        <translation>&amp;Käyttöliittymä</translation>
+        <translation>&amp;Näyttö</translation>
     </message>
     <message>
         <source>User Interface &amp;language:</source>
-        <translation>&amp;Käyttöliittymän kieli</translation>
+        <translation>Käyttöliittymän &amp;kieli:</translation>
+    </message>
+    <message>
+        <source>User Interface Theme:</source>
+        <translation>Käyttöliittymän teema:</translation>
     </message>
     <message>
         <source>&amp;Unit to show amounts in:</source>
-        <translation>Yksikkö jona kore-määrät näytetään</translation>
+        <translation>&amp;Yksikkö jossa määrä näytetään:</translation>
     </message>
     <message>
         <source>Choose the default subdivision unit to show in the interface and when sending coins.</source>
-        <translation>Valitse mitä yksikköä käytetään ensisijaisesti kore-määrien näyttämiseen.</translation>
+        <translation>Käytä oletus vähennysyksikköä käyttöliittymässä ja kolikoita lähettäessä.</translation>
     </message>
     <message>
-        <source>Whether to show coin control features or not.</source>
-        <translation>Näytetäänkö kolikkokontrollin ominaisuuksia vai ei</translation>
+        <source>Decimal digits</source>
+        <translation>Desimaalinumerot</translation>
+    </message>
+    <message>
+        <source>Reset all client options to default.</source>
+        <translation>Palauta kaikki asetukset oletuksiin</translation>
+    </message>
+    <message>
+        <source>&amp;Reset Options</source>
+        <translation>&amp;Palauta valinnat</translation>
     </message>
     <message>
         <source>&amp;OK</source>
@@ -1184,30 +1314,26 @@
         <translation>oletus</translation>
     </message>
     <message>
-        <source>none</source>
-        <translation>ei mitään</translation>
-    </message>
-    <message>
         <source>Confirm options reset</source>
-        <translation>Varmista asetusten palautus</translation>
+        <translation>Vahvista asetusten nollaus</translation>
     </message>
     <message>
         <source>Client restart required to activate changes.</source>
-        <translation>Ohjelman uudelleenkäynnistys aktivoi muutokset.</translation>
+        <translation>Uudelleenkäynnistys vaadittu aktivoidaksesi muutokset</translation>
     </message>
     <message>
-        <source>Client will be shut down. Do you want to proceed?</source>
-        <translation>Asiakasohjelma sammutetaan. Haluatko jatkaa?</translation>
+        <source>Client will be shutdown, do you want to proceed?</source>
+        <translation>Ohjelma sammuu, haluatko jatkaa?</translation>
     </message>
     <message>
         <source>This change would require a client restart.</source>
-        <translation>Tämä muutos vaatii ohjelman uudelleenkäynnistyksen.</translation>
+        <translation>Tämä muutos vaatii uudelleenkäynnistyksen.</translation>
     </message>
     <message>
         <source>The supplied proxy address is invalid.</source>
-        <translation>Antamasi proxy-osoite on virheellinen.</translation>
+        <translation>Tarjottu proxy osoite on virheellinen.</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>OverviewPage</name>
     <message>
@@ -1215,279 +1341,174 @@
         <translation>Lomake</translation>
     </message>
     <message>
-        <source>The displayed information may be out of date. Your wallet automatically synchronizes with the KORE network after a connection is established, but this process has not completed yet.</source>
-        <translation>Näytetyt tiedot eivät välttämättä ole ajantasalla. Lompakkosi synkronoituu Kore-verkon kanssa automaattisesti yhteyden muodostamisen jälkeen, mutta synkronointi on vielä meneillään.</translation>
-    </message>
-    <message>
-        <source>Watch-only:</source>
-        <translation>Seuranta:</translation>
-    </message>
-    <message>
         <source>Available:</source>
-        <translation>Käytettävissä:</translation>
+        <translation>Saatavilla:</translation>
     </message>
     <message>
         <source>Your current spendable balance</source>
-        <translation>Nykyinen käytettävissä oleva tase</translation>
+        <translation>Nykyinen käytettävä saldo</translation>
     </message>
     <message>
         <source>Pending:</source>
-        <translation>Odotetaan:</translation>
+        <translation>Odottaa:</translation>
     </message>
     <message>
         <source>Total of transactions that have yet to be confirmed, and do not yet count toward the spendable balance</source>
-        <translation>Varmistamattomien rahansiirtojen summa, jota ei lasketa käytettävissä olevaan taseeseen.</translation>
+        <translation>Kokonaismäärä rahansiirroista, joita ei ole vielä vahvistettu, eivätkä vielä lisäänny käytettävään saldoon.</translation>
     </message>
     <message>
         <source>Immature:</source>
-        <translation>Epäkypsää:</translation>
+        <translation>Epäkypsä:</translation>
     </message>
     <message>
-        <source>Mined balance that has not yet matured</source>
-        <translation>Louhittu saldo, joka ei ole vielä kypsynyt</translation>
-    </message>
-    <message>
-        <source>Balances</source>
-        <translation>Saldot</translation>
+        <source>Staked or masternode rewards that has not yet matured</source>
+        <translation>Panostus tai masternodem palkiinnot jotka eivät ole vielä kypsyneet.</translation>
     </message>
     <message>
         <source>Total:</source>
-        <translation>Yhteensä:</translation>
-    </message>
-    <message>
-        <source>Your current total balance</source>
-        <translation>Tililläsi tällä hetkellä olevien Koreien määrä</translation>
-    </message>
-    <message>
-        <source>Your current balance in watch-only addresses</source>
-        <translation>Nykyinen tase seurantaosoitetteissa</translation>
+        <translation>Määrä:</translation>
     </message>
     <message>
         <source>Spendable:</source>
-        <translation>Käytettävissä:</translation>
+        <translation>Käytettävää:</translation>
     </message>
-    <message>
-        <source>Recent transactions</source>
-        <translation>Viimeisimmät rahansiirrot</translation>
-    </message>
-    <message>
-        <source>Unconfirmed transactions to watch-only addresses</source>
-        <translation>Vahvistamattomat rahansiirrot vain katseltaviin osoitteisiin</translation>
-    </message>
-    <message>
-        <source>Mined balance in watch-only addresses that has not yet matured</source>
-        <translation>Louhittu, ei vielä kypsynyt saldo vain katseltavissa osoitteissa</translation>
-    </message>
-    <message>
-        <source>Current total balance in watch-only addresses</source>
-        <translation>Nykyinen tase seurantaosoitetteissa</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>PaymentServer</name>
-    <message>
-        <source>URI handling</source>
-        <translation>URI käsittely</translation>
-    </message>
-    <message>
-        <source>Invalid payment address %1</source>
-        <translation>Virheellinen maksuosoite %1</translation>
-    </message>
-    <message>
-        <source>Payment request rejected</source>
-        <translation>Maksupyyntö hylätty</translation>
-    </message>
-    <message>
-        <source>Payment request network doesn't match client network.</source>
-        <translation>Maksypyyntö verkossa ei täsmää asiakasohjelman verkkoon.</translation>
-    </message>
-    <message>
-        <source>Payment request is not initialized.</source>
-        <translation>Maksupyyntöä ei ole alustettu.</translation>
-    </message>
-    <message>
-        <source>Requested payment amount of %1 is too small (considered dust).</source>
-        <translation>Maksupyyntö %1 on liian pieni (huomioidaan tomuna).</translation>
-    </message>
-    <message>
-        <source>Payment request error</source>
-        <translation>Maksupyyntövirhe</translation>
-    </message>
-    <message>
-        <source>Cannot start kore: click-to-pay handler</source>
-        <translation>Ei voida käynnistää kore: klikkaa-maksu käsittelijää</translation>
-    </message>
-    <message>
-        <source>Payment request fetch URL is invalid: %1</source>
-        <translation>Maksupyynnön haku URL on virheellinen: %1</translation>
-    </message>
-    <message>
-        <source>URI cannot be parsed! This can be caused by an invalid Koreaddress or malformed URI parameters.</source>
-        <translation>URIa ei voitu jäsentää! Tämä voi johtua kelvottomasta Kore-osoitteesta tai virheellisistä URI parametreista.</translation>
-    </message>
-    <message>
-        <source>Payment request file handling</source>
-        <translation>Maksupyynnön tiedoston käsittely</translation>
-    </message>
-    <message>
-        <source>Payment request file cannot be read! This can be caused by an invalid payment request file.</source>
-        <translation>Maksupyynnön tiedostoa ei voida lukea! Tämä voi aiheutua sopimattomasta maksupyyntötiedostosta.</translation>
-    </message>
-    <message>
-        <source>Payment request expired.</source>
-        <translation>Maksupyyntö on vanhentunut.</translation>
-    </message>
-    <message>
-        <source>Unverified payment requests to custom payment scripts are unsupported.</source>
-        <translation>Varmistamattomia maksupyyntöjä kustomoituun maksupalveluun ei tueta.</translation>
-    </message>
-    <message>
-        <source>Invalid payment request.</source>
-        <translation>Epäkelpo maksupyyntö.</translation>
-    </message>
-    <message>
-        <source>Refund from %1</source>
-        <translation>Maksupalautus %1:sta</translation>
-    </message>
-    <message>
-        <source>Payment request %1 is too large (%2 bytes, allowed %3 bytes).</source>
-        <translation>Maksupyyntö %1 on liian suuri (%2 tavua, sallittu %3 tavua).</translation>
-    </message>
-    <message>
-        <source>Error communicating with %1: %2</source>
-        <translation>Virhe kommunikoidessa %1n kanssa: %2</translation>
-    </message>
-    <message>
-        <source>Payment request cannot be parsed!</source>
-        <translation>Maksupyyntöä ei voida jäsentää!</translation>
-    </message>
-    <message>
-        <source>Bad response from server %1</source>
-        <translation>Huono vastaus palvelimelta %1</translation>
-    </message>
-    <message>
-        <source>Payment acknowledged</source>
-        <translation>Rahansiirto tunnistettu</translation>
-    </message>
-    <message>
-        <source>Network request error</source>
-        <translation>Tietoverkon pyyntövirhe</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>PeerTableModel</name>
     <message>
-        <source>User Agent</source>
-        <translation>Käyttöliittymä</translation>
-    </message>
-    <message>
-        <source>Node/Service</source>
-        <translation>Noodi/Palvelu</translation>
+        <source>Version</source>
+        <translation>Versio</translation>
     </message>
     <message>
         <source>Ping Time</source>
-        <translation>Vasteaika</translation>
+        <translation>Ping aika</translation>
     </message>
 </context>
+<context>
+    <name>PrivacyDialog</name>
+    <message>
+        <source>0</source>
+        <translation>0</translation>
+    </message>
+    <message>
+        <source>Quantity:</source>
+        <translation>Määrä:</translation>
+    </message>
+    <message>
+        <source>Amount:</source>
+        <translation>Määrä:</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>Valitse aikaisemmin käytetty osoite</translation>
+    </message>
+    <message>
+        <source>Alt+A</source>
+        <translation>Alt+A</translation>
+    </message>
+    <message>
+        <source>Paste address from clipboard</source>
+        <translation>Liitä osoite leikepöydältä</translation>
+    </message>
+    <message>
+        <source>Alt+P</source>
+        <translation>Alt+P</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Nimike:</translation>
+    </message>
+    <message>
+        <source>Enter a label for this address to add it to the list of used addresses</source>
+        <translation>Syötä nimike tälle osoittelle lisätäksesi se käytettävien osoitteiden listaan</translation>
+    </message>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>M&amp;äärä:</translation>
+    </message>
+    <message>
+        <source>Priority:</source>
+        <translation>Tärkeys:</translation>
+    </message>
+    <message>
+        <source>TextLabel</source>
+        <translation>TekstiNimike</translation>
+    </message>
+    <message>
+        <source>Fee:</source>
+        <translation>Taksa:</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>ei</translation>
+    </message>
+    <message>
+        <source>Bytes:</source>
+        <translation>Tavut:</translation>
+    </message>
+    <message>
+        <source>Insufficient funds!</source>
+        <translation>Puutteelliset varat!</translation>
+    </message>
+    <message>
+        <source>medium</source>
+        <translation>kohtalainen</translation>
+    </message>
+    <message>
+        <source>Change:</source>
+        <translation>Muutos:</translation>
+    </message>
+    <message>
+        <source>Copy quantity</source>
+        <translation>Kopioi määrä</translation>
+    </message>
+    <message>
+        <source>Copy amount</source>
+        <translation>Kopioi määrä</translation>
+    </message>
+    <message>
+        <source>Confirm send coins</source>
+        <translation>Vahvista kolikoiden lähetys</translation>
+    </message>
+    </context>
 <context>
     <name>QObject</name>
     <message>
         <source>Amount</source>
         <translation>Määrä</translation>
     </message>
-    <message>
-        <source>Enter a Koreaddress (e.g. %1)</source>
-        <translation>Syötä Kore-osoite (esim. %1)</translation>
-    </message>
-    <message>
-        <source>%1 d</source>
-        <translation>%1 d</translation>
-    </message>
-    <message>
-        <source>%1 h</source>
-        <translation>%1 h</translation>
-    </message>
-    <message>
-        <source>%1 m</source>
-        <translation>%1 m</translation>
-    </message>
-    <message>
-        <source>%1 s</source>
-        <translation>%1 s</translation>
-    </message>
-    <message>
-        <source>None</source>
-        <translation>Ei yhtään</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Ei saatavilla</translation>
-    </message>
-    <message>
-        <source>%1 ms</source>
-        <translation>%1 ms</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>QRImageWidget</name>
     <message>
         <source>&amp;Save Image...</source>
-        <translation>&amp;Tallenna kuva</translation>
+        <translation>&amp;Tallenna Kuva...</translation>
     </message>
     <message>
         <source>&amp;Copy Image</source>
-        <translation>&amp;Kopioi kuva</translation>
+        <translation>&amp;Kopioi Kuva</translation>
     </message>
     <message>
         <source>Save QR Code</source>
-        <translation>Tallenna QR-koodi</translation>
+        <translation>Tallenna QR koodi</translation>
     </message>
-    <message>
-        <source>PNG Image (*.png)</source>
-        <translation>PNG kuva (*.png)</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>RPCConsole</name>
     <message>
-        <source>Client name</source>
-        <translation>Pääteohjelman nimi</translation>
-    </message>
-    <message>
-        <source>N/A</source>
-        <translation>Ei saatavilla</translation>
-    </message>
-    <message>
-        <source>Client version</source>
-        <translation>Pääteohjelman versio</translation>
+        <source>Tools window</source>
+        <translation>Työkaluikkuna</translation>
     </message>
     <message>
         <source>&amp;Information</source>
-        <translation>T&amp;ietoa</translation>
-    </message>
-    <message>
-        <source>Debug window</source>
-        <translation>&amp;Debug-ikkuna</translation>
+        <translation>&amp;Informaatio</translation>
     </message>
     <message>
         <source>General</source>
         <translation>Yleinen</translation>
-    </message>
-    <message>
-        <source>Using OpenSSL version</source>
-        <translation>Käytössä oleva OpenSSL-versio</translation>
-    </message>
-    <message>
-        <source>Using BerkeleyDB version</source>
-        <translation>Käyttää BerkeleyDB-versiota</translation>
-    </message>
-    <message>
-        <source>Startup time</source>
-        <translation>Käynnistysaika</translation>
-    </message>
-    <message>
-        <source>Network</source>
-        <translation>Verkko</translation>
     </message>
     <message>
         <source>Name</source>
@@ -1495,127 +1516,39 @@
     </message>
     <message>
         <source>Number of connections</source>
-        <translation>Yhteyksien lukumäärä</translation>
-    </message>
-    <message>
-        <source>Block chain</source>
-        <translation>Lohkoketju</translation>
-    </message>
-    <message>
-        <source>Current number of blocks</source>
-        <translation>Nykyinen Lohkojen määrä</translation>
-    </message>
-    <message>
-        <source>Memory Pool</source>
-        <translation>Muistiallas</translation>
-    </message>
-    <message>
-        <source>Current number of transactions</source>
-        <translation>Tämänhetkinen rahansiirtojen määrä</translation>
-    </message>
-    <message>
-        <source>Memory usage</source>
-        <translation>Muistin käyttö</translation>
-    </message>
-    <message>
-        <source>Open the Kore Core debug log file from the current data directory. This can take a few seconds for large log files.</source>
-        <translation>Avaa Kore Coren debug-loki tämänhetkisestä datahakemistosta. Tämä voi viedä muutaman sekunnin suurille lokitiedostoille.</translation>
-    </message>
-    <message>
-        <source>Received</source>
-        <translation>Vastaanotetut</translation>
-    </message>
-    <message>
-        <source>Sent</source>
-        <translation>Lähetetyt</translation>
-    </message>
-    <message>
-        <source>&amp;Peers</source>
-        <translation>&amp;Vertaiset</translation>
-    </message>
-    <message>
-        <source>Banned peers</source>
-        <translation>Estetyt vertaiset</translation>
-    </message>
-    <message>
-        <source>Select a peer to view detailed information.</source>
-        <translation>Valitse vertainen eriteltyjä tietoja varten.</translation>
-    </message>
-    <message>
-        <source>Whitelisted</source>
-        <translation>Sallittu</translation>
-    </message>
-    <message>
-        <source>Direction</source>
-        <translation>Suunta</translation>
-    </message>
-    <message>
-        <source>Version</source>
-        <translation>Versio</translation>
-    </message>
-    <message>
-        <source>Starting Block</source>
-        <translation>Alkaen lohkosta</translation>
-    </message>
-    <message>
-        <source>Synced Headers</source>
-        <translation>Synkronoidut ylätunnisteet</translation>
-    </message>
-    <message>
-        <source>Synced Blocks</source>
-        <translation>Synkronoidut lohkot</translation>
-    </message>
-    <message>
-        <source>User Agent</source>
-        <translation>Käyttöliittymä</translation>
-    </message>
-    <message>
-        <source>Services</source>
-        <translation>Palvelut</translation>
-    </message>
-    <message>
-        <source>Ban Score</source>
-        <translation>Panna-pisteytys</translation>
-    </message>
-    <message>
-        <source>Connection Time</source>
-        <translation>Yhteysaika</translation>
-    </message>
-    <message>
-        <source>Last Send</source>
-        <translation>Viimeisin lähetetty</translation>
-    </message>
-    <message>
-        <source>Last Receive</source>
-        <translation>Viimeisin vastaanotettu</translation>
-    </message>
-    <message>
-        <source>Ping Time</source>
-        <translation>Vasteaika</translation>
-    </message>
-    <message>
-        <source>The duration of a currently outstanding ping.</source>
-        <translation>Tämänhetkisen merkittävän yhteyskokeilun kesto.</translation>
-    </message>
-    <message>
-        <source>Ping Wait</source>
-        <translation>Yhteyskokeilun odotus</translation>
-    </message>
-    <message>
-        <source>Time Offset</source>
-        <translation>Ajan poikkeama</translation>
-    </message>
-    <message>
-        <source>Last block time</source>
-        <translation>Viimeisimmän lohkon aika</translation>
+        <translation>Yhteyksien määrä</translation>
     </message>
     <message>
         <source>&amp;Open</source>
         <translation>&amp;Avaa</translation>
     </message>
     <message>
+        <source>Startup time</source>
+        <translation>Käynnistysaika</translation>
+    </message>
+    <message>
+        <source>Current number of blocks</source>
+        <translation>Nykyinen lohkojen määrä</translation>
+    </message>
+    <message>
+        <source>Block chain</source>
+        <translation>Lohko ketju</translation>
+    </message>
+    <message>
+        <source>Open the KORE debug log file from the current data directory. This can take a few seconds for large log files.</source>
+        <translation>Avaa KORE debug loki nykyisestä sijainnista. Tämä voi kestää muutaman sekunnin suurille lokeille</translation>
+    </message>
+    <message>
+        <source>Number of Masternodes</source>
+        <translation>Masternodien määrä</translation>
+    </message>
+    <message>
         <source>&amp;Console</source>
         <translation>&amp;Konsoli</translation>
+    </message>
+    <message>
+        <source>Clear console</source>
+        <translation>Tyhjennä konsoli</translation>
     </message>
     <message>
         <source>&amp;Network Traffic</source>
@@ -1627,7 +1560,83 @@
     </message>
     <message>
         <source>Totals</source>
-        <translation>Yhteensä</translation>
+        <translation>Kokonaismäärät</translation>
+    </message>
+    <message>
+        <source>Received</source>
+        <translation>Vastaanotettu</translation>
+    </message>
+    <message>
+        <source>Sent</source>
+        <translation>Lähetetty</translation>
+    </message>
+    <message>
+        <source>Direction</source>
+        <translation>Suunta</translation>
+    </message>
+    <message>
+        <source>Protocol</source>
+        <translation>Protokolla</translation>
+    </message>
+    <message>
+        <source>Version</source>
+        <translation>Versio</translation>
+    </message>
+    <message>
+        <source>Services</source>
+        <translation>Palvelut</translation>
+    </message>
+    <message>
+        <source>Connection Time</source>
+        <translation>Yhteysaika</translation>
+    </message>
+    <message>
+        <source>Last Send</source>
+        <translation>Viime lähetys</translation>
+    </message>
+    <message>
+        <source>Last Receive</source>
+        <translation>Viime vastaanotto</translation>
+    </message>
+    <message>
+        <source>Bytes Sent</source>
+        <translation>Tavuja lähetetty</translation>
+    </message>
+    <message>
+        <source>Bytes Received</source>
+        <translation>Tavuja vastaanotettu</translation>
+    </message>
+    <message>
+        <source>Ping Time</source>
+        <translation>Ping aika</translation>
+    </message>
+    <message>
+        <source>&amp;Wallet Repair</source>
+        <translation>&amp;Lompakon korjaus</translation>
+    </message>
+    <message>
+        <source>Wallet In Use:</source>
+        <translation>Käytössä oleva lompakko:</translation>
+    </message>
+    <message>
+        <source>Salvage wallet</source>
+        <translation>Pelasta lompakko</translation>
+    </message>
+    <message>
+        <source>Attempt to recover private keys from a corrupt wallet.dat.</source>
+        <translation>Yritä pelastaa yksityisavaimet korruptoituneesa wallet.dat tiedostosta</translation>
+    </message>
+    <message>
+        <source>Rescan blockchain files</source>
+        <translation>Uudelleenskannaa blockchain tiedostot</translation>
+    </message>
+    <message>
+        <source>Rescan the block chain for missing wallet transactions.</source>
+        <translation>Uudelleenskannaa blockchain puuttuvista rahansiirroista</translation>
+    </message>
+    <message>
+        <source>Wallet repair options.</source>
+        <translation>Lompakon korjausvaihtoehdot</translation>
     </message>
     <message>
         <source>In:</source>
@@ -1638,100 +1647,20 @@
         <translation>Ulos:</translation>
     </message>
     <message>
-        <source>Build date</source>
-        <translation>Kääntöpäiväys</translation>
-    </message>
-    <message>
-        <source>Debug log file</source>
-        <translation>Debug lokitiedosto</translation>
-    </message>
-    <message>
-        <source>Clear console</source>
-        <translation>Tyhjennä konsoli</translation>
-    </message>
-    <message>
-        <source>&amp;Disconnect Node</source>
-        <translation>&amp;Katkaise yhteys solmukohtaan</translation>
-    </message>
-    <message>
-        <source>Ban Node for</source>
-        <translation>Estä solmukohta</translation>
-    </message>
-    <message>
-        <source>1 &amp;hour</source>
-        <translation>1 &amp;tunti</translation>
-    </message>
-    <message>
-        <source>1 &amp;day</source>
-        <translation>1 &amp;päivä</translation>
-    </message>
-    <message>
-        <source>1 &amp;week</source>
-        <translation>1 &amp;viikko</translation>
-    </message>
-    <message>
-        <source>1 &amp;year</source>
-        <translation>1 &amp;vuosi</translation>
-    </message>
-    <message>
-        <source>&amp;Unban Node</source>
-        <translation>&amp;Poista solmukohdan esto</translation>
-    </message>
-    <message>
-        <source>Welcome to the Kore Core RPC console.</source>
-        <translation>Tervetuloa Kore Coren RPC-konsoliin.</translation>
-    </message>
-    <message>
-        <source>Use up and down arrows to navigate history, and &lt;b&gt;Ctrl-L&lt;/b&gt; to clear screen.</source>
-        <translation>Ylös- ja alas-nuolet selaavat historiaa ja &lt;b&gt;Ctrl-L&lt;/b&gt; tyhjentää ruudun.</translation>
-    </message>
-    <message>
-        <source>Type &lt;b&gt;help&lt;/b&gt; for an overview of available commands.</source>
-        <translation>Kirjoita &lt;b&gt;help&lt;/b&gt; nähdäksesi yleiskatsauksen käytettävissä olevista komennoista.</translation>
-    </message>
-    <message>
-        <source>%1 B</source>
-        <translation>%1 B</translation>
-    </message>
-    <message>
-        <source>%1 KB</source>
-        <translation>%1 KB</translation>
-    </message>
-    <message>
-        <source>%1 MB</source>
-        <translation>%1 MB</translation>
-    </message>
-    <message>
-        <source>%1 GB</source>
-        <translation>%1 GB</translation>
-    </message>
-    <message>
-        <source>(node id: %1)</source>
-        <translation>(solmukohdan id: %1)</translation>
-    </message>
-    <message>
-        <source>via %1</source>
-        <translation>%1 kautta</translation>
+        <source>Welcome to the KORE RPC console.</source>
+        <translation>Tervetuloa KORE RPC konsoliin.</translation>
     </message>
     <message>
         <source>never</source>
-        <translation>ei koskaan</translation>
+        <translation>ikinä</translation>
     </message>
     <message>
         <source>Inbound</source>
-        <translation>Sisääntuleva</translation>
+        <translation>Saapuva</translation>
     </message>
     <message>
         <source>Outbound</source>
-        <translation>Ulosmenevä</translation>
-    </message>
-    <message>
-        <source>Yes</source>
-        <translation>Kyllä</translation>
-    </message>
-    <message>
-        <source>No</source>
-        <translation>Ei</translation>
+        <translation>Lähtevä</translation>
     </message>
     <message>
         <source>Unknown</source>
@@ -1741,44 +1670,52 @@
 <context>
     <name>ReceiveCoinsDialog</name>
     <message>
-        <source>&amp;Amount:</source>
-        <translation>&amp;Määrä</translation>
+        <source>Reuse one of the previously used receiving addresses.&lt;br&gt;Reusing addresses has security and privacy issues.&lt;br&gt;Do not use this unless re-generating a payment request made before.</source>
+        <translation>Uudelleenkäytä yksi aikaisemmista vastaanottavista osoitteista. &lt;br&gt; Osoitteen uudelleenkäytössä on turvallisuus- ja yksityisyysongelmia.&lt;br&gt; Älä käytä tätä ellet halua uudelleen käyttää vanhaa maksupyyntöä.</translation>
     </message>
     <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Nimi:</translation>
+        <source>R&amp;euse an existing receiving address (not recommended)</source>
+        <translation>U&amp;udelleenkäytä olemassaoleva vastaanottava osoite (Ei suositeltu)</translation>
     </message>
     <message>
         <source>&amp;Message:</source>
         <translation>&amp;Viesti:</translation>
     </message>
     <message>
-        <source>Reuse one of the previously used receiving addresses. Reusing addresses has security and privacy issues. Do not use this unless re-generating a payment request made before.</source>
-        <translation>Uudelleenkäytä yksi vanhoista vastaanotto-osoitteista. Uudelleenkäyttössä on turvallisuus- ja yksityisyysongelmia. Älä käytä tätä ellet ole uudelleenluomassa aikaisempaa maksupyyntöä.</translation>
-    </message>
-    <message>
-        <source>R&amp;euse an existing receiving address (not recommended)</source>
-        <translation>&amp;Uudelleenkäytä vastaanotto-osoitetta (ei suositella)</translation>
+        <source>An optional label to associate with the new receiving address.</source>
+        <translation>Vaihtoehtoinen nimike uudelle vastaanottavalle osoitteelle</translation>
     </message>
     <message>
         <source>An optional message to attach to the payment request, which will be displayed when the request is opened. Note: The message will not be sent with the payment over the KORE network.</source>
-        <translation>Valinnainen viesti liitetään maksupyyntöön ja näytetään avattaessa. Viestiä ei lähetetä Kore-verkkoon.</translation>
+        <translation>Vaihtoehtoinen viesti joka liitetään maksupyyntöön, joka näytetään kun pyyntö avataan. Huomio: Viestiä ei lähetetä maksun mukana KORE verkolle.</translation>
     </message>
     <message>
-        <source>An optional label to associate with the new receiving address.</source>
-        <translation>Valinnainen nimi liitetään vastaanottavaan osoitteeseen.</translation>
+        <source>An optional message to attach to the payment request, which will be displayed when the request is opened.&lt;br&gt;Note: The message will not be sent with the payment over the KORE network.</source>
+        <translation>Vaihtoehtoinen viesti, joka liitetään maksupyyntöö, joka näytetään kun pyyntö avataan. &lt;br&gt; Huomio: Tätä viestiä ei lähetetä maksun mukana KORE  verkolle.</translation>
     </message>
     <message>
         <source>Use this form to request payments. All fields are &lt;b&gt;optional&lt;/b&gt;.</source>
-        <translation>Käytä lomaketta maksupyyntöihin. Kaikki kentät ovat &lt;b&gt;valinnaisia&lt;/b&gt;.</translation>
+        <translation>Käytä tätä lomaketta luodaksesi maksupyyntöjä. Kaikki kentät ovat &lt;b&gt; vaihtoehtoisia&lt;/b&gt;.</translation>
+    </message>
+    <message>
+        <source>&amp;Label:</source>
+        <translation>&amp;Nimike:</translation>
     </message>
     <message>
         <source>An optional amount to request. Leave this empty or zero to not request a specific amount.</source>
-        <translation>Valinnainen pyyntömäärä. Jätä tyhjäksi tai nollaksi jos et pyydä tiettyä määrää.</translation>
+        <translation>Pyydä vaihtoehtoinen määrä. Jätä tämä tyhjäksi tai 0, jos haluat pyytää ennaltamääräämättömän summan</translation>
+    </message>
+    <message>
+        <source>&amp;Amount:</source>
+        <translation>&amp;Määrä:</translation>
+    </message>
+    <message>
+        <source>&amp;Request payment</source>
+        <translation>&amp;Pyydä maksua</translation>
     </message>
     <message>
         <source>Clear all fields of the form.</source>
-        <translation>Tyhjennä lomakkeen kaikki kentät.</translation>
+        <translation>Tyhjennä kaikki kentät lomakkeesta</translation>
     </message>
     <message>
         <source>Clear</source>
@@ -1786,15 +1723,11 @@
     </message>
     <message>
         <source>Requested payments history</source>
-        <translation>Pyydettyjen maksujen historia</translation>
-    </message>
-    <message>
-        <source>&amp;Request payment</source>
-        <translation>&amp;Vastaanota maksu</translation>
+        <translation>Pyydetty maksuhistoria</translation>
     </message>
     <message>
         <source>Show the selected request (does the same as double clicking an entry)</source>
-        <translation>Näytä valittu pyyntö (sama toiminta kuin alkion tuplaklikkaus)</translation>
+        <translation>Näytä valittu pyyntö (sama kuin tuplaklikkaus)</translation>
     </message>
     <message>
         <source>Show</source>
@@ -1802,7 +1735,7 @@
     </message>
     <message>
         <source>Remove the selected entries from the list</source>
-        <translation>Poista valitut alkiot listasta</translation>
+        <translation>Poista valitut merkinnät listalta</translation>
     </message>
     <message>
         <source>Remove</source>
@@ -1810,7 +1743,7 @@
     </message>
     <message>
         <source>Copy label</source>
-        <translation>Kopioi nimi</translation>
+        <translation>Kopioi nimike</translation>
     </message>
     <message>
         <source>Copy message</source>
@@ -1825,7 +1758,7 @@
     <name>ReceiveRequestDialog</name>
     <message>
         <source>QR Code</source>
-        <translation>QR-koodi</translation>
+        <translation>QR Koodi</translation>
     </message>
     <message>
         <source>Copy &amp;URI</source>
@@ -1837,11 +1770,11 @@
     </message>
     <message>
         <source>&amp;Save Image...</source>
-        <translation>&amp;Tallenna kuva</translation>
+        <translation>&amp;Tallenna Kuva...</translation>
     </message>
     <message>
         <source>Request payment to %1</source>
-        <translation>Vastaanota maksu %1</translation>
+        <translation>Pyydä maksu %1</translation>
     </message>
     <message>
         <source>Payment information</source>
@@ -1861,7 +1794,7 @@
     </message>
     <message>
         <source>Label</source>
-        <translation>Nimi</translation>
+        <translation>Nimike</translation>
     </message>
     <message>
         <source>Message</source>
@@ -1869,22 +1802,22 @@
     </message>
     <message>
         <source>Resulting URI too long, try to reduce the text for label / message.</source>
-        <translation>Tuloksen URI liian pitkä, yritä lyhentää otsikon tekstiä / viestiä.</translation>
+        <translation>Tuotettu URI liian pitkä, yritä vähentää merkkien määrää nimikkeessä / viestissä.</translation>
     </message>
     <message>
         <source>Error encoding URI into QR Code.</source>
-        <translation>Virhe käännettäessä URI:a QR-koodiksi.</translation>
+        <translation>Virhe koodetessa URIa QR koodiksi.</translation>
     </message>
 </context>
 <context>
     <name>RecentRequestsTableModel</name>
     <message>
         <source>Date</source>
-        <translation>Aika</translation>
+        <translation>Päivämäärä</translation>
     </message>
     <message>
         <source>Label</source>
-        <translation>Nimi</translation>
+        <translation>Nimike</translation>
     </message>
     <message>
         <source>Message</source>
@@ -1896,7 +1829,7 @@
     </message>
     <message>
         <source>(no label)</source>
-        <translation>(ei nimeä)</translation>
+        <translation>(ei nimikettä)</translation>
     </message>
     <message>
         <source>(no message)</source>
@@ -1911,23 +1844,11 @@
     <name>SendCoinsDialog</name>
     <message>
         <source>Send Coins</source>
-        <translation>Lähetä Koreeja</translation>
-    </message>
-    <message>
-        <source>Coin Control Features</source>
-        <translation>Kolikkokontrolli ominaisuudet</translation>
-    </message>
-    <message>
-        <source>Inputs...</source>
-        <translation>Sisääntulot...</translation>
-    </message>
-    <message>
-        <source>automatically selected</source>
-        <translation>automaattisesti valitut</translation>
+        <translation>Lähetä Kolikot</translation>
     </message>
     <message>
         <source>Insufficient funds!</source>
-        <translation>Lompakon saldo ei riitä!</translation>
+        <translation>Puutteelliset varat!</translation>
     </message>
     <message>
         <source>Quantity:</source>
@@ -1935,7 +1856,7 @@
     </message>
     <message>
         <source>Bytes:</source>
-        <translation>Tavuja:</translation>
+        <translation>Tavut:</translation>
     </message>
     <message>
         <source>Amount:</source>
@@ -1943,67 +1864,39 @@
     </message>
     <message>
         <source>Priority:</source>
-        <translation>Prioriteetti:</translation>
+        <translation>Tärkeys:</translation>
+    </message>
+    <message>
+        <source>medium</source>
+        <translation>kohtalainen</translation>
     </message>
     <message>
         <source>Fee:</source>
-        <translation>Palkkio:</translation>
+        <translation>Taksa:</translation>
+    </message>
+    <message>
+        <source>no</source>
+        <translation>ei</translation>
     </message>
     <message>
         <source>After Fee:</source>
-        <translation>Palkkion jälkeen:</translation>
+        <translation>Taksan jälkeen:</translation>
     </message>
     <message>
         <source>Change:</source>
-        <translation>Vaihtoraha:</translation>
+        <translation>Muutos:</translation>
     </message>
     <message>
-        <source>If this is activated, but the change address is empty or invalid, change will be sent to a newly generated address.</source>
-        <translation>Jos tämä aktivoidaan mutta vaihtorahan osoite on tyhjä tai virheellinen, vaihtoraha tullaan lähettämään uuteen luotuun osoitteeseen.</translation>
-    </message>
-    <message>
-        <source>Custom change address</source>
-        <translation>Kustomoitu vaihtorahan osoite</translation>
-    </message>
-    <message>
-        <source>Transaction Fee:</source>
-        <translation>Rahansiirtokulu:</translation>
+        <source>0 KORE</source>
+        <translation>0 KORE</translation>
     </message>
     <message>
         <source>Choose...</source>
         <translation>Valitse...</translation>
     </message>
     <message>
-        <source>collapse fee-settings</source>
-        <translation>pudota kulujen asetukset</translation>
-    </message>
-    <message>
-        <source>per kilobyte</source>
-        <translation>per kilotavu</translation>
-    </message>
-    <message>
-        <source>Hide</source>
-        <translation>Piilota</translation>
-    </message>
-    <message>
-        <source>total at least</source>
-        <translation>yhteensä ainakin</translation>
-    </message>
-    <message>
-        <source>(read the tooltip)</source>
-        <translation>(lue työkaluvinkki)</translation>
-    </message>
-    <message>
-        <source>Recommended:</source>
-        <translation>Suositeltu:</translation>
-    </message>
-    <message>
-        <source>Custom:</source>
-        <translation>Muokattu:</translation>
-    </message>
-    <message>
-        <source>(Smart fee not initialized yet. This usually takes a few blocks...)</source>
-        <translation>(Älykästä rahansiirtokulua ei ole vielä alustettu. Tähän kuluu yleensä aikaa muutaman lohkon verran...)</translation>
+        <source>Minimize</source>
+        <translation>Minimoi</translation>
     </message>
     <message>
         <source>Confirmation time:</source>
@@ -2018,36 +1911,16 @@
         <translation>nopea</translation>
     </message>
     <message>
+        <source>Recommended</source>
+        <translation>Suositeltu</translation>
+    </message>
+    <message>
         <source>Send as zero-fee transaction if possible</source>
-        <translation>Lähetä siirtokuluttomana jos mahdollista</translation>
+        <translation>Lähetä nolla taksainen rahansiirto jos mahdollista</translation>
     </message>
     <message>
         <source>(confirmation may take longer)</source>
-        <translation>(vahvistaminen voi viedä kauemmin)</translation>
-    </message>
-    <message>
-        <source>Send to multiple recipients at once</source>
-        <translation>Lähetä usealla vastaanottajalle samanaikaisesti</translation>
-    </message>
-    <message>
-        <source>Add &amp;Recipient</source>
-        <translation>Lisää &amp;Vastaanottaja</translation>
-    </message>
-    <message>
-        <source>Clear all fields of the form.</source>
-        <translation>Tyhjennä lomakkeen kaikki kentät</translation>
-    </message>
-    <message>
-        <source>Dust:</source>
-        <translation>Tomu:</translation>
-    </message>
-    <message>
-        <source>Clear &amp;All</source>
-        <translation>&amp;Tyhjennnä Kaikki</translation>
-    </message>
-    <message>
-        <source>Balance:</source>
-        <translation>Balanssi:</translation>
+        <translation>(Vahvistus voi kestää pidempään)</translation>
     </message>
     <message>
         <source>Confirm the send action</source>
@@ -2055,15 +1928,27 @@
     </message>
     <message>
         <source>S&amp;end</source>
-        <translation>&amp;Lähetä</translation>
+        <translation>L&amp;ähetä</translation>
     </message>
     <message>
-        <source>Confirm send coins</source>
-        <translation>Hyväksy Koreien lähettäminen</translation>
+        <source>Clear all fields of the form.</source>
+        <translation>Tyhjennä kaikki kentät lomakkeesta</translation>
     </message>
     <message>
-        <source>%1 to %2</source>
-        <translation>%1 to %2</translation>
+        <source>Clear &amp;All</source>
+        <translation>Tyhjennä &amp;Kaikki</translation>
+    </message>
+    <message>
+        <source>Send to multiple recipients at once</source>
+        <translation>Lähetä useammalle vastaanottajalle kerralla</translation>
+    </message>
+    <message>
+        <source>Add &amp;Recipient</source>
+        <translation>Lisää &amp;Vastaanottaja</translation>
+    </message>
+    <message>
+        <source>Balance:</source>
+        <translation>Saldo:</translation>
     </message>
     <message>
         <source>Copy quantity</source>
@@ -2075,130 +1960,66 @@
     </message>
     <message>
         <source>Copy fee</source>
-        <translation>Kopioi palkkio</translation>
+        <translation>Kopioi taksa</translation>
     </message>
     <message>
-        <source>Copy after fee</source>
-        <translation>Kopioi palkkion jälkeen</translation>
-    </message>
-    <message>
-        <source>Copy bytes</source>
-        <translation>Kopioi tavut</translation>
-    </message>
-    <message>
-        <source>Copy priority</source>
-        <translation>Kopioi prioriteetti</translation>
-    </message>
-    <message>
-        <source>Copy change</source>
-        <translation>Kopioi vaihtoraha</translation>
-    </message>
-    <message>
-        <source>Total Amount %1</source>
-        <translation>Kokonaismäärä %1</translation>
-    </message>
-    <message>
-        <source>or</source>
-        <translation>tai</translation>
-    </message>
-    <message>
-        <source>The amount to pay must be larger than 0.</source>
-        <translation>Maksettavan summan tulee olla suurempi kuin 0 Koreia.</translation>
-    </message>
-    <message>
-        <source>The amount exceeds your balance.</source>
-        <translation>Määrä ylittää käytettävissä olevan saldon.</translation>
-    </message>
-    <message>
-        <source>The total exceeds your balance when the %1 transaction fee is included.</source>
-        <translation>Kokonaismäärä ylittää saldosi kun %1 maksukulu lisätään summaan.</translation>
-    </message>
-    <message>
-        <source>Transaction creation failed!</source>
-        <translation>Rahansiirron luonti epäonnistui!</translation>
-    </message>
-    <message>
-        <source>The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.</source>
-        <translation>Rahansiirto hylättiin! Tämä saattaa tapahtua jos lompakossa olevat kolikot on jo kulutettu, kuten jos käytät kopioita wallet.dat tiedostosta ja kolikot oli jos käytetty mutta ei merkattu täällä.</translation>
-    </message>
-    <message>
-        <source>A fee higher than %1 is considered an absurdly high fee.</source>
-        <translation>Rahansiirtokulua %1 ja sitä suurempia määriä pidetään järjenvastaisen korkeana kuluna.</translation>
-    </message>
-    <message>
-        <source>Payment request expired.</source>
-        <translation>Maksupyyntö on vanhentunut.</translation>
-    </message>
-    <message>
-        <source>Pay only the required fee of %1</source>
-        <translation>Maksa vain vaadittu kulu kooltaan %1</translation>
-    </message>
-    <message numerus="yes">
-        <source>Estimated to begin confirmation within %n block(s).</source>
-        <translation><numerusform>Vahvistuminen alkaa arviolta %n lohkon päästä.</numerusform><numerusform>Vahvistuminen alkaa arviolta %n lohkon päästä.</numerusform></translation>
-    </message>
-    <message>
-        <source>The recipient address is not valid. Please recheck.</source>
-        <translation>Vastaanottajan osoite ei ole kelvollinen. Tarkistathan uudelleen.</translation>
-    </message>
-    <message>
-        <source>Duplicate address found: addresses should only be used once each.</source>
-        <translation>Duplikaattiosoite löytyi: kutakin osoitetta pitäisi käyttää vain kerran.</translation>
-    </message>
-    <message>
-        <source>Warning: Invalid Koreaddress</source>
-        <translation>Varoitus: Virheellinen Koreosoite</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(ei nimeä)</translation>
-    </message>
-    <message>
-        <source>Warning: Unknown change address</source>
-        <translation>Varoitus: Tuntematon vaihtorahan osoite</translation>
-    </message>
-    <message>
-        <source>Copy dust</source>
-        <translation>Kopioi tomu</translation>
+        <source>Warning: Invalid KORE address</source>
+        <translation>Varoitus: Virheellinen KORE osoite</translation>
     </message>
     <message>
         <source>Are you sure you want to send?</source>
-        <translation>Haluatko varmasti lähettää?</translation>
+        <translation>Oletko varma että tahdot lähettää?</translation>
     </message>
     <message>
-        <source>added as transaction fee</source>
-        <translation>lisätty rahansiirtomaksuna</translation>
+        <source>are added as transaction fee</source>
+        <translation>lisätään rahansiirtotaksana</translation>
+    </message>
+    <message>
+        <source>Confirm send coins</source>
+        <translation>Vahvista kolikoiden lähetys</translation>
+    </message>
+    <message>
+        <source>The recipient address is not valid, please recheck.</source>
+        <translation>Vastaanottava osoite ei ole kunnollinen, tarkista</translation>
+    </message>
+    <message>
+        <source>The amount exceeds your balance.</source>
+        <translation>Määrä ylittää saldosi.</translation>
+    </message>
+    <message>
+        <source>Transaction creation failed!</source>
+        <translation>Maksun luonti epäonnistui!</translation>
+    </message>
+    <message>
+        <source>Error: The wallet was unlocked only to anonymize coins.</source>
+        <translation>Virhe: Lompakko avattiin vain kolikoiden anonymisointiin</translation>
+    </message>
+    <message>
+        <source>Error: The wallet was unlocked only to anonymize coins. Unlock canceled.</source>
+        <translation>Virhe: Lompakko avattiin vain kolikoiden anonymisointiin. Avaus peruutettu.</translation>
+    </message>
+    <message>
+        <source>Pay only the minimum fee of %1</source>
+        <translation>Maksa vain %1 minimi taksa</translation>
+    </message>
+    <message>
+        <source>(no label)</source>
+        <translation>(ei nimikettä)</translation>
     </message>
 </context>
 <context>
     <name>SendCoinsEntry</name>
     <message>
-        <source>A&amp;mount:</source>
-        <translation>M&amp;äärä:</translation>
-    </message>
-    <message>
-        <source>Pay &amp;To:</source>
-        <translation>Maksun saaja:</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to your address book</source>
-        <translation>Anna nimi tälle osoitteelle, jos haluat lisätä sen osoitekirjaan</translation>
-    </message>
-    <message>
-        <source>&amp;Label:</source>
-        <translation>&amp;Nimi:</translation>
-    </message>
-    <message>
-        <source>Choose previously used address</source>
-        <translation>Valitse aikaisemmin käytetty osoite</translation>
-    </message>
-    <message>
         <source>This is a normal payment.</source>
         <translation>Tämä on normaali maksu.</translation>
     </message>
     <message>
-        <source>The Kore addressress to send the payment to</source>
-        <translation>Kore-osoite johon maksu lähetetään</translation>
+        <source>The KORE address to send the payment to</source>
+        <translation>KORE osoite johon maksu lähetetään</translation>
+    </message>
+    <message>
+        <source>Choose previously used address</source>
+        <translation>Valitse aikaisemmin käytetty osoite</translation>
     </message>
     <message>
         <source>Alt+A</source>
@@ -2214,65 +2035,49 @@
     </message>
     <message>
         <source>Remove this entry</source>
-        <translation>Poista tämä alkio</translation>
+        <translation>Poista tämä merkintä</translation>
     </message>
     <message>
-        <source>S&amp;ubtract fee from amount</source>
-        <translation>V&amp;ähennä maksukulu määrästä</translation>
+        <source>&amp;Label:</source>
+        <translation>&amp;Nimike:</translation>
+    </message>
+    <message>
+        <source>Enter a label for this address to add it to the list of used addresses</source>
+        <translation>Syötä nimike tälle osoittelle lisätäksesi se käytettävien osoitteiden listaan</translation>
+    </message>
+    <message>
+        <source>A&amp;mount:</source>
+        <translation>M&amp;äärä:</translation>
     </message>
     <message>
         <source>Message:</source>
         <translation>Viesti:</translation>
     </message>
-    <message>
-        <source>This is an unauthenticated payment request.</source>
-        <translation>Tämä on todentamaton maksupyyntö.</translation>
-    </message>
-    <message>
-        <source>This is an authenticated payment request.</source>
-        <translation>Tämä on todennettu maksupyyntö.</translation>
-    </message>
-    <message>
-        <source>Enter a label for this address to add it to the list of used addresses</source>
-        <translation>Aseta nimi tälle osoitteelle lisätäksesi sen käytettyjen osoitteiden listalle.</translation>
-    </message>
-    <message>
-        <source>A message that was attached to the kore: URI which will be stored with the transaction for your reference. Note: This message will not be sent over the KORE network.</source>
-        <translation>Viesti joka liitettiin kore: URI:iin tallennetaan rahansiirtoon viitteeksi. Tätä viestiä ei lähetetä Kore-verkkoon.</translation>
-    </message>
-    <message>
-        <source>Pay To:</source>
-        <translation>Saaja:</translation>
-    </message>
-    <message>
-        <source>Memo:</source>
-        <translation>Muistio:</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>ShutdownWindow</name>
     <message>
-        <source>Kore Core is shutting down...</source>
-        <translation>Korecore sulkeutuu...</translation>
+        <source>KORE Core is shutting down...</source>
+        <translation>KORE core sammuu...</translation>
     </message>
     <message>
         <source>Do not shut down the computer until this window disappears.</source>
-        <translation>Älä sammuta tietokonetta ennenkuin tämä ikkuna katoaa.</translation>
+        <translation>Älä sammuta konetta ennen kuin tämä ikkuna katoaa.</translation>
     </message>
 </context>
 <context>
     <name>SignVerifyMessageDialog</name>
     <message>
-        <source>Signatures - Sign / Verify a Message</source>
-        <translation>Allekirjoitukset - Allekirjoita / Varmista viesti</translation>
-    </message>
-    <message>
         <source>&amp;Sign Message</source>
         <translation>&amp;Allekirjoita viesti</translation>
     </message>
     <message>
-        <source>The Kore addressress to sign the message with</source>
-        <translation>Kore-osoite jolla viesti allekirjoitetaan</translation>
+        <source>You can sign messages with your addresses to prove you own them. Be careful not to sign anything vague, as phishing attacks may try to trick you into signing your identity over to them. Only sign fully-detailed statements you agree to.</source>
+        <translation>Voit allekirjoittaa viestejä osoitteillasi todistaaksesi, että omistat ne. Ole varovainen ettet allekirjoita mitään kummallista, sillä kalasteluyritykset saattavat yrittää huijata sinut luovuttamaan tietoja. Allekirjoita vain täysin yksityiskohtaisia sanomia, jotka hyväksyt.</translation>
+    </message>
+    <message>
+        <source>The KORE address to sign the message with</source>
+        <translation>KORE osoite, jolla viesti allekirjoitetaan</translation>
     </message>
     <message>
         <source>Choose previously used address</source>
@@ -2292,7 +2097,7 @@
     </message>
     <message>
         <source>Enter the message you want to sign here</source>
-        <translation>Kirjoita tähän viesti minkä haluat allekirjoittaa</translation>
+        <translation>Syötä viesti jonka haluat kirjoittaa tähän</translation>
     </message>
     <message>
         <source>Signature</source>
@@ -2300,106 +2105,118 @@
     </message>
     <message>
         <source>Copy the current signature to the system clipboard</source>
-        <translation>Kopioi tämänhetkinen allekirjoitus leikepöydälle</translation>
+        <translation>Kopioi nykyinen allekirjoitus järjestelmän leikepöydälle</translation>
     </message>
     <message>
-        <source>Sign the message to prove you own this Koreaddress</source>
-        <translation>Allekirjoita viesti todistaaksesi, että omistat tämän Kore-osoitteen</translation>
+        <source>Sign the message to prove you own this KORE address</source>
+        <translation>Allekirjoita viesti todistaaksesi, että omistat tämän KORE osoitteen</translation>
+    </message>
+    <message>
+        <source>The KORE address the message was signed with</source>
+        <translation>KORE osoite, jolla viesti allekirjoitettiin</translation>
+    </message>
+    <message>
+        <source>Verify the message to ensure it was signed with the specified KORE address</source>
+        <translation>Vahvista että viesti on allekirjoitettu kyseessä olevalla KORE osoitteella.</translation>
     </message>
     <message>
         <source>Sign &amp;Message</source>
-        <translation>Allekirjoita &amp;viesti</translation>
+        <translation>Allekirjoita &amp;Viesti</translation>
     </message>
     <message>
         <source>Reset all sign message fields</source>
-        <translation>Tyhjennä kaikki allekirjoita-viesti-kentät</translation>
+        <translation>Tyhjennä kaikki allekirjoita viesti kentät</translation>
     </message>
     <message>
         <source>Clear &amp;All</source>
-        <translation>&amp;Tyhjennä Kaikki</translation>
+        <translation>Tyhjennä &amp;Kaikki</translation>
     </message>
     <message>
         <source>&amp;Verify Message</source>
-        <translation>&amp;Varmista viesti</translation>
-    </message>
-    <message>
-        <source>The Kore addressress the message was signed with</source>
-        <translation>Kore-osoite jolla viesti on allekirjoitettu</translation>
-    </message>
-    <message>
-        <source>Verify the message to ensure it was signed with the specified Koreaddress</source>
-        <translation>Tarkista viestin allekirjoitus varmistaaksesi, että se allekirjoitettiin tietyllä Kore-osoitteella</translation>
+        <translation>&amp;Vahvista Viesti</translation>
     </message>
     <message>
         <source>Verify &amp;Message</source>
-        <translation>Varmista &amp;viesti...</translation>
+        <translation>Vahvista &amp;Viesti</translation>
     </message>
     <message>
         <source>Reset all verify message fields</source>
-        <translation>Tyhjennä kaikki varmista-viesti-kentät</translation>
+        <translation>Tyhjennä kaikki vahvista viesti kentät</translation>
     </message>
     <message>
         <source>Click "Sign Message" to generate signature</source>
-        <translation>Klikkaa "Allekirjoita Viesti luodaksesi allekirjoituksen </translation>
+        <translation>Klikkaa "Allekirjoita viesti" generoidaksesi allekirjoituksen</translation>
     </message>
     <message>
         <source>The entered address is invalid.</source>
-        <translation>Syötetty osoite on virheellinen.</translation>
+        <translation>Syötetty osoite ei ole toimiva.</translation>
     </message>
     <message>
         <source>Please check the address and try again.</source>
-        <translation>Tarkista osoite ja yritä uudelleen.</translation>
+        <translation>Ole hyvä ja tarkista osoite ja yritä uudelleen.</translation>
     </message>
     <message>
         <source>The entered address does not refer to a key.</source>
-        <translation>Syötetyn osoitteen avainta ei löydy.</translation>
+        <translation>Syötetty osoite ei viittaa avaimeen.</translation>
     </message>
     <message>
         <source>Wallet unlock was cancelled.</source>
-        <translation>Lompakon avaaminen peruttiin.</translation>
+        <translation>Lompakon avaus peruutettiin.</translation>
     </message>
     <message>
         <source>Private key for the entered address is not available.</source>
-        <translation>Yksityistä avainta syötetylle osoitteelle ei ole saatavilla.</translation>
+        <translation>Yksityisavain syötetylle osoitteelle ei ole saatavilla.</translation>
     </message>
     <message>
         <source>Message signing failed.</source>
-        <translation>Viestin allekirjoitus epäonnistui.</translation>
+        <translation>Viestin allekirjoitus epäonnistui</translation>
     </message>
     <message>
         <source>Message signed.</source>
-        <translation>Viesti allekirjoitettu.</translation>
+        <translation>Viesti allekirjoitettu</translation>
     </message>
     <message>
         <source>The signature could not be decoded.</source>
-        <translation>Allekirjoitusta ei pystytty tulkitsemaan.</translation>
+        <translation>Allekirjoitusta ei pystytty avaamaan.</translation>
     </message>
     <message>
         <source>Please check the signature and try again.</source>
-        <translation>Tarkista allekirjoitus ja yritä uudelleen.</translation>
+        <translation>Tarkista allekirjoitus ja yritä uudestaan.</translation>
     </message>
     <message>
         <source>The signature did not match the message digest.</source>
-        <translation>Allekirjoitus ei täsmää viestin tiivisteeseen.</translation>
+        <translation>Allekirjoitus ei vastannut viestin sisältöä.</translation>
     </message>
     <message>
         <source>Message verification failed.</source>
-        <translation>Viestin varmistus epäonnistui.</translation>
+        <translation>Viestin vahvistus epäonnistui</translation>
     </message>
     <message>
         <source>Message verified.</source>
-        <translation>Viesti varmistettu.</translation>
+        <translation>Viesti vahvistettu</translation>
     </message>
 </context>
 <context>
     <name>SplashScreen</name>
     <message>
-        <source>Kore Core</source>
-        <translation>Kore-ydin</translation>
+        <source>KORE Core</source>
+        <translation>KORE Ydin</translation>
     </message>
     <message>
-        <source>The Kore Core developers</source>
-        <translation>Kore Core kehittäjät</translation>
+        <source>Version %1</source>
+        <translation>Versio %1</translation>
+    </message>
+    <message>
+        <source>The Bitcoin Core developers</source>
+        <translation>Bitcoin Core kehittäjät</translation>
+    </message>
+    <message>
+        <source>The Dash Core developers</source>
+        <translation>Dash Core kehittäjät</translation>
+    </message>
+    <message>
+        <source>The KORE Core developers</source>
+        <translation>KORE core kehittäjät</translation>
     </message>
     <message>
         <source>[testnet]</source>
@@ -2416,96 +2233,32 @@
 <context>
     <name>TransactionDesc</name>
     <message>
-        <source>Open until %1</source>
-        <translation>Avoinna %1 asti</translation>
-    </message>
-    <message>
-        <source>conflicted</source>
-        <translation>ristiriitainen</translation>
-    </message>
-    <message>
-        <source>%1/offline</source>
-        <translation>%1/offline</translation>
-    </message>
-    <message>
         <source>%1/unconfirmed</source>
-        <translation>%1/vahvistamaton</translation>
-    </message>
-    <message>
-        <source>%1 confirmations</source>
-        <translation>%1 vahvistusta</translation>
+        <translation>%1/Vahvistamatonta</translation>
     </message>
     <message>
         <source>Status</source>
         <translation>Tila</translation>
-    </message>
-    <message numerus="yes">
-        <source>, broadcast through %n node(s)</source>
-        <translation><numerusform>lähetetty %n noodin läpi</numerusform><numerusform>lähetetty %n noodin läpi</numerusform></translation>
     </message>
     <message>
         <source>Date</source>
         <translation>Päivämäärä</translation>
     </message>
     <message>
-        <source>Source</source>
-        <translation>Lähde</translation>
-    </message>
-    <message>
-        <source>Generated</source>
-        <translation>Generoitu</translation>
-    </message>
-    <message>
-        <source>From</source>
-        <translation>Lähettäjä</translation>
-    </message>
-    <message>
-        <source>To</source>
-        <translation>Saaja</translation>
-    </message>
-    <message>
-        <source>own address</source>
-        <translation>oma osoite</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>vain katseltava</translation>
-    </message>
-    <message>
-        <source>label</source>
-        <translation>nimi</translation>
-    </message>
-    <message>
-        <source>Credit</source>
-        <translation>Credit</translation>
-    </message>
-    <message numerus="yes">
-        <source>matures in %n more block(s)</source>
-        <translation><numerusform>kypsyy %n lohkon kuluttua</numerusform><numerusform>kypsyy %n lohkon kuluttua</numerusform></translation>
+        <source>unknown</source>
+        <translation>tuntematon</translation>
     </message>
     <message>
         <source>not accepted</source>
         <translation>ei hyväksytty</translation>
     </message>
     <message>
-        <source>Debit</source>
-        <translation>Debit</translation>
-    </message>
-    <message>
-        <source>Total debit</source>
-        <translation>Yhteensä debit</translation>
-    </message>
-    <message>
-        <source>Total credit</source>
-        <translation>Yhteensä credit</translation>
-    </message>
-    <message>
         <source>Transaction fee</source>
-        <translation>Maksukulu</translation>
+        <translation>Rahansiirron taksa</translation>
     </message>
     <message>
         <source>Net amount</source>
-        <translation>Netto määrä</translation>
+        <translation>Nettomäärä</translation>
     </message>
     <message>
         <source>Message</source>
@@ -2513,31 +2266,15 @@
     </message>
     <message>
         <source>Comment</source>
-        <translation>Viesti</translation>
+        <translation>Kommentti</translation>
     </message>
     <message>
         <source>Transaction ID</source>
-        <translation>Siirtotunnus</translation>
+        <translation>Rahansiirto ID</translation>
     </message>
     <message>
         <source>Merchant</source>
-        <translation>Kauppias</translation>
-    </message>
-    <message>
-        <source>Generated coins must mature %1 blocks before they can be spent. When you generated this block, it was broadcast to the network to be added to the block chain. If it fails to get into the chain, its state will change to "not accepted" and it won't be spendable. This may occasionally happen if another node generates a block within a few seconds of yours.</source>
-        <translation>Luodut kolikot täytyy kypsyttää %1 lohkoa kunnes ne voidaan käyttää. Kun loit tämän lohkon, se lähetettiin verkkoon lisänä lohkoketjuun. Jos se epäonnistuu pääsemään ketjuun sen tila tulee muuttumaan "ei hyväksytty" ja sitä ei voida käyttää. Tämä voi ajoittain tapahtua kun toisen solmun lohko luodaan samanaikaisesti omasi kanssa.</translation>
-    </message>
-    <message>
-        <source>Debug information</source>
-        <translation>Debug tiedot</translation>
-    </message>
-    <message>
-        <source>Transaction</source>
-        <translation>Rahansiirto</translation>
-    </message>
-    <message>
-        <source>Inputs</source>
-        <translation>Sisääntulot</translation>
+        <translation>Myyjä</translation>
     </message>
     <message>
         <source>Amount</source>
@@ -2551,30 +2288,14 @@
         <source>false</source>
         <translation>epätosi</translation>
     </message>
-    <message>
-        <source>, has not been successfully broadcast yet</source>
-        <translation>, ei ole vielä onnistuneesti lähetetty</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation><numerusform>Avoinna %n lisälohkolle</numerusform><numerusform>Avoinna %n lisälohkolle</numerusform></translation>
-    </message>
-    <message>
-        <source>unknown</source>
-        <translation>tuntematon</translation>
-    </message>
 </context>
 <context>
     <name>TransactionDescDialog</name>
     <message>
         <source>Transaction details</source>
-        <translation>Rahansiirron yksityiskohdat</translation>
+        <translation>Rahansiirron tiedot</translation>
     </message>
-    <message>
-        <source>This pane shows a detailed description of the transaction</source>
-        <translation>Tämä ruutu näyttää yksityiskohtaisen tiedon rahansiirrosta</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>TransactionTableModel</name>
     <message>
@@ -2583,103 +2304,47 @@
     </message>
     <message>
         <source>Type</source>
-        <translation>Laatu</translation>
+        <translation>Tyyppi</translation>
     </message>
     <message>
-        <source>Immature (%1 confirmations, will be available after %2)</source>
-        <translation>Epäkypsä (%1 varmistusta, saatavilla %2 jälkeen)</translation>
-    </message>
-    <message numerus="yes">
-        <source>Open for %n more block(s)</source>
-        <translation><numerusform>Avoinna %n lisälohkolle</numerusform><numerusform>Avoinna %n lisälohkolle</numerusform></translation>
-    </message>
-    <message>
-        <source>Open until %1</source>
-        <translation>Avoinna %1 asti</translation>
-    </message>
-    <message>
-        <source>Confirmed (%1 confirmations)</source>
-        <translation>Vahvistettu (%1 vahvistusta)</translation>
-    </message>
-    <message>
-        <source>This block was not received by any other nodes and will probably not be accepted!</source>
-        <translation>Tätä lohkoa ei vastaanotettu mistään muusta solmusta ja sitä ei mahdollisesti hyväksytä!</translation>
-    </message>
-    <message>
-        <source>Generated but not accepted</source>
-        <translation>Generoitu mutta ei hyväksytty</translation>
-    </message>
-    <message>
-        <source>Offline</source>
-        <translation>Offline</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Nimi</translation>
+        <source>Address</source>
+        <translation>Osoite</translation>
     </message>
     <message>
         <source>Unconfirmed</source>
-        <translation>Varmistamaton</translation>
+        <translation>Vahvistamaton</translation>
     </message>
     <message>
         <source>Confirming (%1 of %2 recommended confirmations)</source>
-        <translation>Varmistetaan (%1 kehoitetusta %2 varmistuksesta)</translation>
-    </message>
-    <message>
-        <source>Conflicted</source>
-        <translation>Ristiriitainen</translation>
-    </message>
-    <message>
-        <source>Received with</source>
-        <translation>Vastaanotettu osoitteella</translation>
-    </message>
-    <message>
-        <source>Received from</source>
-        <translation>Vastaanotettu</translation>
-    </message>
-    <message>
-        <source>Sent to</source>
-        <translation>Saaja</translation>
+        <translation>Vahvistetaan (%1 %2:sta suositellusta vahvistuksesta)</translation>
     </message>
     <message>
         <source>Payment to yourself</source>
-        <translation>Maksu itsellesi</translation>
+        <translation>Maksut itsellesi</translation>
     </message>
     <message>
         <source>Mined</source>
-        <translation>Louhittu</translation>
-    </message>
-    <message>
-        <source>watch-only</source>
-        <translation>vain katseltava</translation>
-    </message>
-    <message>
-        <source>(n/a)</source>
-        <translation>(ei saatavilla)</translation>
+        <translation>Mainattu</translation>
     </message>
     <message>
         <source>Transaction status. Hover over this field to show number of confirmations.</source>
-        <translation>Rahansiirron tila. Siirrä osoitin kentän päälle nähdäksesi vahvistusten lukumäärä.</translation>
+        <translation>Rahansiirron status. Liikuta hiiresi tämän kentän päälle nähdäksesi vahvistuksien määrä</translation>
     </message>
     <message>
         <source>Date and time that the transaction was received.</source>
-        <translation>Rahansiirron vastaanottamisen päivämäärä ja aika.</translation>
+        <translation>Päivämäärä ja aika jolloin rahansiirto vastaanotettiin</translation>
     </message>
     <message>
         <source>Type of transaction.</source>
-        <translation>Rahansiirron laatu.</translation>
+        <translation>Rahansiirron tyyppi.</translation>
     </message>
     <message>
-        <source>Whether or not a watch-only address is involved in this transaction.</source>
-        <translation>Onko rahansiirrossa mukana ainoastaan katseltava osoite vai ei.</translation>
-    </message>
-    <message>
-        <source>User-defined intent/purpose of the transaction.</source>
-        <translation>Käyttäjän määrittämä käyttötarkoitus rahansiirrolle.</translation>
+        <source>Destination address of transaction.</source>
+        <translation>Rahansiirron määränpään osoite.</translation>
     </message>
     <message>
         <source>Amount removed from or added to balance.</source>
-        <translation>Saldoon lisätty tai siitä vähennetty määrä.</translation>
+        <translation>Määrä, joka poistettu tai lisätty taseeseen</translation>
     </message>
 </context>
 <context>
@@ -2709,24 +2374,16 @@
         <translation>Tänä vuonna</translation>
     </message>
     <message>
-        <source>Range...</source>
-        <translation>Alue...</translation>
-    </message>
-    <message>
-        <source>Received with</source>
-        <translation>Vastaanotettu osoitteella</translation>
-    </message>
-    <message>
-        <source>Sent to</source>
-        <translation>Saaja</translation>
-    </message>
-    <message>
         <source>To yourself</source>
         <translation>Itsellesi</translation>
     </message>
     <message>
         <source>Mined</source>
-        <translation>Louhittu</translation>
+        <translation>Mainattu</translation>
+    </message>
+    <message>
+        <source>Minted</source>
+        <translation>Luotu</translation>
     </message>
     <message>
         <source>Other</source>
@@ -2734,11 +2391,11 @@
     </message>
     <message>
         <source>Enter address or label to search</source>
-        <translation>Anna etsittävä osoite tai tunniste</translation>
+        <translation>Syötä osoite tai nimike etsiäksesi</translation>
     </message>
     <message>
         <source>Min amount</source>
-        <translation>Minimimäärä</translation>
+        <translation>Minimi määrä</translation>
     </message>
     <message>
         <source>Copy address</source>
@@ -2746,7 +2403,7 @@
     </message>
     <message>
         <source>Copy label</source>
-        <translation>Kopioi nimi</translation>
+        <translation>Kopioi nimike</translation>
     </message>
     <message>
         <source>Copy amount</source>
@@ -2754,15 +2411,11 @@
     </message>
     <message>
         <source>Copy transaction ID</source>
-        <translation>Kopioi siirtotunnus</translation>
-    </message>
-    <message>
-        <source>Copy raw transaction</source>
-        <translation>Kopioi rahansiirron raakavedos</translation>
+        <translation>Kopioi rahansiirron ID</translation>
     </message>
     <message>
         <source>Edit label</source>
-        <translation>Muokkaa nimeä</translation>
+        <translation>Muokkaa nimikettä</translation>
     </message>
     <message>
         <source>Show transaction details</source>
@@ -2770,31 +2423,11 @@
     </message>
     <message>
         <source>Export Transaction History</source>
-        <translation>Vie rahansiirtohistoria</translation>
-    </message>
-    <message>
-        <source>Watch-only</source>
-        <translation>Vain katseltava</translation>
-    </message>
-    <message>
-        <source>Exporting Failed</source>
-        <translation>Vienti epäonnistui</translation>
-    </message>
-    <message>
-        <source>There was an error trying to save the transaction history to %1.</source>
-        <translation>Rahansiirron historian tallentamisessa tapahtui virhe paikkaan %1.</translation>
-    </message>
-    <message>
-        <source>Exporting Successful</source>
-        <translation>Vienti onnistui</translation>
-    </message>
-    <message>
-        <source>The transaction history was successfully saved to %1.</source>
-        <translation>Rahansiirron historia tallennettiin onnistuneesti paikkaan %1.</translation>
+        <translation>Vie Rahansiirto historia</translation>
     </message>
     <message>
         <source>Comma separated file (*.csv)</source>
-        <translation>Comma separated file (*.csv)</translation>
+        <translation>Pilkuilla eroteltu tiedosto (*.csv)</translation>
     </message>
     <message>
         <source>Confirmed</source>
@@ -2802,15 +2435,15 @@
     </message>
     <message>
         <source>Date</source>
-        <translation>Aika</translation>
+        <translation>Päivämäärä</translation>
     </message>
     <message>
         <source>Type</source>
-        <translation>Laatu</translation>
+        <translation>Tyyppi</translation>
     </message>
     <message>
         <source>Label</source>
-        <translation>Nimi</translation>
+        <translation>Nimike</translation>
     </message>
     <message>
         <source>Address</source>
@@ -2821,44 +2454,52 @@
         <translation>ID</translation>
     </message>
     <message>
-        <source>Range:</source>
-        <translation>Alue:</translation>
+        <source>Exporting Failed</source>
+        <translation>Vienti epäonnistui</translation>
     </message>
     <message>
-        <source>to</source>
-        <translation>kenelle</translation>
+        <source>Exporting Successful</source>
+        <translation>Vienti onnistui</translation>
     </message>
-</context>
+    <message>
+        <source>The transaction history was successfully saved to %1.</source>
+        <translation>Rahansiirto historia onnistuneesti tallennettu %1</translation>
+    </message>
+    </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
     <message>
         <source>Unit to show amounts in. Click to select another unit.</source>
-        <translation>Yksikkö jossa määrät näytetään. Klikkaa valitaksesi toisen yksikön.</translation>
+        <translation>Yksikkö jossa määrä näytetään. Klikkaa vaihtaaksesi yksikkö.</translation>
     </message>
 </context>
 <context>
     <name>WalletFrame</name>
     <message>
         <source>No wallet has been loaded.</source>
-        <translation>Lomakkoa ei ole ladattu.</translation>
+        <translation>Lompakkoa ei ole ladattu.</translation>
     </message>
 </context>
 <context>
     <name>WalletModel</name>
     <message>
         <source>Send Coins</source>
-        <translation>Lähetä Koreeja</translation>
+        <translation>Lähetä Kolikot</translation>
     </message>
-</context>
+    </context>
 <context>
     <name>WalletView</name>
     <message>
         <source>&amp;Export</source>
-        <translation>&amp;Vie...</translation>
+        <translation>&amp;Vie</translation>
     </message>
     <message>
         <source>Export the data in the current tab to a file</source>
-        <translation>Vie auki olevan välilehden tiedot tiedostoon</translation>
+        <translation>Vie tiedot nykyisestä välilehdestä tiedostoon</translation>
+    </message>
+    <message>
+        <source>Selected amount:</source>
+        <translation>Valittu määrä:</translation>
     </message>
     <message>
         <source>Backup Wallet</source>
@@ -2866,606 +2507,261 @@
     </message>
     <message>
         <source>Wallet Data (*.dat)</source>
-        <translation>Lompakkodata (*.dat)</translation>
-    </message>
-    <message>
-        <source>Backup Failed</source>
-        <translation>Varmuuskopio epäonnistui</translation>
-    </message>
-    <message>
-        <source>There was an error trying to save the wallet data to %1.</source>
-        <translation>Lompakon tallennuksessa tapahtui virhe %1.</translation>
-    </message>
-    <message>
-        <source>The wallet data was successfully saved to %1.</source>
-        <translation>Lompakko tallennettiin onnistuneesti tiedostoon %1.</translation>
-    </message>
-    <message>
-        <source>Backup Successful</source>
-        <translation>Varmuuskopio Onnistui</translation>
+        <translation>Lompakko Data (*.dat)</translation>
     </message>
 </context>
 <context>
+    <name>ZkoreControlDialog</name>
+    <message>
+        <source>0</source>
+        <translation>0</translation>
+    </message>
+    </context>
+<context>
     <name>kore-core</name>
     <message>
-        <source>Options:</source>
-        <translation>Asetukset:</translation>
-    </message>
-    <message>
-        <source>Specify data directory</source>
-        <translation>Määritä data-hakemisto</translation>
-    </message>
-    <message>
-        <source>Connect to a node to retrieve peer addresses, and disconnect</source>
-        <translation>Yhdistä noodiin hakeaksesi naapurien osoitteet ja katkaise yhteys</translation>
-    </message>
-    <message>
-        <source>Specify your own public address</source>
-        <translation>Määritä julkinen osoitteesi</translation>
-    </message>
-    <message>
-        <source>Accept command line and JSON-RPC commands</source>
-        <translation>Hyväksy merkkipohjaiset- ja JSON-RPC-käskyt</translation>
-    </message>
-    <message>
-        <source>If &lt;category&gt; is not supplied or if &lt;category&gt; = 1, output all debugging information.</source>
-        <translation>Jos &lt;category&gt; on toimittamatta tai jos &lt;category&gt; = 1, tulosta kaikki debug-tieto.</translation>
-    </message>
-    <message>
-        <source>Error: A fatal internal error occurred, see debug.log for details</source>
-        <translation>Virhe: Kriittinen sisäinen virhe kohdattiin, katso debug.log lisätietoja varten</translation>
-    </message>
-    <message>
-        <source>Run in the background as a daemon and accept commands</source>
-        <translation>Aja taustalla daemonina ja hyväksy komennot</translation>
-    </message>
-    <message>
-        <source>Unable to start HTTP server. See debug log for details.</source>
-        <translation>HTTP-palvelinta ei voitu käynnistää. Katso debug-lokista lisätietoja.</translation>
-    </message>
-    <message>
-        <source>Accept connections from outside (default: 1 if no -proxy or -connect)</source>
-        <translation>Hyväksy yhteyksiä ulkopuolelta (vakioasetus: 1 jos -proxy tai -connect ei määritelty)</translation>
-    </message>
-    <message>
-        <source>Bind to given address and always listen on it. Use [host]:port notation for IPv6</source>
-        <translation>Kytkeydy annettuun osoitteeseen ja pidä linja aina auki. Käytä [host]:portin merkintätapaa IPv6:lle.</translation>
-    </message>
-    <message>
-        <source>Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)</source>
-        <translation>Suorita käsky kun lompakossa rahansiirto muuttuu (%s cmd on vaihdettu TxID kanssa)</translation>
-    </message>
-    <message>
-        <source>Set the number of script verification threads (%u to %d, 0 = auto, &lt;0 = leave that many cores free, default: %d)</source>
-        <translation>Aseta script varmistuksen threadien lukumäärä (%u - %d, 0= auto, &lt;0 = jätä näin monta ydintä vapaaksi, oletus: %d)</translation>
-    </message>
-    <message>
-        <source>This is a pre-release test build - use at your own risk - do not use for mining or merchant applications</source>
-        <translation>Tämä on esi-julkaistu testiversio - Käytä omalla riskillä - Ei saa käytää louhimiseen tai kauppasovelluksiin.</translation>
-    </message>
-    <message>
-        <source>Unable to bind to %s on this computer. Kore Core is probably already running.</source>
-        <translation>Ei voida yhdistää %s tässä tietokoneessa. Kore Core on luultavasti jo käynnissä.</translation>
-    </message>
-    <message>
-        <source>Use UPnP to map the listening port (default: 1 when listening and no -proxy)</source>
-        <translation>Käytä UPnP:ta kuuntelevan portin kartoitukseen (oletus: 1 kun kuunnellaan ja -proxy ei käytössä)</translation>
-    </message>
-    <message>
-        <source>WARNING: abnormally high number of blocks generated, %d blocks received in the last %d hours (%d expected)</source>
-        <translation>VAROITUS: epätavallisen monta lohkoa generoitu, vastaanotettu %d lohkoa viimeisen %d tunnin aikana (odotettavissa %d)</translation>
-    </message>
-    <message>
-        <source>WARNING: check your network connection, %d blocks received in the last %d hours (%d expected)</source>
-        <translation>VAROITUS: tarkista verkkoyhteytesi, vastaanotettu %d lohkoa viimeisen %d tunnin aikana (odotettavissa %d)</translation>
-    </message>
-    <message>
         <source>Warning: The network does not appear to fully agree! Some miners appear to be experiencing issues.</source>
-        <translation>Varoitus: Tietoverkko ei ole sovussa! Luohijat näyttävät kokevan virhetilanteita.</translation>
+        <translation>Varoitus: Verkko ei näytä olevan samaa mieltä! Jotkin mainaajat saattavat kokea ongelmia.</translation>
     </message>
     <message>
-        <source>Warning: We do not appear to fully agree with our peers! You may need to upgrade, or other nodes may need to upgrade.</source>
-        <translation>Varoitus: Olemme vertaisverkon kanssa ristiriidassa! Sinun tulee päivittää tai toisten solmujen tulee päivitää.</translation>
+        <source>Warning: error reading wallet.dat! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
+        <translation>Varoitus: virhe yrittäessä lukea wallet.dat tiedostoa! Kaikki avaimet luettu onnistuneesti, mutta rahansiirto- tai yhteystietokirjat saattavat puuttua tai olla virheellisiä.</translation>
     </message>
     <message>
-        <source>Warning: wallet.dat corrupt, data salvaged! Original wallet.dat saved as wallet.{timestamp}.bak in %s; if your balance or transactions are incorrect you should restore from a backup.</source>
-        <translation>Varoitus: wallet.dat -lompakkotiedosto on korruptoitunut, tiedot pelastettu. Alkuperäinen wallet.dat -lompakkotiedosto on tallennettu wallet.{timestamp}.bak kansioon %s; jos balanssisi tai siirtohistoria on virheellinen, sinun tulisi palauttaa lompakkotiedosto varmuuskopiosta.</translation>
-    </message>
-    <message>
-        <source>-maxmempool must be at least %d MB</source>
-        <translation>-maxmempool on oltava vähintään %d MB</translation>
-    </message>
-    <message>
-        <source>&lt;category&gt; can be:</source>
-        <translation>&lt;category&gt; voi olla:</translation>
-    </message>
-    <message>
-        <source>Block creation options:</source>
-        <translation>Lohkon luonnin asetukset:</translation>
-    </message>
-    <message>
-        <source>Connect only to the specified node(s)</source>
-        <translation>Yhidstä ainoastaan määrättyihin noodeihin</translation>
+        <source>Connect through SOCKS5 proxy</source>
+        <translation>Yhdistä SOCKS5 proxyn kautta</translation>
     </message>
     <message>
         <source>Connection options:</source>
-        <translation>Yhteyden valinnat:</translation>
+        <translation>Yhteys vaihtoehdot:</translation>
     </message>
     <message>
         <source>Corrupted block database detected</source>
-        <translation>Vioittunut lohkotietokanta havaittu</translation>
-    </message>
-    <message>
-        <source>Debugging/Testing options:</source>
-        <translation>Debuggaus/Testauksen valinnat:</translation>
-    </message>
-    <message>
-        <source>Do not load the wallet and disable wallet RPC calls</source>
-        <translation>Älä lataa lompakkoa ja poista lompakon RPC kutsut</translation>
+        <translation>Korruptoitunut lohko tietokannassa havaittu</translation>
     </message>
     <message>
         <source>Do you want to rebuild the block database now?</source>
-        <translation>Haluatko uudelleenrakentaa lohkotietokannan nyt?</translation>
+        <translation>Haluatko rakentaa uudelleen lohkotietokannan?</translation>
     </message>
     <message>
-        <source>Enable publish raw transaction in &lt;address&gt;</source>
-        <translation>Ota rahansiirtojen raakavedosten julkaisu käyttöön osoitteessa &lt;address&gt;</translation>
+        <source>Done loading</source>
+        <translation>Lataus valmis</translation>
+    </message>
+    <message>
+        <source>Error connecting to Masternode.</source>
+        <translation>Virhe Masternodeen yhdistyksessä</translation>
     </message>
     <message>
         <source>Error initializing block database</source>
-        <translation>Virhe alustaessa lohkotietokantaa</translation>
-    </message>
-    <message>
-        <source>Error initializing wallet database environment %s!</source>
-        <translation>Virhe alustaessa lompakon tietokantaympäristöä %s!</translation>
+        <translation>Virhe aloittaessa lohko tietokantaa</translation>
     </message>
     <message>
         <source>Error loading block database</source>
-        <translation>Virhe avattaessa lohkoketjua</translation>
+        <translation>Virhe ladattaessa lohko tietokantaa</translation>
     </message>
     <message>
-        <source>Error opening block database</source>
-        <translation>Virhe avattaessa lohkoindeksiä</translation>
+        <source>Error loading wallet.dat</source>
+        <translation>Virhe ladattaessa wallet.dat tiedostoa</translation>
+    </message>
+    <message>
+        <source>Error loading wallet.dat: Wallet corrupted</source>
+        <translation>Virhe ladattaessa wallet.dat tiedostoa: Lompakko korruptoitunut</translation>
+    </message>
+    <message>
+        <source>Error loading wallet.dat: Wallet requires newer version of KORE Core</source>
+        <translation>Virhe ladattaessa wallet.dat tiedostoa: Lompakko vaatii uudemman version KORE Coresta</translation>
+    </message>
+    <message>
+        <source>Error reading from database, shutting down.</source>
+        <translation>Virhe lukiessa tietokantaa, sammutetaan.</translation>
+    </message>
+    <message>
+        <source>Error</source>
+        <translation>Virhe</translation>
     </message>
     <message>
         <source>Error: Disk space is low!</source>
-        <translation>Varoitus: Levytila on vähissä!</translation>
+        <translation>Virhe: Tallennustila vähissä!</translation>
     </message>
     <message>
-        <source>Failed to listen on any port. Use -listen=0 if you want this.</source>
-        <translation>Ei onnistuttu kuuntelemaan missään portissa. Käytä -listen=0 jos haluat tätä.</translation>
+        <source>Error: Wallet locked, unable to create transaction!</source>
+        <translation>Virhe: Lompakko lukittu, ei voida luoda rahansiirtoa!</translation>
+    </message>
+    <message>
+        <source>Finalizing transaction.</source>
+        <translation>Viimeistellään rahansiirto.</translation>
     </message>
     <message>
         <source>Importing...</source>
         <translation>Tuodaan...</translation>
     </message>
     <message>
-        <source>Incorrect or no genesis block found. Wrong datadir for network?</source>
-        <translation>Virheellinen tai olematon alkulohko löydetty. Väärä data-hakemisto verkolle?</translation>
+        <source>Incompatible mode.</source>
+        <translation>Yhteensopimaton tila.</translation>
     </message>
     <message>
-        <source>Invalid -onion address: '%s'</source>
-        <translation>Virheellinen -onion osoite: '%s'</translation>
-    </message>
-    <message>
-        <source>Not enough file descriptors available.</source>
-        <translation>Ei tarpeeksi tiedostomerkintöjä vapaana.</translation>
-    </message>
-    <message>
-        <source>Only connect to nodes in network &lt;net&gt; (ipv4, ipv6 or onion)</source>
-        <translation>Yhdistä vain solmukohtiin &lt;net&gt;-verkossa (ipv4, ipv6 tai onion)</translation>
-    </message>
-    <message>
-        <source>Prune mode is incompatible with -txindex.</source>
-        <translation>Karsittu tila ei ole yhteensopiva -txindex:n kanssa.</translation>
-    </message>
-    <message>
-        <source>Set database cache size in megabytes (%d to %d, default: %d)</source>
-        <translation>Aseta tietokannan välimuistin koko megatavuissa (%d - %d, oletus: %d</translation>
-    </message>
-    <message>
-        <source>Set maximum block size in bytes (default: %d)</source>
-        <translation>Aseta lohkon maksimikoko tavuissa (oletus: %d)</translation>
-    </message>
-    <message>
-        <source>Specify wallet file (within data directory)</source>
-        <translation>Aseta lompakkotiedosto (data-hakemiston sisällä)</translation>
-    </message>
-    <message>
-        <source>Use UPnP to map the listening port (default: %u)</source>
-        <translation>Käytä UPnP:ta kuuntelevan portin kartoittamiseen (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Verifying blocks...</source>
-        <translation>Varmistetaan lohkoja...</translation>
-    </message>
-    <message>
-        <source>Verifying wallet...</source>
-        <translation>Varmistetaan lompakko...</translation>
-    </message>
-    <message>
-        <source>Wallet %s resides outside data directory %s</source>
-        <translation>Lompakko %s sijaitsee data-hakemiston ulkopuolella %s</translation>
-    </message>
-    <message>
-        <source>Wallet options:</source>
-        <translation>Lompakon valinnat:</translation>
-    </message>
-    <message>
-        <source>Warning: This version is obsolete; upgrade required!</source>
-        <translation>Varoitus: Tämä versio on vanhentunut; päivittämistä vaaditaan!</translation>
-    </message>
-    <message>
-        <source>You need to rebuild the database using -reindex to change -txindex</source>
-        <translation>Sinun tulee uudelleenrakentaa tietokanta käyttäen -reindex vaihtaen -txindex</translation>
-    </message>
-    <message>
-        <source>Allow JSON-RPC connections from specified source. Valid for &lt;ip&gt; are a single IP (e.g. 1.2.3.4), a network/netmask (e.g. 1.2.3.4/255.255.255.0) or a network/CIDR (e.g. 1.2.3.4/24). This option can be specified multiple times</source>
-        <translation>Salli JSON-RPC-yhteydet määritetystä lähteestä. Kelvolliset arvot &lt;ip&gt; ovat yksittäinen IP (esim. 1.2.3.4), verkko/verkkomaski (esim. 1.2.3.4/255.255.255.0) tai verkko/luokaton reititys (esim. 1.2.3.4/24). Tätä valintatapaa voidaan käyttää useita kertoja</translation>
-    </message>
-    <message>
-        <source>Cannot obtain a lock on data directory %s. Kore Core is probably already running.</source>
-        <translation>Ei voida lukita data-hakemistoa %s. Kore Core on luultavasti jo käynnissä.</translation>
-    </message>
-    <message>
-        <source>Execute command when a relevant alert is received or we see a really long fork (%s in cmd is replaced by message)</source>
-        <translation>Aja komento kun olennainen hälytys vastaanotetaan tai nähdään todella pitkä haara (%s komennossa korvataan viestillä)</translation>
-    </message>
-    <message>
-        <source>Set maximum size of high-priority/low-fee transactions in bytes (default: %d)</source>
-        <translation>Aseta maksimikoko korkea prioriteetti/pieni palkkio rahansiirtoihin tavuissa (oletus: %d)</translation>
-    </message>
-    <message>
-        <source>Set the number of threads for coin generation if enabled (-1 = all cores, default: %d)</source>
-        <translation>Aseta kolikoiden luomiseen tarkoitettujen säikeiden lukumäärä (-1 = kaikki ytimet, oletus: %d)</translation>
-    </message>
-    <message>
-        <source>(default: %u)</source>
-        <translation>(oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Accept public REST requests (default: %u)</source>
-        <translation>Hyväksy julkisia REST-pyyntöjä (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Activating best chain...</source>
-        <translation>Aktivoidaan parhainta ketjua...</translation>
-    </message>
-    <message>
-        <source>Attempt to recover private keys from a corrupt wallet.dat on startup</source>
-        <translation>Yritä palauttaa yksityiset avaimet korruptoituneesta wallet.dat-tiedostosta käynnistyksen yhteydessä</translation>
-    </message>
-    <message>
-        <source>Cannot resolve -whitebind address: '%s'</source>
-        <translation>-whitebind -osoitetta '%s' ei voida jäsentää</translation>
-    </message>
-    <message>
-        <source>Connect through SOCKS5 proxy</source>
-        <translation>Yhdistä SOCKS5 proxin kautta</translation>
-    </message>
-    <message>
-        <source>Copyright (C) 2009-%i The Kore Core Developers</source>
-        <translation>Copyright (C) 2009-%i  Korekehittäjät</translation>
-    </message>
-    <message>
-        <source>Error loading wallet.dat: Wallet requires newer version of Kore Core</source>
-        <translation>Virhe ladattaessa wallet.dat-tiedostoa: Tarvitset uudemman version Koreista</translation>
-    </message>
-    <message>
-        <source>Error reading from database, shutting down.</source>
-        <translation>Virheitä tietokantaa luettaessa, ohjelma pysäytetään.</translation>
+        <source>Incompatible version.</source>
+        <translation>Yhteensopimaton versio.</translation>
     </message>
     <message>
         <source>Information</source>
-        <translation>Tietoa</translation>
+        <translation>Informaatio</translation>
     </message>
     <message>
-        <source>Invalid amount for -maxtxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Virheellinen määrä -maxtxfee=&lt;amount&gt;: '%s'</translation>
+        <source>Insufficient funds.</source>
+        <translation>Riittämättömät varat.</translation>
     </message>
     <message>
-        <source>Invalid amount for -minrelaytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Virheellinen määrä -minrelaytxfee=&lt;amount&gt;: '%s'</translation>
+        <source>Invalid private key.</source>
+        <translation>Virheellinen yksityisavain.</translation>
     </message>
     <message>
-        <source>Invalid amount for -mintxfee=&lt;amount&gt;: '%s'</source>
-        <translation>Virheellinen määrä -mintxfee=&lt;amount&gt;: '%s'</translation>
+        <source>Invalid script detected.</source>
+        <translation>Virheellinen skripti havaittu.</translation>
     </message>
     <message>
-        <source>Keep at most &lt;n&gt; unconnectable transactions in memory (default: %u)</source>
-        <translation>Pidä enimmillään &lt;n&gt; yhdistämiskelvotonta rahansiirtoa muistissa (oletus: %u)</translation>
+        <source>&lt;category&gt; can be:</source>
+        <translation>&lt;category&gt; voi olla:</translation>
     </message>
     <message>
-        <source>Node relay options:</source>
-        <translation>Välityssolmukohdan asetukset:</translation>
+        <source>Loading addresses...</source>
+        <translation>Lataa osoitteita...</translation>
     </message>
     <message>
-        <source>RPC server options:</source>
-        <translation>RPC-palvelimen valinnat:</translation>
+        <source>Loading block index...</source>
+        <translation>Lataa lohkoindeksiä...</translation>
     </message>
     <message>
-        <source>Receive and display P2P network alerts (default: %u)</source>
-        <translation>Vastaanota ja näytä P2P-verkon hälytyksiä (oletus: %u)</translation>
+        <source>Loading wallet...</source>
+        <translation>Lataa lompakkoa...</translation>
     </message>
     <message>
-        <source>Rescan the block chain for missing wallet transactions on startup</source>
-        <translation>Uudelleenskannaa lohkoketju käynnistyksen yhteydessä puuttuvien lompakon rahansiirtojen vuoksi</translation>
+        <source>Lock is already in place.</source>
+        <translation>Lukitus on jo käytössä.</translation>
     </message>
     <message>
-        <source>Send trace/debug info to console instead of debug.log file</source>
-        <translation>Lähetä jäljitys/debug-tieto konsoliin, debug.log-tiedoston sijaan</translation>
+        <source>Options:</source>
+        <translation>Vaihtoehdot:</translation>
     </message>
     <message>
-        <source>Show all debugging options (usage: --help -help-debug)</source>
-        <translation>Näytä kaikki debuggaus valinnat: (käyttö: --help -help-debug)</translation>
+        <source>Rescanning...</source>
+        <translation>Skannaa uudelleen...</translation>
     </message>
     <message>
-        <source>Shrink debug.log file on client startup (default: 1 when no -debug)</source>
-        <translation>Pienennä debug.log tiedosto käynnistyksen yhteydessä (vakioasetus: 1 kun ei -debug)</translation>
+        <source>Session not complete!</source>
+        <translation>Sessio ei valmis!</translation>
+    </message>
+    <message>
+        <source>Session timed out.</source>
+        <translation>Istunto päättyi.</translation>
+    </message>
+    <message>
+        <source>Signing failed.</source>
+        <translation>Allekirjoitus epäonnistui.</translation>
     </message>
     <message>
         <source>Signing transaction failed</source>
-        <translation>Siirron vahvistus epäonnistui</translation>
+        <translation>Rahansiirron allekirjoitus epäonnistui</translation>
     </message>
     <message>
-        <source>The transaction amount is too small to pay the fee</source>
-        <translation>Rahansiirron määrä on liian pieni kattaakseen maksukulun</translation>
+        <source>Specify data directory</source>
+        <translation>Määritä tiedostosijainti</translation>
+    </message>
+    <message>
+        <source>Specify your own public address</source>
+        <translation>Määritä oma julkinen osoitteesi</translation>
+    </message>
+    <message>
+        <source>Staking options:</source>
+        <translation>Panostus vaihtoehdot:</translation>
+    </message>
+    <message>
+        <source>Synchronization failed</source>
+        <translation>Synkronisointi epäonnistui</translation>
+    </message>
+    <message>
+        <source>Synchronization finished</source>
+        <translation>Synkronisointi valmis</translation>
     </message>
     <message>
         <source>This is experimental software.</source>
-        <translation>Tämä on ohjelmistoa kokeelliseen käyttöön.</translation>
-    </message>
-    <message>
-        <source>Tor control port password (default: empty)</source>
-        <translation>Tor-hallintaportin salasana (oletus: tyhjä)</translation>
-    </message>
-    <message>
-        <source>Tor control port to use if onion listening enabled (default: %s)</source>
-        <translation>Tor-hallintaportti jota käytetään jos onion-kuuntelu on käytössä (oletus: %s)</translation>
+        <translation>Tämä on kokeellista ohjelmistoa.</translation>
     </message>
     <message>
         <source>Transaction amount too small</source>
-        <translation>Siirtosumma liian pieni</translation>
+        <translation>Rahansiirron määrä on liian pieni</translation>
     </message>
     <message>
         <source>Transaction amounts must be positive</source>
-        <translation>Siirtosumman tulee olla positiivinen</translation>
+        <translation>Rahansiirtojen tulee olla positiivisia</translation>
+    </message>
+    <message>
+        <source>Transaction created successfully.</source>
+        <translation>Rahansiirto luotu onnistuneesti.</translation>
+    </message>
+    <message>
+        <source>Transaction fees are too high.</source>
+        <translation>Rahansiirron taksat ovat liian korkeat.</translation>
+    </message>
+    <message>
+        <source>Transaction not valid.</source>
+        <translation>Rahansiirto ei onnistu</translation>
     </message>
     <message>
         <source>Transaction too large for fee policy</source>
-        <translation>Rahansiirto on liian suuri maksukulukäytännölle</translation>
+        <translation>Rahansiirto liian iso taksaan nähden</translation>
     </message>
     <message>
         <source>Transaction too large</source>
-        <translation>Siirtosumma liian iso</translation>
+        <translation>Rahansiirto liian suuri</translation>
     </message>
     <message>
-        <source>Upgrade wallet to latest format on startup</source>
-        <translation>Päivitä lompakko viimeisimpään formaattiin käynnistyksen yhteydessä</translation>
+        <source>Transmitting final transaction.</source>
+        <translation>Lähetetään viimeinen rahansiirto.</translation>
     </message>
     <message>
-        <source>Username for JSON-RPC connections</source>
-        <translation>Käyttäjätunnus JSON-RPC-yhteyksille</translation>
+        <source>Upgrade wallet to latest format</source>
+        <translation>Päivitä lompakko viimeisimpään formaattiin.</translation>
     </message>
     <message>
-        <source>Wallet needed to be rewritten: restart Kore Core to complete</source>
-        <translation>Lompakko tarvitsee uudelleenkirjoittaa: käynnistä Koreuudelleen</translation>
+        <source>Use the test network</source>
+        <translation>Käytä testiverkkoa</translation>
+    </message>
+    <message>
+        <source>Verifying blocks...</source>
+        <translation>Tarkistaa lohkoja...</translation>
+    </message>
+    <message>
+        <source>Verifying wallet...</source>
+        <translation>Tarkistaa lompakkoa...</translation>
+    </message>
+    <message>
+        <source>Wallet is locked.</source>
+        <translation>Lompakko on lukittu.</translation>
+    </message>
+    <message>
+        <source>Wallet options:</source>
+        <translation>Lompakon vaihtoehdot:</translation>
     </message>
     <message>
         <source>Warning</source>
         <translation>Varoitus</translation>
     </message>
     <message>
-        <source>Whether to operate in a blocks only mode (default: %u)</source>
-        <translation>Toimitaanko tilassa jossa ainoastaan lohkot sallitaan (oletus: %u)</translation>
+        <source>Warning: This version is obsolete, upgrade required!</source>
+        <translation>Varoitus: Tämä versio on vanha, päivitys vaadittu!</translation>
     </message>
     <message>
-        <source>Zapping all transactions from wallet...</source>
-        <translation>Tyhjennetään kaikki rahansiirrot lompakosta....</translation>
+        <source>Will retry...</source>
+        <translation>Yrittää uudelleen...</translation>
     </message>
     <message>
-        <source>ZeroMQ notification options:</source>
-        <translation>ZeroMQ-ilmoitusasetukset:</translation>
+        <source>on startup</source>
+        <translation>käynnistyksessä</translation>
     </message>
     <message>
         <source>wallet.dat corrupt, salvage failed</source>
-        <translation>wallet.dat -lompakkotiedosto korruptoitunut, korjaaminen epäonnistui</translation>
-    </message>
-    <message>
-        <source>Password for JSON-RPC connections</source>
-        <translation>Salasana JSON-RPC-yhteyksille</translation>
-    </message>
-    <message>
-        <source>Execute command when the best block changes (%s in cmd is replaced by block hash)</source>
-        <translation>Suorita käsky kun paras lohko muuttuu (%s cmd on vaihdettu block hashin kanssa)</translation>
-    </message>
-    <message>
-        <source>This help message</source>
-        <translation>Tämä ohjeviesti</translation>
-    </message>
-    <message>
-        <source>Allow DNS lookups for -addnode, -seednode and -connect</source>
-        <translation>Salli DNS kyselyt -addnode, -seednode ja -connect yhteydessä</translation>
-    </message>
-    <message>
-        <source>Loading addresses...</source>
-        <translation>Ladataan osoitteita...</translation>
-    </message>
-    <message>
-        <source>Error loading wallet.dat: Wallet corrupted</source>
-        <translation>Virhe ladattaessa wallet.dat-tiedostoa: Lompakko vioittunut</translation>
-    </message>
-    <message>
-        <source>-maxtxfee is set very high! Fees this large could be paid on a single transaction.</source>
-        <translation>-maxtxfee on asetettu erittäin suureksi! Tämänkokoisia kuluja saatetaan maksaa yhdessä rahansiirrossa.</translation>
-    </message>
-    <message>
-        <source>-paytxfee is set very high! This is the transaction fee you will pay if you send a transaction.</source>
-        <translation>-paytxfee on asetettu erittäin suureksi! Tämä on rahansiirtokulu, jonka maksat, mikäli lähetät rahansiirron.</translation>
-    </message>
-    <message>
-        <source>Do not keep transactions in the mempool longer than &lt;n&gt; hours (default: %u)</source>
-        <translation>Älä pidä rahansiirtoja muistivarannoissa kauemmin kuin &lt;n&gt; tuntia (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Error reading wallet.dat! All keys read correctly, but transaction data or address book entries might be missing or incorrect.</source>
-        <translation>Virhe lukiessa wallet.dat-tiedostoa! Kaikki avaimet luettiin onnistuneesti, mutta rahansiirtotiedot tai osoitekirjan sisältö saattavat olla muuttuneita tai vääriä.</translation>
-    </message>
-    <message>
-        <source>How thorough the block verification of -checkblocks is (0-4, default: %u)</source>
-        <translation>Kuinka läpikäyvä lohkojen -checkblocks -todennus on (0-4, oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Use separate SOCKS5 proxy to reach peers via Tor hidden services (default: %s)</source>
-        <translation>Käytä erillistä SOCKS5-proxyä tavoittaaksesi vertaisia Tor-piilopalveluiden kautta (oletus: %s)</translation>
-    </message>
-    <message>
-        <source>(default: %s)</source>
-        <translation>(oletus: %s)</translation>
-    </message>
-    <message>
-        <source>Always query for peer addresses via DNS lookup (default: %u)</source>
-        <translation>Pyydä vertaisten osoitteita aina DNS-kyselyjen avulla (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Error loading wallet.dat</source>
-        <translation>Virhe ladattaessa wallet.dat-tiedostoa</translation>
-    </message>
-    <message>
-        <source>Generate coins (default: %u)</source>
-        <translation>Luo kolikoita (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>How many blocks to check at startup (default: %u, 0 = all)</source>
-        <translation>Kuinka monta lohkoa tarkistetaan käynnistyksessä (oletus: %u, 0 = kaikki)</translation>
-    </message>
-    <message>
-        <source>Include IP addresses in debug output (default: %u)</source>
-        <translation>Sisällytä IP-osoitteet virheenkorjauslokissa (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Invalid -proxy address: '%s'</source>
-        <translation>Virheellinen proxy-osoite '%s'</translation>
-    </message>
-    <message>
-        <source>Listen for JSON-RPC connections on &lt;port&gt; (default: %u or testnet: %u)</source>
-        <translation>Kuuntele JSON-RPC-yhteyksiä portissa &lt;port&gt; (oletus: %u tai testnet: %u)</translation>
-    </message>
-    <message>
-        <source>Listen for connections on &lt;port&gt; (default: %u or testnet: %u)</source>
-        <translation>Kuuntele yhteyksiä portissa &lt;port&gt; (oletus: %u tai testnet: %u)</translation>
-    </message>
-    <message>
-        <source>Maintain at most &lt;n&gt; connections to peers (default: %u)</source>
-        <translation>Ylläpidä enimmillään &lt;n&gt; yhteyttä vertaisiin (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Make the wallet broadcast transactions</source>
-        <translation>Aseta lompakko kuuluttamaan rahansiirtoja</translation>
-    </message>
-    <message>
-        <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: %u)</source>
-        <translation>Maksimi yhteyttä kohden käytettävä vastaanottopuskurin koko, &lt;n&gt;*1000 tavua (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Maximum per-connection send buffer, &lt;n&gt;*1000 bytes (default: %u)</source>
-        <translation>Maksimi yhteyttä kohden käytettävä lähetyspuskurin koko, &lt;n&gt;*1000 tavua (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Prepend debug output with timestamp (default: %u)</source>
-        <translation>Lisää debug-tietojen alkuun aikaleimat (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Relay and mine data carrier transactions (default: %u)</source>
-        <translation>Välitä ja louhi dataa kantavia rahansiirtoja (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Relay non-P2SH multisig (default: %u)</source>
-        <translation>Välitä ei-P2SH-multisig (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Set key pool size to &lt;n&gt; (default: %u)</source>
-        <translation>Aseta avainaltaan kooksi &lt;n&gt; (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Set minimum block size in bytes (default: %u)</source>
-        <translation>Aseta pienin mahdollinen lohkokoko tavuina (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Set the number of threads to service RPC calls (default: %d)</source>
-        <translation>Aseta RPC-kutsujen palvelemiseen tarkoitettujen säikeiden lukumäärä (oletus: %d)</translation>
-    </message>
-    <message>
-        <source>Specify configuration file (default: %s)</source>
-        <translation>Määritä asetustiedosto (oletus: %s)</translation>
-    </message>
-    <message>
-        <source>Specify connection timeout in milliseconds (minimum: 1, default: %d)</source>
-        <translation>Määritä yhteyden aikakatkaisu millisekunneissa (minimi: 1, oletus: %d)</translation>
-    </message>
-    <message>
-        <source>Specify pid file (default: %s)</source>
-        <translation>Määritä pid-tiedosto (oletus: %s)</translation>
-    </message>
-    <message>
-        <source>Spend unconfirmed change when sending transactions (default: %u)</source>
-        <translation>Käytä vahvistamattomia vaihtorahoja lähetettäessä rahansiirtoja (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Threshold for disconnecting misbehaving peers (default: %u)</source>
-        <translation>Aikaväli sopimattomien vertaisten yhteyksien katkaisuun (oletus: %u)</translation>
-    </message>
-    <message>
-        <source>Unknown network specified in -onlynet: '%s'</source>
-        <translation>Tuntematon verkko -onlynet parametrina: '%s'</translation>
-    </message>
-    <message>
-        <source>Cannot resolve -bind address: '%s'</source>
-        <translation>-bind osoitteen '%s' selvittäminen epäonnistui</translation>
-    </message>
-    <message>
-        <source>Cannot resolve -externalip address: '%s'</source>
-        <translation>-externalip osoitteen '%s' selvittäminen epäonnistui</translation>
-    </message>
-    <message>
-        <source>Invalid amount for -paytxfee=&lt;amount&gt;: '%s'</source>
-        <translation>-paytxfee=&lt;amount&gt;: '%s' on virheellinen</translation>
-    </message>
-    <message>
-        <source>Insufficient funds</source>
-        <translation>Lompakon saldo ei riitä</translation>
-    </message>
-    <message>
-        <source>Loading block index...</source>
-        <translation>Ladataan lohkoindeksiä...</translation>
-    </message>
-    <message>
-        <source>Add a node to connect to and attempt to keep the connection open</source>
-        <translation>Linää solmu mihin liittyä pitääksesi yhteyden auki</translation>
-    </message>
-    <message>
-        <source>Loading wallet...</source>
-        <translation>Ladataan lompakkoa...</translation>
-    </message>
-    <message>
-        <source>Cannot downgrade wallet</source>
-        <translation>Et voi päivittää lompakkoasi vanhempaan versioon</translation>
-    </message>
-    <message>
-        <source>Cannot write default address</source>
-        <translation>Oletusosoitetta ei voi kirjoittaa</translation>
-    </message>
-    <message>
-        <source>Rescanning...</source>
-        <translation>Skannataan uudelleen...</translation>
-    </message>
-    <message>
-        <source>Done loading</source>
-        <translation>Lataus on valmis</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation>Virhe</translation>
+        <translation>wallet.dat vioittunut, pelastus epäonnistui</translation>
     </message>
 </context>
 </TS>

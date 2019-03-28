@@ -6,7 +6,6 @@
 #ifndef OBFUSCATION_H
 #define OBFUSCATION_H
 
-#include "activemasternode.h"
 #include "main.h"
 #include "masternode-payments.h"
 #include "masternode-sync.h"
@@ -18,7 +17,7 @@ class CTxIn;
 class CObfuscationPool;
 class CObfuScationSigner;
 class CMasterNodeVote;
-class CCodexAddress;
+class CBitcoinAddress;
 class CObfuscationQueue;
 class CObfuscationBroadcastTx;
 class CActiveMasternode;
@@ -48,13 +47,13 @@ class CActiveMasternode;
 #define OBFUSCATION_RELAY_SIG 3
 
 static const CAmount OBFUSCATION_COLLATERAL = (10 * COIN);
-static const CAmount OBFUSCATION_POOL_MAX = (99999.99 * COIN);
+static const CAmount OBFUSCATION_POOL_MAX = ((MASTERNODE_MIN_COINS - 0.01) * COIN);
 
 extern CObfuscationPool obfuScationPool;
 extern CObfuScationSigner obfuScationSigner;
 extern std::vector<CObfuscationQueue> vecObfuscationQueue;
 extern std::string strMasterNodePrivKey;
-extern std::map<uint256, CObfuscationBroadcastTx> mapObfuscationBroadcastTxes;
+extern map<uint256, CObfuscationBroadcastTx> mapObfuscationBroadcastTxes;
 extern CActiveMasternode activeMasternode;
 
 /** Holds an Obfuscation input
@@ -239,7 +238,7 @@ class CObfuscationBroadcastTx
 public:
     CTransaction tx;
     CTxIn vin;
-    std::vector<unsigned char> vchSig;
+    vector<unsigned char> vchSig;
     int64_t sigTime;
 };
 
@@ -248,7 +247,7 @@ public:
 class CObfuScationSigner
 {
 public:
-    /// Is the inputs associated with this public key? (and there is 500 KORE - checking if valid masternode)
+    /// Is the inputs associated with this public key? (and there is 10000 KORE - checking if valid masternode)
     bool IsVinAssociatedWithPubkey(CTxIn& vin, CPubKey& pubkey);
     /// Set the private/public key values, returns true if successful
     bool GetKeysFromSecret(std::string strSecret, CKey& keyRet, CPubKey& pubkeyRet);
@@ -365,7 +364,7 @@ public:
 
     void InitCollateralAddress()
     {
-        SetCollateralAddress(Params().ObfuscationPoolDummyAddress());
+        SetCollateralAddress(Params().GetObfuscationPoolDummyAddress());
     }
 
     void SetMinBlockSpacing(int minBlockSpacingIn)
@@ -412,11 +411,11 @@ public:
     void UpdateState(unsigned int newState)
     {
         if (fMasterNode && (newState == POOL_STATUS_ERROR || newState == POOL_STATUS_SUCCESS)) {
-            LogPrint("obfuscation", "CObfuscationPool::UpdateState() - Can't set state to ERROR or SUCCESS as a Masternode. \n");
+            // LogPrint("obfuscation", "CObfuscationPool::UpdateState() - Can't set state to ERROR or SUCCESS as a Masternode. \n");
             return;
         }
 
-        LogPrintf("CObfuscationPool::UpdateState() == %d | %d \n", state, newState);
+        // LogPrintf("CObfuscationPool::UpdateState() == %d | %d \n", state, newState);
         if (state != newState) {
             lastTimeChanged = GetTimeMillis();
             if (fMasterNode) {
@@ -429,7 +428,7 @@ public:
     /// Get the maximum number of transactions for the pool
     int GetMaxPoolTransactions()
     {
-        return Params().PoolMaxTransactions();
+        return Params().GetPoolMaxTransactions();
     }
 
     /// Do we have enough users to take entries?

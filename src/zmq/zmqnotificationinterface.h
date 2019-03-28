@@ -1,4 +1,4 @@
-// Copyright (c) 2015 The Kore Core developers
+// Copyright (c) 2015 The Bitcoin Core developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -26,6 +26,7 @@ protected:
     // CValidationInterface
     void SyncTransaction(const CTransaction &tx, const CBlock *pblock);
     void UpdatedBlockTip(const CBlockIndex *pindex);
+    void NotifyTransactionLock(const CTransaction &tx);
 
 private:
     CZMQNotificationInterface();

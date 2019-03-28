@@ -1,6 +1,7 @@
 // Copyright (c) 2009-2010 Satoshi Nakamoto
-// Copyright (c) 2009-2015 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2009-2014 The Bitcoin developers
+// Copyright (c) 2015-2018 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #ifndef BITCOIN_NET_H
@@ -8,13 +9,16 @@
 
 #include "bloom.h"
 #include "compat.h"
+#include "hash.h"
 #include "limitedmap.h"
+#include "mruset.h"
 #include "netbase.h"
 #include "protocol.h"
 #include "random.h"
 #include "streams.h"
 #include "sync.h"
 #include "uint256.h"
+#include "utilstrencodings.h"
 
 #include <deque>
 #include <stdint.h>
@@ -28,6 +32,7 @@
 #include <boost/signals2/signal.hpp>
 
 class CAddrMan;
+class CBlockIndex;
 class CScheduler;
 class CNode;
 
@@ -47,6 +52,8 @@ static const unsigned int MAX_ADDR_TO_SEND = 1000;
 static const unsigned int MAX_PROTOCOL_MESSAGE_LENGTH = 2 * 1024 * 1024;
 /** Maximum length of strSubVer in `version` message */
 static const unsigned int MAX_SUBVERSION_LENGTH = 256;
+/** Default for blocks only*/
+static const bool DEFAULT_BLOCKSONLY_LEGACY = false;
 /** -listen default */
 static const bool DEFAULT_LISTEN = true;
 /** -upnp default */
@@ -59,70 +66,50 @@ static const bool DEFAULT_UPNP = false;
 static const size_t MAPASKFOR_MAX_SZ = MAX_INV_SZ;
 /** The maximum number of entries in setAskFor (larger due to getdata latency)*/
 static const size_t SETASKFOR_MAX_SZ = 2 * MAX_INV_SZ;
-/** The maximum number of peer connections to maintain. */
 static const unsigned int DEFAULT_MAX_PEER_CONNECTIONS = 125;
 /** The default for -maxuploadtarget. 0 = Unlimited */
 static const uint64_t DEFAULT_MAX_UPLOAD_TARGET = 0;
 /** Default for blocks only*/
 static const bool DEFAULT_BLOCKSONLY = false;
-
-static const bool DEFAULT_FORCEDNSSEED = false;
-static const size_t DEFAULT_MAXRECEIVEBUFFER = 5 * 1000;
-static const size_t DEFAULT_MAXSENDBUFFER    = 1 * 1000;
-
 // NOTE: When adjusting this, update rpcnet:setban's help ("24h")
 static const unsigned int DEFAULT_MISBEHAVING_BANTIME = 60 * 60 * 24;  // Default 24-hour ban
 
 unsigned int ReceiveFloodSize();
 unsigned int SendBufferSize();
 
-void AddOneShot(const std::string& strDest);
+void AddOneShot(std::string strDest);
+bool RecvLine(SOCKET hSocket, std::string& strLine);
 void AddressCurrentlyConnected(const CService& addr);
 CNode* FindNode(const CNetAddr& ip);
 CNode* FindNode(const CSubNet& subNet);
 CNode* FindNode(const std::string& addrName);
 CNode* FindNode(const CService& ip);
-CNode* ConnectNode(CAddress addrConnect, const char *pszDest = NULL, bool obfuScationMaster = false);
-bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant *grantOutbound = NULL, const char *strDest = NULL, bool fOneShot = false);
+CNode* ConnectNode(CAddress addrConnect, const char* pszDest = NULL, bool obfuScationMaster = false);
+bool OpenNetworkConnection(const CAddress& addrConnect, CSemaphoreGrant* grantOutbound = NULL, const char* strDest = NULL, bool fOneShot = false);
 void MapPort(bool fUseUPnP);
 unsigned short GetListenPort();
-bool BindListenPort(const CService &bindAddr, std::string& strError, bool fWhitelisted = false);
-void StartTor(boost::thread_group& threadGroup);
-void StopTor();
+bool BindListenPort(const CService& bindAddr, std::string& strError, bool fWhitelisted = false);
 void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler);
 bool StopNode();
 void SocketSendData(CNode *pnode);
 
 typedef int NodeId;
 
-struct CombinerAll
-{
-    typedef bool result_type;
-
-    template<typename I>
-    bool operator()(I first, I last) const
-    {
-        while (first != last) {
-            if (!(*first)) return false;
-            ++first;
-        }
-        return true;
-    }
-};
-
 // Signals for message handling
-struct CNodeSignals
-{
-    boost::signals2::signal<int ()> GetHeight;
-    boost::signals2::signal<bool (CNode*), CombinerAll> ProcessMessages;
-    boost::signals2::signal<bool (CNode*), CombinerAll> SendMessages;
-    boost::signals2::signal<void (NodeId, const CNode*)> InitializeNode;
-    boost::signals2::signal<void (NodeId)> FinalizeNode;
+struct CNodeSignals {
+    boost::signals2::signal<int()> GetHeight;
+    boost::signals2::signal<bool(CNode*)> ProcessMessages;
+    boost::signals2::signal<bool(CNode*)> SendMessages;
+    boost::signals2::signal<void(NodeId, const CNode*)> InitializeNode;
+    boost::signals2::signal<void(NodeId)> FinalizeNode;
 };
 
 
 CNodeSignals& GetNodeSignals();
 
+void StartTor();
+void InterruptTor();
+void StopTor();
 
 enum
 {
@@ -135,8 +122,8 @@ enum
     LOCAL_MAX
 };
 
-bool IsPeerAddrLocalGood(CNode *pnode);
-void AdvertiseLocal(CNode *pnode);
+bool IsPeerAddrLocalGood(CNode* pnode);
+void AdvertizeLocal(CNode* pnode);
 void SetLimited(enum Network net, bool fLimited = true);
 bool IsLimited(enum Network net);
 bool IsLimited(const CNetAddr& addr);
@@ -147,21 +134,15 @@ bool SeenLocal(const CService& addr);
 bool IsLocal(const CService& addr);
 bool GetLocal(CService &addr, const CNetAddr *paddrPeer = NULL);
 bool IsReachable(enum Network net);
-bool IsReachable(const CNetAddr &addr);
-void SetReachable(enum Network net, bool fFlag = true);
-CAddress GetLocalAddress(const CNetAddr *paddrPeer = NULL);
+bool IsReachable(const CNetAddr& addr);
+CAddress GetLocalAddress(const CNetAddr* paddrPeer = NULL);
 
-extern double usdprice;
-extern double koreprice;
-extern double usdrate;
 
 extern bool fDiscover;
 extern bool fListen;
 extern uint64_t nLocalServices;
 extern uint64_t nLocalHostNonce;
 extern CAddrMan addrman;
-
-/** Maximum number of connections to simultaneously allow (aka connection slots) */
 extern int nMaxConnections;
 
 extern std::vector<CNode*> vNodes;
@@ -187,14 +168,12 @@ struct LocalServiceInfo {
 
 extern CCriticalSection cs_mapLocalHost;
 extern std::map<CNetAddr, LocalServiceInfo> mapLocalHost;
-typedef std::map<std::string, uint64_t> mapMsgCmdSize; //command, total bytes
 
 class CNodeStats
 {
 public:
     NodeId nodeid;
     uint64_t nServices;
-    bool fRelayTxes;
     int64_t nLastSend;
     int64_t nLastRecv;
     int64_t nTimeConnected;
@@ -205,9 +184,7 @@ public:
     bool fInbound;
     int nStartingHeight;
     uint64_t nSendBytes;
-    mapMsgCmdSize mapSendBytesPerMsgCmd;
     uint64_t nRecvBytes;
-    mapMsgCmdSize mapRecvBytesPerMsgCmd;
     bool fWhitelisted;
     double dPingTime;
     double dPingWait;
@@ -231,7 +208,8 @@ public:
 
     int64_t nTime;                  // time (in microseconds) of message receipt.
 
-    CNetMessage(const CMessageHeader::MessageStartChars& pchMessageStartIn, int nTypeIn, int nVersionIn) : hdrbuf(nTypeIn, nVersionIn), hdr(pchMessageStartIn), vRecv(nTypeIn, nVersionIn) {
+    CNetMessage(int nTypeIn, int nVersionIn) : hdrbuf(nTypeIn, nVersionIn), vRecv(nTypeIn, nVersionIn)
+    {
         hdrbuf.resize(24);
         in_data = false;
         nHdrPos = 0;
@@ -389,16 +367,13 @@ protected:
     static std::vector<CSubNet> vWhitelistedRange;
     static CCriticalSection cs_vWhitelistedRange;
 
-    mapMsgCmdSize mapSendBytesPerMsgCmd;
-    mapMsgCmdSize mapRecvBytesPerMsgCmd;
-
     // Basic fuzz-testing
     void Fuzz(int nChance); // modifies ssSend
 
 public:
     uint256 hashContinue;
     int nStartingHeight;
-    int nChainHeight; // updates with ping
+    int nChainHeight; // updates with ping Legacy    
 
     // flood relay
     std::vector<CAddress> vAddrToSend;
@@ -412,9 +387,10 @@ public:
     CRollingBloomFilter filterInventoryKnown;
     std::vector<CInv> vInventoryToSend;
     CCriticalSection cs_inventory;
-    std::set<uint256> setAskFor;
+    std::set<uint256> setAskFor;    
     std::multimap<int64_t, CInv> mapAskFor;
     int64_t nNextInvSend;
+    std::vector<uint256> vBlockRequested;
     // Used for headers announcements - unfiltered blocks to relay
     // Also protected by cs_inventory
     std::vector<uint256> vBlockHashesToAnnounce;
@@ -431,7 +407,7 @@ public:
     // Whether a ping is requested.
     bool fPingQueued;
 
-    CNode(SOCKET hSocketIn, const CAddress &addrIn, const std::string &addrNameIn = "", bool fInboundIn = false);
+    CNode(SOCKET hSocketIn, CAddress addrIn, std::string addrNameIn = "", bool fInboundIn = false);
     ~CNode();
 
 private:
@@ -494,7 +470,6 @@ public:
     }
 
 
-
     void AddAddressKnown(const CAddress& addr)
     {
         addrKnown.insert(addr.GetKey());
@@ -548,7 +523,7 @@ public:
     void AbortMessage() UNLOCK_FUNCTION(cs_vSend);
 
     // TODO: Document the precondition of this function.  Is cs_vSend locked?
-    void EndMessage(const char* pszCommand) UNLOCK_FUNCTION(cs_vSend);
+    void EndMessage() UNLOCK_FUNCTION(cs_vSend);
 
     void PushVersion();
 
@@ -558,154 +533,125 @@ public:
         try
         {
             BeginMessage(pszCommand);
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
     }
 
-    template<typename T1>
+    template <typename T1>
     void PushMessage(const char* pszCommand, const T1& a1)
     {
-        try
-        {
+        try {
             BeginMessage(pszCommand);
             ssSend << a1;
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
     }
 
-    template<typename T1, typename T2>
+    template <typename T1, typename T2>
     void PushMessage(const char* pszCommand, const T1& a1, const T2& a2)
     {
-        try
-        {
+        try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2;
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
     }
 
-    template<typename T1, typename T2, typename T3>
+    template <typename T1, typename T2, typename T3>
     void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3)
     {
-        try
-        {
+        try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3;
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
     }
 
-    template<typename T1, typename T2, typename T3, typename T4>
+    template <typename T1, typename T2, typename T3, typename T4>
     void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3, const T4& a4)
     {
-        try
-        {
+        try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4;
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
     }
 
-    template<typename T1, typename T2, typename T3, typename T4, typename T5>
+    template <typename T1, typename T2, typename T3, typename T4, typename T5>
     void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3, const T4& a4, const T5& a5)
     {
-        try
-        {
+        try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5;
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
     }
 
-    template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
+    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
     void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3, const T4& a4, const T5& a5, const T6& a6)
     {
-        try
-        {
+        try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6;
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
     }
 
-    template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
+    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
     void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3, const T4& a4, const T5& a5, const T6& a6, const T7& a7)
     {
-        try
-        {
+        try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7;
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
     }
 
-    template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
+    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
     void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3, const T4& a4, const T5& a5, const T6& a6, const T7& a7, const T8& a8)
     {
-        try
-        {
+        try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8;
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
     }
 
-    template<typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
+    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8, typename T9>
     void PushMessage(const char* pszCommand, const T1& a1, const T2& a2, const T3& a3, const T4& a4, const T5& a5, const T6& a6, const T7& a7, const T8& a8, const T9& a9)
     {
-        try
-        {
+        try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8 << a9;
-            EndMessage(pszCommand);
-        }
-        catch (...)
-        {
+            EndMessage();
+        } catch (...) {
             AbortMessage();
             throw;
         }
@@ -717,7 +663,7 @@ public:
         try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8 << a9 << a10;
-            EndMessage(pszCommand);
+            EndMessage();
         } catch (...) {
             AbortMessage();
             throw;
@@ -730,7 +676,7 @@ public:
         try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8 << a9 << a10 << a11;
-            EndMessage(pszCommand);
+            EndMessage();
         } catch (...) {
             AbortMessage();
             throw;
@@ -743,7 +689,7 @@ public:
         try {
             BeginMessage(pszCommand);
             ssSend << a1 << a2 << a3 << a4 << a5 << a6 << a7 << a8 << a9 << a10 << a11 << a12;
-            EndMessage(pszCommand);
+            EndMessage();
         } catch (...) {
             AbortMessage();
             throw;
@@ -780,6 +726,7 @@ public:
     void Subscribe(unsigned int nChannel, unsigned int nHops = 0);
     void CancelSubscribe(unsigned int nChannel);
     void CloseSocketDisconnect();
+    bool DisconnectOldProtocol(int nVersionRequired, std::string strLastCommand = "");
 
     // Denial-of-service detection/prevention
     // The idea is to detect peers that are behaving
@@ -826,7 +773,6 @@ public:
 
     //!set the max outbound target in bytes
     static void SetMaxOutboundTarget(uint64_t limit);
-    static uint64_t GetMaxOutboundTarget();
 
     //!set the timeframe for the max outbound target
     static void SetMaxOutboundTimeframe(uint64_t timeframe);
@@ -836,10 +782,6 @@ public:
     // if param historicalBlockServingLimit is set true, the function will
     // response true if the limit for serving historical blocks has been reached
     static bool OutboundTargetReached(bool historicalBlockServingLimit);
-
-    //!response the bytes left in the current max outbound cycle
-    // in case of no limit, it will always response 0
-    static uint64_t GetOutboundTargetBytesLeft();
 
     //!response the time in second left in the current max outbound cycle
     // in case of no limit, it will always response 0
@@ -856,7 +798,8 @@ class CTransaction;
 void RelayTransaction(const CTransaction& tx);
 void RelayTransaction(const CTransaction& tx, const CDataStream& ss);
 void RelayTransactionLockReq(const CTransaction& tx, bool relayToAll = false);
-void RelayInv(CInv& inv, const int minProtoVersion = MIN_PEER_PROTO_VERSION);
+void RelayInv(CInv& inv);
+
 /** Access to the (IP) address database (peers.dat) */
 class CAddrDB
 {
@@ -882,6 +825,6 @@ public:
 void DumpBanlist();
 
 /** Return a timestamp in the future (in microseconds) for exponentially distributed events. */
-int64_t PoissonNextSend(int64_t nNow, int average_interval_seconds);
+int64_t PoissonNextSend_Legacy(int64_t nNow, int average_interval_seconds);
 
 #endif // BITCOIN_NET_H

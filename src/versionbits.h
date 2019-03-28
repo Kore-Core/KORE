@@ -6,6 +6,7 @@
 #define BITCOIN_CONSENSUS_VERSIONBITS
 
 #include "chain.h"
+#include "chainparams.h"
 #include <map>
 
 /** What block version to use for new blocks (pre versionbits) */
@@ -44,25 +45,25 @@ extern const struct BIP9DeploymentInfo VersionBitsDeploymentInfo[];
  */
 class AbstractThresholdConditionChecker {
 protected:
-    virtual bool Condition(const CBlockIndex* pindex, const Consensus::Params& params) const =0;
-    virtual int64_t BeginTime(const Consensus::Params& params) const =0;
-    virtual int64_t EndTime(const Consensus::Params& params) const =0;
-    virtual int Period(const Consensus::Params& params) const =0;
-    virtual int Threshold(const Consensus::Params& params) const =0;
+    virtual bool Condition(const CBlockIndex* pindex) const =0;
+    virtual int64_t BeginTime() const =0;
+    virtual int64_t EndTime() const =0;
+    virtual int Period() const =0;
+    virtual int Threshold() const =0;
 
 public:
     // Note that the function below takes a pindexPrev as input: they compute information for block B based on its parent.
-    ThresholdState GetStateFor(const CBlockIndex* pindexPrev, const Consensus::Params& params, ThresholdConditionCache& cache) const;
+    ThresholdState GetStateFor(const CBlockIndex* pindexPrev, ThresholdConditionCache& cache) const;
 };
 
 struct VersionBitsCache
 {
-    ThresholdConditionCache caches[Consensus::MAX_VERSION_BITS_DEPLOYMENTS];
+    ThresholdConditionCache caches[CChainParams::MAX_VERSION_BITS_DEPLOYMENTS];
 
     void Clear();
 };
 
-ThresholdState VersionBitsState(const CBlockIndex* pindexPrev, const Consensus::Params& params, Consensus::DeploymentPos pos, VersionBitsCache& cache);
-uint32_t VersionBitsMask(const Consensus::Params& params, Consensus::DeploymentPos pos);
+ThresholdState VersionBitsState(const CBlockIndex* pindexPrev, CChainParams::DeploymentPos pos, VersionBitsCache& cache);
+uint32_t VersionBitsMask(CChainParams::DeploymentPos pos);
 
 #endif

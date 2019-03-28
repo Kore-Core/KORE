@@ -1,75 +1,54 @@
-// Copyright (c) 2014-2015 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2014 The Bitcoin Core developers
+// Copyright (c) 2014-2015 The Dash developers
+// Copyright (c) 2015-2017 The KORE developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-#include "chainparams.h"
 #include "main.h"
+#include "miner.h"
+#include "primitives/transaction.h"
 
-#include "test/test_kore.h"
+#include "utilmoneystr.h"
 
-#include <boost/signals2/signal.hpp>
 #include <boost/test/unit_test.hpp>
 
-BOOST_FIXTURE_TEST_SUITE(main_tests, TestingSetup)
+BOOST_AUTO_TEST_SUITE(main_tests)
 
-static void TestBlockSubsidyHalvings(const Consensus::Params& consensusParams)
+// We are unable to test pre-fork supply beacause it doesn't use a fixed amount.
+// For test purpose we consider the fork to happen on block 429033.
+// The money supply on block 429032 is 2,141,450.338583.
+BOOST_AUTO_TEST_CASE(subsidy_limit_test_post_fork)
 {
-    int maxHalvings = 64;
-    CAmount nInitialSubsidy = 50 * COIN;
+    SelectParams(CBaseChainParams::MAIN);
 
-    CAmount nPreviousSubsidy = nInitialSubsidy * 2; // for height == 0
-    BOOST_CHECK_EQUAL(nPreviousSubsidy, nInitialSubsidy * 2);
-    for (int nHalvings = 0; nHalvings < maxHalvings; nHalvings++) {
-        int nHeight = nHalvings * consensusParams.nSubsidyHalvingInterval;
-        CAmount nSubsidy = GetProofOfWorkSubsidy(nHeight, consensusParams);
-        BOOST_CHECK(nSubsidy <= nInitialSubsidy);
-        BOOST_CHECK_EQUAL(nSubsidy, nPreviousSubsidy / 2);
-        nPreviousSubsidy = nSubsidy;
+    int nHeight = 429033;
+    CAmount nMoneySupply = 214145033858300;
+    CAmount nlastSubsidy = 103008606;
+    CAmount nSubsidy = 0;
+
+    // Represents block 429032
+    CBlockIndex pindexPrev;
+    pindexPrev.nHeight = 429032;
+    pindexPrev.nMoneySupply = nMoneySupply;
+
+    for (nHeight; nHeight <= 12435722; nHeight++) {
+        /* PoS */
+        nSubsidy = GetBlockReward(&pindexPrev);
+        BOOST_CHECK(nSubsidy <= nlastSubsidy);
+        nlastSubsidy = nSubsidy;
+        if(!MoneyRange(nSubsidy))
+            printf("%d, %s", nHeight, FormatMoney(nSubsidy).c_str());
+        BOOST_CHECK(MoneyRange(nSubsidy));
+        nMoneySupply += nSubsidy;
+        BOOST_CHECK(nMoneySupply <= MAX_MONEY);
+        pindexPrev.nMoneySupply = nMoneySupply;
+        pindexPrev.nHeight++;
     }
-    BOOST_CHECK_EQUAL(GetProofOfWorkSubsidy(maxHalvings * consensusParams.nSubsidyHalvingInterval, consensusParams), 0);
+    BOOST_ASSERT(pindexPrev.nMoneySupply == MAX_MONEY);
+
+    // Try to call it again after the limit was reached
+    nSubsidy = GetBlockReward(&pindexPrev);
+    BOOST_ASSERT(nSubsidy == 0);
 }
 
-static void TestBlockSubsidyHalvings(int nSubsidyHalvingInterval)
-{
-    Consensus::Params consensusParams;
-    consensusParams.nSubsidyHalvingInterval = nSubsidyHalvingInterval;
-    TestBlockSubsidyHalvings(consensusParams);
-}
-
-BOOST_AUTO_TEST_CASE(block_subsidy_test)
-{
-    TestBlockSubsidyHalvings(Params(CBaseChainParams::MAIN).GetConsensus()); // As in main
-    TestBlockSubsidyHalvings(150); // As in regtest
-    TestBlockSubsidyHalvings(1000); // Just another interval
-}
-
-BOOST_AUTO_TEST_CASE(subsidy_limit_test)
-{
-    const Consensus::Params& consensusParams = Params(CBaseChainParams::MAIN).GetConsensus();
-    CAmount nSum = 0;
-    for (int nHeight = 0; nHeight < 14000000; nHeight += 1000) {
-        CAmount nSubsidy = GetProofOfWorkSubsidy(nHeight, consensusParams);
-        BOOST_CHECK(nSubsidy <= 50 * COIN);
-        nSum += nSubsidy * 1000;
-        BOOST_CHECK(MoneyRange(nSum));
-    }
-    BOOST_CHECK_EQUAL(nSum, 2099999997690000ULL);
-}
-
-bool ReturnFalse() { return false; }
-bool ReturnTrue() { return true; }
-
-BOOST_AUTO_TEST_CASE(test_combiner_all)
-{
-    boost::signals2::signal<bool (), CombinerAll> Test;
-    BOOST_CHECK(Test());
-    Test.connect(&ReturnFalse);
-    BOOST_CHECK(!Test());
-    Test.connect(&ReturnTrue);
-    BOOST_CHECK(!Test());
-    Test.disconnect(&ReturnFalse);
-    BOOST_CHECK(Test());
-    Test.disconnect(&ReturnTrue);
-    BOOST_CHECK(Test());
-}
 BOOST_AUTO_TEST_SUITE_END()

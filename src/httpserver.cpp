@@ -1,4 +1,5 @@
-// Copyright (c) 2015 The KoreCore developers
+// Copyright (c) 2015 The Bitcoin Core developers
+// Copyright (c) 2018 The KORE developers
 // Distributed under the MIT software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -8,7 +9,7 @@
 #include "compat.h"
 #include "util.h"
 #include "netbase.h"
-#include "rpc/protocol.h" // For HTTP status codes
+#include "rpcprotocol.h" // For HTTP status codes
 #include "sync.h"
 #include "ui_interface.h"
 
@@ -188,7 +189,6 @@ static std::vector<CSubNet> rpc_allow_subnets;
 static WorkQueue<HTTPClosure>* workQueue = 0;
 //! Handlers for (sub)paths
 std::vector<HTTPPathHandler> pathHandlers;
-//! Bound listening sockets
 std::vector<evhttp_bound_socket *> boundSockets;
 
 /** Check if a network address is allowed to access the HTTP server */
@@ -305,11 +305,10 @@ static void http_reject_request_cb(struct evhttp_request* req, void*)
     LogPrint("http", "Rejecting request while shutting down\n");
     evhttp_send_error(req, HTTP_SERVUNAVAIL, NULL);
 }
-
 /** Event dispatcher thread */
 static void ThreadHTTP(struct event_base* base, struct evhttp* http)
 {
-    RenameThread("kore-http");
+    RenameThread("bitcoin-http");
     LogPrint("http", "Entering http event loop\n");
     event_base_dispatch(base);
     // Event loop will be interrupted by InterruptHTTPServer()
@@ -358,7 +357,7 @@ static bool HTTPBindAddresses(struct evhttp* http)
 /** Simple wrapper to set thread name and run work queue */
 static void HTTPWorkQueueRun(WorkQueue<HTTPClosure>* queue)
 {
-    RenameThread("kore-httpworker");
+    RenameThread("bitcoin-httpworker");
     queue->Run();
 }
 
@@ -460,11 +459,9 @@ void InterruptHTTPServer()
 {
     LogPrint("http", "Interrupting HTTP server\n");
     if (eventHTTP) {
-        // Unlisten sockets
         BOOST_FOREACH (evhttp_bound_socket *socket, boundSockets) {
             evhttp_del_accept_socket(eventHTTP, socket);
         }
-        // Reject requests on current connections
         evhttp_set_gencb(eventHTTP, http_reject_request_cb, NULL);
     }
     if (workQueue)
@@ -479,6 +476,7 @@ void StopHTTPServer()
         workQueue->WaitExit();
         delete workQueue;
     }
+    MilliSleep(500); // Avoid race condition while the last HTTP-thread is exiting
     if (eventBase) {
         LogPrint("http", "Waiting for HTTP event thread to exit\n");
         // Give event loop a few seconds to exit (to send back last RPC responses), then break it
@@ -486,7 +484,7 @@ void StopHTTPServer()
         // at least libevent 2.0.21 and always introduced a delay. In libevent
         // master that appears to be solved, so in the future that solution
         // could be used again (if desirable).
-        // (see discussion in https://github.com/kore/kore/pull/6990)
+        // (see discussion in https://github.com/bitcoin/bitcoin/pull/6990)
 #if BOOST_VERSION >= 105000
         if (!threadHTTP.try_join_for(boost::chrono::milliseconds(2000))) {
 #else
@@ -669,4 +667,3 @@ void UnregisterHTTPHandler(const std::string &prefix, bool exactMatch)
         pathHandlers.erase(i);
     }
 }
-

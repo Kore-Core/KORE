@@ -1,10 +1,33 @@
-#!/usr/bin/env python3
-# Copyright (c) 2014-2016 The Kore Core developers
+#!/usr/bin/env python2
+# Copyright (c) 2014 The Bitcoin Core developers
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
-from test_framework.test_framework import KoreTestFramework
-from test_framework.util import *
+from test_framework import BitcoinTestFramework
+from bitcoinrpc.authproxy import AuthServiceProxy, JSONRPCException
+from util import *
+
+
+def check_array_result(object_array, to_match, expected):
+    """
+    Pass in array of JSON objects, a dictionary with key/value pairs
+    to match against, and another dictionary with expected key/value
+    pairs.
+    """
+    num_matched = 0
+    for item in object_array:
+        all_match = True
+        for key,value in to_match.items():
+            if item[key] != value:
+                all_match = False
+        if not all_match:
+            continue
+        for key,value in expected.items():
+            if item[key] != value:
+                raise AssertionError("%s : expected %s=%s"%(str(item), str(key), str(value)))
+            num_matched = num_matched+1
+    if num_matched == 0:
+        raise AssertionError("No objects matched %s"%(str(to_match)))
 
 import threading
 
@@ -16,19 +39,19 @@ class LongpollThread(threading.Thread):
         self.longpollid = templat['longpollid']
         # create a new connection to the node, we can't use the same
         # connection from two threads
-        self.node = get_rpc_proxy(node.url, 1, timeout=600)
+        self.node = AuthServiceProxy(node.url, timeout=600)
 
     def run(self):
         self.node.getblocktemplate({'longpollid':self.longpollid})
 
-class GetBlockTemplateLPTest(KoreTestFramework):
+class GetBlockTemplateLPTest(BitcoinTestFramework):
     '''
     Test longpolling with getblocktemplate.
     '''
 
     def run_test(self):
-        print("Warning: this test will take about 70 seconds in the best case. Be patient.")
-        self.nodes[0].generate(10)
+        print "Warning: this test will take about 70 seconds in the best case. Be patient."
+        self.nodes[0].setgenerate(True, 10)
         templat = self.nodes[0].getblocktemplate()
         longpollid = templat['longpollid']
         # longpollid should not change between successive invocations if nothing else happens
@@ -43,7 +66,7 @@ class GetBlockTemplateLPTest(KoreTestFramework):
         assert(thr.is_alive())
 
         # Test 2: test that longpoll will terminate if another node generates a block
-        self.nodes[1].generate(1)  # generate a block on another node
+        self.nodes[1].setgenerate(True, 1)  # generate a block on another node
         # check that thread will exit now that new transaction entered mempool
         thr.join(5)  # wait 5 seconds or until thread exits
         assert(not thr.is_alive())
@@ -51,7 +74,7 @@ class GetBlockTemplateLPTest(KoreTestFramework):
         # Test 3: test that longpoll will terminate if we generate a block ourselves
         thr = LongpollThread(self.nodes[0])
         thr.start()
-        self.nodes[0].generate(1)  # generate a block on another node
+        self.nodes[0].setgenerate(True, 1)  # generate a block on another node
         thr.join(5)  # wait 5 seconds or until thread exits
         assert(not thr.is_alive())
 

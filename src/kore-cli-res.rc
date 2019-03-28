@@ -17,13 +17,13 @@ BEGIN
         BLOCK "040904E4" // U.S. English - multilingual (hex)
         BEGIN
             VALUE "CompanyName",        "Kore"
-            VALUE "FileDescription",    "kore-cli (JSON-RPC client for Kore Core)"
+            VALUE "FileDescription",    "Kore-cli (OSS RPC client for Kore)"
             VALUE "FileVersion",        VER_FILEVERSION_STR
             VALUE "InternalName",       "kore-cli"
             VALUE "LegalCopyright",     COPYRIGHT_STR
-            VALUE "LegalTrademarks1",   "Distributed under the MIT software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
+            VALUE "LegalTrademarks1",   "Distributed under the MIT/X11 software license, see the accompanying file COPYING or http://www.opensource.org/licenses/mit-license.php."
             VALUE "OriginalFilename",   "kore-cli.exe"
-            VALUE "ProductName",        "kore-cli"
+            VALUE "ProductName",        "Kore-cli"
             VALUE "ProductVersion",     VER_PRODUCTVERSION_STR
         END
     END

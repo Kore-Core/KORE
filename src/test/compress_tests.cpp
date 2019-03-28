@@ -1,10 +1,9 @@
-// Copyright (c) 2012-2015 The KoreCore developers
-// Distributed under the MIT software license, see the accompanying
+// Copyright (c) 2012-2013 The Bitcoin Core developers
+// Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "compressor.h"
 #include "util.h"
-#include "test/test_kore.h"
 
 #include <stdint.h>
 
@@ -17,12 +16,12 @@
 #define NUM_MULTIPLES_CENT 10000
 
 // amounts 1 .. 10000
-#define NUM_MULTIPLES_1KORE 10000
+#define NUM_MULTIPLES_1BTC 10000
 
 // amounts 50 .. 21000000
-#define NUM_MULTIPLES_50KORE 420000
+#define NUM_MULTIPLES_50BTC 420000
 
-BOOST_FIXTURE_TEST_SUITE(compress_tests, BasicTestingSetup)
+BOOST_AUTO_TEST_SUITE(compress_tests)
 
 bool static TestEncode(uint64_t in) {
     return in == CTxOutCompressor::DecompressAmount(CTxOutCompressor::CompressAmount(in));
@@ -52,10 +51,10 @@ BOOST_AUTO_TEST_CASE(compress_amounts)
     for (uint64_t i = 1; i <= NUM_MULTIPLES_CENT; i++)
         BOOST_CHECK(TestEncode(i * CENT));
 
-    for (uint64_t i = 1; i <= NUM_MULTIPLES_1KORE; i++)
+    for (uint64_t i = 1; i <= NUM_MULTIPLES_1BTC; i++)
         BOOST_CHECK(TestEncode(i * COIN));
 
-    for (uint64_t i = 1; i <= NUM_MULTIPLES_50KORE; i++)
+    for (uint64_t i = 1; i <= NUM_MULTIPLES_50BTC; i++)
         BOOST_CHECK(TestEncode(i * 50 * COIN));
 
     for (uint64_t i = 0; i < 100000; i++)

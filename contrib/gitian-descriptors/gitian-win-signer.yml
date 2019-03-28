@@ -7,9 +7,8 @@ architectures:
 packages:
 - "libssl-dev"
 - "autoconf"
-reference_datetime: "2016-01-01 00:00:00"
 remotes:
-- "url": "https://github.com/kore/kore-detached-sigs.git"
+- "url": "https://github.com/kore-project/kore-detached-sigs.git"
   "dir": "signature"
 files:
 - "osslsigncode-1.7.1.tar.gz"

@@ -5,24 +5,21 @@
 #ifndef POS_H
 #define POS_H
 
-#include "consensus/validation.h"
+#include "main.h"
+#include "stakeinput.h"
 
-#include <stdint.h>
-#include "util.h"
 class CBlockIndex;
 class CCoins;
 class COutPoint;
 class uint256;
 class CTransaction;
 
-extern const int STAKE_TIMESTAMP_MASK;
-/** Compute the hash modifier for proof-of-stake */
-uint256 ComputeStakeModifier(const CBlockIndex* pindexPrev, const uint256& kernel);
+bool CheckStakeKernelHash_Legacy(const CBlockIndex* pindexPrev, unsigned int nBits, const CCoins* txPrev, const COutPoint& prevout, unsigned int nTimeTx);
 
-// Check whether the coinstake timestamp meets protocol
-bool CheckCoinStakeTimestamp(int64_t nTimeBlock, int64_t nTimeTx);
-bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, const CCoins* txPrev, const COutPoint& prevout, unsigned int nTimeTx);
-bool CheckKernel(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTime, const COutPoint& prevout, int64_t* pBlockTime = NULL);
-bool CheckProofOfStake(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned int nBits, CValidationState &state);
+bool CheckKernel_Legacy(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTime, const COutPoint& prevout, int64_t* pBlockTime);
+
+uint256 ComputeStakeModifier_Legacy(const CBlockIndex* pindexPrev, const uint256& kernel);
+bool CheckProofOfStake_Legacy(CBlockIndex* pindexPrev, const CTransaction& tx, unsigned int nBits, CValidationState& state);
+
 bool VerifySignature(const CTransaction& txFrom, const CTransaction& txTo, unsigned int nIn, unsigned int flags, int nHashType);
 #endif // POS_H

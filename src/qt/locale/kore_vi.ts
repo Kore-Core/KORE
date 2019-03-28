@@ -2,86 +2,104 @@
 <context>
     <name>AddressBookPage</name>
     <message>
+        <source>Right-click to edit address or label</source>
+        <translation>Ấn chuột phải để sửa địa chỉ hoặc tên</translation>
+    </message>
+    <message>
         <source>Create a new address</source>
-        <translation>Tạo một địa chỉ mới</translation>
+        <translation>Tạo địa chỉ mới </translation>
     </message>
     <message>
         <source>&amp;New</source>
-        <translation>Tạo mới</translation>
-    </message>
-    <message>
-        <source>Copy the currently selected address to the system clipboard</source>
-        <translation>Sao chép các địa chỉ đã được chọn vào bộ nhớ tạm thời của hệ thống</translation>
+        <translation>Mới</translation>
     </message>
     <message>
         <source>&amp;Copy</source>
         <translation>Sao chép</translation>
     </message>
     <message>
-        <source>&amp;Copy Address</source>
-        <translation>Sao chép địa chỉ</translation>
+        <source>Delete the currently selected address from the list</source>
+        <translation>Xóa các địa chỉ được chọn khỏi danh sách</translation>
     </message>
     <message>
         <source>&amp;Delete</source>
-        <translation>&amp;Xóa</translation>
+        <translation>Xóa</translation>
     </message>
     <message>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Tập tin tách biệt bởi dấu phẩy (*.csv)</translation>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Xuất dữ liệu của tab hiện tại sang file</translation>
+    </message>
+    <message>
+        <source>&amp;Export</source>
+        <translation>Xuất</translation>
+    </message>
+    <message>
+        <source>C&amp;lose</source>
+        <translation>Đóng</translation>
+    </message>
+    <message>
+        <source>Choose the address to send coins to</source>
+        <translation>Chọn địa chỉ để gửi coin đi</translation>
+    </message>
+    <message>
+        <source>Choose the address to receive coins with</source>
+        <translation>Chọn địa chỉ để nhận coin về</translation>
+    </message>
+    <message>
+        <source>C&amp;hoose</source>
+        <translation>Chọn</translation>
+    </message>
+    <message>
+        <source>Sending addresses</source>
+        <translation>Địa chỉ nhận</translation>
+    </message>
+    <message>
+        <source>Receiving addresses</source>
+        <translation>Địa chỉ gửi </translation>
+    </message>
+    <message>
+        <source>These are your KORE addresses for sending payments. Always check the amount and the receiving address before sending coins.</source>
+        <translation>Đây là địa chỉ ví KORE của bạn để gửi đi. Luôn luôn kiểm tra số lượng và địa chỉ ví nhận trước khi gửi.</translation>
+    </message>
+    <message>
+        <source>These are your KORE addresses for receiving payments. It is recommended to use a new receiving address for each transaction.</source>
+        <translation>Đây là địa chỉ ví KORE của bạn để nhận. Bạn nên sử dụng địa chỉ ví nhận mới cho mỗi giao dịch</translation>
     </message>
     </context>
 <context>
     <name>AddressTableModel</name>
-    <message>
-        <source>Label</source>
-        <translation>Nhãn dữ liệu</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Địa chỉ</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(chưa có nhãn)</translation>
-    </message>
-</context>
+    </context>
 <context>
     <name>AskPassphraseDialog</name>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Mở khóa ví</translation>
+    </message>
     </context>
 <context>
     <name>BanTableModel</name>
     </context>
 <context>
-    <name>KoreGUI</name>
+    <name>Bip38ToolDialog</name>
+    </context>
+<context>
+    <name>BitcoinGUI</name>
+    <message>
+        <source>Unlock wallet</source>
+        <translation>Mở khóa ví</translation>
+    </message>
+    </context>
+<context>
+    <name>BlockExplorer</name>
     </context>
 <context>
     <name>ClientModel</name>
     </context>
 <context>
     <name>CoinControlDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>Số lượng:</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Số lượng</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(chưa có nhãn)</translation>
-    </message>
     </context>
 <context>
     <name>EditAddressDialog</name>
-    <message>
-        <source>&amp;Label</source>
-        <translation>Nhãn dữ liệu</translation>
-    </message>
-    <message>
-        <source>&amp;Address</source>
-        <translation>Địa chỉ</translation>
-    </message>
     </context>
 <context>
     <name>FreespaceChecker</name>
@@ -91,6 +109,18 @@
     </context>
 <context>
     <name>Intro</name>
+    </context>
+<context>
+    <name>MasternodeList</name>
+    </context>
+<context>
+    <name>MultiSendDialog</name>
+    </context>
+<context>
+    <name>MultisigDialog</name>
+    </context>
+<context>
+    <name>ObfuscationConfig</name>
     </context>
 <context>
     <name>OpenURIDialog</name>
@@ -108,11 +138,10 @@
     <name>PeerTableModel</name>
     </context>
 <context>
+    <name>PrivacyDialog</name>
+    </context>
+<context>
     <name>QObject</name>
-    <message>
-        <source>Amount</source>
-        <translation>Số lượng</translation>
-    </message>
     </context>
 <context>
     <name>QRImageWidget</name>
@@ -125,48 +154,12 @@
     </context>
 <context>
     <name>ReceiveRequestDialog</name>
-    <message>
-        <source>Copy &amp;Address</source>
-        <translation>Sao chép địa chỉ</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Địa chỉ</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Số lượng</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Nhãn dữ liệu</translation>
-    </message>
     </context>
 <context>
     <name>RecentRequestsTableModel</name>
-    <message>
-        <source>Label</source>
-        <translation>Nhãn dữ liệu</translation>
-    </message>
-    <message>
-        <source>Amount</source>
-        <translation>Số lượng</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(chưa có nhãn)</translation>
-    </message>
     </context>
 <context>
     <name>SendCoinsDialog</name>
-    <message>
-        <source>Amount:</source>
-        <translation>Số lượng:</translation>
-    </message>
-    <message>
-        <source>(no label)</source>
-        <translation>(chưa có nhãn)</translation>
-    </message>
     </context>
 <context>
     <name>SendCoinsEntry</name>
@@ -185,35 +178,15 @@
     </context>
 <context>
     <name>TransactionDesc</name>
-    <message>
-        <source>Amount</source>
-        <translation>Số lượng</translation>
-    </message>
     </context>
 <context>
     <name>TransactionDescDialog</name>
     </context>
 <context>
     <name>TransactionTableModel</name>
-    <message>
-        <source>Label</source>
-        <translation>Nhãn dữ liệu</translation>
-    </message>
     </context>
 <context>
     <name>TransactionView</name>
-    <message>
-        <source>Comma separated file (*.csv)</source>
-        <translation>Tập tin tách biệt bởi dấu phẩy (*.csv)</translation>
-    </message>
-    <message>
-        <source>Label</source>
-        <translation>Nhãn dữ liệu</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Địa chỉ</translation>
-    </message>
     </context>
 <context>
     <name>UnitDisplayStatusBarControl</name>
@@ -226,6 +199,17 @@
     </context>
 <context>
     <name>WalletView</name>
+    <message>
+        <source>&amp;Export</source>
+        <translation>Xuất</translation>
+    </message>
+    <message>
+        <source>Export the data in the current tab to a file</source>
+        <translation>Xuất dữ liệu của tab hiện tại sang file</translation>
+    </message>
+    </context>
+<context>
+    <name>ZkoreControlDialog</name>
     </context>
 <context>
     <name>kore-core</name>

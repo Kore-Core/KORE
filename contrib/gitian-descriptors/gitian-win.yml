@@ -24,7 +24,7 @@ packages:
 - "python"
 - "rename"
 remotes:
-- "url": "https://github.com/mammix2/kore.git"
+- "url": "https://github.com/kore-core/kore.git"
   "dir": "kore"
 files: []
 script: |

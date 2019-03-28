@@ -54,3 +54,44 @@ More information at [kore.org](http://www.kore.org) Visit our ANN thread at [Bit
 <tr><td>Phase 9</td><td>604800-647999</td><td>10 KORE</td><td>90% (9 KORE)</td><td>10% (1 KORE)</td></tr>
 <tr><td>Phase X</td><td>648000-Infinite</td><td>5 KORE</td><td>90% (4.5 KORE)</td><td>10% (0.5 KORE)</td></tr>
 </table>
+
+
+### Installation Steps
+Note1: that you can speed up the compilation using the option -j when using make, for example: make -j3
+
+Note2: If you machine has less than 3G memory, you should use a swapfile.
+a) enabling swap
+    sudo dd if=/dev/zero of=/swapfile bs,=4096 count=1048576
+    sudo chmod 600 /swapfile
+    sudo mkswap /swapfile
+    sudo swapon /swapfile
+
+b) disabling swap
+    sudo swapoff -v /swapfile
+    sudo rm /swapfile
+
+
+### Installating dependencies
+
+sudo apt-get update
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository -y ppa:bitcoin/bitcoin
+sudo apt-get update
+sudo apt-get install -y autotools-dev autoconf automake build-essential bsdmainutils 
+sudo apt-get install -y libssl-dev libevent-dev libboost-all-dev libcurl4-openssl-dev sudo apt-get install -y libdb4.8-dev libdb4.8++-dev libzmq3-dev 
+sudo apt-get install -y libtool pkg-config protobuf-compiler python3 qttools5-dev
+sudo apt-get install -y qttools5-dev-tools libprotobuf-dev libqrencode-dev git curl jq
+
+sudo apt-get update && sudo apt-get upgrade -y
+
+### Building KORE dependencies
+cd depends
+make
+
+### Building KORE source
+cd ..
+./autogen.sh
+./configure --with-gui=qt5 --prefix=$(pwd)/depends/x86_64-pc-linux-gnu
+
+make
+

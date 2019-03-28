@@ -418,13 +418,13 @@ void PrintExceptionContinue(std::exception* pex, const char* pszThread)
 boost::filesystem::path GetDefaultDataDir()
 {
     namespace fs = boost::filesystem;
-// Windows < Vista: C:\Documents and Settings\Username\Application Data\kore
-// Windows >= Vista: C:\Users\Username\AppData\Roaming\kore
-// Mac: ~/Library/Application Support/kore
-// Unix: ~/.kore
+// Windows < Vista: C:\Documents and Settings\Username\Application Data\kore-testnet
+// Windows >= Vista: C:\Users\Username\AppData\Roaming\kore-testnet
+// Mac: ~/Library/Application Support/kore-testnet
+// Unix: ~/.kore-testnet
 #ifdef WIN32
     // Windows
-    return GetSpecialFolderPath(CSIDL_APPDATA) / "kore";
+    return GetSpecialFolderPath(CSIDL_APPDATA) / "kore-testnet";
 #else
     fs::path pathRet;
     char* pszHome = getenv("HOME");
@@ -436,10 +436,10 @@ boost::filesystem::path GetDefaultDataDir()
     // Mac
     pathRet /= "Library/Application Support";
     TryCreateDirectory(pathRet);
-    return pathRet / "kore";
+    return pathRet / "kore-testnet";
 #else
     // Unix
-    return pathRet / ".kore";
+    return pathRet / ".kore-testnet";
 #endif
 #endif
 }

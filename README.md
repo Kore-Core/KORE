@@ -9,7 +9,7 @@ KORE is an open source crypto-currency focused on fast private transactions with
 - Fast transactions featuring guaranteed zero confirmation transactions, we call it _SwiftX_.
 - Decentralized blockchain voting utilizing Masternode technology to form a DAO. The blockchain will distribute monthly treasury funds based on successful proposals submitted by the community and voted on by the DAO.
 
-More information at [kore.org](http://www.kore.org) Visit our ANN thread at [BitcoinTalk](http://www.bitcointalk.org/index.php?topic=1262920)
+More information at [kore.org](http://www.kore.org) Visit our ANN thread at [BitcoinTalk](https://bitcointalk.org/index.php?topic=2096416.0
 
 ### Coin Specs
 

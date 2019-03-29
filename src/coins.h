@@ -36,7 +36,7 @@
  * - bit 0: IsCoinBase()
  * - bit 1: vout[0] is not spent
  * - bit 2: vout[1] is not spent
- * - bit 8: IsCoinStake()
+ * - bit 3: IsCoinStake()
  * - The higher bits encode N, the number of non-zero bytes in the following bitvector.
  *   - In case both bit 1 and bit 2 are unset, they encode N-1, as there must be at
  *     least one non-spent output).

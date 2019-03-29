@@ -12,6 +12,7 @@
 #include "checkpoints.h"
 #include "coincontrol.h"
 #include "kernel.h"
+#include "masternodeconfig.h"
 #include "masternode-budget.h"
 #include "miner.h"
 #include "net.h"
@@ -1187,6 +1188,9 @@ CAmount CWalletTx::GetDebit(const isminefilter& filter) const
     if (filter & ISMINE_WATCH_ONLY)
         debit += pwallet->GetDebit(*this, ISMINE_WATCH_ONLY);
 
+    // if (filter & ISMINE_STAKE)
+    //     debit += pwallet->GetDebit(*this, ISMINE_STAKE);
+
     return debit;
 }
 
@@ -1212,6 +1216,14 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter) const
 bool CWalletTx::IsStakeSpendable() const
 {
     return GetAdjustedTime() + chainActive.Tip()->GetMedianTimeSpacing() >= nTime + Params().GetStakeLockInterval();
+    // Must be the same as EvaluateSequenceLocks
+    // CBlockIndex* block = chainActive.Tip();
+    // assert(block);
+    // int64_t nBlockTime = block->pprev->GetMedianTimePast();
+    // if (nTime >= nBlockTime)
+    //     return false;
+
+    // return true;
 }
 
 CAmount CWalletTx::GetStakedCredit() const
@@ -1237,7 +1249,7 @@ CAmount CWalletTx::GetStakedCredit() const
 
 CAmount CWalletTx::GetImmatureCredit() const
 {
-    if ((IsCoinBase() || IsCoinStake()) && GetBlocksToMaturity() > 0 && IsInMainChain())
+    if ((IsCoinBase() || IsLegacyCoinStake()) && GetBlocksToMaturity() > 0 && IsInMainChain())
         return pwallet->GetCredit(*this, ISMINE_SPENDABLE);
 
     return 0;
@@ -1590,12 +1602,12 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
             pindex = chainActive.Next(pindex);
 
         ShowProgress(_("Rescanning..."), 0); // show rescan progress in GUI as dialog or on splashscreen, if -rescan on startup
-        double dProgressStart = Checkpoints::GuessVerificationProgress(pindex, false);
-        double dProgressTip = Checkpoints::GuessVerificationProgress(chainActive.Tip(), false);
+        double dProgressStart = Checkpoints::GuessVerificationProgress(Params().GetTxData(), pindex);
+        double dProgressTip = Checkpoints::GuessVerificationProgress(Params().GetTxData(), chainActive.Tip());
         set<uint256> setAddedToWallet;
         while (pindex) {
             if (pindex->nHeight % 100 == 0 && dProgressTip - dProgressStart > 0.0)
-                ShowProgress(_("Rescanning..."), std::max(1, std::min(99, (int)((Checkpoints::GuessVerificationProgress(pindex, false) - dProgressStart) / (dProgressTip - dProgressStart) * 100))));
+                ShowProgress(_("Rescanning..."), std::max(1, std::min(99, (int)((Checkpoints::GuessVerificationProgress(Params().GetTxData(), pindex) - dProgressStart) / (dProgressTip - dProgressStart) * 100))));
 
             CBlock block;
             ReadBlockFromDisk(block, pindex);
@@ -1607,7 +1619,7 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
             pindex = chainActive.Next(pindex);
             if (GetTime() >= nNow + 60) {
                 nNow = GetTime();
-                LogPrintf("Still rescanning. At block %d. Progress=%f\n", pindex->nHeight, Checkpoints::GuessVerificationProgress(pindex));
+                LogPrintf("Still rescanning. At block %d. Progress=%f\n", pindex->nHeight, Checkpoints::GuessVerificationProgress(Params().GetTxData(), pindex));
             }
         }
         ShowProgress(_("Rescanning..."), 100); // hide progress dialog in GUI
@@ -1721,11 +1733,25 @@ void CWallet::ResendWalletTransactions()
 
 CAmount CWallet::GetBalance() const
 {
+    map<string, uint32_t> mnOutPoints;
+    BOOST_FOREACH (CMasternodeConfig::CMasternodeEntry mne, masternodeConfig.getEntries()) {
+        int nIndex;
+        if(!mne.castOutputIndex(nIndex))
+            continue;
+        
+        mnOutPoints.insert(make_pair(mne.getTxHash(), uint32_t(nIndex)));
+    }
+
     CAmount nTotal = 0;
     {
         LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
+
+            map<string, uint32_t>::iterator it2 = mnOutPoints.find(pcoin->GetHash().ToString());
+            if (it2 != mnOutPoints.end())
+                continue;
+
             if (pcoin->IsTrusted())
                 nTotal += pcoin->GetAvailableCredit();
         }
@@ -2003,7 +2029,7 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
             if (fOnlyConfirmed && !pcoin->IsTrusted())
                 continue;
 
-            if ((pcoin->IsCoinBase() || pcoin->IsCoinStake()) && pcoin->GetBlocksToMaturity() > 0)
+            if ((pcoin->IsCoinBase() || pcoin->IsLegacyCoinStake()) && pcoin->GetBlocksToMaturity() > 0)
                 continue;
 
             int nDepth = pcoin->GetDepthInMainChain(false);
@@ -2170,16 +2196,10 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
             if (GetAdjustedTime() - nTxTime < Params().GetStakeMinAge())
                 continue;
                 
-            if (out.nDepth < Params().GetCoinbaseMaturity())
-            {
-                if (out.tx->IsCoinStake())
-                {
-                    if (!out.tx->IsStakeSpendable())
-                        continue;
-                }
-                else
-                    continue;
-            }
+            if (out.tx->IsLegacyCoinStake() && out.nDepth < Params().GetCoinbaseMaturity())
+                continue;
+            else if (out.tx->IsCoinStake() && !out.tx->IsStakeSpendable())
+                continue;
 
             //add to our stake set
             nAmountSelected += out.tx->vout[out.i].nValue;
@@ -4732,7 +4752,9 @@ void CWallet::AutoCombineDust()
             if (!out.fSpendable)
                 continue;
             //no coins should get this far if they dont have proper maturity, this is double checking
-            if (out.tx->IsCoinStake() && out.tx->GetDepthInMainChain() < Params().GetCoinbaseMaturity() + 1)
+            if (out.tx->IsLegacyCoinStake() && out.tx->GetDepthInMainChain() < Params().GetCoinbaseMaturity() + 1)
+                continue;
+            else if (out.tx->IsCoinStake() && !out.tx->IsStakeSpendable())
                 continue;
 
             COutPoint outpt(out.tx->GetHash(), out.i);
@@ -5010,7 +5032,7 @@ int CMerkleTx::GetDepthInMainChain(const CBlockIndex*& pindexRet, bool enableIX)
 
 int CMerkleTx::GetBlocksToMaturity() const
 {
-    if (!(IsCoinBase() || IsCoinStake()))
+    if (!(IsCoinBase() || IsLegacyCoinStake()))
         return 0;
 
     return max(0, (Params().GetCoinbaseMaturity() + 1) - GetDepthInMainChain());

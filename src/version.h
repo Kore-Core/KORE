@@ -11,11 +11,11 @@
  * network protocol versioning
  */
 
-static const int PROTOCOL_VERSION = 130000;
+static const int PROTOCOL_VERSION = 130001;
 // not using _CLIENT_VERSION_MAJOR because it is still 0
 // 13 => _CLIENT_VERSION_MINOR
 // 00 => _CLIENT_VERSION_REVISION
-// 00 => _CLIENT_VERSION_BUILD
+// 01 => _CLIENT_VERSION_BUILD
 
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;

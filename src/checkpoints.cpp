@@ -32,7 +32,7 @@ bool CheckBlock(int nHeight, const uint256& hash, bool fMatchesCheckpoint)
     if (!fEnabled)
         return true;
 
-    const MapCheckpoints& checkpoints = *Params().GetCheckpoints().mapCheckpoints;
+    const MapCheckpoints& checkpoints = Params().GetCheckpoints().mapCheckpoints;
 
     MapCheckpoints::const_iterator i = checkpoints.find(nHeight);
     // If looking for an exact match, then return false
@@ -41,36 +41,22 @@ bool CheckBlock(int nHeight, const uint256& hash, bool fMatchesCheckpoint)
 }
 
 //! Guess how far we are in the verification process at the given block index
-double GuessVerificationProgress(CBlockIndex* pindex, bool fSigchecks)
-{
-    if (pindex == NULL)
+//! require cs_main if pindex has not been validated yet (because nChainTx might be unset)
+double GuessVerificationProgress(const ChainTxData& data, const CBlockIndex *pindex) {
+    if (pindex == nullptr)
         return 0.0;
 
-    int64_t nNow = time(NULL);
+    int64_t nNow = time(nullptr);
 
-    double fSigcheckVerificationFactor = fSigchecks ? SIGCHECK_VERIFICATION_FACTOR : 1.0;
-    double fWorkBefore = 0.0; // Amount of work done before pindex
-    double fWorkAfter = 0.0;  // Amount of work left after pindex (estimated)
-    // Work is defined as: 1.0 per transaction before the last checkpoint, and
-    // fSigcheckVerificationFactor per transaction after.
+    double fTxTotal;
 
-    const CCheckpointData& data = Params().GetCheckpoints();
-
-    if (pindex->nChainTx <= data.nTransactionsLastCheckpoint) {
-        double nCheapBefore = pindex->nChainTx;
-        double nCheapAfter = data.nTransactionsLastCheckpoint - pindex->nChainTx;
-        double nExpensiveAfter = (nNow - data.nTimeLastCheckpoint) / 86400.0 * data.fTransactionsPerDay;
-        fWorkBefore = nCheapBefore;
-        fWorkAfter = nCheapAfter + nExpensiveAfter * fSigcheckVerificationFactor;
+    if (pindex->nChainTx <= data.nTxCount) {
+        fTxTotal = data.nTxCount + (nNow - data.nTime) * data.dTxRate;
     } else {
-        double nCheapBefore = data.nTransactionsLastCheckpoint;
-        double nExpensiveBefore = pindex->nChainTx - data.nTransactionsLastCheckpoint;
-        double nExpensiveAfter = (nNow - pindex->GetBlockTime()) / 86400.0 * data.fTransactionsPerDay;
-        fWorkBefore = nCheapBefore + nExpensiveBefore * fSigcheckVerificationFactor;
-        fWorkAfter = nExpensiveAfter * fSigcheckVerificationFactor;
+        fTxTotal = pindex->nChainTx + (nNow - pindex->GetBlockTime()) * data.dTxRate;
     }
 
-    return fWorkBefore / (fWorkBefore + fWorkAfter);
+    return pindex->nChainTx / fTxTotal;
 }
 
 int GetTotalBlocksEstimate()
@@ -78,7 +64,7 @@ int GetTotalBlocksEstimate()
     if (!fEnabled)
         return 0;
 
-    const MapCheckpoints& checkpoints = *Params().GetCheckpoints().mapCheckpoints;
+    const MapCheckpoints& checkpoints = Params().GetCheckpoints().mapCheckpoints;
     if (checkpoints.empty())
         return 0;
 
@@ -90,7 +76,7 @@ CBlockIndex* GetLastCheckpoint()
     if (!fEnabled)
         return NULL;
 
-    const MapCheckpoints& checkpoints = *Params().GetCheckpoints().mapCheckpoints;
+    const MapCheckpoints& checkpoints = Params().GetCheckpoints().mapCheckpoints;
 
     BOOST_REVERSE_FOREACH (const MapCheckpoints::value_type& i, checkpoints) {
         const uint256& hash = i.second;

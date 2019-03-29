@@ -150,6 +150,8 @@ UniValue setstaking(const UniValue& params, bool fHelp)
 
     std::ostringstream strTemp;
 
+    bool isConfExist = false;
+
     if (streamConfig.peek() == std::ifstream::traits_type::eof())
         strTemp << strNew << std::endl;
     else {
@@ -158,10 +160,13 @@ UniValue setstaking(const UniValue& params, bool fHelp)
             std::string strValue =  it->value[0];
             if((strKey + "=" + strValue) == strReplace){
                 strTemp << strNew << std::endl;
+                isConfExist = true;
                 continue;
             }
             strTemp << strKey << "=" << strValue << std::endl;
         }
+        if(!isConfExist)
+            strTemp << strNew << std::endl;
     }
     
     std::ofstream newKoreConfig;

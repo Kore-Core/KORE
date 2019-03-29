@@ -347,6 +347,17 @@ public:
             return false;
     }
 
+    bool IsLegacyCoinStake() const
+    {
+        if (vin.empty())
+        return false;
+
+        if (vin[0].prevout.IsNull())
+            return false;
+            
+        return (vin.size() > 0 && vout.size() >= 2 && vout[0].IsEmpty());
+    }
+
     friend bool operator==(const CTransaction& a, const CTransaction& b)
     {
         return a.hash == b.hash;

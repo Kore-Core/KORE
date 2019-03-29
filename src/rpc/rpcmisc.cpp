@@ -99,7 +99,7 @@ UniValue getinfo(const UniValue& params, bool fHelp)
     double verificationProgress = 0;
 
     if (chainActive.Tip()->nHeight > 0)
-        verificationProgress = (masternodeSync.IsBlockchainSynced()) ? 1.0 : Checkpoints::GuessVerificationProgress(chainActive.Tip());
+        verificationProgress = (masternodeSync.IsBlockchainSynced()) ? 1.0 : Checkpoints::GuessVerificationProgress(Params().GetTxData(), chainActive.Tip());
     proxyType proxy;
     GetProxy(NET_IPV4, proxy);
 

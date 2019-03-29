@@ -30,7 +30,7 @@ echo "##       onion address and it needs to be up to lock the coins."
 echo "##"
 echo "## PLEASE install jq from here https://stedolan.github.io/jq/", in this folder
 echo "##        make sure it is named as jq. Ubuntu you can install like this:"
-echo "##        sudo apt-get jq"
+echo "##        sudo apt-get install jq -y"
 echo "#############################################################################"
 echo "#############################################################################"
 
@@ -138,9 +138,6 @@ echo "masternode=1"  >> $masternode_conf_file
 echo "masternodeprivkey=$masternode_private_key"  >> $masternode_conf_file
 echo "masternodeaddr=$masternode_onion_address"   >> $masternode_conf_file
 echo "masternode account= $masternode_account"    >> $masternode_conf_file
-echo "# sporkkey for testnet"
-echo "sporkkey=8pLecrnAhZjHZyKfqMAtN4rekdcBFrikTi1w1hXjuDRfV1Ygean"   >> $masternode_conf_file
-
 
 echo "Generating $control_wallet file"
 command="$dir/kore-cli $cli_args gettransaction $masternode_tx"

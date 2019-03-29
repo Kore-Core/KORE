@@ -1107,7 +1107,7 @@ bool CheckTransaction(const CTransaction& tx, CValidationState& state)
     // Check for negative or overflow output values
     CAmount nValueOut = 0;
     BOOST_FOREACH (const CTxOut& txout, tx.vout) {
-        if (txout.IsEmpty() && !tx.IsCoinBase() && !tx.IsCoinStake())
+        if (txout.IsEmpty() && !tx.IsCoinBase() && !tx.IsLegacyCoinStake())
             return state.DoS(100, error("CheckTransaction(): txout empty for user transaction"));
 
         if (txout.nValue < 0)
@@ -1289,12 +1289,14 @@ static std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction& tx, in
 
 static bool EvaluateSequenceLocks(const CBlockIndex& block, std::pair<int, int64_t> lockPair)
 {
-    assert(block.pprev);
-    int64_t nBlockTime = block.pprev->GetMedianTimePast();
-    if (lockPair.first >= block.nHeight || lockPair.second >= nBlockTime)
-        return false;
+    return lockPair.first >= block.nHeight || GetAdjustedTime() + chainActive.Tip()->GetMedianTimeSpacing() >= lockPair.second + Params().GetStakeLockInterval();
+    // Changed because in this consensus using PoS
+    // assert(block.pprev);
+    // int64_t nBlockTime = block.pprev->GetMedianTimePast();
+    // if (lockPair.first >= block.nHeight || lockPair.second >= nBlockTime)
+    //     return false;
 
-    return true;
+    // return true;
 }
 
 bool SequenceLocks(const CTransaction& tx, int flags, std::vector<int>* prevHeights, const CBlockIndex& block)
@@ -2466,10 +2468,27 @@ bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsVi
             assert(coins);
 
             // If prev is coinbase, check that it's matured
-            if (coins->IsCoinBase() || coins->IsCoinStake()) {
+            if (coins->IsCoinBase())
+            {
+                if (coins->IsCoinStake())
+                {
+                    CTransaction txStake;
+                    uint256 blockHash;
+
+                    if(!GetTransaction(prevout.hash, txStake, blockHash, true))
+                        return state.Invalid(
+                            error("CheckInputs(): could not find tx %s", prevout.hash.ToString()),
+                            REJECT_INVALID, "bad-txns-premature-spend-of-coinbase");
+                    
+                    if (txStake.IsLegacyCoinStake() && nSpendHeight - coins->nHeight < Params().GetCoinbaseMaturity())
+                        return state.Invalid(
+                            error("CheckInputs(): tried to spend coinbase at depth %d", nSpendHeight - coins->nHeight),
+                            REJECT_INVALID, "bad-txns-premature-spend-of-coinbase");
+                }
+
                 if (nSpendHeight - coins->nHeight < Params().GetCoinbaseMaturity())
                     return state.Invalid(
-                        error("CheckInputs() : tried to spend coinbase at depth %d, coinstake=%d", nSpendHeight - coins->nHeight, coins->IsCoinStake()),
+                        error("CheckInputs(): tried to spend coinbase at depth %d", nSpendHeight - coins->nHeight),
                         REJECT_INVALID, "bad-txns-premature-spend-of-coinbase");
             }
 
@@ -3035,9 +3054,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
         nInputs <= 1 ? 0 : 0.001 * (nTime1 - nTimeStart) / (nInputs - 1), nTimeConnect * 0.000001);
 
     //PoW phase redistributed fees to miner. PoS stage destroys fees.
-    CAmount nExpectedMint = GetBlockReward(pindex->pprev);
-    if (block.IsProofOfWork())
-        nExpectedMint += nFees;
+    CAmount nExpectedMint = GetBlockReward(pindex->pprev) + nFees;
 
     //Check that the block does not overmint
     if (!IsBlockValueValid(block, nExpectedMint, pindex->nMint)) {
@@ -3737,7 +3754,7 @@ void static UpdateTip(CBlockIndex* pindexNew)
     LogPrintf("UpdateTip: new best=%s  height=%d  log2_work=%.8g  tx=%lu  date=%s progress=%f  cache=%u\n",
         chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(), log(chainActive.Tip()->nChainWork.getdouble()) / log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
         DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
-        Checkpoints::GuessVerificationProgress(chainActive.Tip()), (unsigned int)pcoinsTip->GetCacheSize());
+        Checkpoints::GuessVerificationProgress(Params().GetTxData(), chainActive.Tip()), (unsigned int)pcoinsTip->GetCacheSize());
 
     cvBlockChange.notify_all();
 
@@ -3777,7 +3794,7 @@ void static UpdateTip(CBlockIndex* pindexNew)
     LogPrintf("%s: new best=%s  height=%d  log2_work=%.8g  tx=%lu  date=%s progress=%f  cache=%.1fMiB(%utx)\n", __func__,
         chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(), log(chainActive.Tip()->nChainWork.getdouble()) / log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
         DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
-        Checkpoints::GuessVerificationProgress(chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1 << 20)), pcoinsTip->GetCacheSize());
+        Checkpoints::GuessVerificationProgress(Params().GetTxData(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1 << 20)), pcoinsTip->GetCacheSize());
 
 
     cvBlockChange.notify_all();
@@ -5072,11 +5089,11 @@ bool CheckBlock_Legacy(const CBlock& block, const int height, CValidationState& 
             return state.DoS(100, error("CheckBlock(): coinbase output not empty for proof-of-stake block"), REJECT_INVALID, "bad-cb-not-empty");
 
         // Second transaction must be coinstake, the rest must not be
-        if (block.vtx.size() < 2 || !block.vtx[1].IsCoinStake())
+        if (block.vtx.size() < 2 || !block.vtx[1].IsLegacyCoinStake())
             return state.DoS(100, error("CheckBlock(): second tx is not coinstake"), REJECT_INVALID, "bad-cs-missing");
 
         for (unsigned int i = 2; i < block.vtx.size(); i++)
-            if (block.vtx[i].IsCoinStake())
+            if (block.vtx[i].IsLegacyCoinStake())
                 return state.DoS(100, error("CheckBlock(): more than one coinstake"), REJECT_INVALID, "bad-cs-multiple");
     }
 
@@ -5612,12 +5629,15 @@ CBlockIndex* CBlockIndex::GetAncestor(int height)
     while (heightWalk > height) {
         int heightSkip = GetSkipHeight(heightWalk);
         int heightSkipPrev = GetSkipHeight(heightWalk - 1);
-        if (heightSkip == height ||
-            (heightSkip > height && !(heightSkipPrev < heightSkip - 2 && heightSkipPrev >= height))) {
+        if (pindexWalk->pskip != NULL &&
+            (heightSkip == height ||
+             (heightSkip > height && !(heightSkipPrev < heightSkip - 2 && 
+                                      heightSkipPrev >= height)))) {
             // Only follow pskip if pprev->pskip isn't better than pskip->pprev.
             pindexWalk = pindexWalk->pskip;
             heightWalk = heightSkip;
         } else {
+            assert(pindexWalk->pprev);
             pindexWalk = pindexWalk->pprev;
             heightWalk--;
         }
@@ -6018,7 +6038,7 @@ bool static LoadBlockIndexDB()
     LogPrintf("%s: hashBestChain=%s height=%d date=%s progress=%f\n", __func__,
         chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(),
         DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
-        Checkpoints::GuessVerificationProgress(chainActive.Tip()));
+        Checkpoints::GuessVerificationProgress(Params().GetTxData(), chainActive.Tip()));
 
     return true;
 }

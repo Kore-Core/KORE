@@ -7,10 +7,10 @@
 #define BITCOIN_CHECKPOINTS_H
 
 #include "uint256.h"
-
 #include <map>
 
 class CBlockIndex;
+struct ChainTxData;
 
 /** 
  * Block-chain checkpoints are compiled-in sanity checks.
@@ -18,14 +18,6 @@ class CBlockIndex;
  */
 namespace Checkpoints
 {
-typedef std::map<int, uint256> MapCheckpoints;
-
-struct CCheckpointData {
-    const MapCheckpoints* mapCheckpoints;
-    int64_t nTimeLastCheckpoint;
-    int64_t nTransactionsLastCheckpoint;
-    double fTransactionsPerDay;
-};
 
 //! Returns true if block passes checkpoint checks
 bool CheckBlock(int nHeight, const uint256& hash, bool fMatchesCheckpoint = false);
@@ -36,7 +28,8 @@ int GetTotalBlocksEstimate();
 //! Returns last CBlockIndex* in mapBlockIndex that is a checkpoint
 CBlockIndex* GetLastCheckpoint();
 
-double GuessVerificationProgress(CBlockIndex* pindex, bool fSigchecks = true);
+/** Guess verification progress (as a fraction between 0.0=genesis and 1.0=current tip). */
+double GuessVerificationProgress(const ChainTxData& data, const CBlockIndex* pindex);
 
 extern bool fEnabled;
 

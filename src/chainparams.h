@@ -17,6 +17,24 @@
 
 #include <vector>
 
+typedef std::map<int, uint256> MapCheckpoints;
+
+struct CCheckpointData {
+    MapCheckpoints mapCheckpoints;
+};
+
+/**
+ * Holds various statistics on transactions within a chain. Used to estimate
+ * verification progress during chain sync.
+ *
+ * See also: CChainParams::TxData, GuessVerificationProgress.
+ */
+struct ChainTxData {
+    int64_t nTime;    //!< UNIX timestamp of last known number of transactions
+    int64_t nTxCount; //!< total number of transactions between genesis and that timestamp
+    double dTxRate;   //!< estimated number of transactions per second after that timestamp
+};
+
 typedef unsigned char MessageStartChars[MESSAGE_START_SIZE];
 
 struct CDNSSeedData {
@@ -60,8 +78,6 @@ public:
     };
 
     typedef BIP9Deployment vDeployments_type[MAX_VERSION_BITS_DEPLOYMENTS];
-
-    virtual const Checkpoints::CCheckpointData& GetCheckpoints() const = 0;
 
     const std::vector<unsigned char>&      AlertKey() const                    { return vAlertPubKey; }
     const int32_t                          HeightToBanOldWallets() const       { return nHeightToBanOldWallets; }
@@ -142,6 +158,9 @@ public:
     /** Skip proof-of-work check: allow mining of any difficulty block */
     bool                      SkipProofOfWorkCheck() const             { return fSkipProofOfWorkCheck; }
     
+    const CCheckpointData&    GetCheckpoints() const                   { return checkpointData; }
+    const ChainTxData&        GetTxData() const                        { return chainTxData; }
+
 protected:
     CChainParams() {}
 
@@ -209,6 +228,9 @@ protected:
     std::vector<CAddress>      vFixedSeeds;
     std::vector<CDNSSeedData>  vSeeds;
     std::vector<unsigned char> base58Prefixes[MAX_BASE58_TYPES];
+    
+    CCheckpointData            checkpointData;
+    ChainTxData                chainTxData;
 
     void MineNewGenesisBlock_Legacy();
 };

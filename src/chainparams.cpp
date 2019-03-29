@@ -189,52 +189,6 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
     }
 }
 
-//   What makes a good checkpoint block?
-// + Is surrounded by blocks with reasonable timestamps
-//   (no blocks before with a timestamp after, none after with
-//    timestamp before)
-// + Contains no strange transactions
-static Checkpoints::MapCheckpoints mapCheckpoints =
-    boost::assign::map_list_of
-    (0,      uint256S("0x0aab10677b4fe0371a67f99e78a69e7d9fa03a1c7d48747978da405dc5abeb99"))
-    (5,      uint256S("0x00eaaa465402e6bcf745c00c38c0033a26e4dea19448d9109e4555943d677a31"))
-    (1000,   uint256S("0x2073f0a245cedde8344c2d0b48243a58908ffa50b02e2378189f2bb80037abd9")) // ,last PoW block, begin of PoS
-    (40000,  uint256S("0x572b31cc34f842aecbbc89083f7e40fff6a07e73e6002be75cb95468f4e3b4ca"))
-    (80000,  uint256S("0x070aa76a8a879f3946322086a542dd9e4afca81efafd7642192ed9fe56ba74f1"))
-    (120000, uint256S("0x70edc85193638b8adadb71ea766786d207f78a173dd13f965952eb76932f5729"))
-    (209536, uint256S("0x8a718dbb44b57a5693ac70c951f2f81a01b39933e3e19e841637f757598f571a"))
-    (300000, uint256S("0xb0d6c4c7240b03e70587bb52ebdc63a694a90f22b30fb73856b5cc3d192a231f"))
-    (400000, uint256S("0x59aee83d1f027d2107a8a9c4951767a27eb2224b24022b89f6b9247d2ebb4fdd"));
-
-static const Checkpoints::CCheckpointData data = {
-    &mapCheckpoints,
-    1547880304, // * UNIX timestamp of last checkpoint block
-    806769,     // * total number of transactions between genesis and last checkpoint
-                //   (the tx=... number in the SetBestChain debug.log lines)
-    1        // * estimated number of transactions per day after checkpoint
-    
-};
-
-static Checkpoints::MapCheckpoints mapCheckpointsTestnet =
-    boost::assign::map_list_of
-    (0,     uint256("0x000ce3b76d9435adbc2713c62239cea20fe6bf0f69ed4d4f5c95ef07018a0450"));
-    // (36500, uint256("0xb6584cf0dec619db96620558e390055843e0bea2c40585ae51af5fccf3794104"));
-
-static const Checkpoints::CCheckpointData dataTestnet = {
-    &mapCheckpointsTestnet,
-    1553278048,
-    72950,
-    1};
-
-static Checkpoints::MapCheckpoints mapCheckpointsRegtest =
-    boost::assign::map_list_of(0, uint256("0x001"));
-static const Checkpoints::CCheckpointData dataRegtest = {
-    &mapCheckpointsRegtest,
-    1454124731,
-    0,
-    100};
-
-
 class CMainParams : public CChainParams
 {
 public:
@@ -335,11 +289,31 @@ public:
         vSeeds.push_back(CDNSSeedData("kore-dnsseed-4", "dnsseed4.kore.life"));				
 		
         convertSeed6(vFixedSeeds, pnSeed6_main, ARRAYLEN(pnSeed6_main));
-    }
 
-    const Checkpoints::CCheckpointData& GetCheckpoints() const
-    {
-        return data;
+        //   What makes a good checkpoint block?
+        // + Is surrounded by blocks with reasonable timestamps
+        //   (no blocks before with a timestamp after, none after with timestamp before)
+        // + Contains no strange transactions
+        checkpointData = {
+            {
+                {     0, uint256S("0x0aab10677b4fe0371a67f99e78a69e7d9fa03a1c7d48747978da405dc5abeb99")},
+                {     5, uint256S("0x00eaaa465402e6bcf745c00c38c0033a26e4dea19448d9109e4555943d677a31")},
+                {  1000, uint256S("0x2073f0a245cedde8344c2d0b48243a58908ffa50b02e2378189f2bb80037abd9")}, // last PoW block, begin PoS
+                { 40000, uint256S("0x572b31cc34f842aecbbc89083f7e40fff6a07e73e6002be75cb95468f4e3b4ca")},
+                { 80000, uint256S("0x070aa76a8a879f3946322086a542dd9e4afca81efafd7642192ed9fe56ba74f1")},
+                {120000, uint256S("0x70edc85193638b8adadb71ea766786d207f78a173dd13f965952eb76932f5729")},
+                {209536, uint256S("0x8a718dbb44b57a5693ac70c951f2f81a01b39933e3e19e841637f757598f571a")},
+                {300000, uint256S("0xb0d6c4c7240b03e70587bb52ebdc63a694a90f22b30fb73856b5cc3d192a231f")},
+                {400000, uint256S("0x59aee83d1f027d2107a8a9c4951767a27eb2224b24022b89f6b9247d2ebb4fdd")}
+            }
+        };
+
+        chainTxData = ChainTxData{
+        // Data from rpc: getchaintxstats 43200 
+        /* nTime    */ 1553871056,
+        /* nTxCount */ 929813,
+        /* dTxRate  */ 0.01913898770737205
+        };
     }
 };
 static CMainParams mainParams;
@@ -391,10 +365,10 @@ public:
         nBudgetFeeConfirmations                       = 2;                           // Number of confirmations for the finalization fee. We have to make this very short here because we only have a 8 block finalization window on testnet
         nBudgetVoteUpdate                             = 1 * 60;                      // can only change vote after 1 minute
         nClientMintableCoinsInterval                  = 15;                          // Every 45 seconds
-        // nCoinbaseMaturity = nStakeMinConfirmations    = 10;                          // Lico should be 25;
+        // nCoinbaseMaturity = nStakeMinConfirmations    = 10;                       // Lico should be 25;
         nDefaultPort                                  = 11743;
         nEnsureMintableCoinsInterval                  = 5;
-        nHeightToBanOldWallets                        = 120; // one hour before, will banned 
+        nHeightToBanOldWallets                        = 120;                        // one hour before, will banned 
         nHeightToFork                                 = 67000;
         nLastPOWBlock                                 = 1000;                       // 10000
         nMajorityBlockUpgradeToCheck                  = 100;
@@ -458,11 +432,21 @@ public:
         vSeeds.clear();
         vSeeds.push_back(CDNSSeedData("fuzzbawls.pw", "kore-testnet.seed.fuzzbawls.pw"));
         convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
-    }
 
-    const Checkpoints::CCheckpointData& GetCheckpoints() const
-    {
-        return dataTestnet;
+        checkpointData = {
+            {
+                {     0, uint256S("0x000ce3b76d9435adbc2713c62239cea20fe6bf0f69ed4d4f5c95ef07018a0450")},
+                { 36500, uint256S("0xb6584cf0dec619db96620558e390055843e0bea2c40585ae51af5fccf3794104")},
+                { 50000, uint256S("0x898cabda1d962795e1351629888d0a8c52525ff2ff6fbc9ab8bc3bbc1e9bf33f")}
+            }
+        };
+
+        chainTxData = ChainTxData{
+        // Data from rpc: getchaintxstats 20160 e5b7d252d6b2ab66702ddd457d90cc13db34b17e01201db056d91736aa505865
+        /* nTime    */ 1553866021,
+        /* nTxCount */ 114459,
+        /* dTxRate  */ 0.07034278185215136
+        };
     }
 };
 static CTestNetParams testNetParams;
@@ -512,11 +496,19 @@ public:
 
         vFixedSeeds.clear(); //! Testnet mode doesn't have any fixed seeds.
         vSeeds.clear();      //! Testnet mode doesn't have any DNS seeds.
-    }
-    
-    const Checkpoints::CCheckpointData& GetCheckpoints() const
-    {
-        return dataRegtest;
+
+        checkpointData = {
+            {
+                {0, uint256S("0x001")}
+            }
+        };
+
+        chainTxData = ChainTxData{
+        // Data from rpc: getchaintxstats 20160 e5b7d252d6b2ab66702ddd457d90cc13db34b17e01201db056d91736aa505865
+        /* nTime    */ 1454124731,
+        /* nTxCount */ 0,
+        /* dTxRate  */ 100
+        };
     }
 };
 static CRegTestParams regTestParams;
@@ -556,12 +548,6 @@ public:
 
         vFixedSeeds.clear(); //! Unit test mode doesn't have any fixed seeds.
         vSeeds.clear();      //! Unit test mode doesn't have any DNS seeds.
-    }
-
-    const Checkpoints::CCheckpointData& GetCheckpoints() const
-    {
-        // UnitTest share the same checkpoints as MAIN
-        return data;
     }
 
     virtual void setCoinbaseMaturity(int aCoinbaseMaturity) { nCoinbaseMaturity = aCoinbaseMaturity; }

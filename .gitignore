@@ -10,13 +10,7 @@ reset-files.bash
 *.creator.user
 *.files
 *.includes
-EXPRESSKORE.config
-EXPRESSKORE.creator
-EXPRESSKORE.creator.user
-EXPRESSKORE.files
-EXPRESSKORE.includes
-EXPRESSKORE.pro
-EXPRESSKORE.pro.user
+
 
 *.tar.gz
 
@@ -91,11 +85,11 @@ tools/masternode/*.activation
 *.trs
 *.dmg
 
-*.json.h
+#*.json.h
+!/src/invalid_outpoints.json.h
+!/src/invalid_serials.json.h
 *.raw.h
 
-!src/invalid_outpoints.json.h
-!src/invalid_serials.json.h
 
 #libtool object files
 *.lo

@@ -130,6 +130,8 @@ BITCOIN_CORE_H = \
   httpserver.h \
   init.h \
   invalid.h \
+  invalid_outpoints.json.h \
+  invalid_serials.json.h \
   kernel.h \
   swifttx.h \
   key.h \

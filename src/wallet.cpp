@@ -1733,14 +1733,14 @@ void CWallet::ResendWalletTransactions()
 
 CAmount CWallet::GetBalance() const
 {
-    map<string, uint32_t> mnOutPoints;
-    BOOST_FOREACH (CMasternodeConfig::CMasternodeEntry mne, masternodeConfig.getEntries()) {
-        int nIndex;
-        if(!mne.castOutputIndex(nIndex))
-            continue;
+    // map<string, uint32_t> mnOutPoints;
+    // BOOST_FOREACH (CMasternodeConfig::CMasternodeEntry mne, masternodeConfig.getEntries()) {
+    //     int nIndex;
+    //     if(!mne.castOutputIndex(nIndex))
+    //         continue;
         
-        mnOutPoints.insert(make_pair(mne.getTxHash(), uint32_t(nIndex)));
-    }
+    //     mnOutPoints.insert(make_pair(mne.getTxHash(), uint32_t(nIndex)));
+    // }
 
     CAmount nTotal = 0;
     {
@@ -1748,9 +1748,9 @@ CAmount CWallet::GetBalance() const
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
 
-            map<string, uint32_t>::iterator it2 = mnOutPoints.find(pcoin->GetHash().ToString());
-            if (it2 != mnOutPoints.end())
-                continue;
+            // map<string, uint32_t>::iterator it2 = mnOutPoints.find(pcoin->GetHash().ToString());
+            // if (it2 != mnOutPoints.end())
+            //     continue;
 
             if (pcoin->IsTrusted())
                 nTotal += pcoin->GetAvailableCredit();
@@ -2874,10 +2874,10 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
         return false;
     }
 
-    wtxNew.SetVersion(UseLegacyCode() ? 1 : 2);
     wtxNew.fTimeReceivedIsTxTime = true;
     wtxNew.BindWallet(this);
     CMutableTransaction txNew;
+    txNew.SetVersion(UseLegacyCode() ? 1 : 2);
     txNew.nTime = GetAdjustedTime();
     {
         LOCK2(cs_main, cs_wallet);

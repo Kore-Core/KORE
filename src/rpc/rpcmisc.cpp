@@ -624,7 +624,7 @@ UniValue getforkstatus(const UniValue& params, bool fHelp)
             "  \"oldVersionPercentage\":    (intenger),         Percentage of old version blocks\n"
             "  \"newVersionCount\":         (intenger),         Block count of nodes running new version\n"
             "  \"newVersionPercentage\":    (intenger),         Percentage of new version blocks\n"
-            "  \"totalBlockVerified\":      (intenger),         Total blocks processed\n"
+            "  \"totalBlocksVerified\":     (intenger),         Total blocks processed\n"
             "  \"timeUntilFork\":           (intenger),         Median time until Fork - 1 Block/minute\n"
             "}\n"
 
@@ -674,12 +674,12 @@ UniValue getforkstatus(const UniValue& params, bool fHelp)
     UniValue obj(UniValue::VOBJ);
     obj.push_back(Pair("blockHeight", blockHeight));
     obj.push_back(Pair("forkHeight", forkHeight));
-    obj.push_back(Pair("oldVersionCount", std::to_string(nLegacy)));
-    obj.push_back(Pair("oldVersionPercentage", std::to_string(nLegacy * 100 / BlocksToMeasure) + "%"));
-    obj.push_back(Pair("newVersionCount", std::to_string(nUpgraded)));
-    obj.push_back(Pair("newVersionPercentage", std::to_string(nUpgraded * 100 / BlocksToMeasure) + "%"));
-    obj.push_back(Pair("totalBlockVerified",  std::to_string(count)));
-    obj.push_back(Pair("timeUntilFork", strprintf("%d minute until the fork - based on 1 blcok/minute", (forkHeight - blockHeight))));
+    obj.push_back(Pair("oldClientCount", std::to_string(nLegacy)));
+    obj.push_back(Pair("oldClientPercentage", std::to_string(nLegacy * 100 / BlocksToMeasure) + "%"));
+    obj.push_back(Pair("newClientCount", std::to_string(nUpgraded)));
+    obj.push_back(Pair("newClientPercentage", std::to_string(nUpgraded * 100 / BlocksToMeasure) + "%"));
+    obj.push_back(Pair("blocksVerified",  strprintf("latest %d blocks", std::to_string(count))));
+    obj.push_back(Pair("timeUntilFork", strprintf("%d minute until the fork - based on 2 blcoks/minute", (forkHeight - blockHeight)/2)));
 
     return obj;
 }

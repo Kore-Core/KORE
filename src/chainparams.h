@@ -112,7 +112,6 @@ public:
     int64_t                   GetMasternodeCheckSeconds() const        { return nMasternodeCheckSeconds; }
     int64_t                   GetMasternodeCoinScore() const           { return nMasternodeCoinScore; }
     /** The masternode count that we will allow the see-saw reward payments to be off by */
-    int32_t                   GetMasternodeCountDrift() const          { return nMasternodeCountDrift; }
     int64_t                   GetMasternodeExpirationSeconds() const   { return nMasternodeExpirationSeconds; }
     int64_t                   GetMasternodeFinalizationWindow() const  { return nMasternodeFinalizationWindow; }
     int64_t                   GetMasternodeMinConfirmations() const    { return nMasternodeMinConfirmations; }
@@ -192,7 +191,6 @@ protected:
     int32_t                    nMajorityBlockUpgradeToCheck;
     int64_t                    nMasternodeCheckSeconds;
     int64_t                    nMasternodeCoinScore;
-    int32_t                    nMasternodeCountDrift;
     int64_t                    nMasternodeExpirationSeconds;
     int64_t                    nMasternodeMinConfirmations;
     int64_t                    nMasternodeMinMNPSeconds;

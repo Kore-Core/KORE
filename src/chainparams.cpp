@@ -231,7 +231,6 @@ public:
         nMasternodeBudgetPaymentCycle                 = 60 * 24 * 30 * 1;    // Amount of blocks in a months period of time using 1 minute per block
         nMasternodeCheckSeconds                       = 5;   
         nMasternodeCoinScore                          = 499;   
-        nMasternodeCountDrift                         = 20;                  // ONLY KORE
         nMasternodeExpirationSeconds                  = 120 * 60;
         nMasternodeFinalizationWindow                 = ((GetMasternodeBudgetPaymentCycle() / 30) * 2); // Submit final budget during the last 2 days (2880 blocks) before payment for Mainnet
         nMasternodeMinConfirmations                   = 15;
@@ -372,17 +371,7 @@ public:
         nHeightToFork                                 = 67000;
         nLastPOWBlock                                 = 1000;                       // 10000
         nMajorityBlockUpgradeToCheck                  = 100;
-        nMasternodeBudgetPaymentCycle                 = 30;                          // Every 60 blocks, it will check if it is necessary to pay. A superblock will have 140 cycle
-        nMasternodeMinConfirmations                   = 2;
-        nMasternodeMinMNPSeconds                      = 2 * 60;
-        nMasternodeMinMNBSeconds                      = 1 * 60;
-        nMasternodePingSeconds                        = 1 * 60;
-        nMasternodeExpirationSeconds                  = 24 * 60;
-        nMasternodeRemovalSeconds                     = 26 * 60;
-        nMasternodeCheckSeconds                       = 1;
-        nMasternodeCoinScore                          = 499;
-        nMasternodeCountDrift                         = 4;
-        nMasternodeFinalizationWindow                 = 15;                          // 13 + 1 finalization confirmations + 1 minutes buffer for propagation
+        nMasternodeBudgetPaymentCycle                 = 144;                          // Every 60 blocks, it will check if it is necessary to pay. A superblock will have 140 cycle
         nMaxTipAge                                    = 0x7fffffff;
         nMinerThreads                                 = 0;
         nModifierInterval                             = 30;                          // Modifier interval: time to elapse before new modifier is computed

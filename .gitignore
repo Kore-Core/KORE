@@ -10,7 +10,13 @@ reset-files.bash
 *.creator.user
 *.files
 *.includes
-
+EXPRESSKORE.config
+EXPRESSKORE.creator
+EXPRESSKORE.creator.user
+EXPRESSKORE.files
+EXPRESSKORE.includes
+EXPRESSKORE.pro
+EXPRESSKORE.pro.user
 
 *.tar.gz
 

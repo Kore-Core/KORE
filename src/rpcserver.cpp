@@ -31,10 +31,10 @@
 using namespace RPCServer;
 using namespace std;
 
-static bool fRPCRunning = false;
-static bool fRPCInWarmup = true;
-static std::string rpcWarmupStatus("RPC server started");
 static CCriticalSection cs_rpcWarmup;
+static bool fRPCRunning = false;
+static bool fRPCInWarmup GUARDED_BY(cs_rpcWarmup) = true;
+static std::string rpcWarmupStatus GUARDED_BY(cs_rpcWarmup) = "RPC server started";
 
 /* Timer-creating functions */
 static std::vector<RPCTimerInterface*> timerInterfaces;
@@ -568,6 +568,13 @@ std::string JSONRPCExecBatch(JSONRequest& jreq, const UniValue& vReq)
 
 UniValue CRPCTable::execute(const std::string& strMethod, const UniValue& params) const
 {
+    // Return immediately if in warmup
+    {
+        LOCK(cs_rpcWarmup);
+        if (fRPCInWarmup)
+            throw JSONRPCError(RPC_IN_WARMUP, rpcWarmupStatus);
+    }
+
     // Find method
     const CRPCCommand* pcmd = tableRPC[strMethod];
     if (!pcmd)

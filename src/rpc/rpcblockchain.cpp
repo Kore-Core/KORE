@@ -149,12 +149,7 @@ UniValue getbestblockhash(const UniValue& params, bool fHelp)
 
     LOCK(cs_main);
 
-    CBlockIndex* tip = chainActive.Tip();
-    // During inital block verification chainActive.Tip() might be not yet initialized
-    if (tip == NULL)
-        return "Blockchain information not yet available";
-
-    return tip->GetBlockHash().GetHex();
+    return chainActive.Tip()->GetBlockHash().GetHex();
 }
 
 UniValue getdifficulty(const UniValue& params, bool fHelp)
@@ -244,16 +239,10 @@ UniValue getchaintxstats(const UniValue& params, bool fHelp)
 
     const CBlockIndex* pindex;
     int blockcount = 30 * 24 * 60 * 60 / Params().GetTargetSpacing(); // By default: 1 month
-    UniValue ret(UniValue::VOBJ);
 
     if (params[1].isNull()) {
         LOCK(cs_main);
         pindex = chainActive.Tip();
-        // During inital block verification chainActive.Tip() might be not yet initialized
-        if (pindex == NULL) {
-            ret.push_back(Pair("error", "Blockchain information not yet available"));
-            return ret;
-        }
     } else {
         uint256 hash(ParseHashV(params[1], "blockhash"));
         LOCK(cs_main);
@@ -282,6 +271,7 @@ UniValue getchaintxstats(const UniValue& params, bool fHelp)
     int nTimeDiff = pindex->GetMedianTimePast() - pindexPast->GetMedianTimePast();
     int nTxDiff = pindex->nChainTx - pindexPast->nChainTx;
 
+    UniValue ret(UniValue::VOBJ);
     ret.pushKV("time", (int64_t)pindex->nTime);
     ret.pushKV("txcount", (int64_t)pindex->nChainTx);
     ret.pushKV("window_final_block_hash", pindex->GetBlockHash().GetHex());

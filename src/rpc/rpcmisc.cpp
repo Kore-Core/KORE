@@ -97,20 +97,14 @@ UniValue getinfo(const UniValue& params, bool fHelp)
     LOCK(cs_main);
 #endif
     double verificationProgress = 0;
-    UniValue obj(UniValue::VOBJ);
-
     CBlockIndex* tip = chainActive.Tip();
-    // During inital block verification chainActive.Tip() might be not yet initialized
-    if (tip == NULL) {
-        obj.push_back(Pair("error", "Blockchain information not yet available"));
-        return obj;
-    }
 
     if (tip->nHeight > 0)
         verificationProgress = (masternodeSync.IsBlockchainSynced()) ? 1.0 : Checkpoints::GuessVerificationProgress(Params().GetTxData(), tip);
     proxyType proxy;
     GetProxy(NET_IPV4, proxy);
 
+    UniValue obj(UniValue::VOBJ);
     obj.push_back(Pair("version", CLIENT_VERSION));
     obj.push_back(Pair("protocolversion", PROTOCOL_VERSION));
 #ifdef ENABLE_WALLET
@@ -592,14 +586,7 @@ UniValue getstakingstatus(const UniValue& params, bool fHelp)
 #endif
 
     UniValue obj(UniValue::VOBJ);
-    CBlockIndex* tip = chainActive.Tip();
-    // During inital block verification chainActive.Tip() might be not yet initialized
-    if (tip == NULL) {
-        obj.push_back(Pair("error", "Blockchain information not yet available"));
-        return obj;
-    }
-
-    obj.push_back(Pair("validtime", tip->nTime > 1471482000));
+    obj.push_back(Pair("validtime", chainActive.Tip()->nTime > 1471482000));
     obj.push_back(Pair("haveconnections", !vNodes.empty()));
     if (pwalletMain) {
         obj.push_back(Pair("walletunlocked", !pwalletMain->IsLocked()));
@@ -644,13 +631,7 @@ UniValue getforkstatus(const UniValue& params, bool fHelp)
         LOCK(cs_main);
     #endif
 
-    UniValue obj(UniValue::VOBJ);
     CBlockIndex* tip = chainActive.Tip();
-    // During inital block verification chainActive.Tip() might be not yet initialized
-    if (tip == NULL) {
-        obj.push_back(Pair("error", "Blockchain information not yet available"));
-        return obj;
-    }
 
     int nUpgraded = 0;
     int nLegacy = 0;
@@ -685,6 +666,7 @@ UniValue getforkstatus(const UniValue& params, bool fHelp)
         count++;
     }
 
+    UniValue obj(UniValue::VOBJ);
     obj.push_back(Pair("blockHeight", blockHeight));
     obj.push_back(Pair("forkHeight", forkHeight));
     obj.push_back(Pair("oldClientCount", std::to_string(nLegacy)));

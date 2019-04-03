@@ -2205,7 +2205,7 @@ CAmount GetMasternodePayment(CAmount blockReward, CAmount stakedBalance, CBlockI
     double stakedBalanceTimesConstant1 = 8.00011e-13 * stakedBalanceDouble;
     double stakedBalanceTimesConstant2 = 1.17928e-58 * stakedBalanceSquare;
     stakedBalanceTimesConstant2 *= moneySupplyDouble;
-    stakedBalanceDouble = 1 - stakedBalanceTimesConstant1 + stakedBalanceTimesConstant2 + 0.05;
+    stakedBalanceDouble = 1 - (stakedBalanceTimesConstant1 + stakedBalanceTimesConstant2 + 0.05);
 
     return blockRewardDouble * stakedBalanceDouble;
 }

@@ -566,6 +566,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         if (!fProofOfStake) {
             pblock->vtx[0] = txNew;
             pblock->vtx[0].vin[0].scriptSig = CScript() << nHeight << OP_0;
+            pblock->vtx[0].vout[0].nValue += nFees;
         }
         else
             pblock->vtx[0].vout[1].nValue += nFees;

@@ -632,7 +632,7 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew, CBloc
 
     std::string strPayeesPossible = "";
 
-    CAmount nReward = GetBlockValue(nBlockHeight);
+    CAmount nReward = GetBlockReward(pindexPrev);
 
     CAmount requiredMasternodePayment = GetMasternodePayment(nBlockHeight, nReward, pindexPrev);
 

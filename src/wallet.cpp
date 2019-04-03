@@ -3457,12 +3457,10 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if (addressBalance < 50 * COIN)
             continue;
 
-        // Read block header
-        CBlockHeader block = pindex->GetBlockHeader();
         nTxNewTime = GetAdjustedTime();
 
         // Send the address' stakeable balance to ease the difficulty
-        if (Stake(stakeInput.get(), nBits, block.GetBlockTime(), nTxNewTime, addressBalance)) {
+        if (Stake(stakeInput.get(), nBits, tx.nTime, nTxNewTime, addressBalance)) {
             LOCK(cs_main);
             //Double check that this will pass time requirements
             if (nTxNewTime <= chainActive.Tip()->GetMedianTimePast()) {

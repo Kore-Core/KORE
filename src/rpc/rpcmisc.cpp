@@ -97,13 +97,20 @@ UniValue getinfo(const UniValue& params, bool fHelp)
     LOCK(cs_main);
 #endif
     double verificationProgress = 0;
+    UniValue obj(UniValue::VOBJ);
 
-    if (chainActive.Tip()->nHeight > 0)
-        verificationProgress = (masternodeSync.IsBlockchainSynced()) ? 1.0 : Checkpoints::GuessVerificationProgress(Params().GetTxData(), chainActive.Tip());
+    CBlockIndex* tip = chainActive.Tip();
+    // During inital block verification chainActive.Tip() might be not yet initialized
+    if (tip == NULL) {
+        obj.push_back(Pair("error", "Blockchain information not yet available"));
+        return obj;
+    }
+
+    if (tip->nHeight > 0)
+        verificationProgress = (masternodeSync.IsBlockchainSynced()) ? 1.0 : Checkpoints::GuessVerificationProgress(Params().GetTxData(), tip);
     proxyType proxy;
     GetProxy(NET_IPV4, proxy);
 
-    UniValue obj(UniValue::VOBJ);
     obj.push_back(Pair("version", CLIENT_VERSION));
     obj.push_back(Pair("protocolversion", PROTOCOL_VERSION));
 #ifdef ENABLE_WALLET
@@ -120,14 +127,7 @@ UniValue getinfo(const UniValue& params, bool fHelp)
     obj.push_back(Pair("proxy", (proxy.IsValid() ? proxy.proxy.ToStringIPPort() : string())));
     obj.push_back(Pair("difficulty", (double)GetDifficulty()));
     obj.push_back(Pair("testnet", Params().GetNetworkID() == CBaseChainParams::TESTNET));
-
-    // During inital block verification chainActive.Tip() might be not yet initialized
-    if (chainActive.Tip() == NULL) {
-        obj.push_back(Pair("status", "Blockchain information not yet available"));
-        return obj;
-    }
-
-    obj.push_back(Pair("moneysupply", ValueFromAmount(chainActive.Tip()->nMoneySupply)));
+    obj.push_back(Pair("moneysupply", ValueFromAmount(tip->nMoneySupply)));
 
 #ifdef ENABLE_WALLET
     if (pwalletMain) {
@@ -592,7 +592,14 @@ UniValue getstakingstatus(const UniValue& params, bool fHelp)
 #endif
 
     UniValue obj(UniValue::VOBJ);
-    obj.push_back(Pair("validtime", chainActive.Tip()->nTime > 1471482000));
+    CBlockIndex* tip = chainActive.Tip();
+    // During inital block verification chainActive.Tip() might be not yet initialized
+    if (tip == NULL) {
+        obj.push_back(Pair("error", "Blockchain information not yet available"));
+        return obj;
+    }
+
+    obj.push_back(Pair("validtime", tip->nTime > 1471482000));
     obj.push_back(Pair("haveconnections", !vNodes.empty()));
     if (pwalletMain) {
         obj.push_back(Pair("walletunlocked", !pwalletMain->IsLocked()));
@@ -637,22 +644,29 @@ UniValue getforkstatus(const UniValue& params, bool fHelp)
         LOCK(cs_main);
     #endif
 
+    UniValue obj(UniValue::VOBJ);
+    CBlockIndex* tip = chainActive.Tip();
+    // During inital block verification chainActive.Tip() might be not yet initialized
+    if (tip == NULL) {
+        obj.push_back(Pair("error", "Blockchain information not yet available"));
+        return obj;
+    }
+
     int nUpgraded = 0;
     int nLegacy = 0;
     int count = 0;
     
     int BlocksToMeasure = Params().GetMajorityBlockUpgradeToCheck();
-    const CBlockIndex* pindex = chainActive.Tip();
-    int blockHeight = pindex->nHeight;
+    int blockHeight = tip->nHeight;
     int forkHeight = Params().HeightToFork();
 
     if (blockHeight > forkHeight) return "Fork was already done";
 
-    for (int i = 0; i < BlocksToMeasure && pindex != NULL; i++)
+    for (int i = 0; i < BlocksToMeasure && tip != NULL; i++)
     {
-        if (pindex->nHeight < 1) break;
+        if (tip->nHeight < 1) break;
         CBlock pblock;
-        if (!ReadBlockFromDisk(pblock, pindex))
+        if (!ReadBlockFromDisk(pblock, tip))
             return LogPrintf("Failed to read block");
 
         CScript script = pblock.vtx[1].vout.back().scriptPubKey;
@@ -667,11 +681,10 @@ UniValue getforkstatus(const UniValue& params, bool fHelp)
                     nUpgraded++;
             }
         }
-        pindex = pindex->pprev;
+        tip = tip->pprev;
         count++;
     }
 
-    UniValue obj(UniValue::VOBJ);
     obj.push_back(Pair("blockHeight", blockHeight));
     obj.push_back(Pair("forkHeight", forkHeight));
     obj.push_back(Pair("oldClientCount", std::to_string(nLegacy)));

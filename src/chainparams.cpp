@@ -251,7 +251,7 @@ public:
         nPruneAfterHeight                             = 100000;              // Legacy
         nRuleChangeActivationThreshold                = 1916;                // 95% of 2016
         nSporkKeyEnforceNew                           = 1525158000;          //!> Sporks signed after (GMT): Tuesday, May 1, 2018 7:00:00 AM GMT must use the new spork key
-        nStakeLockInterval                            = 60 * 60 * 4;         // Stake remains locked for 4 hours
+        nStakeLockInterval                            = 4 * 60 * 60;         // Stake remains locked for 4 hours
         nStakeMinAge                                  = 4 * 60 * 60;
         nStartMasternodePayments                      = 1508884606;          //Genesis time
         nTargetTimespan                               = 1 * 60;
@@ -364,21 +364,20 @@ public:
         nBudgetFeeConfirmations                       = 2;                           // Number of confirmations for the finalization fee. We have to make this very short here because we only have a 8 block finalization window on testnet
         nBudgetVoteUpdate                             = 1 * 60;                      // can only change vote after 1 minute
         nClientMintableCoinsInterval                  = 15;                          // Every 45 seconds
-        // nCoinbaseMaturity = nStakeMinConfirmations    = 10;                       // Lico should be 25;
         nDefaultPort                                  = 11743;
         nEnsureMintableCoinsInterval                  = 5;
-        nHeightToBanOldWallets                        = 120;                        // one hour before, will banned 
+        nHeightToBanOldWallets                        = 120;                         // one hour before, will banned 
         nHeightToFork                                 = 67000;
-        nLastPOWBlock                                 = 1000;                       // 10000
+        nLastPOWBlock                                 = 1000;                        // 10000
         nMajorityBlockUpgradeToCheck                  = 100;
-        nMasternodeBudgetPaymentCycle                 = 144;                          // Every 60 blocks, it will check if it is necessary to pay. A superblock will have 140 cycle
+        nMasternodeBudgetPaymentCycle                 = 144;                         // Every 60 blocks, it will check if it is necessary to pay. A superblock will have 140 cycle
         nMaxTipAge                                    = 0x7fffffff;
         nMinerThreads                                 = 0;
         nModifierInterval                             = 30;                          // Modifier interval: time to elapse before new modifier is computed
         nPastBlocksMax                                = 64;
         nPastBlocksMin                                = 64;
         nPoolMaxTransactions                          = 2;
-        nStakeLockInterval                            = 5 * 60;                     // Stake remains locked for 30 minutes
+        nStakeLockInterval                            = 5 * 60;                      // Stake remains locked for 30 minutes
         nStakeMinAge                                  = nCoinbaseMaturity * 60;      // It will stake after 30 minutes
         nStartMasternodePayments                      = 1533841307;                  //genesis block time
         nSporkKeyEnforceNew                           = 1521604800;                  //!> Sporks signed after Wednesday, March 21, 2018 4:00:00 AM GMT must use the new spork key
@@ -390,13 +389,13 @@ public:
         vDeployments[DEPLOYMENT_CSV].bit              = 0;
         vDeployments[DEPLOYMENT_CSV].nStartTime       = 1456790400;                  // March 1st, 2016
         vDeployments[DEPLOYMENT_CSV].nTimeout         = 1493596800;                  // May 1st, 2017
-        strDevFundPubKey = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
-        strSporkKey = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
-        strObfuscationPoolDummyAddress = "jPt4RY7Nfs5XCWqCBmmDWAUza475KR42iU";
+        strDevFundPubKey                              = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
+        strSporkKey                                   = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
+        strObfuscationPoolDummyAddress                = "jPt4RY7Nfs5XCWqCBmmDWAUza475KR42iU";
 
         // sending rewards to this public key
-        CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
-        const char* pszTimestamp = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
+        CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
+        const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
 
         // genesis for momentum
         genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1541080950, 1237, 2500634, 64441706, 0x1f7fffff, 1, 49 * COIN);

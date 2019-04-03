@@ -1063,7 +1063,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
 
             while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || 
                   (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()) || 
-                  !(masternodeSync.IsSynced() && (mnodeman.CountEnabled() == mnodeman.size()) && mnodeman.CountEnabled() >1))
+                  !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >2))
             {
                 if (fDebug) {
                     LogPrintf("***************************************************************\n");
@@ -1076,7 +1076,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                     LogPrintf("BitcoinMiner Masternode is Synced        ? %s (should be true)\n", masternodeSync.IsSynced() ? "true" : "false");
                     LogPrintf("BitcoinMiner How Many MN are Enabled     ? %d (should be %d)\n", mnodeman.CountEnabled(), mnodeman.size());
                     LogPrintf("BitcoinMiner Balance > 0                 ? %s (should be true)\n", pwallet->GetBalance() > 0 ? "true" : "false");
-                    LogPrintf("BitcoinMiner Balance is >= than reserved ? %s (should be true)\n", nReserveBalance >= pwallet->GetBalance() ? "true" : "false");
+                    LogPrintf("BitcoinMiner Balance is >= than reserved ? %s (should be true)\n", nReserveBalance >= pwallet->GetBalance() ? "false" : "true");
                     LogPrintf("***************************************************************\n");
                     LogPrintf("***************************************************************\n");
                     LogPrintf("***************************************************************\n");
@@ -1133,9 +1133,9 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             LogPrintf("Wallet Locked ? %s \n", pwallet->IsLocked() ? "true" : "false");
             LogPrintf("Is there Mintable Coins ? %s \n", fMintableCoins ? "true" : "false");
             LogPrintf("Masternode is Synced ? %s \n", masternodeSync.IsSynced() ? "true" : "false");
-            LogPrintf("BitcoinMiner How Many MN are Enabled     ? %d (should be %d)\n", mnodeman.CountEnabled(), mnodeman.size());
+            LogPrintf("BitcoinMiner How Many MN are Enabled ? %d (should be %d)\n", mnodeman.CountEnabled(), mnodeman.size());
             LogPrintf("Do we have Balance ? %s \n", pwallet->GetBalance() > 0 ? "true" : "false");
-            LogPrintf("Balance is Greater than reserved one ? %s \n", nReserveBalance >= pwallet->GetBalance() ? "true" : "false");
+            LogPrintf("Balance is Greater than reserved one ? %s \n", nReserveBalance >= pwallet->GetBalance() ? "false" : "true");
         }
         unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
         CBlockIndex* pindexPrev = chainActive.Tip();

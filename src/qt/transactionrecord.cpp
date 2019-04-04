@@ -41,10 +41,13 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet* 
     std::map<std::string, std::string> mapValue = wtx.mapValue;
 
     if (wtx.IsCoinStake()) {
+        if (wtx.GetVersion() == 2)
+            return parts;
+
         TransactionRecord sub(hash, nTime);
         CTxDestination address;
-        CScript scriptPubKey = wtx.GetVersion() == 2 ? wtx.vout[0].scriptPubKey : wtx.vout[1].scriptPubKey;
-        if (!ExtractDestination(scriptPubKey, address))
+
+        if (!ExtractDestination(wtx.vout[1].scriptPubKey, address))
             return parts;
 
         if (!IsMine(*wallet, address)) {
@@ -63,7 +66,7 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet* 
             }
         } else {
             //stake reward
-            isminetype mine = wallet->IsMine(  wtx.GetVersion() == 2 ? wtx.vout[0] : wtx.vout[1]);
+            isminetype mine = wallet->IsMine(wtx.vout[1]);
             sub.involvesWatchAddress = mine & ISMINE_WATCH_ONLY;
             sub.type = TransactionRecord::StakeMint;
             sub.address = CBitcoinAddress(address).ToString();

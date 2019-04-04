@@ -227,11 +227,9 @@ public:
     unsigned int nMasterKeyMaxID;
 
     // Stake Settings
-    unsigned int nHashDrift;
     unsigned int nHashInterval;
     uint64_t nStakeSplitThreshold;
-    int nStakeSetUpdateTime;
-
+    
     //MultiSend
     std::vector<std::pair<std::string, int> > vMultiSend;
     bool fMultiSendStake;
@@ -279,10 +277,8 @@ public:
         fBackupMints = false;
 
         // Stake Settings
-        nHashDrift = 45;
         nStakeSplitThreshold = 2000;
-        nHashInterval = 22;
-        nStakeSetUpdateTime = 300; // 5 minutes
+        nHashInterval = Params().GetTargetSpacing() * 0.75 / 2;
 
         //MultiSend
         vMultiSend.clear();

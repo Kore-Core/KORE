@@ -143,7 +143,7 @@ public:
     // minimum Stake confirmations is 2 !!!
     uint32_t                  GetStakeMinConfirmations() const         { return nStakeMinConfirmations; }
     uint32_t                  GetTargetSpacing() const                 { return nTargetSpacing; }
-    int64_t                   GetTargetSpacingForStake() const         { return nTargetSpacingForStake; }
+    int64_t                   GetTargetSpacingForStake() const         { return nModifierInterval * 0.75; }
     uint32_t                  GetTargetTimespan() const                { return nTargetTimespan; }
     /** Default value for -checkmempool and -checkblockindex argument */
     bool                      IsConsistencyChecksDefault() const       { return fDefaultConsistencyChecks; }

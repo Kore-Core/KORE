@@ -256,7 +256,6 @@ public:
         nStartMasternodePayments                      = 1508884606;          //Genesis time
         nTargetTimespan                               = 1 * 60;
         nTargetSpacing                                = 1 * 60;              // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
-        nTargetSpacingForStake                        = nModifierInterval;   // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
         /** Height or Time Based Activations **/
         nBlockEnforceInvalidUTXO                      = 902850;              //Start enforcing the invalid UTXO's
         nHeightToBanOldWallets                        = 1440;                //Ban old nodes the day before
@@ -384,7 +383,6 @@ public:
         nSporkKeyEnforceNew                           = 1521604800;                  //!> Sporks signed after Wednesday, March 21, 2018 4:00:00 AM GMT must use the new spork key
         nTargetTimespan                               = 1 * 60;                      // KORE: 1 minute
         nTargetSpacing                                = nModifierInterval;           // Lico this should be de default 60;
-        nTargetSpacingForStake                        = nModifierInterval;           // Stake every 10 minutes
         vAlertPubKey                                  = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         // Deployment of BIP68, BIP112, and BIP113.
         vDeployments[DEPLOYMENT_CSV].bit              = 0;
@@ -526,7 +524,7 @@ public:
         fMiningRequiresPeers                       = false;
         fSkipProofOfWorkCheck                      = true;
         nDefaultPort                               = 51478;
-        nTargetSpacingForStake = nTargetSpacing    = 10;
+        nTargetSpacing                             = 10;
         nCoinbaseMaturity = nStakeMinConfirmations = nTargetSpacing + 1;
         nModifierInterval                          = nTargetSpacing;
         nTargetTimespan                            = nTargetSpacing - 1;

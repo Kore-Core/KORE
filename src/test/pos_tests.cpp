@@ -116,7 +116,6 @@ static std::vector<CRecipient> PopulateWalletByWealth(double numberOfWallets, do
             CWalletDB walletDB(wallets[walletCount].strWalletFile, "crw");
 
             wallets[walletCount].nTimeFirstKey = genesisTime;
-            wallets[walletCount].nStakeSetUpdateTime = 0;
             wallets[walletCount].nStakeSplitThreshold = 5000 * COIN;
 
             CPubKey key;
@@ -681,3 +680,4 @@ BOOST_AUTO_TEST_CASE(pos_ValidateBlock)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+

@@ -3415,7 +3415,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     static list<std::unique_ptr<CStakeInput> > listInputs;
     static map<string, CAmount> stakeableBalance;
     static map<string, CAmount> maxStakeableBalance;
-    if (GetTime() - nLastStakeSetUpdate > nStakeSetUpdateTime) {
+    if (GetTime() - nLastStakeSetUpdate > Params().GetTargetSpacingForStake()) {
         listInputs.clear();
         stakeableBalance.clear();
         if (!SelectStakeCoins(listInputs, nBalance - nReserveBalance, stakeableBalance, maxStakeableBalance))

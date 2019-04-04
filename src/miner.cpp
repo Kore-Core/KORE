@@ -194,7 +194,7 @@ uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock
         if (bnNew <= 0 || bnNew > bnTargetLimit)
             bnNew = bnTargetLimit;
 
-        if (fDebug) LogPrintf("GetNextWorkRequired: %s \n", bnNew.ToString().c_str());
+        if (fDebug) LogPrintf("GetNextTarget: %s \n", bnNew.ToString().c_str());
         
         return bnNew.GetCompact();
     }
@@ -255,7 +255,7 @@ uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock
 
     if (fDebug) {
         LogPrintf("nActualTimespan: %d \n", nActualTimespan);
-        LogPrintf("GetNextWorkRequired: %s \n", bnNew.ToString().c_str());
+        LogPrintf("GetNextTarget: %s \n", bnNew.ToString().c_str());
     }
 
     return bnNew.GetCompact();
@@ -1102,7 +1102,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
 
             if (mapHashedBlocks.count(chainActive.Tip()->nHeight)) //search our map of hashed blocks, see if bestblock has been hashed yet
             {
-                if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < max(pwallet->nHashInterval, (unsigned int)1)) // wait half of the nHashDrift with max wait of 3 minutes
+                if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < pwallet->nHashInterval)  // wait half of the nHashDrift
                 {
                     MilliSleep(5000);
                     boost::this_thread::interruption_point();
@@ -1153,14 +1153,14 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
 
         //Stake miner main
         if (fProofOfStake) {
-            LogPrintf("CPUMiner : proof-of-stake block found %s \n", pblock->GetHash().ToString().c_str());
+            LogPrintf("BitcoinMiner: proof-of-stake block found %s \n", pblock->GetHash().ToString().c_str());
             if (!SignBlock(*pblock, *pwallet)) {
                 LogPrintf("BitcoinMiner(): Signing new block with UTXO key failed \n");
                 MilliSleep(500);
                 continue;
             }
 
-            LogPrintf("CPUMiner : proof-of-stake block was signed %s \n", pblock->GetHash().ToString().c_str());
+            LogPrintf("BitcoinMiner : proof-of-stake block was signed %s \n", pblock->GetHash().ToString().c_str());
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             ProcessBlockFound(pblock, *pwallet, reservekey);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);

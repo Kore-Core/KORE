@@ -74,15 +74,18 @@ public:
      */
     void refreshWallet()
     {
-        qDebug() << "TransactionTablePriv::refreshWallet";
+        qDebug() << "TransactionTablePriv::refreshWallet -->";
         cachedWallet.clear();
         {
             LOCK2(cs_main, wallet->cs_wallet);
             for (std::map<uint256, CWalletTx>::iterator it = wallet->mapWallet.begin(); it != wallet->mapWallet.end(); ++it) {
-                if (TransactionRecord::showTransaction(it->second))
+                if (TransactionRecord::showTransaction(it->second)) {
+                    qDebug() << it->second.ToString().c_str();
                     cachedWallet.append(TransactionRecord::decomposeTransaction(wallet, it->second));
+                }
             }
         }
+        qDebug() << "TransactionTablePriv::refreshWallet <--";
     }
 
     /* Update our model of the wallet incrementally, to synchronize our model of the wallet

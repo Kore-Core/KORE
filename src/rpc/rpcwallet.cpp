@@ -1738,26 +1738,27 @@ UniValue gettransaction(const UniValue& params, bool fHelp)
 
             "\nResult:\n"
             "{\n"
-            "  \"amount\" : x.xxx,        (numeric) The transaction amount in KORE\n"
-            "  \"confirmations\" : n,     (numeric) The number of confirmations\n"
-            "  \"bcconfirmations\" : n,   (numeric) The number of blockchain confirmations\n"
-            "  \"blockhash\" : \"hash\",  (string) The block hash\n"
-            "  \"blockindex\" : xx,       (numeric) The block index\n"
-            "  \"blocktime\" : ttt,       (numeric) The time in seconds since epoch (1 Jan 1970 GMT)\n"
-            "  \"txid\" : \"transactionid\",   (string) The transaction id.\n"
-            "  \"time\" : ttt,            (numeric) The transaction time in seconds since epoch (1 Jan 1970 GMT)\n"
-            "  \"timereceived\" : ttt,    (numeric) The time received in seconds since epoch (1 Jan 1970 GMT)\n"
+            "  \"amount\" : x.xxx,                      (numeric) The transaction amount in KORE\n"
+            "  \"confirmations\" : n,                   (numeric) The number of confirmations\n"
+            "  \"bcconfirmations\" : n,                 (numeric) The number of blockchain confirmations\n"
+            "  \"blockhash\" : \"hash\",                (string) The block hash\n"
+            "  \"blockindex\" : xx,                     (numeric) The block index\n"
+            "  \"blocktime\" : ttt,                     (numeric) The time in seconds since epoch (1 Jan 1970 GMT)\n"
+            "  \"txid\" : \"transactionid\",            (string) The transaction id.\n"
+            "  \"walletconflicts\" : []                 (array)     Wallet Conflicts \n"
+            "  \"time\" : ttt,                          (numeric) The transaction time in seconds since epoch (1 Jan 1970 GMT)\n"
+            "  \"timereceived\" : ttt,                  (numeric) The time received in seconds since epoch (1 Jan 1970 GMT)\n"
             "  \"details\" : [\n"
             "    {\n"
-            "      \"account\" : \"accountname\",  (string) The account name involved in the transaction, can be \"\" for the default account.\n"
-            "      \"address\" : \"koreaddress\",   (string) The kore address involved in the transaction\n"
-            "      \"category\" : \"send|receive\",    (string) The category, either 'send' or 'receive'\n"
-            "      \"amount\" : x.xxx                  (numeric) The amount in KORE\n"
-            "      \"vout\" : n,                       (numeric) the vout value\n"
+            "      \"account\" : \"accountname\",       (string) The account name involved in the transaction, can be \"\" for the default account.\n"
+            "      \"address\" : \"koreaddress\",       (string) The kore address involved in the transaction\n"
+            "      \"category\" : \"send|receive\",     (string) The category, either 'send' or 'receive'\n"
+            "      \"amount\" : x.xxx                   (numeric) The amount in KORE\n"
+            "      \"vout\" : n,                        (numeric) the vout value\n"
             "    }\n"
             "    ,...\n"
             "  ],\n"
-            "  \"hex\" : \"data\"         (string) Raw data for transaction\n"
+            "  \"hex\" : \"data\"                       (string) Raw data for transaction\n"
             "}\n"
 
             "\nExamples:\n" +
@@ -1770,7 +1771,7 @@ UniValue gettransaction(const UniValue& params, bool fHelp)
     uint256 hash;
     hash.SetHex(params[0].get_str());
 
-    isminefilter filter = ISMINE_SPENDABLE;
+    isminefilter filter = ISMINE_SPENDABLE | ISMINE_STAKE;
     if (params.size() > 1)
         if (params[1].get_bool())
             filter = filter | ISMINE_WATCH_ONLY;

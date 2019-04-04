@@ -303,15 +303,16 @@ public:
                 {120000, uint256S("0x70edc85193638b8adadb71ea766786d207f78a173dd13f965952eb76932f5729")},
                 {209536, uint256S("0x8a718dbb44b57a5693ac70c951f2f81a01b39933e3e19e841637f757598f571a")},
                 {300000, uint256S("0xb0d6c4c7240b03e70587bb52ebdc63a694a90f22b30fb73856b5cc3d192a231f")},
-                {400000, uint256S("0x59aee83d1f027d2107a8a9c4951767a27eb2224b24022b89f6b9247d2ebb4fdd")}
+                {400000, uint256S("0x59aee83d1f027d2107a8a9c4951767a27eb2224b24022b89f6b9247d2ebb4fdd")},
+                {450000, uint256S("0xa03c16b67f4c8303e0df024b81de65619ebe5f30cc7cd02fe2049b384f2a3a84")}
             }
         };
 
         chainTxData = ChainTxData{
         // Data from rpc: getchaintxstats 43200 
-        /* nTime    */ 1553871056,
-        /* nTxCount */ 929813,
-        /* dTxRate  */ 0.01913898770737205
+        /* nTime    */ 1554323680,
+        /* nTxCount */ 937630,
+        /* dTxRate  */ 0.01864469112830689
         };
     }
 };

@@ -1188,8 +1188,8 @@ CAmount CWalletTx::GetDebit(const isminefilter& filter) const
     if (filter & ISMINE_WATCH_ONLY)
         debit += pwallet->GetDebit(*this, ISMINE_WATCH_ONLY);
 
-    // if (filter & ISMINE_STAKE)
-    //     debit += pwallet->GetDebit(*this, ISMINE_STAKE);
+    if (filter & ISMINE_STAKE)
+        debit += pwallet->GetDebit(*this, ISMINE_STAKE);
 
     return debit;
 }
@@ -1206,6 +1206,9 @@ CAmount CWalletTx::GetCredit(const isminefilter& filter) const
 
     if (filter & ISMINE_WATCH_ONLY)
         credit += pwallet->GetCredit(*this, ISMINE_WATCH_ONLY);
+
+    if (filter & ISMINE_STAKE)
+        credit += pwallet->GetCredit(*this, ISMINE_STAKE);
 
     return credit;
 }
@@ -1627,7 +1630,7 @@ int CWallet::ScanForWalletTransactions(CBlockIndex* pindexStart, bool fUpdate)
     return ret;
 }
 
-void CWallet::ReacceptWalletTransactions()
+void CWallet::ReacceptWalletTransactions(bool isLoadingTx)
 {
     // If transactions aren't being broadcasted, don't let them into local mempool either
     if (!fBroadcastTransactions)
@@ -1644,7 +1647,7 @@ void CWallet::ReacceptWalletTransactions()
         if (!wtx.IsCoinBase() && !wtx.IsCoinStake() && nDepth < 0) {
             // Try to add to memory pool
             LOCK(mempool.cs);
-            wtx.AcceptToMemoryPool(false);
+            wtx.AcceptToMemoryPool(false, true, false, isLoadingTx);
         }
     }
 }
@@ -5035,12 +5038,12 @@ int CMerkleTx::GetBlocksToMaturity() const
 }
 
 
-bool CMerkleTx::AcceptToMemoryPool(bool fLimitFree, bool fRejectInsaneFee, bool ignoreFees) const
+bool CMerkleTx::AcceptToMemoryPool(bool fLimitFree, bool fRejectInsaneFee, bool ignoreFees, bool isLoadingTx) const
 {
     CValidationState state;
     bool fAccepted = UseLegacyCode(chainActive.Height()) ?
-                         ::AcceptToMemoryPool(mempool, state, *this, fLimitFree, NULL, false, fRejectInsaneFee) :
-                         ::AcceptToMemoryPool(mempool, state, *this, fLimitFree, NULL, fRejectInsaneFee, ignoreFees);
+                         ::AcceptToMemoryPool(mempool, state, *this, fLimitFree, NULL, false, fRejectInsaneFee, false, isLoadingTx) :
+                         ::AcceptToMemoryPool(mempool, state, *this, fLimitFree, NULL, fRejectInsaneFee, ignoreFees, isLoadingTx);
 
     if (!fAccepted)
         LogPrintf("%s : %s\n", __func__, state.GetRejectReason());

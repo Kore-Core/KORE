@@ -274,7 +274,7 @@ bool CBlockTreeDB::ReadInt(const std::string& name, int& nValue)
 
 bool CBlockTreeDB::LoadBlockIndexGuts()
 {
-    LogPrintf("LoadBlockIndexGuts --> \n");
+    if (fDebug) LogPrintf("LoadBlockIndexGuts --> \n");
     boost::scoped_ptr<CLevelDBIterator> pcursor(NewIterator());
 
     pcursor->Seek(make_pair(DB_BLOCK_INDEX, uint256()));
@@ -289,8 +289,10 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
                 if (pcursor->GetValue(diskindex)) {
                     // Construct block index object=
                     bool useLegacyCode = UseLegacyCode(diskindex.nHeight);
+                    if (fDebug) {
                     LogPrintf("Reading Block: %d \n", diskindex.nHeight);
                     LogPrintf("BlockInfo %s \n", diskindex.ToString());
+                    }
                     CBlockIndex* pindexNew    = InsertBlockIndex(diskindex.GetBlockHash());
                     pindexNew->pprev          = InsertBlockIndex(diskindex.hashPrev);
                     pindexNew->pnext          = useLegacyCode ? NULL : InsertBlockIndex(diskindex.hashNext);
@@ -319,9 +321,11 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
                     pindexNew->hashProofOfStake  = diskindex.hashProofOfStake;
                     bool isProofOfStake = pindexNew->IsProofOfStake(); 
 
-                    LogPrintf("LoadBlockIndexGuts : useLegacy ?: %s \n", useLegacyCode ? "true" : "false");
-                    LogPrintf("LoadBlockIndexGuts block: %d, POS ? %s Status value %u \n", pindexNew->nHeight, isProofOfStake ? "true" : "false", pindexNew->nStatus);
-                    LogPrintf("LoadBlockIndexGuts BLOCK: %s \n", pindexNew->ToString());
+                    if (fDebug) {
+                        LogPrintf("LoadBlockIndexGuts : useLegacy ?: %s \n", useLegacyCode ? "true" : "false");
+                        LogPrintf("LoadBlockIndexGuts block: %d, POS ? %s Status value %u \n", pindexNew->nHeight, isProofOfStake ? "true" : "false", pindexNew->nStatus);
+                        LogPrintf("LoadBlockIndexGuts BLOCK: %s \n", pindexNew->ToString());
+                    }
                     if (!isProofOfStake && (pindexNew->nStatus & BLOCK_HAVE_DATA)) {
                         if (useLegacyCode) {
                             if (!CheckProofOfWork_Legacy(pindexNew->GetBlockHash(), pindexNew->nBits))
@@ -348,6 +352,6 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
         }
     }
 
-    LogPrintf("LoadBlockIndexGuts <-- \n");
+    if (fDebug) LogPrintf("LoadBlockIndexGuts <-- \n");
     return true;
 }

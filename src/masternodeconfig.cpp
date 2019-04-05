@@ -28,8 +28,8 @@ bool CMasternodeConfig::read(std::string& strErr)
         if (configFile != NULL) {
             std::stringstream strHeader;
             strHeader << "# Masternode config file\n";
-            strHeader << "# Format: alias IP:port masternodeprivkey collateral_output_txid collateral_output_index\n";
-            strHeader << "# Example: mn1 " << strprintf("127.0.0.2:%d \n", Params().GetDefaultPort()) << " 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0\n";
+            strHeader << "# Format: alias onion:port masternodeprivkey collateral_output_txid collateral_output_index\n";
+            strHeader << "# Example: mn1 " << strprintf("qhkhoysjza3fdnni.onion:%d ", Params().GetDefaultPort()) << " 93HaYBVUCYjEMeeH1Y4sBGLALQZE1Yc1K64xiqgX37tGBDQL8Xg 2bcd3c84c84f87eaa86e4e56834c92927a07f9e18718810b92e0d0324456a67c 0\n";
             fwrite(strHeader.str().c_str(), std::strlen(strHeader.str().c_str()), 1, configFile);
             fclose(configFile);
         }

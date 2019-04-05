@@ -195,7 +195,6 @@ public:
     bool SelectCoinsDarkDenominated(CAmount nTargetValue, std::vector<CTxIn>& setCoinsRet, CAmount& nValueRet) const;
     bool HasCollateralInputs(bool fOnlyConfirmed = true) const;
     bool IsCollateralAmount(CAmount nInputAmount) const;
-    bool SplitStake(CAmount stake) const;
     int CountInputsWithAmount(CAmount nInputAmount);
 
     bool SelectCoinsCollateral(std::vector<CTxIn>& setCoinsRet, CAmount& nValueRet) const;
@@ -225,10 +224,6 @@ public:
     typedef std::map<unsigned int, CMasterKey> MasterKeyMap;
     MasterKeyMap mapMasterKeys;
     unsigned int nMasterKeyMaxID;
-
-    // Stake Settings
-    unsigned int nHashInterval;
-    uint64_t nStakeSplitThreshold;
     
     //MultiSend
     std::vector<std::pair<std::string, int> > vMultiSend;
@@ -275,10 +270,6 @@ public:
         fBroadcastTransactions = false;
         fWalletUnlockAnonymizeOnly = false;
         fBackupMints = false;
-
-        // Stake Settings
-        nStakeSplitThreshold = 2000;
-        nHashInterval = Params().GetTargetSpacing() * 0.75 / 2;
 
         //MultiSend
         vMultiSend.clear();

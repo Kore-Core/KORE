@@ -1889,10 +1889,10 @@ bool AppInit2()
 
     if (GetBoolArg("-mnconflock", true) && pwalletMain) {
         LOCK(pwalletMain->cs_wallet);
-        LogPrintf("Locking Masternodes:\n");
+        if (fDebug) LogPrintf("Locking Masternodes:\n");
         uint256 mnTxHash;
         BOOST_FOREACH (CMasternodeConfig::CMasternodeEntry mne, masternodeConfig.getEntries()) {
-            LogPrintf("  %s %s\n", mne.getTxHash(), mne.getOutputIndex());
+            if (fDebug) LogPrintf("  %s %s\n", mne.getTxHash(), mne.getOutputIndex());
             mnTxHash.SetHex(mne.getTxHash());
             COutPoint outpoint = COutPoint(mnTxHash, boost::lexical_cast<unsigned int>(mne.getOutputIndex()));
             pwalletMain->LockCoin(outpoint);

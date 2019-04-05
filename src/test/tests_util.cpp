@@ -985,7 +985,7 @@ void GenerateBlocks(int startBlock, int endBlock, CWallet* pwallet, CScript& scr
 
             if (mapHashedBlocks.count(chainActive.Tip()->nHeight)) //search our map of hashed blocks, see if bestblock has been hashed yet
             {
-                if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < pwallet->nHashInterval) // wait half of the nHashDrift
+                if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < Params().GetTargetSpacing() * 0.75 / 2) // wait half of the nHashDrift
                 {
                     SetMockTime(GetTime() + 5);
                     //cout << "BitcoinMiner Going out of Loop !!!" << endl;

@@ -116,7 +116,6 @@ static std::vector<CRecipient> PopulateWalletByWealth(double numberOfWallets, do
             CWalletDB walletDB(wallets[walletCount].strWalletFile, "crw");
 
             wallets[walletCount].nTimeFirstKey = genesisTime;
-            wallets[walletCount].nStakeSplitThreshold = 5000 * COIN;
 
             CPubKey key;
             wallets[walletCount].GetKeyFromPool(key);
@@ -194,7 +193,6 @@ void StartPreMineAndWalletAllocation()
     wallets[0].nTimeFirstKey = actualBlock->nTime;
     wallets[0].fFileBacked = true;
     wallets[0].SetBroadcastTransactions(true);
-    wallets[0].nStakeSplitThreshold = 5000 * COIN;
 
     int i = 1;
     int populate = 0;

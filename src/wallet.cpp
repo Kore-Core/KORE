@@ -802,8 +802,8 @@ bool CWallet::AddToWallet_Legacy(const CWalletTx& wtxIn, bool fFromLoadWallet, C
 
                     int64_t blocktime = mapBlockIndex[wtxIn.hashBlock]->GetBlockTime();
                     wtx.nTimeSmart = std::max(latestEntry, std::min(blocktime, latestNow));
-                } else
-                    if (fDebug) LogPrintf("AddToWallet(): found %s in block %s not in index\n", wtxIn.GetHash().ToString(), wtxIn.hashBlock.ToString());
+                } else if (fDebug) 
+                    LogPrintf("AddToWallet(): found %s in block %s not in index\n", wtxIn.GetHash().ToString(), wtxIn.hashBlock.ToString());
             }
             AddToSpends(hash);
         }
@@ -1526,9 +1526,9 @@ void CWalletTx::GetAmounts(list<COutputEntry>& listReceived,
         // In either case, we need to get the destination address
         CTxDestination address;
         if (!ExtractDestination(txout.scriptPubKey, address)) {
-            if (!IsCoinStake() && !IsCoinBase()) {
-                if (fDebug) LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n", this->GetHash().ToString());
-            }
+            if (!IsCoinStake() && !IsCoinBase() && fDebug)
+                LogPrintf("CWalletTx::GetAmounts: Unknown transaction type found, txid %s\n", this->GetHash().ToString());
+
             address = CNoDestination();
         }
 
@@ -2266,7 +2266,6 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int
 
             const CWalletTx* pcoin = output.tx;
 
-            //            if (fDebug) LogPrint("selectcoins", "value %s confirms %d\n", FormatMoney(pcoin->vout[output.i].nValue), output.nDepth);
             if (output.nDepth < (pcoin->IsFromMe(ISMINE_ALL) ? nConfMine : nConfTheirs))
                 continue;
 
@@ -2838,9 +2837,8 @@ bool CWallet::ConvertList(std::vector<CTxIn> vCoins, std::vector<CAmount>& vecAm
             if (i.prevout.n < wtx.vout.size()) {
                 vecAmounts.push_back(wtx.vout[i.prevout.n].nValue);
             }
-        } else {
-            if (fDebug) LogPrintf("ConvertList -- Couldn't find transaction\n");
-        }
+        } else if (fDebug) 
+            LogPrintf("ConvertList -- Couldn't find transaction\n");
     }
     return true;
 }
@@ -3928,9 +3926,8 @@ CAmount CWallet::GetTotalValue(std::vector<CTxIn> vCoins)
             if (i.prevout.n < wtx.vout.size()) {
                 nTotalValue += wtx.vout[i.prevout.n].nValue;
             }
-        } else {
-            if (fDebug) LogPrintf("GetTotalValue -- Couldn't find transaction\n");
-        }
+        } else if (fDebug)
+            LogPrintf("GetTotalValue -- Couldn't find transaction\n");
     }
     return nTotalValue;
 }
@@ -4673,10 +4670,8 @@ unsigned int CWallet::ComputeTimeSmart(const CWalletTx& wtx) const
 
             int64_t blocktime = mapBlockIndex[wtx.hashBlock]->GetBlockTime();
             nTimeSmart = std::max(latestEntry, std::min(blocktime, latestNow));
-        } else
-            if (fDebug) LogPrintf("AddToWallet() : found %s in block %s not in index\n",
-                wtx.GetHash().ToString(),
-                wtx.hashBlock.ToString());
+        } else if (fDebug)
+            LogPrintf("AddToWallet() : found %s in block %s not in index\n", wtx.GetHash().ToString(), wtx.hashBlock.ToString());
     }
     return nTimeSmart;
 }
@@ -4908,8 +4903,8 @@ bool CWallet::MultiSend()
         //write nLastMultiSendHeight to DB
         CWalletDB walletdb(strWalletFile);
         nLastMultiSendHeight = chainActive.Tip()->nHeight;
-        if (!walletdb.WriteMSettings(fMultiSendStake, fMultiSendMasternodeReward, nLastMultiSendHeight))
-            if (fDebug) LogPrintf("Failed to write MultiSend setting to DB\n");
+        if (!walletdb.WriteMSettings(fMultiSendStake, fMultiSendMasternodeReward, nLastMultiSendHeight) && fDebug)
+            LogPrintf("Failed to write MultiSend setting to DB\n");
 
         if (fDebug) LogPrintf("MultiSend successfully sent\n");
         //set which MultiSend triggered
@@ -5039,8 +5034,7 @@ bool CMerkleTx::AcceptToMemoryPool(bool fLimitFree, bool fRejectInsaneFee, bool 
                          ::AcceptToMemoryPool(mempool, state, *this, fLimitFree, NULL, false, fRejectInsaneFee, false, isLoadingTx) :
                          ::AcceptToMemoryPool(mempool, state, *this, fLimitFree, NULL, fRejectInsaneFee, ignoreFees, isLoadingTx);
 
-    if (!fAccepted)
-        if (fDebug) LogPrintf("%s : %s\n", __func__, state.GetRejectReason());
+    if (!fAccepted && fDebug) LogPrintf("%s : %s\n", __func__, state.GetRejectReason());
 
     return fAccepted;
 }

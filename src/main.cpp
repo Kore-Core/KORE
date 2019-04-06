@@ -1064,8 +1064,8 @@ bool GetCoinAge(const CTransaction& tx, const unsigned int nTxTime, uint64_t& nC
         BlockMap::iterator it = mapBlockIndex.find(hashBlockPrev);
         if (it != mapBlockIndex.end())
             pindex = it->second;
-        else {
-            if (fDebug) LogPrintf("GetCoinAge() failed to find block index \n");
+        else if (fDebug) {
+            LogPrintf("GetCoinAge() failed to find block index \n");
             continue;
         }
 
@@ -2341,8 +2341,7 @@ void Misbehaving(NodeId pnode, int howmuch)
     if (state->nMisbehavior >= banscore && state->nMisbehavior - howmuch < banscore) {
         if (fDebug) LogPrintf("Misbehaving: %s (%d -> %d) BAN THRESHOLD EXCEEDED\n", state->name, state->nMisbehavior - howmuch, state->nMisbehavior);
         state->fShouldBan = true;
-    } else
-        if (fDebug) LogPrintf("Misbehaving: %s (%d -> %d)\n", state->name, state->nMisbehavior - howmuch, state->nMisbehavior);
+    } else if (fDebug) LogPrintf("Misbehaving: %s (%d -> %d)\n", state->name, state->nMisbehavior - howmuch, state->nMisbehavior);
 }
 
 void static InvalidChainFound(CBlockIndex* pindexNew)
@@ -2838,8 +2837,7 @@ bool RecalculateKORESupply(int nHeightStart)
     CAmount nSupplyPrev = pindex->pprev->nMoneySupply;
 
     while (true) {
-        if (pindex->nHeight % 1000 == 0)
-            if (fDebug) LogPrintf("%s : block %d...\n", __func__, pindex->nHeight);
+        if (pindex->nHeight % 1000 == 0 && fDebug) LogPrintf("%s : block %d...\n", __func__, pindex->nHeight);
 
         CBlock block;
         assert(ReadBlockFromDisk(block, pindex));
@@ -3819,9 +3817,8 @@ void static UpdateTip(CBlockIndex* pindexNew)
                         CAlert::Notify(strMiscWarning, true);
                         fWarned = true;
                     }
-                } else {
-                    if (fDebug) LogPrintf("%s: unknown new rules are about to activate (versionbit %i)\n", __func__, bit);
-                }
+                } else if (fDebug)
+                    LogPrintf("%s: unknown new rules are about to activate (versionbit %i)\n", __func__, bit);
             }
         }
         /*
@@ -4385,27 +4382,29 @@ CBlockIndex* AddToBlockIndex(const CBlock& block)
             pindexNew->bnChainTrust = (pindexNew->pprev ? pindexNew->pprev->bnChainTrust : 0) + pindexNew->GetBlockTrust();
 
             // ppcoin: compute stake entropy bit for stake modifier
-            if (!pindexNew->SetStakeEntropyBit(pindexNew->GetStakeEntropyBit()))
-                if (fDebug) LogPrintf("AddToBlockIndex() : SetStakeEntropyBit() failed \n");
+            if (!pindexNew->SetStakeEntropyBit(pindexNew->GetStakeEntropyBit()) && fDebug)
+                LogPrintf("AddToBlockIndex() : SetStakeEntropyBit() failed \n");
 
             // ppcoin: record proof-of-stake hash value
             if (pindexNew->IsProofOfStake()) {
-                if (!mapProofOfStake.count(hash))
-                    if (fDebug) LogPrintf("AddToBlockIndex() : hashProofOfStake not found in map \n");
+                if (!mapProofOfStake.count(hash) && fDebug)
+                    LogPrintf("AddToBlockIndex() : hashProofOfStake not found in map \n");
+
                 pindexNew->hashProofOfStake = mapProofOfStake[hash];
             }
 
             // ppcoin: compute stake modifier
             uint64_t nStakeModifier = 0;
             bool fGeneratedStakeModifier = false;
-            if (!ComputeNextStakeModifier(pindexNew->pprev, nStakeModifier, fGeneratedStakeModifier))
-                if (fDebug) LogPrintf("AddToBlockIndex() : ComputeNextStakeModifier() failed \n");
+            if (!ComputeNextStakeModifier(pindexNew->pprev, nStakeModifier, fGeneratedStakeModifier) && fDebug)
+                LogPrintf("AddToBlockIndex() : ComputeNextStakeModifier() failed \n");
+
             if (fDebug) LogPrintf("ComputeNextStakeModifier() => Block : %d Modifier Generated ? %s Modifier: %u \n", pindexNew->nHeight, fGeneratedStakeModifier ? "true" : "false", nStakeModifier);
             pindexNew->SetStakeModifier(nStakeModifier, fGeneratedStakeModifier);
             pindexNew->nStakeModifierOld = ComputeStakeModifier_Legacy(pindexNew->pprev, block.IsProofOfStake() ? block.vtx[1].vin[0].prevout.hash : pindexNew->GetBlockHash());
             pindexNew->nStakeModifierChecksum = GetStakeModifierChecksum(pindexNew);
-            if (!CheckStakeModifierCheckpoints(pindexNew->nHeight, pindexNew->nStakeModifierChecksum))
-                if (fDebug) LogPrintf("AddToBlockIndex() : Rejected by stake modifier checkpoint height=%d, modifier=%s \n", pindexNew->nHeight, boost::lexical_cast<std::string>(nStakeModifier));
+            if (!CheckStakeModifierCheckpoints(pindexNew->nHeight, pindexNew->nStakeModifierChecksum) && fDebug)
+                LogPrintf("AddToBlockIndex() : Rejected by stake modifier checkpoint height=%d, modifier=%s \n", pindexNew->nHeight, boost::lexical_cast<std::string>(nStakeModifier));
         }
     }
     pindexNew->nChainWork = (pindexNew->pprev ? pindexNew->pprev->nChainWork : 0) + GetBlockProof(*pindexNew);
@@ -4493,9 +4492,9 @@ bool FindBlockPos(CValidationState& state, CDiskBlockPos& pos, unsigned int nAdd
     }
 
     if ((int)nFile != nLastBlockFile) {
-        if (!fKnown) {
-            if (fDebug) LogPrintf("Leaving block file %i: %s\n", nLastBlockFile, vinfoBlockFile[nLastBlockFile].ToString());
-        }
+        if (!fKnown && fDebug)
+            LogPrintf("Leaving block file %i: %s\n", nLastBlockFile, vinfoBlockFile[nLastBlockFile].ToString());
+
         FlushBlockFile(!fKnown);
         nLastBlockFile = nFile;
     }
@@ -4789,9 +4788,8 @@ bool CheckBlock(const CBlock& block, const int height, CValidationState& state, 
                 }
             }
         }
-    } else {
-        if (fDebug) LogPrintf("CheckBlock() : skipping transaction locking checks\n");
-    }
+    } else if (fDebug) 
+        LogPrintf("CheckBlock() : skipping transaction locking checks\n");
 
     // masternode payments / budgets
     CBlockIndex* pindexPrev = chainActive.Tip();
@@ -4817,10 +4815,8 @@ bool CheckBlock(const CBlock& block, const int height, CValidationState& state, 
                 return state.DoS(0, error("CheckBlock() : Couldn't find masternode/budget payment"),
                     REJECT_INVALID, "bad-cb-payee");
             }
-        } else {
-            if (fDebug)
-                LogPrintf("CheckBlock(): Masternode payment check skipped on sync - skipping IsBlockPayeeValid()\n");
-        }
+        } else if (fDebug)
+            LogPrintf("CheckBlock(): Masternode payment check skipped on sync - skipping IsBlockPayeeValid()\n");
     }
 
     // Check transactions
@@ -4952,10 +4948,8 @@ bool CheckBlock_Legacy(const CBlock& block, const int height, CValidationState& 
                 mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
                 return state.DoS(100, error("CheckBlock() : Couldn't find masternode/budget payment"));
             }
-        } else {
-            if (fDebug)
-                LogPrintf("CheckBlock(): Masternode payment check skipped on sync - skipping IsBlockPayeeValid()\n");
-        }
+        } else if (fDebug)
+            LogPrintf("CheckBlock(): Masternode payment check skipped on sync - skipping IsBlockPayeeValid()\n");
     }
 
     // Check transactions
@@ -6108,10 +6102,9 @@ bool LoadExternalBlockFile(FILE* fileIn, CDiskBlockPos* dbp)
                     }
                     if (state.IsError())
                         break;
-                } else if (hash != Params().HashGenesisBlock() && mapBlockIndex[hash]->nHeight % 1000 == 0) {
-                    if (fDebug) LogPrintf("Block Import: already had block %s at height %d\n", hash.ToString(), mapBlockIndex[hash]->nHeight);
-                }
-
+                } else if (hash != Params().HashGenesisBlock() && mapBlockIndex[hash]->nHeight % 1000 == 0 && fDebug)
+                    LogPrintf("Block Import: already had block %s at height %d\n", hash.ToString(), mapBlockIndex[hash]->nHeight);
+                
                 // Recursively process earlier encountered successors of this block
                 deque<uint256> queue;
                 queue.push_back(hash);
@@ -6506,9 +6499,8 @@ void static ProcessGetData(CNode* pfrom)
                         // chain if they are valid, and no more than the max reorganization depth older.
                         send = mi->second->IsValid(BLOCK_VALID_SCRIPTS) && (pindexBestHeader != NULL) &&
                                (chainActive.Height() - mi->second->nHeight < Params().GetMaxReorganizationDepth());
-                        if (!send) {
-                            if (fDebug) LogPrintf("%s: ignoring request from peer=%i for old block that isn't in the main chain\n", __func__, pfrom->GetId());
-                        }
+                        if (!send && fDebug)
+                            LogPrintf("%s: ignoring request from peer=%i for old block that isn't in the main chain\n", __func__, pfrom->GetId());
                     }
                 }
                 // disconnect node in case we have reached the outbound limit for serving historical blocks
@@ -6775,26 +6767,24 @@ bool static ProcessMessageBlock(CNode* pfrom, string strCommand, CDataStream& vR
 
 bool static ProcessMessageReject(CNode* pfrom, string strCommand, CDataStream& vRecv, int64_t nTimeReceived)
 {
-    if (fDebug) {
-        try {
-            string strMsg;
-            unsigned char ccode;
-            string strReason;
-            vRecv >> LIMITED_STRING(strMsg, CMessageHeader::COMMAND_SIZE) >> ccode >> LIMITED_STRING(strReason, MAX_REJECT_MESSAGE_LENGTH);
+    try {
+        string strMsg;
+        unsigned char ccode;
+        string strReason;
+        vRecv >> LIMITED_STRING(strMsg, CMessageHeader::COMMAND_SIZE) >> ccode >> LIMITED_STRING(strReason, MAX_REJECT_MESSAGE_LENGTH);
 
-            ostringstream ss;
-            ss << strMsg << " code " << itostr(ccode) << ": " << strReason;
+        ostringstream ss;
+        ss << strMsg << " code " << itostr(ccode) << ": " << strReason;
 
-            if (strMsg == NetMsgType::BLOCK || strMsg == NetMsgType::TX) {
-                uint256 hash;
-                vRecv >> hash;
-                ss << ": hash " << hash.ToString();
-            }
-            LogPrint("net", "Reject %s\n", SanitizeString(ss.str()));
-        } catch (const std::ios_base::failure&) {
-            // Avoid feedback loops by preventing reject messages from triggering a new reject message.
-            LogPrint("net", "Unparseable reject message received\n");
+        if (strMsg == NetMsgType::BLOCK || strMsg == NetMsgType::TX) {
+            uint256 hash;
+            vRecv >> hash;
+            ss << ": hash " << hash.ToString();
         }
+        LogPrint("net", "Reject %s\n", SanitizeString(ss.str()));
+    } catch (const std::ios_base::failure&) {
+        // Avoid feedback loops by preventing reject messages from triggering a new reject message.
+        LogPrint("net", "Unparseable reject message received\n");
     }
 }
 
@@ -7374,9 +7364,8 @@ bool static ProcessMessageTx(CNode* pfrom, string strCommand, CDataStream& vRecv
             if (!state.IsInvalid(nDoS) || nDoS == 0) {
                 if (fDebug) LogPrintf("Force relaying tx %s from whitelisted peer=%d\n", tx.GetHash().ToString(), pfrom->id);
                 RelayTransaction(tx);
-            } else {
-                if (fDebug) LogPrintf("Not relaying invalid transaction %s from whitelisted peer=%d (%s)\n", tx.GetHash().ToString(), pfrom->id, FormatStateMessage_Legacy(state));
-            }
+            } else if (fDebug) 
+                LogPrintf("Not relaying invalid transaction %s from whitelisted peer=%d (%s)\n", tx.GetHash().ToString(), pfrom->id, FormatStateMessage_Legacy(state));
         }
     }
 
@@ -7892,15 +7881,12 @@ bool ProcessMessages(CNode* pfrom)
             boost::this_thread::interruption_point();
         } catch (std::ios_base::failure& e) {
             pfrom->PushMessage("reject", strCommand, REJECT_MALFORMED, string("error parsing message"));
-            if (strstr(e.what(), "end of data")) {
-                // Allow exceptions from under-length message on vRecv
-                if (fDebug) LogPrintf("ProcessMessages(%s, %u bytes): Exception '%s' caught, normally caused by a message being shorter than its stated length\n", SanitizeString(strCommand), nMessageSize, e.what());
-            } else if (strstr(e.what(), "size too large")) {
-                // Allow exceptions from over-long size
-                if (fDebug) LogPrintf("ProcessMessages(%s, %u bytes): Exception '%s' caught\n", SanitizeString(strCommand), nMessageSize, e.what());
-            } else {
+            if (strstr(e.what(), "end of data") && fDebug)
+                LogPrintf("ProcessMessages(%s, %u bytes): Exception '%s' caught, normally caused by a message being shorter than its stated length\n", SanitizeString(strCommand), nMessageSize, e.what());
+            else if (strstr(e.what(), "size too large") && fDebug)
+                LogPrintf("ProcessMessages(%s, %u bytes): Exception '%s' caught\n", SanitizeString(strCommand), nMessageSize, e.what());
+            else
                 PrintExceptionContinue(&e, "ProcessMessages()");
-            }
         } catch (boost::thread_interrupted) {
             throw;
         } catch (std::exception& e) {
@@ -7909,8 +7895,8 @@ bool ProcessMessages(CNode* pfrom)
             PrintExceptionContinue(NULL, "ProcessMessages()");
         }
 
-        if (!fRet)
-            if (fDebug) LogPrintf("ProcessMessage(%s, %u bytes) FAILED peer=%d\n", SanitizeString(strCommand), nMessageSize, pfrom->id);
+        if (!fRet && fDebug)
+            LogPrintf("ProcessMessage(%s, %u bytes) FAILED peer=%d\n", SanitizeString(strCommand), nMessageSize, pfrom->id);
 
         break;
     }
@@ -8006,15 +7992,14 @@ bool SendMessages(CNode* pto)
 
     CNodeState& state = *State(pto->GetId());
     if (state.fShouldBan) {
-        if (pto->fWhitelisted && fDebug)
+        if (pto->fWhitelisted && fDebug) 
             LogPrintf("Warning: not punishing whitelisted peer %s!\n", pto->addr.ToString());
         else {
             pto->fDisconnect = true;
             if (pto->addr.IsLocal() && fDebug)
                 LogPrintf("Warning: not banning local peer %s!\n", pto->addr.ToString());
-            else {
+            else
                 CNode::Ban(pto->addr, BanReasonNodeMisbehaving);
-            }
         }
         state.fShouldBan = false;
     }

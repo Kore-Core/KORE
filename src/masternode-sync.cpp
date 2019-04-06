@@ -138,44 +138,34 @@ void CMasternodeSync::GetNextAsset()
     switch (RequestedMasternodeAssets) {
     case (MASTERNODE_SYNC_INITIAL):
     case (MASTERNODE_SYNC_FAILED): // should never be used here actually, use Reset() instead
-        if (fDebug) {
-            LogPrintf("----- CMasternodeSync::GetNextAsset ----\n");
-            LogPrintf("====> MASTERNODE_SYNC_INITIAL \n");
-            LogPrintf("\n");
-        }
+        LogPrintf("----- CMasternodeSync::GetNextAsset ----\n");
+        LogPrintf("====> MASTERNODE_SYNC_INITIAL \n");
+        LogPrintf("\n");
         ClearFulfilledRequest();
         RequestedMasternodeAssets = MASTERNODE_SYNC_SPORKS;
         break;
     case (MASTERNODE_SYNC_SPORKS):
-        if (fDebug) {
-            LogPrintf("----- CMasternodeSync::GetNextAsset ----\n");
-            LogPrintf("====> MASTERNODE_SYNC_SPORKS \n");
-            LogPrintf("\n");
-        }
+        LogPrintf("----- CMasternodeSync::GetNextAsset ----\n");
+        LogPrintf("====> MASTERNODE_SYNC_SPORKS \n");
+        LogPrintf("\n");
         RequestedMasternodeAssets = MASTERNODE_SYNC_LIST;
         break;
     case (MASTERNODE_SYNC_LIST):
-        if (fDebug) {
-            LogPrintf("----- CMasternodeSync::GetNextAsset ----\n");
-            LogPrintf("====> MASTERNODE_SYNC_LIST \n");
-            LogPrintf("\n");
-        }
+        LogPrintf("----- CMasternodeSync::GetNextAsset ----\n");
+        LogPrintf("====> MASTERNODE_SYNC_LIST \n");
+        LogPrintf("\n");
         RequestedMasternodeAssets = MASTERNODE_SYNC_MNW;
         break;
     case (MASTERNODE_SYNC_MNW):
-        if (fDebug) {
-            LogPrintf("----- CMasternodeSync::GetNextAsset ----\n");
-            LogPrintf("====> MASTERNODE_SYNC_MNW \n");
-            LogPrintf("\n");
-        }
+        LogPrintf("----- CMasternodeSync::GetNextAsset ----\n");
+        LogPrintf("====> MASTERNODE_SYNC_MNW \n");
+        LogPrintf("\n");
         RequestedMasternodeAssets = MASTERNODE_SYNC_BUDGET;
         break;
     case (MASTERNODE_SYNC_BUDGET):
-        if (fDebug) {
-            LogPrintf("CMasternodeSync::GetNextAsset - **********************\n");
-            LogPrintf("CMasternodeSync::GetNextAsset - SYNC HAS FINISHED !!! \n");
-            LogPrintf("CMasternodeSync::GetNextAsset - **********************\n");
-        }
+        LogPrintf("CMasternodeSync::GetNextAsset - **********************\n");
+        LogPrintf("CMasternodeSync::GetNextAsset - SYNC HAS FINISHED !!! \n");
+        LogPrintf("CMasternodeSync::GetNextAsset - **********************\n");
         RequestedMasternodeAssets = MASTERNODE_SYNC_FINISHED;
         break;
     }

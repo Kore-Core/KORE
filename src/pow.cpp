@@ -97,12 +97,6 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits)
     }
 
 
-    // Check proof of work matches claimed amount
-    if (fDebug) {
-        //LogPrintf("CheckProofOfWork \n");
-        //LogPrintf("hash    : %s \n", hash.ToString().c_str());
-        //LogPrintf("bnTarget: %s \n", bnTarget.ToString().c_str());
-    }
     if (hash > bnTarget) {
         if (fDebug) LogPrintf("CheckProofOfWork() : hash doesn't match nBits");
         return false;

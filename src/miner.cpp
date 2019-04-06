@@ -528,11 +528,9 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             nBlockSigOps += nTxSigOps;
             nFees += nTxFees;
 
-            if (fPrintPriority) {
-                if (fDebug) LogPrintf("priority %.1f fee %s txid %s\n",
-                    dPriority, feeRate.ToString(), tx.GetHash().ToString());
-            }
-
+            if (fPrintPriority && fDebug) 
+                LogPrintf("priority %.1f fee %s txid %s\n", dPriority, feeRate.ToString(), tx.GetHash().ToString());
+            
             // Add transactions that depend on this one to the priority queue
             if (mapDependers.count(hash)) {
                 BOOST_FOREACH (COrphan* porphan, mapDependers[hash]) {
@@ -1059,8 +1057,8 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             }
 
             while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || 
-                  (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance()) || 
-                  !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >2))
+                  !(pwallet->GetBalance() > 0 && nReserveBalance <= pwallet->GetBalance()) || 
+                  !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >= 2))
             {
                 if (fDebug) {
                     LogPrintf("***************************************************************\n");
@@ -1165,8 +1163,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             continue;
         }
 
-        if (fDebug) LogPrintf("Running KOREMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
-            ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+        if (fDebug) LogPrintf("Running KOREMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
         //
         // Search
@@ -1411,8 +1408,7 @@ void KoreMiner_Legacy()
             CBlock* pblock = &pblocktemplate->block;
             IncrementExtraNonce_Legacy(pblock, pindexPrev, nExtraNonce);
 
-            if (fDebug) LogPrintf("KoreMiner_Legacy Running with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
-                ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+            if (fDebug) LogPrintf("KoreMiner_Legacy Running with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             //
             // Search

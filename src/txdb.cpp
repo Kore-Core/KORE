@@ -290,8 +290,8 @@ bool CBlockTreeDB::LoadBlockIndexGuts()
                     // Construct block index object=
                     bool useLegacyCode = UseLegacyCode(diskindex.nHeight);
                     if (fDebug) {
-                    LogPrintf("Reading Block: %d \n", diskindex.nHeight);
-                    LogPrintf("BlockInfo %s \n", diskindex.ToString());
+                        LogPrintf("Reading Block: %d \n", diskindex.nHeight);
+                        LogPrintf("BlockInfo %s \n", diskindex.ToString());
                     }
                     CBlockIndex* pindexNew    = InsertBlockIndex(diskindex.GetBlockHash());
                     pindexNew->pprev          = InsertBlockIndex(diskindex.hashPrev);

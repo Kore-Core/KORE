@@ -219,27 +219,12 @@ class CTestNetParams : public CChainParams {
 public:
     CTestNetParams() {
         strNetworkID = "test";
-        consensus.nSubsidyHalvingInterval = 4000;
-        consensus.nMaxReorganizationDepth = 25;
-        consensus.nMajorityEnforceBlockUpgrade = 750;
-        consensus.nMajorityRejectBlockOutdated = 950;
-        consensus.nMajorityWindow = 1000;
         consensus.BIP34Height = 227931;
         consensus.BIP34Hash = uint256S("0x0000000023b3a96d3484e5abb3755c413e7d41500f8e2a5c3f0dd01299cd8ef8");
-        consensus.powLimit  = uint256S("1fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.posLimit  = uint256S("0000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff");
-        consensus.nTargetTimespan = 60;
-        consensus.nTargetSpacing = 60;
         consensus.fPowAllowMinDifficultyBlocks = true;
-        consensus.fPowNoRetargeting = false;
-        consensus.nRuleChangeActivationThreshold = 1916; // 75% for testchains
-        consensus.nMinerConfirmationWindow = 50; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nStartTime = 1199145601; // January 1, 2008
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].nTimeout = 1230767999; // December 31, 2008
-        consensus.nStakeTimestampMask = 0xf;
-        consensus.nLastPOWBlock = 1000;
-        consensus.nStakeMinAge = 30 * 60;
         // Deployment of BIP68, BIP112, and BIP113.
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].bit = 0;
         consensus.vDeployments[Consensus::DEPLOYMENT_CSV].nStartTime = 1456790400; // March 1st, 2016
@@ -250,13 +235,9 @@ public:
         pchMessageStart[2] = 0x14;
         pchMessageStart[3] = 0x88;
         vAlertPubKey = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
-        nDefaultPort = 11743; // 18333;
-        nMaxTipAge = 0x7fffffff;
-        nPruneAfterHeight = 100000;
+        nDefaultPort = 11743;
 
-        //genesis = CreateGenesisBlock(1453993470, 414098458, 0, 0, 0x1d00ffff, 1, 48 * COIN); // 50 * COIN);
         genesis = CreateGenesisBlock(1541080950, 1237, 2500634, 64441706, 0x1f7fffff, 1, 49 * COIN);
-        //MineNewGenesisBlock(); // REMOVE
         consensus.hashGenesisBlock = genesis.GetHash();
 
         LogPrintf("genesis.GetHash = %s\n",  genesis.GetHash().ToString().c_str());
@@ -280,17 +261,11 @@ public:
 
         vFixedSeeds = std::vector<SeedSpec6>(pnSeed6_test, pnSeed6_test + ARRAYLEN(pnSeed6_test));
 
-        fMiningRequiresPeers = true;
-        fDefaultConsistencyChecks = false;
         fRequireStandard = false;
-        fMineBlocksOnDemand = false;
-        fTestnetToBeDeprecatedFieldRPC = false;
 
         strDevFundPubKey = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
         strSporkKey = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
-        nStartMasternodePayments = 1541080950; //Genesis time
-
-        nMasternodeMinConfirmations   = 2;
+        nStartMasternodePayments = genesis.nTime; //Genesis time
 
         checkpointData = (CCheckpointData){
             boost::assign::map_list_of

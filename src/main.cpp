@@ -1834,7 +1834,7 @@ CAmount GetProofOfWorkSubsidy(int nHeight, const Consensus::Params& consensusPar
 {
     if (Params().NetworkIDString() == CBaseChainParams::TESTNET) {
         if (nHeight >= 0 && nHeight < 500)
-            return 10000 * COIN;
+            return 40000 * COIN;
     }
     return 5 * COIN;
 }

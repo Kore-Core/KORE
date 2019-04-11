@@ -2187,7 +2187,7 @@ CAmount GetProofOfStakeSubsidy_Legacy(int nHeight, CAmount input)
 int64_t GetBlockValue(int nHeight)
 {
     if (Params().EnableBigRewards()) {
-        if (nHeight >= 0 && nHeight < 500)
+        if (nHeight >= 0 && nHeight < 50)
             return 40000 * COIN;
     }
     return 5 * COIN;

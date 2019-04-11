@@ -23,6 +23,7 @@
 #include "txmempool.h"
 #include "uint256.h"
 #include "utilstrencodings.h"
+#include "utiltime.h"
 #ifdef ENABLE_WALLET
 #include "wallet/wallet.h"
 #endif
@@ -475,7 +476,7 @@ UniValue createrawtransaction(const UniValue& params, bool fHelp)
             rawTx.vout.push_back(out);
         }
     }
-
+    rawTx.nTime = GetTime();
     return EncodeHexTx(rawTx);
 }
 

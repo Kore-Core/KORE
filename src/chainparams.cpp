@@ -67,51 +67,6 @@ static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesi
     return genesis;
 }
 
-void CChainParams::MineNewGenesisBlock_Legacy()
-{
-    fPrintToConsole = true;
-    bool fNegative;
-    bool fOverflow;
-    genesis.nNonce = 0;
-    LogPrintStr("Searching for genesis block...\n");
-
-    //arith_uint256 hashTarget = UintToArith256(consensus.powLimit).GetCompact();
-    LogPrintStr("Start to Find the Genesis \n");
-    arith_uint256 hashTarget = arith_uint256().SetCompact(genesis.nBits, &fNegative, &fOverflow);
-
-    if (fNegative || fOverflow) {
-        LogPrintf("Please check nBits, negative or overflow value");
-        LogPrintf("genesis.nBits = %x \n",  genesis.nBits);
-        exit(1);
-    }
-
-    while(true) {
-        LogPrintf("nNonce = %u \n",  genesis.nNonce);
-        arith_uint256 thash = UintToArith256(genesis.CalculateBestBirthdayHash());
-		LogPrintf("theHash %s\n", thash.ToString().c_str());
-		LogPrintf("Hash Target %s\n", hashTarget.ToString().c_str());  
-        if (thash <= hashTarget)
-            break;
-        if ((genesis.nNonce & 0xFFF) == 0)
-            LogPrintf("nonce %08X: hash = %s (target = %s)\n", genesis.nNonce, thash.ToString().c_str(), hashTarget.ToString().c_str());
-
-        ++genesis.nNonce;
-        if (genesis.nNonce == 0) {
-            LogPrintf("NONCE WRAPPED, incrementing time\n");
-            ++genesis.nTime;
-        }        
-    }
-    LogPrintf("genesis.nTime          = %u\n", genesis.nTime);
-    LogPrintf("genesis.nNonce         = %u\n", genesis.nNonce);
-	LogPrintf("genesis.nBirthdayA     = %d\n", genesis.nBirthdayA);
-	LogPrintf("genesis.nBirthdayB     = %d\n", genesis.nBirthdayB);
-    LogPrintf("genesis.nBits          = %x\n", genesis.nBits);
-    LogPrintf("genesis.GetHash        = %s\n", genesis.GetHash().ToString().c_str());
-    LogPrintf("genesis.hashMerkleRoot = %s\n", genesis.hashMerkleRoot.ToString().c_str());
-
-    exit(1);
-}
-
 /**
  * Main network
  */
@@ -284,7 +239,7 @@ public:
         fEnableBigReward                              = true;
         nDefaultPort                                  = 11743;
         nBlocksToBanOldWallets                        = 60;                         //Ban old nodes one hour before fork 
-        nHeightToFork                                 = 1500;
+        nHeightToFork                                 = 1000;
         vAlertPubKey                                  = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         strDevFundPubKey                              = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
         strSporkKey                                   = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
@@ -297,11 +252,11 @@ public:
         // sending rewards to this public key
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
-
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1541080950, 1237, 2500634, 64441706, 0x1f7fffff, 1, 49 * COIN);
+        
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1554993017, 2, 2500634, 64441706, bnProofOfWorkLimit.GetCompact(), 1, 49 * COIN);
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x000cab5a4c6dc2ada269cf1bf70a4f8e146b140514a104c36de2976328f8419d"));
-        assert(genesis.hashMerkleRoot == uint256S("0x05f52634c417f226734231cbd54ad97b0ad524b59fe40add53648a3f27ccbd02"));
+        assert(nHashGenesisBlock == uint256S("0x15df50f016d3e2296ac84433b7a4f6364b2541829938889e7c2e22895d649524"));
+        assert(genesis.hashMerkleRoot == uint256S("0x979e29c82f4158cb634e2596a416f85b9138fca527a93207256fb9496b1cdb7e"));
         
         vFixedSeeds.clear();
         vSeeds.clear();

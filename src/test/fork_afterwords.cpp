@@ -10,7 +10,7 @@
 
 static const string strSecret("5HxWvvfubhXpYYpS3tJkw6fq9jE9j18THftkZjHHfmFiWtmAbrj");
 
-// #define RUN_FORK_TESTS
+//#define RUN_FORK_TESTS
 
 BOOST_AUTO_TEST_SUITE(fork_afterwords)
 
@@ -32,8 +32,8 @@ BOOST_AUTO_TEST_CASE(after_fork)
     int64_t oldTargetTimespan = Params().GetTargetTimespan();
     int64_t oldTargetSpacing = Params().GetTargetSpacing();
     int oldHeightToFork = Params().HeightToFork();
-    int oldStakeMinConfirmations = Params().GetStakeMinConfirmations();
-    int oldCoinBaseMaturity = Params().GetCoinbaseMaturity();
+
+    int oldCoinBaseMaturity = Params().GetCoinMaturity();
     int oldStakeMinAge = Params().GetStakeMinAge();
     int oldModifier = Params().GetModifierInterval();
     // confirmations    : 3
@@ -43,8 +43,7 @@ BOOST_AUTO_TEST_CASE(after_fork)
     // pow blocks       : [confirmations + 1, max(confirmations+1, value)], this way we will have 2 modifiers
     int minConfirmations = 3;
     ModifiableParams()->setHeightToFork(0);
-    ModifiableParams()->setStakeMinConfirmations(minConfirmations - 1);
-    ModifiableParams()->setCoinbaseMaturity(minConfirmations - 1);
+    ModifiableParams()->setCoinMaturity(minConfirmations - 1);
     ModifiableParams()->setTargetSpacing(minConfirmations - 1);
     ModifiableParams()->setStakeModifierInterval(minConfirmations - 1);
     //ModifiableParams()->setTargetSpacing(10);
@@ -70,10 +69,9 @@ BOOST_AUTO_TEST_CASE(after_fork)
     Checkpoints::fEnabled = true;
     ModifiableParams()->setHeightToFork(oldHeightToFork);
     ModifiableParams()->setEnableBigRewards(false);
-    ModifiableParams()->setCoinbaseMaturity(oldCoinBaseMaturity);
+    ModifiableParams()->setCoinMaturity(oldCoinBaseMaturity);
     ModifiableParams()->setStakeMinAge(oldStakeMinAge);
     ModifiableParams()->setStakeModifierInterval(oldModifier);
-    ModifiableParams()->setStakeMinConfirmations(oldStakeMinConfirmations);
     ModifiableParams()->setTargetTimespan(oldTargetTimespan);
     ModifiableParams()->setTargetSpacing(oldTargetSpacing);
 }

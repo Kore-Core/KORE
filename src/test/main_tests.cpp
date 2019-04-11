@@ -21,17 +21,17 @@ BOOST_AUTO_TEST_CASE(subsidy_limit_test_post_fork)
 {
     SelectParams(CBaseChainParams::MAIN);
 
-    int nHeight = 429033;
-    CAmount nMoneySupply = 214145033858300;
+    int nHeight = 470499;  
+    CAmount nMoneySupply = 215594083152340;
     CAmount nlastSubsidy = 103008606;
     CAmount nSubsidy = 0;
 
-    // Represents block 429032
+    // Represents block 470498
     CBlockIndex pindexPrev;
-    pindexPrev.nHeight = 429032;
+    pindexPrev.nHeight = 470498;
     pindexPrev.nMoneySupply = nMoneySupply;
 
-    for (nHeight; nHeight <= 12435722; nHeight++) {
+    for (nHeight; nHeight <= 20433096; nHeight++) {
         /* PoS */
         nSubsidy = GetBlockReward(&pindexPrev);
         BOOST_CHECK(nSubsidy <= nlastSubsidy);

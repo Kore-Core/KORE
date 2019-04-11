@@ -1011,7 +1011,7 @@ int GetInputAgeIX(uint256 nTXHash, CTxIn& vin)
     int nResult = GetInputAge(vin);
     if (nResult < 0) nResult = 0;
 
-    if (nResult < 6) {
+    if (nResult < Params().GetCoinMaturity()) {
         std::map<uint256, CTransactionLock>::iterator i = mapTxLocks.find(nTXHash);
         if (i != mapTxLocks.end()) {
             sigs = (*i).second.CountSignatures();
@@ -2186,11 +2186,9 @@ CAmount GetProofOfStakeSubsidy_Legacy(int nHeight, CAmount input)
 
 int64_t GetBlockValue(int nHeight)
 {
-    // TODO: CHECK MERGE
-    //if (Params().GetNetworkID() == CBaseChainParams::TESTNET /* || Params().GetNetworkID() == CBaseChainParams::UNITTEST */)
     if (Params().EnableBigRewards()) {
         if (nHeight >= 0 && nHeight < 500)
-            return 10000 * COIN;
+            return 40000 * COIN;
     }
     return 5 * COIN;
 }
@@ -2206,13 +2204,7 @@ CAmount GetMasternodePayment(CAmount blockReward, CAmount stakedBalance, CBlockI
     double blockRewardDouble = (double)blockReward;
     double stakedBalanceDouble = (double)min(stakedBalance, 5000 * COIN);
 
-    double stakedBalanceSquare = pow(stakedBalanceDouble, 2);
-    double stakedBalanceTimesConstant1 = 8.00011e-13 * stakedBalanceDouble;
-    double stakedBalanceTimesConstant2 = 1.17928e-58 * stakedBalanceSquare;
-    stakedBalanceTimesConstant2 *= moneySupplyDouble;
-    stakedBalanceDouble = 1 - (stakedBalanceTimesConstant1 + stakedBalanceTimesConstant2 + 0.05);
-
-    return blockRewardDouble * stakedBalanceDouble;
+    return (1 - ((4e-13 * stakedBalanceDouble) + (1e-58 * pow(stakedBalanceDouble, 2) * moneySupplyDouble) + 0.43)) * stakedBalanceDouble;
 }
 
 int GetBestPeerHeight()
@@ -2229,32 +2221,12 @@ bool IsInitialBlockDownload()
     static bool lockIBDState = false;
     if (lockIBDState)
         return false;
-    bool state = (chainActive.Height() < pindexBestHeader->nHeight - 24 * 6 ||
-                  pindexBestHeader->GetBlockTime() < GetTime() - chainParams.GetMaxTipAge()); // ~144 blocks behind -> 2 x fork detection time
+    bool state = (chainActive.Height() < pindexBestHeader->nHeight - 24 * 60 || // 60 => Blocks per hour
+                  pindexBestHeader->GetBlockTime() < GetTime() - chainParams.GetMaxTipAge()); // ~1440 blocks behind -> 2 x fork detection time
     if (!state)
         lockIBDState = true;
     return state;
 }
-
-/* FORK
-bool IsInitialBlockDownload_Legacy()
-{
-    const CChainParams& chainParams = Params();
-    LOCK(cs_main);
-    if (fImporting || fReindex)
-        return true;
-    if (fCheckpointsEnabled && chainActive.Height() < Checkpoints::GetTotalBlocksEstimate())
-        return true;
-    static bool lockIBDState = false;
-    if (lockIBDState)
-        return false;
-    bool state = (chainActive.Height() < pindexBestHeader->nHeight - 24 * 6 ||
-            pindexBestHeader->GetBlockTime() < GetTime() - chainParams.GetMaxTipAge());
-    if (!state)
-        lockIBDState = true;
-    return state;
-}
-*/
 
 bool fLargeWorkForkFound = false;
 bool fLargeWorkInvalidChainFound = false;
@@ -2273,7 +2245,7 @@ void CheckForkWarningConditions()
     if (pindexBestForkTip && chainActive.Height() - pindexBestForkTip->nHeight >= 72)
         pindexBestForkTip = NULL;
 
-    if (pindexBestForkTip || (pindexBestInvalid && pindexBestInvalid->nChainWork > chainActive.Tip()->nChainWork + (GetBlockProof(*chainActive.Tip()) * 6))) {
+    if (pindexBestForkTip || (pindexBestInvalid && pindexBestInvalid->nChainWork > chainActive.Tip()->nChainWork + (GetBlockProof(*chainActive.Tip()) * Params().GetCoinMaturity()))) {
         if (!fLargeWorkForkFound && pindexBestForkBase) {
             std::string warning = std::string("'Warning: Large-work fork detected, forking after block ") +
                                   pindexBestForkBase->phashBlock->ToString() + std::string("'");
@@ -2285,7 +2257,7 @@ void CheckForkWarningConditions()
                 pindexBestForkTip->nHeight, pindexBestForkTip->phashBlock->ToString());
             fLargeWorkForkFound = true;
         } else {
-            if (fDebug) LogPrintf("%s: Warning: Found invalid chain at least ~6 blocks longer than our best chain.\nChain state database corruption likely.\n", __func__);
+            if (fDebug) LogPrintf("%s: Warning: Found invalid chain at least ~%d blocks longer than our best chain.\nChain state database corruption likely.\n", __func__, Params().GetCoinMaturity());
             fLargeWorkInvalidChainFound = true;
         }
     } else {
@@ -2341,7 +2313,8 @@ void Misbehaving(NodeId pnode, int howmuch)
     if (state->nMisbehavior >= banscore && state->nMisbehavior - howmuch < banscore) {
         if (fDebug) LogPrintf("Misbehaving: %s (%d -> %d) BAN THRESHOLD EXCEEDED\n", state->name, state->nMisbehavior - howmuch, state->nMisbehavior);
         state->fShouldBan = true;
-    } else if (fDebug) LogPrintf("Misbehaving: %s (%d -> %d)\n", state->name, state->nMisbehavior - howmuch, state->nMisbehavior);
+    } else if (fDebug)
+        LogPrintf("Misbehaving: %s (%d -> %d)\n", state->name, state->nMisbehavior - howmuch, state->nMisbehavior);
 }
 
 void static InvalidChainFound(CBlockIndex* pindexNew)
@@ -2421,7 +2394,7 @@ CBitcoinAddress addressExp2("DTQYdnNqKuEHXyNeeYhPQGGGdqHbXYwjpj");
 
 bool ValidOutPoint(const COutPoint out, int nHeight)
 {
-    bool isInvalid = nHeight >= Params().GetBlockEnforceInvalid() && invalid_out::ContainsOutPoint(out);
+    bool isInvalid = nHeight >= Params().HeightToFork() && invalid_out::ContainsOutPoint(out);
     return !isInvalid;
 }
 
@@ -2472,25 +2445,23 @@ bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsVi
             assert(coins);
 
             // If prev is coinbase, check that it's matured
-            if (coins->IsCoinBase())
-            {
-                if (coins->IsCoinStake())
-                {
+            if (coins->IsCoinBase()) {
+                if (coins->IsCoinStake()) {
                     CTransaction txStake;
                     uint256 blockHash;
 
-                    if(!GetTransaction(prevout.hash, txStake, blockHash, true))
+                    if (!GetTransaction(prevout.hash, txStake, blockHash, true))
                         return state.Invalid(
                             error("CheckInputs(): could not find tx %s", prevout.hash.ToString()),
                             REJECT_INVALID, "bad-txns-premature-spend-of-coinbase");
                     
-                    if (txStake.IsLegacyCoinStake() && nSpendHeight - coins->nHeight < Params().GetCoinbaseMaturity())
+                    if (txStake.IsLegacyCoinStake() && nSpendHeight - coins->nHeight < Params().GetCoinMaturity())
                         return state.Invalid(
                             error("CheckInputs(): tried to spend coinbase at depth %d", nSpendHeight - coins->nHeight),
                             REJECT_INVALID, "bad-txns-premature-spend-of-coinbase");
                 }
 
-                if (nSpendHeight - coins->nHeight < Params().GetCoinbaseMaturity())
+                if (nSpendHeight - coins->nHeight < Params().GetCoinMaturity())
                     return state.Invalid(
                         error("CheckInputs(): tried to spend coinbase at depth %d", nSpendHeight - coins->nHeight),
                         REJECT_INVALID, "bad-txns-premature-spend-of-coinbase");
@@ -2580,7 +2551,7 @@ bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsVi
 
 bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex, CCoinsViewCache& view, bool* pfClean)
 {
-    if (UseLegacyCode(pindex->nHeight))
+    if (UseLegacyCode(block))
         return DisconnectBlock_Legacy(block, state, pindex, view, pfClean);
     if (pindex->GetBlockHash() != view.GetBestBlock())
         if (fDebug) LogPrintf("%s : pindex=%s view=%s\n", __func__, pindex->GetBlockHash().GetHex(), view.GetBestBlock().GetHex());
@@ -2748,7 +2719,7 @@ bool DisconnectBlock_Legacy(const CBlock& block, CValidationState& state, const 
         const CTransaction& tx = block.vtx[i];
         uint256 hash = tx.GetHash();
         if (hash.ToString() == "b5f5580e459252fd1bf6547b62daf70af8100fc0b835b524b30b95aa2f48f6d3")
-          cout << "here here";
+            cout << "here here";
         if (fDebug) LogPrintf("tx Hash %s pos=%d\n", hash.ToString().c_str(), i);
         // Check that all outputs are available and match the outputs in the block itself
         // exactly.
@@ -2929,11 +2900,11 @@ static int64_t nTimeTotal = 0;
 
 bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pindex, CCoinsViewCache& view, bool fJustCheck, bool fAlreadyChecked)
 {
-    if (UseLegacyCode(pindex->nHeight))
+    if (UseLegacyCode(block))
         return ConnectBlock_Legacy(block, state, pindex, view, fJustCheck);
     AssertLockHeld(cs_main);
     // Check it again in case a previous version let a bad block in
-    if (!fAlreadyChecked && !CheckBlock(block, pindex->nHeight, state, !fJustCheck, !fJustCheck))
+    if (!fAlreadyChecked && !CheckBlock(block, state, !fJustCheck, !fJustCheck))
         return false;
 
     // verify that the view's current state corresponds to the previous block
@@ -3187,7 +3158,7 @@ bool ConnectBlock_Legacy(const CBlock& block, CValidationState& state, CBlockInd
             REJECT_INVALID, "PoW-ended");
 
     // Check it again in case a previous version let a bad block in
-    if (!CheckBlock_Legacy(block, GetnHeight(pindex), state, !fJustCheck, !fJustCheck))
+    if (!CheckBlock_Legacy(block, state, !fJustCheck, !fJustCheck))
         return false;
 
     // Special case for the genesis block, skipping connection of its transactions
@@ -3200,7 +3171,7 @@ bool ConnectBlock_Legacy(const CBlock& block, CValidationState& state, CBlockInd
     // verify that the view's current state corresponds to the previous block
     uint256 hashPrevBlock = pindex->pprev == NULL ? uint256() : pindex->pprev->GetBlockHash();
     if (fDebug)
-      LogPrintf("ConnectBlock_Legacy block height: %d hashPrevBlock: %s", pindex->nHeight, hashPrevBlock.ToString());
+        LogPrintf("ConnectBlock_Legacy block height: %d hashPrevBlock: %s", pindex->nHeight, hashPrevBlock.ToString());
     assert(hashPrevBlock == view.GetBestBlock());
 
     // Check proof-of-stake
@@ -3211,13 +3182,13 @@ bool ConnectBlock_Legacy(const CBlock& block, CValidationState& state, CBlockInd
             return state.DoS(100, error("%s: kernel input unavailable", __func__), REJECT_INVALID, "bad-cs-kernel");
 
         if (fDebug) {
-          LogPrintf("ConnectBlock_Legacy - Coin found hash: %s \n", prevout.hash.ToString());
-          LogPrintf("   %s \n", coins->ToString());          
+            LogPrintf("ConnectBlock_Legacy - Coin found hash: %s \n", prevout.hash.ToString());
+            LogPrintf("   %s \n", coins->ToString());
         }
 
 
         // Check proof-of-stake min confirmations
-        if (pindex->nHeight - coins->nHeight < Params().GetStakeMinConfirmations())
+        if (pindex->nHeight - coins->nHeight < Params().GetCoinMaturity())
             return state.DoS(100, error("%s: tried to stake at depth %d", __func__, pindex->nHeight - coins->nHeight), REJECT_INVALID, "bad-cs-premature");
 
         if (coins->nTime + Params().GetStakeMinAge() > block.vtx[1].nTime) // Min age requirement
@@ -3821,31 +3792,6 @@ void static UpdateTip(CBlockIndex* pindexNew)
                     LogPrintf("%s: unknown new rules are about to activate (versionbit %i)\n", __func__, bit);
             }
         }
-        /*
-        LogPrintf("Signalling start --> \n");
-        int BlocksToMeasure = Params().GetMajorityBlockUpgradeToCheck();
-        for (int i = 0; i < BlocksToMeasure && pindex != NULL; i++)
-        {
-            //int32_t nExpectedVersion = ComputeBlockVersion_Legacy(pindex->pprev);
-            LogPrintf(" block: %d version: %x \n", pindex->nHeight, pindex->nVersion);
-            if ((pindex->nVersion & CBlockHeader::SIGNALING_NEW_VERSION_MASK) == CBlockHeader::SIGNALING_NEW_VERSION_MASK)
-                ++nUpgraded;
-            pindex = pindex->pprev;
-        }
-        LogPrintf("Signalling end <-- upgraded : %d \n", nUpgraded);
-        int currentVersionSignalingPercent = nUpgraded*100/BlocksToMeasure;
-        int versionMajorityPercent = Params().RejectBlockOutdatedMajority()*100/Params().GetMajorityBlockUpgradeToCheck();
-        string versionSignaling = "Please note that " + std::to_string(currentVersionSignalingPercent) + "% of blocks have new version. When it reaches " + std::to_string(versionMajorityPercent) + "%, blocks from version 1 will be discarded !!! If you have not updated, please do it asap." ;
-        if (nUpgraded > 0)
-            LogPrintf("%s: %s \n", __func__, versionSignaling.c_str());
-        
-        // strMiscWarning is read by GetWarnings(), called by Qt and the JSON-RPC code to warn the user:
-        strMiscWarning = _(versionSignaling.c_str());
-        if (!fWarned) {
-            CAlert::Notify(strMiscWarning, true);
-            fWarned = true;
-        }
-        */
     }
 }
 
@@ -4011,7 +3957,7 @@ bool DisconnectBlockAndInputs(CValidationState& state, CTransaction txLock)
     // List of what to disconnect (typically nothing)
     vector<CBlockIndex*> vDisconnect;
 
-    for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0 && !foundConflictingTx && i < 6; i++) {
+    for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0 && !foundConflictingTx && i < Params().GetCoinMaturity(); i++) {
         vDisconnect.push_back(BlockReading);
         pindexNew = BlockReading->pprev; //new best block
 
@@ -4178,7 +4124,7 @@ static bool ActivateBestChainStep(CValidationState& state, CBlockIndex* pindexMo
                     return false;
                 }
             } else {
-               PruneBlockIndexCandidates();
+                PruneBlockIndexCandidates();
                 if (!pindexOldTip || chainActive.Tip()->nChainWork > pindexOldTip->nChainWork) {
                     // We're in a better position than we were. Return temporarily to release the lock.
                     fContinue = false;
@@ -4374,7 +4320,7 @@ CBlockIndex* AddToBlockIndex(const CBlock& block)
         pindexNew->pprev = (*miPrev).second;
         pindexNew->nHeight = pindexNew->pprev->nHeight + 1;
         pindexNew->BuildSkip();
-        if (!UseLegacyCode(pindexNew->nHeight)) {
+        if (!UseLegacyCode(block)) {
             //update previous block pointer
             pindexNew->pprev->pnext = pindexNew;
 
@@ -4411,7 +4357,7 @@ CBlockIndex* AddToBlockIndex(const CBlock& block)
     pindexNew->RaiseValidity(BLOCK_VALID_TREE);
     if (pindexBestHeader == NULL || pindexBestHeader->nChainWork < pindexNew->nChainWork)
         pindexBestHeader = pindexNew;
-    if (!UseLegacyCode(pindexNew->nHeight)) {
+    if (!UseLegacyCode(block)) {
         //update previous block pointer
         if (pindexNew->nHeight)
             pindexNew->pprev->pnext = pindexNew;
@@ -4591,7 +4537,7 @@ int GetnHeight(const CBlockIndex* pIndex)
     return pIndex ? pIndex->nHeight : chainActive.Height();
 }
 
-bool CheckBlockHeader(const CBlockHeader& block, const int nHeight, CValidationState& state, bool fCheckPOW)
+bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool fCheckPOW)
 {
     if (fDebug) LogPrintf("CheckBlockHeader fCheckPOW: %s \n", fCheckPOW ? "true" : "false");
     // Check proof of work matches claimed amount
@@ -4602,7 +4548,7 @@ bool CheckBlockHeader(const CBlockHeader& block, const int nHeight, CValidationS
     return true;
 }
 
-bool CheckBlockHeader_Legacy(const CBlockHeader& block, const int nHeight, CValidationState& state, bool fCheckPOW)
+bool CheckBlockHeader_Legacy(const CBlockHeader& block, CValidationState& state, bool fCheckPOW)
 {
     // Check proof of work matches claimed amount
     if (fCheckPOW && !CheckProofOfWork_Legacy(block.GetHash(), block.nBits))
@@ -4615,10 +4561,10 @@ bool CheckBlockHeader_Legacy(const CBlockHeader& block, const int nHeight, CVali
     return true;
 }
 
-bool CheckBlock(const CBlock& block, const int height, CValidationState& state, bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig)
+bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bool fCheckMerkleRoot, bool fCheckSig)
 {
-    if (UseLegacyCode(height))
-        return CheckBlock_Legacy(block, height, state, fCheckPOW, fCheckMerkleRoot);
+    if (UseLegacyCode(block))
+        return CheckBlock_Legacy(block, state, fCheckPOW, fCheckMerkleRoot);
     else if (block.nVersion < CBlockHeader::POS_FORK_VERSION)
         return state.Invalid(error("CheckBlock(): block version smaller than 2"), REJECT_INVALID, "bad-block-version");
 
@@ -4628,7 +4574,7 @@ bool CheckBlock(const CBlock& block, const int height, CValidationState& state, 
     // Check that the header is valid (particularly PoW).  This is mostly
     // redundant with the call in AcceptBlockHeader.
     if (fDebug) LogPrintf("CheckBlock fCheckPOW: %s \n", fCheckPOW ? "true" : "false");
-    if (!CheckBlockHeader(block, height, state, fBlockIsProofOfWork && fCheckPOW))
+    if (!CheckBlockHeader(block, state, fBlockIsProofOfWork && fCheckPOW))
         return state.DoS(100, error("CheckBlock() : CheckBlockHeader failed"),
             REJECT_INVALID, "bad-header", true);
 
@@ -4683,16 +4629,6 @@ bool CheckBlock(const CBlock& block, const int height, CValidationState& state, 
         if (block.vtx[0].vin.size() != 1)
             return state.DoS(100, error("CheckBlock(): coinstake first transaction must have only 1 vin"));
 
-        // Too many errors top check it, try to redo sometime
-        // // Coinbase first transaction first input must have a valid Signature
-        // CScript coinbaseSignature = CScript() << height << OP_0;
-        // // if (block.vtx[0].vin[0].scriptSig.size() > coinbaseSignature.size())
-        // //     coinbaseSignature = CScript() << height + 1 << OP_0;
-        // for (int i = 0; i < coinbaseSignature.size() - 1; i++)
-        //     if (block.vtx[0].vin[0].scriptSig[i] != coinbaseSignature[i])
-        //         return state.DoS(100, error("CheckBlock(): coinbase input scriptSig is incorrect"),
-        //             REJECT_INVALID, "bad-cb-scriptsig");
-
         // First transaction first input must have at least 2 vout
         if (block.vtx[0].vout.size() < 2)
             return state.DoS(100, error("CheckBlock(): coinstake first transaction must have at least 2 vout"));
@@ -4708,18 +4644,25 @@ bool CheckBlock(const CBlock& block, const int height, CValidationState& state, 
         if (block.vtx[1].vin.size() < 1)
             return state.DoS(100, error("CheckBlock(): coinstake second transaction must have at least 1 vin"));
 
-        //
-
-        // First vout must be a locking transaction, the rest must not be
+        // First vout must be a locking transaction
         if (!block.vtx[1].vout[0].IsCoinStake())
             return state.DoS(100, error("CheckBlock(): second tx, first vout is not locking"));
-        for (unsigned int i = 1; i < block.vtx[1].vout.size(); i++)
+        // Second vout must be a locking transaction if total value bigger than 100 KORE
+        int startCheckingNotStake = 1;
+        if (block.vtx[1].vout[0].nValue >= 50 * COIN) {
+            if (!block.vtx[1].vout[1].IsCoinStake())
+                return state.DoS(100, error("CheckBlock(): second tx, second vout is not locking"));
+            
+            startCheckingNotStake = 2;
+        }
+        // Other transaction can't be locking
+        for (unsigned int i = startCheckingNotStake; i < block.vtx[1].vout.size(); i++)
             if (block.vtx[1].vout[i].IsCoinStake())
-                return state.DoS(100, error("CheckBlock(): more than one locking vout"));
+                return state.DoS(100, error("CheckBlock(): too many locking vout"));
 
         CTransaction originTx;
         uint256 hashBlock;
-        if (!GetTransaction(block.vtx[1].vin[0].prevout.hash, originTx, hashBlock, false))
+        if (!GetTransaction(block.vtx[1].vin[0].prevout.hash, originTx, hashBlock, true))
             return state.DoS(100, error("CheckBlock(): origin transaction not found"));
 
         // Second transaction must lock coins from same pubkey as coinbase
@@ -4735,7 +4678,7 @@ bool CheckBlock(const CBlock& block, const int height, CValidationState& state, 
             CTransaction otherOriginTx;
             uint256 otherHashBlock;
             pubKeyID.SetNull();
-            if (!GetTransaction(block.vtx[1].vin[i].prevout.hash, otherOriginTx, otherHashBlock, false))
+            if (!GetTransaction(block.vtx[1].vin[i].prevout.hash, otherOriginTx, otherHashBlock, true))
                 return state.DoS(100, error("CheckBlock(): origin transaction not found"));
             ExtractDestination(otherOriginTx.vout[block.vtx[1].vin[i].prevout.n].scriptPubKey, pubKeyID);
             if (lockPubKeyID != pubKeyID)
@@ -4752,7 +4695,7 @@ bool CheckBlock(const CBlock& block, const int height, CValidationState& state, 
 
         // The staked balance gives the target easing
         CAmount stakedBalance = block.vtx[1].GetValueOut();
-        CKoreStake stakeInput;        
+        CKoreStake stakeInput;
         if (!stakeInput.SetInput(originTx, block.vtx[1].vin[0].prevout.n))
             return state.DoS(100, error("CheckBlock(): unable to proccess origin transaction"));
         uint256 bnTargetPerCoinDay;
@@ -4788,7 +4731,7 @@ bool CheckBlock(const CBlock& block, const int height, CValidationState& state, 
                 }
             }
         }
-    } else if (fDebug) 
+    } else if (fDebug)
         LogPrintf("CheckBlock() : skipping transaction locking checks\n");
 
     // masternode payments / budgets
@@ -4839,7 +4782,7 @@ bool CheckBlock(const CBlock& block, const int height, CValidationState& state, 
     return true;
 }
 
-bool CheckBlock_Legacy(const CBlock& block, const int height, CValidationState& state, bool fCheckPOW, bool fCheckMerkleRoot)
+bool CheckBlock_Legacy(const CBlock& block, CValidationState& state, bool fCheckPOW, bool fCheckMerkleRoot)
 {
     // These are checks that are independent of context.
 
@@ -4848,7 +4791,7 @@ bool CheckBlock_Legacy(const CBlock& block, const int height, CValidationState& 
 
     // Check that the header is valid (particularly PoW).  This is mostly
     // redundant with the call in AcceptBlockHeader.
-    if (!CheckBlockHeader_Legacy(block, height, state, block.IsProofOfWork() && fCheckPOW))
+    if (!CheckBlockHeader_Legacy(block, state, block.IsProofOfWork() && fCheckPOW))
         return false;
 
     CBlockIndex* pindexPrev = chainActive.Tip();
@@ -5007,15 +4950,6 @@ bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& sta
     if (pcheckpoint && nHeight < pcheckpoint->nHeight)
         return state.DoS(0, error("%s : forked chain older than last checkpoint (height %d)", __func__, nHeight));
 
-    /* Lico, old kore doesn-t accept our block with version signalling
-    // Reject block.nVersion=1 blocks when 95% (75% on testnet) of the network has upgraded:
-    if (block.nVersion & ~ CBlockHeader::SIGNALING_NEW_VERSION_MASK < CBlockHeader::POS_FORK_VERSION &&
-        CBlockIndex::IsSuperMajority(CBlockHeader::POS_FORK_VERSION, pindexPrev, Params().RejectBlockOutdatedMajority())) {
-        return state.Invalid(error("%s : rejected nVersion=1 block", __func__),
-            REJECT_OBSOLETE, "bad-version");
-    }
-    */
-
     return true;
 }
 
@@ -5151,7 +5085,7 @@ bool AcceptBlockHeader(const CBlockHeader& block, CValidationState& state, CBloc
         return true;
     }
 
-    if (!CheckBlockHeader(block, GetnHeight(pindex), state, false)) {
+    if (!CheckBlockHeader(block, state, false)) {
         if (fDebug) LogPrintf("AcceptBlockHeader(): CheckBlockHeader failed \n");
         return false;
     }
@@ -5210,7 +5144,7 @@ bool AcceptBlockHeader_Legacy(const CBlockHeader& block, CValidationState& state
             return true;
         }
 
-        if (!CheckBlockHeader_Legacy(block, GetnHeight(pindex), state, false))
+        if (!CheckBlockHeader_Legacy(block, state, false))
             return false;
 
         // Get prev block index
@@ -5270,7 +5204,7 @@ static bool AcceptBlock_Legacy(const CBlock& block, CValidationState& state, CBl
     }
 
 
-    if ((!CheckBlock_Legacy(block, GetnHeight(pindex), state)) || !ContextualCheckBlock_Legacy(block, state, pindex->pprev)) {
+    if ((!CheckBlock_Legacy(block, state)) || !ContextualCheckBlock_Legacy(block, state, pindex->pprev)) {
         if (state.IsInvalid() && !state.CorruptionPossible()) {
             pindex->nStatus |= BLOCK_FAILED_VALID;
             setDirtyBlockIndex.insert(pindex);
@@ -5304,7 +5238,7 @@ static bool AcceptBlock_Legacy(const CBlock& block, CValidationState& state, CBl
     if (fCheckForPruning)
         FlushStateToDisk(state, FLUSH_STATE_NONE); // we just allocated more disk space for block files
 
-    if (fDebug) LogPrintf("AcceptBlock_Legacy block: %d<-- \n",nHeight);
+    if (fDebug) LogPrintf("AcceptBlock_Legacy block: %d<-- \n", nHeight);
 
     return true;
 }
@@ -5371,7 +5305,7 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
         return true;
     }
 
-    if ((!fAlreadyCheckedBlock && !CheckBlock(block, GetnHeight(pindex), state)) || !ContextualCheckBlock(block, state, pindex->pprev)) {
+    if ((!fAlreadyCheckedBlock && !CheckBlock(block, state)) || !ContextualCheckBlock(block, state, pindex->pprev)) {
         if (state.IsInvalid() && !state.CorruptionPossible()) {
             pindex->nStatus |= BLOCK_FAILED_VALID;
             setDirtyBlockIndex.insert(pindex);
@@ -5398,20 +5332,10 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
         return state.Abort(std::string("System error: ") + e.what());
     }
 
-    if (fDebug) LogPrintf("AcceptBlock block: %d<-- \n",nHeight);
-    return true;
-}
-
-bool CBlockIndex::IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned int nRequired)
-{
-    unsigned int nToCheck = Params().GetMajorityBlockUpgradeToCheck();
-    unsigned int nFound = 0;
-    for (unsigned int i = 0; i < nToCheck && nFound < nRequired && pstart != NULL; i++) {
-        if ((pstart->nVersion & CBlockHeader::SIGNALING_NEW_VERSION_MASK) >= minVersion)
-            ++nFound;
-        pstart = pstart->pprev;
+    if (fDebug) { 
+        LogPrintf("AcceptBlock block: %d<-- \n",nHeight);
     }
-    return (nFound >= nRequired);
+    return true;
 }
 
 /** Turn the lowest '1' bit in the binary representation of a number into a '0'. */
@@ -5441,8 +5365,8 @@ CBlockIndex* CBlockIndex::GetAncestor(int height)
         int heightSkipPrev = GetSkipHeight(heightWalk - 1);
         if (pindexWalk->pskip != NULL &&
             (heightSkip == height ||
-             (heightSkip > height && !(heightSkipPrev < heightSkip - 2 && 
-                                      heightSkipPrev >= height)))) {
+                (heightSkip > height && !(heightSkipPrev < heightSkip - 2 &&
+                                            heightSkipPrev >= height)))) {
             // Only follow pskip if pprev->pskip isn't better than pskip->pprev.
             pindexWalk = pindexWalk->pskip;
             heightWalk = heightSkip;
@@ -5471,7 +5395,7 @@ bool ProcessNewBlock(CValidationState& state, CNode* pfrom, CBlock* pblock, CDis
     // Preliminary checks
     int64_t nStartTime = GetTimeMillis();
     // we will be processing the next tip block
-    bool checked = CheckBlock(*pblock, GetnHeight(chainActive.Tip()) + 1 , state);
+    bool checked = CheckBlock(*pblock, state);
 
     if (!CheckBlockSignature(*pblock))
         return error("ProcessNewBlock() : bad proof-of-stake block signature");
@@ -5544,23 +5468,23 @@ bool static IsCanonicalBlockSignature_Legacy(const CBlock* pblock)
 bool ProcessNewBlock_Legacy(CValidationState& state, const CChainParams& chainparams, const CNode* pfrom, const CBlock* pblock, bool fForceProcessing, CDiskBlockPos* dbp)
 {
     if (fDebug) LogPrintf("ProcessNewBlock_Legacy starts\n");
-    
+
     // Preliminary checks
-    if (!CheckBlock_Legacy(*pblock, GetnHeight(chainActive.Tip()) + 1, state))
-            return error("%s : CheckBlock FAILED for block %s", __func__, pblock->GetHash().GetHex());
+    if (!CheckBlock_Legacy(*pblock, state))
+        return error("%s : CheckBlock FAILED for block %s", __func__, pblock->GetHash().GetHex());
 
     if (!IsCanonicalBlockSignature_Legacy(pblock)) {
         if (pfrom && pfrom->nVersion >= CANONICAL_BLOCK_SIG_VERSION)
             return state.DoS(100, error("ProcessNewBlock_Legacy(): bad block signature encoding"), REJECT_INVALID, "bad-block-signature-encoding");
-        
+
         return false;
     }
-    
+
     {
         LOCK(cs_main);
         bool fRequested = MarkBlockAsReceived_Legacy(pblock->GetHash());
         fRequested |= fForceProcessing;
-        
+
         // Store to disk
         CBlockIndex* pindex = NULL;
         bool ret = AcceptBlock_Legacy(*pblock, state, &pindex, fRequested, dbp);
@@ -5612,7 +5536,7 @@ bool TestBlockValidity(CValidationState& state, const CBlock& block, CBlockIndex
     // NOTE: CheckBlockHeader is called by CheckBlock
     if (!ContextualCheckBlockHeader(block, state, pindexPrev))
         return false;
-    if (!CheckBlock(block, pindexPrev->nHeight + 1, state, fCheckPOW, fCheckMerkleRoot))
+    if (!CheckBlock(block, state, fCheckPOW, fCheckMerkleRoot))
         return false;
     if (!ContextualCheckBlock(block, state, pindexPrev))
         return false;
@@ -5639,7 +5563,7 @@ bool TestBlockValidity_Legacy(CValidationState& state, const CChainParams& chain
     // NOTE: CheckBlockHeader is called by CheckBlock
     if (!ContextualCheckBlockHeader_Legacy(block, state, pindexPrev))
         return false;
-    if (!CheckBlock_Legacy(block, pindexPrev->nHeight + 1, state, fCheckPOW, fCheckMerkleRoot))
+    if (!CheckBlock_Legacy(block, state, fCheckPOW, fCheckMerkleRoot))
         return false;
     if (!ContextualCheckBlock_Legacy(block, state, pindexPrev))
         return false;
@@ -5889,7 +5813,7 @@ bool CVerifyDB::VerifyDB(CCoinsView* coinsview, int nCheckLevel, int nCheckDepth
         if (!ReadBlockFromDisk(block, pindex))
             return error("VerifyDB() : *** ReadBlockFromDisk failed at %d, hash=%s", pindex->nHeight, pindex->GetBlockHash().ToString());
         // check level 1: verify block validity
-        if (nCheckLevel >= 1 && !CheckBlock(block, pindex->nHeight, state))
+        if (nCheckLevel >= 1 && !CheckBlock(block, state))
             return error("VerifyDB() : *** found bad block at %d, hash=%s\n", pindex->nHeight, pindex->GetBlockHash().ToString());
         // check level 2: verify undo validity
         if (nCheckLevel >= 2 && pindex) {
@@ -6104,7 +6028,7 @@ bool LoadExternalBlockFile(FILE* fileIn, CDiskBlockPos* dbp)
                         break;
                 } else if (hash != Params().HashGenesisBlock() && mapBlockIndex[hash]->nHeight % 1000 == 0 && fDebug)
                     LogPrintf("Block Import: already had block %s at height %d\n", hash.ToString(), mapBlockIndex[hash]->nHeight);
-                
+
                 // Recursively process earlier encountered successors of this block
                 deque<uint256> queue;
                 queue.push_back(hash);
@@ -6738,18 +6662,16 @@ bool static ProcessMessageBlock(CNode* pfrom, string strCommand, CDataStream& vR
 
         CValidationState state;
         CBlockIndex* prevBlockIndex = mapBlockIndex[block.hashPrevBlock];
-        if (UseLegacyCode(prevBlockIndex->nHeight + 1))
-        {            
+        if (UseLegacyCode(prevBlockIndex->nHeight + 1)) {
             // Process all blocks from whitelisted peers, even if not requested,
             // unless we're still syncing with the network.
             // Such an unrequested block may still be processed, subject to the
             // conditions in AcceptBlock().
             bool forceProcessing = pfrom->fWhitelisted && !IsInitialBlockDownload();
             ProcessNewBlock_Legacy(state, chainparams, pfrom, &block, forceProcessing, NULL);
-        }
-        else
+        } else
             ProcessNewBlock(state, pfrom, &block, NULL);
-        
+
         int nDoS;
         if (state.IsInvalid(nDoS)) {
             assert(state.GetRejectCode() < REJECT_INTERNAL_LEGACY); // Blocks are never rejected with internal reject codes
@@ -7198,7 +7120,7 @@ bool static ProcessMessageGetData(CNode* pfrom, CDataStream& vRecv)
         return error("message getdata size() = %u", vInv.size());
     }
 
-    if (fDebug )
+    if (fDebug)
         LogPrint("net", "received getdata (%u invsz) peer=%d\n", vInv.size(), pfrom->id);
 
     if ((fDebug && vInv.size() > 0))
@@ -7364,7 +7286,7 @@ bool static ProcessMessageTx(CNode* pfrom, string strCommand, CDataStream& vRecv
             if (!state.IsInvalid(nDoS) || nDoS == 0) {
                 if (fDebug) LogPrintf("Force relaying tx %s from whitelisted peer=%d\n", tx.GetHash().ToString(), pfrom->id);
                 RelayTransaction(tx);
-            } else if (fDebug) 
+            } else if (fDebug)
                 LogPrintf("Not relaying invalid transaction %s from whitelisted peer=%d (%s)\n", tx.GetHash().ToString(), pfrom->id, FormatStateMessage_Legacy(state));
         }
     }
@@ -7709,8 +7631,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         return false;
     }
 
-    else if (chainActive.Height() + Params().HeightToBanOldWallets() > Params().HeightToFork() && pfrom->nVersion < MIN_PEER_PROTO_VERSION)
-    {
+    else if (chainActive.Height() + Params().HeightToBanOldWallets() > Params().HeightToFork() && pfrom->nVersion < MIN_PEER_PROTO_VERSION) {
         pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION));
         Misbehaving(pfrom->GetId(), 1000);
         pfrom->fDisconnect = true;
@@ -7992,7 +7913,7 @@ bool SendMessages(CNode* pto)
 
     CNodeState& state = *State(pto->GetId());
     if (state.fShouldBan) {
-        if (pto->fWhitelisted && fDebug) 
+        if (pto->fWhitelisted && fDebug)
             LogPrintf("Warning: not punishing whitelisted peer %s!\n", pto->addr.ToString());
         else {
             pto->fDisconnect = true;

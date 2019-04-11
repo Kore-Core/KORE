@@ -28,18 +28,12 @@ proposal_how_many_payments=$5
 control_wallet_user=kore
 control_wallet_password=kore
 # 50COINS submition fee
-# 5COINS activation fee
-masternode_proposal_fee=55 
+# 50COINS activation fee
+masternode_proposal_fee=100 
 # This parameter should match 
 # chainparams nBudgetFeeConfirmations
-if [ "$network" = "testnet" ] || [ "$network" = "TESTNET" ]
-then
-  proposal_fee_confirmations=2
-  nBudgetFeeConfirmations=2
-else
-  proposal_fee_confirmations=6
-  nBudgetFeeConfirmations=6
-fi
+proposal_fee_confirmations=6
+nBudgetFeeConfirmations=6
 
 
 cli_args="-$network -debug -rpcuser=$control_wallet_user -rpcpassword=$control_wallet_password"

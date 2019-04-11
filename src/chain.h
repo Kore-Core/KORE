@@ -376,13 +376,6 @@ public:
             nFlags |= BLOCK_STAKE_MODIFIER;
     }
 
-    /**
-     * Returns true if there are nRequired or more blocks of minVersion or above
-     * in the last Params().GetMajorityBlockUpgradeToCheck() blocks, starting at pstart 
-     * and going backwards.
-     */
-    static bool IsSuperMajority(int minVersion, const CBlockIndex* pstart, unsigned int nRequired);
-
     std::string ToString() const
     {
         if (UseLegacyCode(nHeight))

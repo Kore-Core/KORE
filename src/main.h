@@ -637,14 +637,14 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 bool ConnectBlock_Legacy(const CBlock& block, CValidationState& state, CBlockIndex* pindex, CCoinsViewCache& coins, bool fJustCheck = false);
 
 /** Context-independent validity checks */
-bool CheckBlockHeader(const CBlockHeader& block, const int nHeight, CValidationState& state, bool fCheckPOW = true);
-bool CheckBlock(const CBlock& block, const int height, CValidationState& state, bool fCheckPOW = true, bool fCheckMerkleRoot = true, bool fCheckSig = true);
+bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool fCheckPOW = true);
+bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW = true, bool fCheckMerkleRoot = true, bool fCheckSig = true);
 
 /** Convert CValidationState to a human-readable message for logging */
 std::string FormatStateMessage(const CValidationState& state);
 std::string FormatStateMessage_Legacy(const CValidationState& state);
 bool CheckBlockHeader_Legacy(const CBlockHeader& block, CValidationState& state, bool fCheckPOW = true);
-bool CheckBlock_Legacy(const CBlock& block, const int height, CValidationState& state, bool fCheckPOW = true, bool fCheckMerkleRoot = true);
+bool CheckBlock_Legacy(const CBlock& block, CValidationState& state, bool fCheckPOW = true, bool fCheckMerkleRoot = true);
 
 /** Context-dependent validity checks */
 bool ContextualCheckBlockHeader(const CBlockHeader& block, CValidationState& state, CBlockIndex* pindexPrev);

@@ -80,7 +80,7 @@ public:
     typedef BIP9Deployment vDeployments_type[MAX_VERSION_BITS_DEPLOYMENTS];
 
     const std::vector<unsigned char>&      AlertKey() const                    { return vAlertPubKey; }
-    const int32_t                          HeightToBanOldWallets() const       { return nHeightToBanOldWallets; }
+    const int32_t                          HeightToBanOldWallets() const       { return nBlocksToBanOldWallets; }
     const int32_t                          HeightToFork() const                { return nHeightToFork; };
     const uint256&                         HashGenesisBlock() const            { return nHashGenesisBlock; }
     const MessageStartChars&               MessageStart() const                { return pchMessageStart; }
@@ -95,19 +95,15 @@ public:
     bool                      EnableBigRewards() const                 { return fEnableBigReward; }
     /** Make miner wait to have peers to avoid wasting work */
     bool                      DoesMiningRequiresPeers() const          { return fMiningRequiresPeers; }
-    int32_t                   GetBlockEnforceInvalid() const           { return nBlockEnforceInvalidUTXO; }
     int64_t                   GetBudgetFeeConfirmations() const        { return nBudgetFeeConfirmations; }
     int64_t                   GetBudgetVoteUpdate() const              { return nBudgetVoteUpdate; }
-    int64_t                   GetClientMintableCoinsInterval() const   { return nClientMintableCoinsInterval; }
-    int32_t                   GetCoinbaseMaturity() const              { return nCoinbaseMaturity; }
+    int32_t                   GetCoinMaturity() const                  { return nCoinMaturity; }
     /** Used if GenerateBitcoins is called with a negative number of threads */
     int32_t                   GetDefaultMinerThreads() const           { return nMinerThreads; }
     int32_t                   GetDefaultPort() const                   { return nDefaultPort; }
     /** Spork key and Masternode Handling **/
     std::string               GetDevFundPubKey() const                 { return strDevFundPubKey; }
-    int64_t                   GetEnsureMintableCoinsInterval() const   { return nEnsureMintableCoinsInterval; }
     int32_t                   GetLastPoWBlock() const                  { return nLastPOWBlock; }
-    int32_t                   GetMajorityBlockUpgradeToCheck() const   { return nMajorityBlockUpgradeToCheck; }
     int64_t                   GetMasternodeBudgetPaymentCycle() const  { return nMasternodeBudgetPaymentCycle; }
     int64_t                   GetMasternodeCheckSeconds() const        { return nMasternodeCheckSeconds; }
     int64_t                   GetMasternodeCoinScore() const           { return nMasternodeCoinScore; }
@@ -121,7 +117,7 @@ public:
     int64_t                   GetMasternodeRemovalSeconds() const      { return nMasternodeRemovalSeconds; }
     CAmount                   GetMaxMoneyOut() const                   { return nMaxMoneyOut; }
     int32_t                   GetMaxReorganizationDepth() const        { return nMaxReorganizationDepth; }
-    int32_t                   GetMaxStakeModifierInterval() const      { return std::min(nStakeMinConfirmations, 64U); }
+    int32_t                   GetMaxStakeModifierInterval() const      { return std::min(nCoinMaturity, 64U); }
     int64_t                   GetMaxTipAge() const                     { return nMaxTipAge; }
     uint32_t                  GetMinerConfirmationWindow() const       { return nMinerConfirmationWindow; }
     uint32_t                  GetModifierInterval() const              { return nModifierInterval; }
@@ -132,23 +128,18 @@ public:
     int32_t                   GetPoolMaxTransactions() const           { return nPoolMaxTransactions; }
     uint32_t                  GetRuleChangeActivationThreshold() const { return nRuleChangeActivationThreshold; }
     std::string               GetSporkKey() const                      { return strSporkKey; }
-    int64_t                   GetSporkKeyEnforceNew() const            { return nSporkKeyEnforceNew; }
-    int64_t                   GetStartMasternodePayments() const       { return nStartMasternodePayments; }
+    int64_t                   GetStartMasternodePayments() const       { return genesis.nTime; }
     int64_t                   GetPastBlocksMax() const                 { return nPastBlocksMax; }
     int64_t                   GetPastBlocksMin() const                 { return nPastBlocksMin; }
     // minimum spacing is maturity - 1
     int64_t                   GetStakeLockInterval() const             { return nStakeLockInterval; }
     int64_t                   GetStakeLockSequenceNumber() const       { return (nStakeLockInterval >> CTxIn::SEQUENCE_LOCKTIME_GRANULARITY) | CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG; }
     uint32_t                  GetStakeMinAge() const                   { return nStakeMinAge; }
-    // minimum Stake confirmations is 2 !!!
-    uint32_t                  GetStakeMinConfirmations() const         { return nStakeMinConfirmations; }
     uint32_t                  GetTargetSpacing() const                 { return nTargetSpacing; }
     int64_t                   GetTargetSpacingForStake() const         { return nModifierInterval * 0.75; }
     uint32_t                  GetTargetTimespan() const                { return nTargetTimespan; }
     /** Default value for -checkmempool and -checkblockindex argument */
     bool                      IsConsistencyChecksDefault() const       { return fDefaultConsistencyChecks; }
-    /** Headers first syncing is disabled */
-    bool                      IsHeadersFirstSyncingActive() const      { return fHeadersFirstSyncingActive; };
     uint64_t                  PruneAfterHeight() const                 { return nPruneAfterHeight; }
     /** Make standard checks */
     bool                      RequireStandard() const                  { return fRequireStandard; }
@@ -170,25 +161,20 @@ protected:
     bool                       fRequireStandard;
     bool                       fMineBlocksOnDemand;
     bool                       fSkipProofOfWorkCheck;
-    bool                       fHeadersFirstSyncingActive;
     bool                       fEnableBigReward;
     CBlock                     genesis;
-    int32_t                    nBlockEnforceInvalidUTXO;
     int64_t                    nBudgetFeeConfirmations;
     int64_t                    nBudgetVoteUpdate;
-    int64_t                    nClientMintableCoinsInterval; // PoS mining
-    int32_t                    nCoinbaseMaturity;
+    uint32_t                   nCoinMaturity;
     int32_t                    nDefaultPort;
-    int64_t                    nEnsureMintableCoinsInterval;
     uint256                    nHashGenesisBlock;
-    int32_t                    nHeightToBanOldWallets;
+    int32_t                    nBlocksToBanOldWallets;
     int32_t                    nHeightToFork;    
     MessageStartChars          pchMessageStart;
     int32_t                    nMaxReorganizationDepth;
     int64_t                    nMaxTipAge;
     uint64_t                   nPruneAfterHeight; // Legacy
     int32_t                    nLastPOWBlock;
-    int32_t                    nMajorityBlockUpgradeToCheck;
     int64_t                    nMasternodeCheckSeconds;
     int64_t                    nMasternodeCoinScore;
     int64_t                    nMasternodeExpirationSeconds;
@@ -209,10 +195,8 @@ protected:
     int64_t                    nPastBlocksMax;
     int32_t                    nPoolMaxTransactions;
     uint32_t                   nRuleChangeActivationThreshold;
-    int64_t                    nSporkKeyEnforceNew;
     int64_t                    nStakeLockInterval;
     uint32_t                   nStakeMinAge;
-    uint32_t                   nStakeMinConfirmations;
     int64_t                    nStartMasternodePayments;
     uint32_t                   nTargetTimespan;
     uint32_t                   nTargetSpacing;
@@ -243,13 +227,12 @@ class CModifiableParams
 {
 public:
     //! Published setters to allow changing values in unit test cases
-    virtual void setCoinbaseMaturity(int aCoinbaseMaturity) = 0;
+    virtual void setCoinMaturity(int aCoinMaturity) = 0;
     virtual void setEnableBigRewards(bool bigRewards) = 0;
     virtual void setHeightToFork(int aHeightToFork) = 0;
     virtual void setLastPowBlock(int aLastPOWBlock) = 0;
     virtual void setStakeLockInterval(int aStakeLockInterval) = 0;
     virtual void setStakeMinAge(int aStakeMinAge) = 0;
-    virtual void setStakeMinConfirmations(int aStakeMinConfirmations) = 0;
     virtual void setStakeModifierInterval(int aStakeModifier) = 0;
     virtual void setTargetSpacing(uint32_t aTargetSpacing) = 0;
     virtual void setTargetTimespan(uint32_t aTargetTimespan) = 0;

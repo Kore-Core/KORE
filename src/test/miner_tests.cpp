@@ -63,11 +63,7 @@ BOOST_AUTO_TEST_CASE(CreateNewBlock_validity)
 
     LOCK(cs_main);
     Checkpoints::fEnabled = false;
-
-
-    // Lets create 5 pow blocks than 5 pos than we fork
-    
-
+ 
     // Simple block creation, nothing special yet:
     BOOST_CHECK(pblocktemplate = CreateNewBlock(scriptPubKey, pwalletMain, false));
 

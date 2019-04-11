@@ -18,7 +18,7 @@ BOOST_AUTO_TEST_SUITE(fork_kore_from_blockinfo)
 
 static const string strSecret("5HxWvvfubhXpYYpS3tJkw6fq9jE9j18THftkZjHHfmFiWtmAbrj");
 
-// #define RUN_FORK_TESTS
+//#define RUN_FORK_TESTS
 
 #ifdef RUN_FORK_TESTS
 
@@ -41,8 +41,8 @@ BOOST_AUTO_TEST_CASE(quick_fork)
     int64_t oldTargetTimespan = Params().GetTargetTimespan();
     int64_t oldTargetSpacing = Params().GetTargetSpacing();
     int oldHeightToFork = Params().HeightToFork();
-    int oldStakeMinConfirmations = Params().GetStakeMinConfirmations();
-    int oldCoinBaseMaturity = Params().GetCoinbaseMaturity();
+
+    int oldCoinBaseMaturity = Params().GetCoinMaturity();
     int oldStakeMinAge = Params().GetStakeMinAge();
     int oldModifier = Params().GetModifierInterval();
     // confirmations    : 3
@@ -52,10 +52,9 @@ BOOST_AUTO_TEST_CASE(quick_fork)
     // pow blocks       : [confirmations + 1, max(confirmations+1, value)], this way we will have 2 modifiers
     int minConfirmations = 3;
     ModifiableParams()->setHeightToFork(9);
-    ModifiableParams()->setStakeMinConfirmations(minConfirmations);
     ModifiableParams()->setTargetSpacing(minConfirmations - 1);
     ModifiableParams()->setStakeModifierInterval(minConfirmations - 1);
-    ModifiableParams()->setCoinbaseMaturity(minConfirmations); 
+    ModifiableParams()->setCoinMaturity(minConfirmations); 
     ModifiableParams()->setStakeMinAge(0);
     ModifiableParams()->setTargetTimespan(1);
     ModifiableParams()->setEnableBigRewards(true);
@@ -76,10 +75,9 @@ BOOST_AUTO_TEST_CASE(quick_fork)
     Checkpoints::fEnabled = true;
     ModifiableParams()->setHeightToFork(oldHeightToFork);
     ModifiableParams()->setEnableBigRewards(false);
-    ModifiableParams()->setCoinbaseMaturity(oldCoinBaseMaturity);
+    ModifiableParams()->setCoinMaturity(oldCoinBaseMaturity);
     ModifiableParams()->setStakeMinAge(oldStakeMinAge);
     ModifiableParams()->setStakeModifierInterval(oldModifier);
-    ModifiableParams()->setStakeMinConfirmations(oldStakeMinConfirmations);
     ModifiableParams()->setTargetTimespan(oldTargetTimespan);
     ModifiableParams()->setTargetSpacing(oldTargetSpacing);
 }
@@ -102,8 +100,8 @@ BOOST_AUTO_TEST_CASE(check_database_pow)
     int64_t oldTargetTimespan = Params().GetTargetTimespan();
     int64_t oldTargetSpacing = Params().GetTargetSpacing();
     int oldHeightToFork = Params().HeightToFork();
-    int oldStakeMinConfirmations = Params().GetStakeMinConfirmations();
-    int oldCoinBaseMaturity = Params().GetCoinbaseMaturity();
+
+    int oldCoinBaseMaturity = Params().GetCoinMaturity();
     int oldStakeMinAge = Params().GetStakeMinAge();
     int oldModifier = Params().GetModifierInterval();
     // confirmations    : 3
@@ -113,10 +111,9 @@ BOOST_AUTO_TEST_CASE(check_database_pow)
     // pow blocks       : [confirmations + 1, max(confirmations+1, value)], this way we will have 2 modifiers
     int minConfirmations = 3;
     ModifiableParams()->setHeightToFork(9);
-    ModifiableParams()->setStakeMinConfirmations(minConfirmations);
     ModifiableParams()->setTargetSpacing(minConfirmations - 1);
     ModifiableParams()->setStakeModifierInterval(minConfirmations - 1);
-    ModifiableParams()->setCoinbaseMaturity(minConfirmations); 
+    ModifiableParams()->setCoinMaturity(minConfirmations); 
     ModifiableParams()->setStakeMinAge(0);
     ModifiableParams()->setTargetTimespan(1);
     ModifiableParams()->setEnableBigRewards(true);
@@ -139,10 +136,9 @@ BOOST_AUTO_TEST_CASE(check_database_pow)
     Checkpoints::fEnabled = true;
     ModifiableParams()->setHeightToFork(oldHeightToFork);
     ModifiableParams()->setEnableBigRewards(false);
-    ModifiableParams()->setCoinbaseMaturity(oldCoinBaseMaturity);
+    ModifiableParams()->setCoinMaturity(oldCoinBaseMaturity);
     ModifiableParams()->setStakeMinAge(oldStakeMinAge);
     ModifiableParams()->setStakeModifierInterval(oldModifier);
-    ModifiableParams()->setStakeMinConfirmations(oldStakeMinConfirmations);
     ModifiableParams()->setTargetTimespan(oldTargetTimespan);
     ModifiableParams()->setTargetSpacing(oldTargetSpacing);
 }
@@ -165,8 +161,8 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pow)
     int64_t oldTargetTimespan = Params().GetTargetTimespan();
     int64_t oldTargetSpacing = Params().GetTargetSpacing();
     int oldHeightToFork = Params().HeightToFork();
-    int oldStakeMinConfirmations = Params().GetStakeMinConfirmations();
-    int oldCoinBaseMaturity = Params().GetCoinbaseMaturity();
+
+    int oldCoinBaseMaturity = Params().GetCoinMaturity();
     int oldStakeMinAge = Params().GetStakeMinAge();
     int oldModifier = Params().GetModifierInterval();
     // confirmations    : 3
@@ -176,10 +172,9 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pow)
     // pow blocks       : [confirmations + 1, max(confirmations+1, value)], this way we will have 2 modifiers
     int minConfirmations = 3;
     ModifiableParams()->setHeightToFork(9);
-    ModifiableParams()->setStakeMinConfirmations(minConfirmations);
     ModifiableParams()->setTargetSpacing(minConfirmations - 1);
     ModifiableParams()->setStakeModifierInterval(minConfirmations - 1);
-    ModifiableParams()->setCoinbaseMaturity(minConfirmations); 
+    ModifiableParams()->setCoinMaturity(minConfirmations); 
     ModifiableParams()->setStakeMinAge(0);
     ModifiableParams()->setTargetTimespan(1);
     ModifiableParams()->setEnableBigRewards(true);
@@ -200,10 +195,9 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pow)
     Checkpoints::fEnabled = true;
     ModifiableParams()->setHeightToFork(oldHeightToFork);
     ModifiableParams()->setEnableBigRewards(false);
-    ModifiableParams()->setCoinbaseMaturity(oldCoinBaseMaturity);
+    ModifiableParams()->setCoinMaturity(oldCoinBaseMaturity);
     ModifiableParams()->setStakeMinAge(oldStakeMinAge);
     ModifiableParams()->setStakeModifierInterval(oldModifier);
-    ModifiableParams()->setStakeMinConfirmations(oldStakeMinConfirmations);
     ModifiableParams()->setTargetTimespan(oldTargetTimespan);
     ModifiableParams()->setTargetSpacing(oldTargetSpacing);
 }
@@ -226,8 +220,8 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pos)
     int64_t oldTargetTimespan = Params().GetTargetTimespan();
     int64_t oldTargetSpacing = Params().GetTargetSpacing();
     int oldHeightToFork = Params().HeightToFork();
-    int oldStakeMinConfirmations = Params().GetStakeMinConfirmations();
-    int oldCoinBaseMaturity = Params().GetCoinbaseMaturity();
+
+    int oldCoinBaseMaturity = Params().GetCoinMaturity();
     int oldStakeMinAge = Params().GetStakeMinAge();
     int oldModifier = Params().GetModifierInterval();
     // confirmations    : 3
@@ -237,10 +231,9 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pos)
     // pow blocks       : [confirmations + 1, max(confirmations+1, value)], this way we will have 2 modifiers
     int minConfirmations = 3;
     ModifiableParams()->setHeightToFork(50);
-    ModifiableParams()->setStakeMinConfirmations(minConfirmations);
     ModifiableParams()->setTargetSpacing(minConfirmations - 1);
     ModifiableParams()->setStakeModifierInterval(minConfirmations - 1);
-    ModifiableParams()->setCoinbaseMaturity(minConfirmations); 
+    ModifiableParams()->setCoinMaturity(minConfirmations); 
     ModifiableParams()->setStakeMinAge(0);
     ModifiableParams()->setTargetTimespan(1);
     ModifiableParams()->setEnableBigRewards(true);
@@ -253,11 +246,8 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pos)
     CreateOldBlocksFromBlockInfo(1, minConfirmations + 2, blockinfo[0], pwalletMain, scriptPubKey, false, logToStdout);
 
     // Lets check how it the cachedCoins
-    pcoinsTip->Log();
     // generate 1 pos blocks
     GeneratePOSLegacyBlocks(minConfirmations + 2, 6, pwalletMain, scriptPubKey, logToStdout);
-
-    pcoinsTip->Log();
 
     CheckDatabaseState(pwalletMain);
 
@@ -265,10 +255,9 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pos)
     Checkpoints::fEnabled = true;
     ModifiableParams()->setHeightToFork(oldHeightToFork);
     ModifiableParams()->setEnableBigRewards(false);
-    ModifiableParams()->setCoinbaseMaturity(oldCoinBaseMaturity);
+    ModifiableParams()->setCoinMaturity(oldCoinBaseMaturity);
     ModifiableParams()->setStakeMinAge(oldStakeMinAge);
     ModifiableParams()->setStakeModifierInterval(oldModifier);
-    ModifiableParams()->setStakeMinConfirmations(oldStakeMinConfirmations);
     ModifiableParams()->setTargetTimespan(oldTargetTimespan);
     ModifiableParams()->setTargetSpacing(oldTargetSpacing);
 }
@@ -291,8 +280,8 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pos_newpos)
     int64_t oldTargetTimespan = Params().GetTargetTimespan();
     int64_t oldTargetSpacing = Params().GetTargetSpacing();
     int oldHeightToFork = Params().HeightToFork();
-    int oldStakeMinConfirmations = Params().GetStakeMinConfirmations();
-    int oldCoinBaseMaturity = Params().GetCoinbaseMaturity();
+
+    int oldCoinBaseMaturity = Params().GetCoinMaturity();
     int oldStakeMinAge = Params().GetStakeMinAge();
     int oldModifier = Params().GetModifierInterval();
     // confirmations    : 3
@@ -302,10 +291,9 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pos_newpos)
     // pow blocks       : [confirmations + 1, max(confirmations+1, value)], this way we will have 2 modifiers
     int minConfirmations = 3;
     ModifiableParams()->setHeightToFork(6);
-    ModifiableParams()->setStakeMinConfirmations(minConfirmations);
     ModifiableParams()->setTargetSpacing(minConfirmations - 1);
     ModifiableParams()->setStakeModifierInterval(minConfirmations - 1);
-    ModifiableParams()->setCoinbaseMaturity(minConfirmations); 
+    ModifiableParams()->setCoinMaturity(minConfirmations); 
     ModifiableParams()->setStakeMinAge(0);
     ModifiableParams()->setTargetTimespan(1);
     ModifiableParams()->setEnableBigRewards(true);
@@ -334,10 +322,9 @@ BOOST_AUTO_TEST_CASE(check_database_pow_pos_newpos)
     Checkpoints::fEnabled = true;
     ModifiableParams()->setHeightToFork(oldHeightToFork);
     ModifiableParams()->setEnableBigRewards(false);
-    ModifiableParams()->setCoinbaseMaturity(oldCoinBaseMaturity);
+    ModifiableParams()->setCoinMaturity(oldCoinBaseMaturity);
     ModifiableParams()->setStakeMinAge(oldStakeMinAge);
     ModifiableParams()->setStakeModifierInterval(oldModifier);
-    ModifiableParams()->setStakeMinConfirmations(oldStakeMinConfirmations);
     ModifiableParams()->setTargetTimespan(oldTargetTimespan);
     ModifiableParams()->setTargetSpacing(oldTargetSpacing);
 }

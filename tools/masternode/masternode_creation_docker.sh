@@ -78,14 +78,14 @@ then
   masternode_port=11743
   control_wallet="$user_dir/.$coin/testnet3/masternode.conf"
   control_wallet_onion=`cat $user_dir/.$coin/testnet3/onion/hostname`
-  # needs to be the same as nMasternodeMinConfirmations
-  txConfirmations=6
 else
   masternode_port=10743
   control_wallet="$user_dir/.$coin/masternode.conf"
   control_wallet_onion=`cat $user_dir/.$coin/onion/hostname`
-  txConfirmations=15
 fi
+# needs to be the same as nMasternodeMinConfirmations
+txConfirmations=15
+
 echo "## "
 echo "## Parameters used"
 echo "##   network: $network"

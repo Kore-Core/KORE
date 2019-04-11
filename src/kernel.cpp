@@ -260,10 +260,9 @@ bool GetKernelStakeModifier(uint256 hashBlockFrom, uint64_t& nStakeModifier, boo
         // it was found at the last block before fork, please note that
         // we will no be able to store the last kore block, once we don't have
         // some fields in the database yet, like nFlags, nStakeModifier
-        pindexFrom = chainActive[Params().HeightToFork() - 1];
         nStakeModifier = PREDEFINED_MODIFIER; //uint64_t("stakemodifier");
 
-        LogPrintf("GetKernelStakeModifier(): pindexFrom->nHeight=%d, nStakeModifier=%u\n", pindexFrom->nHeight, nStakeModifier);
+        LogPrintf("GetKernelStakeModifier(): DEFAULT_PRE_FORK_MODIFIER, nStakeModifier=%u\n", nStakeModifier);
 
         return true;
     }

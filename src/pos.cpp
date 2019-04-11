@@ -97,7 +97,7 @@ bool CheckKernel_Legacy(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTi
         return false;
 
     // Maturity requirement
-    if (pindexPrev->nHeight - pIndex->nHeight < Params().GetCoinbaseMaturity())
+    if (pindexPrev->nHeight - pIndex->nHeight < Params().GetCoinMaturity())
         return false;
 
     if (pBlockTime)
@@ -149,7 +149,7 @@ bool CheckProofOfStake_Legacy(CBlockIndex* pindexPrev, const CTransaction& tx, u
         return fDebug ? error("CheckProofOfStake(): *** ReadBlockFromDisk failed at %d, hash=%s \n", pindexPrev->nHeight, pindexPrev->GetBlockHash().ToString()) : false;
 
     // Min age requirement
-    if (pindexPrev->nHeight - pIndex->nHeight < Params().GetStakeMinConfirmations())
+    if (pindexPrev->nHeight - pIndex->nHeight < Params().GetCoinMaturity())
         return state.DoS(100, error("%s: tried to stake at depth %d \n", __func__, pindexPrev->nHeight - pIndex->nHeight), REJECT_INVALID, "bad-cs-premature");
 
     if (prevtx.nTime + Params().GetStakeMinAge() > tx.nTime) // Min age requirement

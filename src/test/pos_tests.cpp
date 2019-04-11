@@ -490,7 +490,7 @@ BOOST_AUTO_TEST_CASE(pos_GetBalance)
     // Set ChainParams for the test
     SelectParams(CBaseChainParams::UNITTEST);
     ModifiableParams()->setHeightToFork(0);
-    ModifiableParams()->setCoinbaseMaturity(1);
+    ModifiableParams()->setCoinMaturity(1);
     ModifiableParams()->setStakeLockInterval(60);
 
     CBitcoinSecret bsecret;
@@ -583,8 +583,10 @@ BOOST_AUTO_TEST_CASE(pos_CreateTransaction)
     // Set ChainParams for the test
     SelectParams(CBaseChainParams::UNITTEST);
     ModifiableParams()->setHeightToFork(0);
-    ModifiableParams()->setCoinbaseMaturity(1);
+    ModifiableParams()->setCoinMaturity(1);
     ModifiableParams()->setStakeLockInterval(60);
+
+    SetMockTime(GetTime());
 
     CBitcoinSecret bsecret;
     bsecret.SetString(strSecret);
@@ -659,7 +661,7 @@ BOOST_AUTO_TEST_CASE(pos_CreateTransaction)
     BOOST_CHECK(wallet.GetBalance() == 9 * COIN);
 
     // Mock a 22 second wait
-    SetMockTime(nTime += 25);
+    SetMockTime(nTime += 27);
     // Try to spend our first staked coin
     BOOST_CHECK(wallet.GetBalance() == 14 * COIN);
     CWalletTx wtx6;
@@ -673,8 +675,66 @@ BOOST_AUTO_TEST_CASE(pos_CreateTransaction)
     BOOST_CHECK(wallet.GetBalance() == 28 * COIN);
 }
 
-BOOST_AUTO_TEST_CASE(pos_ValidateBlock)
+BOOST_AUTO_TEST_CASE(pos_BigStakeValidation)
 {
+    CWallet wallet;
+    wallet.strWalletFile = "pos_BigStakeValidation.dat";
+    CWalletDB walletDB(wallet.strWalletFile, "crw");
+    
+    CMutableTransaction txin = GetNewTransaction(CScript() << OP_RETURN, 1000 * COIN, true, false);
+    CKoreStake stake;
+    stake.SetInput(txin, 0);
+    vector<CTxOut> vout;
+    // Try to create a stake of 99 KORE
+    BOOST_CHECK(stake.CreateLockingTxOuts(&wallet, vout, 99 * COIN));
+    // Should have only one vout
+    BOOST_CHECK(vout.size() == 1);
+
+    vout.clear();
+    stake.SetInput(txin, 0);
+    // Try to create a stake of 100 KORE
+    BOOST_CHECK(stake.CreateLockingTxOuts(&wallet, vout, 100 * COIN));
+    // Should have two vout
+    BOOST_CHECK(vout.size() == 2);
+    // First vout should have half (50 KORE)
+    BOOST_CHECK(vout[0].nValue == 50 * COIN);
+    // Second vout should have half (50 KORE)
+    BOOST_CHECK(vout[1].nValue == 50 * COIN);
+
+    vout.clear();
+    stake.SetInput(txin, 0);
+    // Try to create a stake of 5000.09 KORE
+    BOOST_CHECK(stake.CreateLockingTxOuts(&wallet, vout, 5000.09 * COIN));
+    // Should have two vout
+    BOOST_CHECK(vout.size() == 2);
+    // First vout should have half (2500.045 KORE)
+    BOOST_CHECK(vout[0].nValue == 2500.045 * COIN);
+    // Second vout should have half (2500.045 KORE)
+    BOOST_CHECK(vout[1].nValue == 2500.045 * COIN);
+
+    vout.clear();
+    stake.SetInput(txin, 0);
+    // Try to create a stake of 5001 KORE
+    BOOST_CHECK(stake.CreateLockingTxOuts(&wallet, vout, 5001 * COIN));
+    // Should have three vout
+    BOOST_CHECK(vout.size() == 3);
+    // First vout should have half of 5000 KORE (2500 KORE)
+    BOOST_CHECK(vout[0].nValue == 2500 * COIN);
+    // Second vout should have half of 5000 KORE  (2500 KORE)
+    BOOST_CHECK(vout[1].nValue == 2500 * COIN);
+    // Third vout should have the excess 1 KORE
+    BOOST_CHECK(vout[2].nValue == 1 * COIN);
+
+    vout.clear();
+    stake.SetInput(txin, 0);
+    // Try to create a stake of 5000.00000005 KORE
+    BOOST_CHECK(stake.CreateLockingTxOuts(&wallet, vout, 500000000005));
+    // Should have three vout
+    BOOST_CHECK(vout.size() == 2);
+    // First vout should have half of 5000.00000005 KORE - 1 satoshi(2500.00000002 KORE)
+    BOOST_CHECK(vout[0].nValue == 250000000002);
+    // Second vout should have half of 5000.00000005 KORE + 1 satoshi (2500.00000003 KORE)
+    BOOST_CHECK(vout[1].nValue == 250000000003);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

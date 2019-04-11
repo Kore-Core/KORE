@@ -39,8 +39,7 @@ enum class TrxValidationStatus {
 };
 
 static const CAmount PROPOSAL_FEE_TX = (50 * COIN);
-static const CAmount BUDGET_FEE_TX_OLD = (50 * COIN);
-static const CAmount BUDGET_FEE_TX = (5 * COIN);
+static const CAmount BUDGET_FEE_TX = (50 * COIN);
 static map<uint256, int> mapPayment_History;
 
 extern std::vector<CBudgetProposalBroadcast> vecImmatureBudgetProposals;

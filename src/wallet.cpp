@@ -12,8 +12,8 @@
 #include "checkpoints.h"
 #include "coincontrol.h"
 #include "kernel.h"
-#include "masternodeconfig.h"
 #include "masternode-budget.h"
+#include "masternodeconfig.h"
 #include "miner.h"
 #include "net.h"
 #include "pos.h"
@@ -802,7 +802,7 @@ bool CWallet::AddToWallet_Legacy(const CWalletTx& wtxIn, bool fFromLoadWallet, C
 
                     int64_t blocktime = mapBlockIndex[wtxIn.hashBlock]->GetBlockTime();
                     wtx.nTimeSmart = std::max(latestEntry, std::min(blocktime, latestNow));
-                } else if (fDebug) 
+                } else if (fDebug)
                     LogPrintf("AddToWallet(): found %s in block %s not in index\n", wtxIn.GetHash().ToString(), wtxIn.hashBlock.ToString());
             }
             AddToSpends(hash);
@@ -1735,7 +1735,7 @@ CAmount CWallet::GetBalance() const
     //     int nIndex;
     //     if(!mne.castOutputIndex(nIndex))
     //         continue;
-        
+
     //     mnOutPoints.insert(make_pair(mne.getTxHash(), uint32_t(nIndex)));
     // }
 
@@ -2168,11 +2168,21 @@ bool less_then_denom(const COutput& out1, const COutput& out2)
     return (!found1 && found2);
 }
 
+bool SortOutputsByValueDesc(COutput i, COutput j)
+{
+    return (i.Value() < j.Value());
+}
+
 bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInputs, CAmount nTargetAmount, map<string, CAmount>& stakeableBalance, map<string, CAmount>& maxStakeableBalance)
 {
     vector<COutput> vCoins;
     AvailableCoins(vCoins, true, NULL, false, STAKABLE_COINS);
+
+    // Sort the Available coins and reverse them
+    std::sort(vCoins.begin(), vCoins.end(), SortOutputsByValueDesc);
+
     CAmount nAmountSelected = 0;
+    map<string, int> numberOfSelectedCoinsPerAddress;
     if (GetBoolArg("-korestake", true)) {
         //cout << "SelectStakeCoins -->" << endl;
         if (fDebug) LogPrintf("SelectStakeCoins --> \n");
@@ -2180,8 +2190,12 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
             uint160 destination;
             if (!ExtractDestination(out.tx->vout[out.i].scriptPubKey, destination))
                 continue;
+            string destinationString = destination.ToString();
 
-            nTargetAmount = max(nTargetAmount, maxStakeableBalance[destination.ToString()]);
+            if (numberOfSelectedCoinsPerAddress[destinationString] == 10)
+                continue;
+
+            nTargetAmount = max(nTargetAmount, maxStakeableBalance[destinationString]);
 
             //make sure not to outrun target amount
             if (nAmountSelected + out.tx->vout[out.i].nValue > nTargetAmount)
@@ -2193,7 +2207,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
             if (GetAdjustedTime() - nTxTime < Params().GetStakeMinAge())
                 continue;
                 
-            if (out.tx->IsLegacyCoinStake() && out.nDepth < Params().GetCoinbaseMaturity())
+            if (out.tx->IsLegacyCoinStake() && out.nDepth < Params().GetCoinMaturity())
                 continue;
             else if (out.tx->IsCoinStake() && !out.tx->IsStakeSpendable())
                 continue;
@@ -2206,7 +2220,8 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
             if (fDebug) LogPrintf("SelectStakeCoin from : %d \n", input->GetIndexFrom()->nHeight);
             listInputs.emplace_back(std::move(input));
 
-            stakeableBalance[destination.ToString()] += out.tx->vout[out.i].nValue;
+            stakeableBalance[destinationString] += out.tx->vout[out.i].nValue;
+            numberOfSelectedCoinsPerAddress[destinationString] += 1;
         }
         //cout << "SelectStakeCoins <--" << endl;
         if (fDebug) LogPrintf("SelectStakeCoins <-- \n");
@@ -2390,7 +2405,7 @@ bool CWallet::SelectCoins(const CAmount& nTargetValue, set<pair<const CWalletTx*
         return (nValueRet >= nTargetValue);
     }
 
-    return (SelectCoinsMinConf(nTargetValue, 1, 6, vCoins, setCoinsRet, nValueRet) ||
+    return (SelectCoinsMinConf(nTargetValue, 1, Params().GetCoinMaturity(), vCoins, setCoinsRet, nValueRet) ||
             SelectCoinsMinConf(nTargetValue, 1, 1, vCoins, setCoinsRet, nValueRet) ||
             SelectCoinsMinConf(nTargetValue, 0, 1, vCoins, setCoinsRet, nValueRet));
 }
@@ -2791,7 +2806,7 @@ bool CWallet::GetBudgetSystemCollateralTX(CWalletTx& tx, uint256 hash, bool useI
     std::string strFail = "";
 
     vector<CRecipient> vecSend;
-    CRecipient recipient = {scriptChange, BUDGET_FEE_TX_OLD, false};
+    CRecipient recipient = {scriptChange, BUDGET_FEE_TX, false};
     vecSend.push_back(recipient);
 
     CCoinControl* coinControl = NULL;
@@ -2837,7 +2852,7 @@ bool CWallet::ConvertList(std::vector<CTxIn> vCoins, std::vector<CAmount>& vecAm
             if (i.prevout.n < wtx.vout.size()) {
                 vecAmounts.push_back(wtx.vout[i.prevout.n].nValue);
             }
-        } else if (fDebug) 
+        } else if (fDebug)
             LogPrintf("ConvertList -- Couldn't find transaction\n");
     }
     return true;
@@ -2933,7 +2948,7 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
                     }
 
                     if (useIX) {
-                        strFailReason += " " + _("SwiftTX requires inputs with at least 6 confirmations, you might need to wait a few minutes and try again.");
+                        strFailReason += " " + _("SwiftTX requires inputs with at least 25 confirmations, you might need to wait a few minutes and try again.");
                     }
                     return false;
                 }
@@ -3020,8 +3035,7 @@ bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
 
                 // Fill vin
                 int nIn = 0;
-                BOOST_FOREACH (const PAIRTYPE(const CWalletTx*, unsigned int) & coin, setCoins)
-                {
+                BOOST_FOREACH (const PAIRTYPE(const CWalletTx*, unsigned int) & coin, setCoins) {
                     txNew.vin.push_back(CTxIn(coin.first->GetHash(), coin.second));
                     //if (coin.first->vin[coin.second].prevPubKey)
                     txNew.vin[nIn++].prevPubKey = coin.first->vout[coin.second].scriptPubKey;
@@ -3199,7 +3213,7 @@ bool CWallet::CreateTransaction_Legacy(const vector<CRecipient>& vecSend, CWalle
                     }
 
                     if (useIX) {
-                        strFailReason += " " + _("SwiftTX requires inputs with at least 6 confirmations, you might need to wait a few minutes and try again.");
+                        strFailReason += " " + _("SwiftTX requires inputs with at least 25 confirmations, you might need to wait a few minutes and try again.");
                     }
                     return false;
                 }
@@ -3537,33 +3551,15 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             // Deal again with txNew to add masternode payment
             FillBlockPayee(txNew, 0, true, nBalance);
 
-            static string message = "Created on version 13 post-fork";
-            static vector<u_char> vecMessage(message.begin(), message.end());
-
-            CTxOut vOutMessage;
-            vOutMessage.SetEmpty();
-            vOutMessage.scriptPubKey = CScript() << vecMessage << OP_RETURN;
-            txNew.vout.emplace_back(vOutMessage);
-
             // Create output for the locking transaction and update its value
             vector<CTxOut> vout;
-            bool stakeSplitted = nBalance > 5000 * COIN;
-            if (!stakeInput->CreateLockingTxOuts(this, vout, stakeSplitted)) {
+            if (!stakeInput->CreateLockingTxOuts(this, vout, nBalance)) {
                 if (fDebug) LogPrintf("%s: failed to get scriptPubKey\n", __func__);
                 txLock.vin.clear();
                 txLock.vout.clear();
                 break;
             }
             txLock.vout.insert(txLock.vout.end(), vout.begin(), vout.end());
-
-            if (stakeSplitted) {
-                // Lock output gets max amount of coins
-                txLock.vout[0].nValue = 5000 * COIN;
-                // First transaction gets excess coins
-                txLock.vout[1].nValue = nBalance - txLock.vout[0].nValue;
-            } else {
-                txLock.vout[0].nValue = nBalance;
-            }
 
             // Limit size for the coinbase tx
             unsigned int nBytes = ::GetSerializeSize(txNew, SER_NETWORK, PROTOCOL_VERSION);
@@ -3582,14 +3578,14 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     }
     if (!fKernelFound)
         return false;
-    
+
     // Sign for KORE
     int nIn = 0;
     txNew.nTime = nTxNewTime;
     txLock.nTime = nTxNewTime;
 
     SetSequenceForLockTxVIn(txLock.vin);
-    
+
     for (CTxIn txIn : txLock.vin) {
         const CWalletTx* wtx = GetWalletTx(txIn.prevout.hash);
         if (!SignSignature(*this, *wtx, txLock, nIn++))
@@ -3761,7 +3757,7 @@ bool CWallet::CreateCoinStake_Legacy(const CKeyStore& keystore, CBlock* pblock, 
         pblock->nTime = txNew.nTime = pblock->vtx[0].nTime;
     else
         return error("CreateCoinStake : failed to update coinstake time");
-    
+
     static string message = "Created on version 13 pre-fork";
     static vector<u_char> vecMessage(message.begin(), message.end());
 
@@ -4740,7 +4736,7 @@ void CWallet::AutoCombineDust()
             if (!out.fSpendable)
                 continue;
             //no coins should get this far if they dont have proper maturity, this is double checking
-            if (out.tx->IsLegacyCoinStake() && out.tx->GetDepthInMainChain() < Params().GetCoinbaseMaturity() + 1)
+            if (out.tx->IsLegacyCoinStake() && out.tx->GetDepthInMainChain() < Params().GetCoinMaturity() + 1)
                 continue;
             else if (out.tx->IsCoinStake() && !out.tx->IsStakeSpendable())
                 continue;
@@ -4827,7 +4823,7 @@ bool CWallet::MultiSend()
     bool mnSent = false;
     for (const COutput& out : vCoins) {
         //need output with precise confirm count - this is how we identify which is the output to send
-        if (out.tx->GetDepthInMainChain() != Params().GetCoinbaseMaturity() + 1)
+        if (out.tx->GetDepthInMainChain() != Params().GetCoinMaturity() + 1)
             continue;
 
         COutPoint outpoint(out.tx->GetHash(), out.i);
@@ -5007,7 +5003,7 @@ int CMerkleTx::GetDepthInMainChain(const CBlockIndex*& pindexRet, bool enableIX)
         return -1; // Not in chain, not in mempool
 
     if (enableIX) {
-        if (nResult < Params().GetCoinbaseMaturity()) {
+        if (nResult < Params().GetCoinMaturity()) {
             int signatures = GetTransactionLockSignatures();
             if (signatures >= SWIFTTX_SIGNATURES_REQUIRED) {
                 return nSwiftTXDepth + nResult;
@@ -5023,7 +5019,7 @@ int CMerkleTx::GetBlocksToMaturity() const
     if (!(IsCoinBase() || IsLegacyCoinStake()))
         return 0;
 
-    return max(0, (Params().GetCoinbaseMaturity() + 1) - GetDepthInMainChain());
+    return max(0, (Params().GetCoinMaturity() + 1) - GetDepthInMainChain());
 }
 
 

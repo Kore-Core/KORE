@@ -5,7 +5,7 @@
 #include "tests_util.h"
 #include "utiltime.h"
 
-// #define GENERATE_BLOCK_INFO
+//#define GENERATE_BLOCK_INFO
 
 #include <boost/test/unit_test.hpp>
 
@@ -25,8 +25,7 @@ BOOST_AUTO_TEST_CASE(generate_old_pow)
     int64_t oldTargetTimespan = Params().GetTargetTimespan();
     int64_t oldTargetSpacing = Params().GetTargetSpacing();
     int oldHeightToFork = Params().HeightToFork();
-    int oldStakeMinConfirmations = Params().GetStakeMinConfirmations();
-    int oldCoinBaseMaturity = Params().GetCoinbaseMaturity();
+    int oldCoinBaseMaturity = Params().GetCoinMaturity();
     int oldStakeMinAge = Params().GetStakeMinAge();
     int oldModifier = Params().GetModifierInterval();
 
@@ -36,7 +35,6 @@ BOOST_AUTO_TEST_CASE(generate_old_pow)
     // modifierInterval : [spacing, spacing)]
     // pow blocks       : [confirmations + 1, max(confirmations+1, value)], this way we will have 2 modifiers
     int minConfirmations = 3;
-    int nStakeMinConfirmations       = minConfirmations;        
     int nMaturity                    = minConfirmations;
     int nTargetTimespan              = 1 * 60; // KORE: 1 minute
     int nStakeTargetSpacing          = 10;
@@ -45,8 +43,7 @@ BOOST_AUTO_TEST_CASE(generate_old_pow)
     int nStakeMinAge                 = 30 * 60; // It will stake after 30 minutes
 
     ModifiableParams()->setHeightToFork(999);
-    ModifiableParams()->setStakeMinConfirmations(nStakeMinConfirmations);
-    ModifiableParams()->setCoinbaseMaturity(nMaturity);
+    ModifiableParams()->setCoinMaturity(nMaturity);
     ModifiableParams()->setTargetSpacing(nTargetSpacing);
     ModifiableParams()->setStakeModifierInterval(nModifierInterval);
     ModifiableParams()->setStakeMinAge(nStakeMinAge);
@@ -64,10 +61,9 @@ BOOST_AUTO_TEST_CASE(generate_old_pow)
     Checkpoints::fEnabled = true;
     ModifiableParams()->setHeightToFork(oldHeightToFork);
     ModifiableParams()->setEnableBigRewards(false);
-    ModifiableParams()->setCoinbaseMaturity(oldCoinBaseMaturity);
+    ModifiableParams()->setCoinMaturity(oldCoinBaseMaturity);
     ModifiableParams()->setStakeMinAge(oldStakeMinAge);
     ModifiableParams()->setStakeModifierInterval(oldModifier);
-    ModifiableParams()->setStakeMinConfirmations(oldStakeMinConfirmations);
     ModifiableParams()->setTargetTimespan(oldTargetTimespan);
     ModifiableParams()->setTargetSpacing(oldTargetSpacing);
 }

@@ -109,15 +109,8 @@ CAmount GetBlockReward(CBlockIndex* pindexPrev)
         if (pindexPrev->nMoneySupply == MAX_MONEY)
             return 0;
 
-        static double oneThird = (double)1 / 3;
-        static double half = (double)1 / 2;
-        static double max_money_cube = 1.728e21; // MAX_MONEY/COIN (12,000,000.00000000 KORE)
-        static double k_square_root = pow((double)135711131719231, half);
-
-        double moneySupplyFloat = (double)pindexPrev->nMoneySupply / COIN;
-        moneySupplyFloat = pow(moneySupplyFloat, 3);
-        double rewardDouble = pow(max_money_cube - moneySupplyFloat, oneThird);
-        rewardDouble = rewardDouble / k_square_root;
+        double moneySupplyFloat = (double)pindexPrev->nMoneySupply / COIN;        
+        double rewardDouble = pow(1.44e14 - pow(moneySupplyFloat, 2), (double)1 / 2)/1.436e7;
 
         CAmount reward = ceil(rewardDouble * COIN);
         if (reward + pindexPrev->nMoneySupply < MAX_MONEY)
@@ -265,17 +258,11 @@ uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock
 inline CMutableTransaction CreateCoinbaseTransaction(const CScript& scriptPubKeyIn)
 {
     // Create coinbase tx
-
-    static string message = "Created on version 13 post-fork";
-    static vector<u_char> vecMessage(message.begin(), message.end());
-
     CMutableTransaction txNew;
     txNew.vin.resize(1);
     txNew.vin[0].prevout.SetNull();
-    txNew.vout.resize(2);
+    txNew.vout.resize(1);
     txNew.vout[0].scriptPubKey = scriptPubKeyIn;
-    txNew.vout[1].SetEmpty();
-    txNew.vout[1].scriptPubKey = CScript() << vecMessage << OP_RETURN;
 
     return txNew;
 }
@@ -1051,14 +1038,13 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
         boost::this_thread::interruption_point();
         if (fProofOfStake) {
             //control the amount of times the client will check for mintable coins
-            if ((GetTime() - nMintableLastCheck > Params().GetClientMintableCoinsInterval())) {
+            if ((GetTime() - nMintableLastCheck > Params().GetTargetSpacing())) {
                 nMintableLastCheck = GetTime();
                 fMintableCoins = pwallet->MintableCoins();
             }
 
-            while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || 
-                  !(pwallet->GetBalance() > 0 && nReserveBalance <= pwallet->GetBalance()) || 
-                  !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >= 2))
+            while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || pwallet->GetBalance() == 0 ||
+                   nReserveBalance > pwallet->GetBalance() || !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >= 2))
             {
                 if (fDebug) {
                     LogPrintf("***************************************************************\n");
@@ -1087,7 +1073,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                 nLastCoinStakeSearchInterval = 0;
                 // Do a separate 1 minute check here to ensure fMintableCoins is updated
                 if (!fMintableCoins) {
-                    if (GetTime() - nMintableLastCheck > Params().GetEnsureMintableCoinsInterval()) // 1 minute check time
+                    if (GetTime() - nMintableLastCheck > Params().GetTargetSpacing()) // 1 minute check time
                     {
                         nMintableLastCheck = GetTime();
                         fMintableCoins = pwallet->MintableCoins();

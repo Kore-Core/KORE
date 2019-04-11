@@ -531,7 +531,7 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache* pcoins, unsigned int nMem
                     continue;
                 const CCoins* coins = pcoins->AccessCoins(txin.prevout.hash);
                 if (nCheckFrequency != 0) assert(coins);
-                if (!coins || ((coins->IsCoinBase() || coins->IsCoinStake()) && ((signed long)nMemPoolHeight) - coins->nHeight < Params().GetCoinbaseMaturity())) {
+                if (!coins || ((coins->IsCoinBase() || coins->IsCoinStake()) && ((signed long)nMemPoolHeight) - coins->nHeight < Params().GetCoinMaturity())) {
                     transactionsToRemove.push_back(tx);
                     break;
                 }
@@ -567,7 +567,7 @@ void CTxMemPool::removeForReorg_Legacy(const CCoinsViewCache* pcoins, unsigned i
                     continue;
                 const CCoins* coins = pcoins->AccessCoins(txin.prevout.hash);
                 if (nCheckFrequency != 0) assert(coins);
-                if (!coins || ((coins->IsCoinBase() || coins->IsCoinStake()) && ((signed long)nMemPoolHeight) - coins->nHeight < Params().GetCoinbaseMaturity())) {
+                if (!coins || ((coins->IsCoinBase() || coins->IsCoinStake()) && ((signed long)nMemPoolHeight) - coins->nHeight < Params().GetCoinMaturity())) {
                     transactionsToRemove.push_back(tx);
                     break;
                 }
@@ -596,7 +596,7 @@ void CTxMemPool::removeCoinbaseSpends(const CCoinsViewCache* pcoins, unsigned in
                 continue;
             const CCoins* coins = pcoins->AccessCoins(txin.prevout.hash);
             if (nCheckFrequency != 0) assert(coins);
-            if (!coins || ((coins->IsCoinBase() || coins->IsCoinStake()) && nMemPoolHeight - coins->nHeight < (unsigned)Params().GetCoinbaseMaturity())) {
+            if (!coins || ((coins->IsCoinBase() || coins->IsCoinStake()) && nMemPoolHeight - coins->nHeight < (unsigned)Params().GetCoinMaturity())) {
                 transactionsToRemove.push_back(tx);
                 break;
             }

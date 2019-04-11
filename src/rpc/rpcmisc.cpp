@@ -637,7 +637,7 @@ UniValue getforkstatus(const UniValue& params, bool fHelp)
     int nLegacy = 0;
     int count = 0;
     
-    int BlocksToMeasure = Params().GetMajorityBlockUpgradeToCheck();
+    int BlocksToMeasure = Params().GetNetworkID() == CBaseChainParams::MAIN ? 1000 : 100;
     int blockHeight = tip->nHeight;
     int forkHeight = Params().HeightToFork();
 
@@ -674,7 +674,7 @@ UniValue getforkstatus(const UniValue& params, bool fHelp)
     obj.push_back(Pair("newClientCount", std::to_string(nUpgraded)));
     obj.push_back(Pair("newClientPercentage", std::to_string(nUpgraded * 100 / BlocksToMeasure) + "%"));
     obj.push_back(Pair("blocksVerified",  strprintf("latest %d blocks", std::to_string(count))));
-    obj.push_back(Pair("timeUntilFork", strprintf("%d minute until the fork - based on 2 blcoks/minute", (forkHeight - blockHeight)/2)));
+    obj.push_back(Pair("timeUntilFork", strprintf("%d minutes until the fork - based on 1 blcok/minute", (forkHeight - blockHeight)/2)));
 
     return obj;
 }

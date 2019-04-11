@@ -74,17 +74,31 @@ CAmount CKoreStake::GetValue()
     return txFrom.vout[nPosition].nValue;
 }
 
-bool CKoreStake::CreateLockingTxOuts(CWallet* pwallet, vector<CTxOut>& vout, bool fsplitStake)
+bool CKoreStake::CreateLockingTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount value)
 {
     CScript scriptPubKey;
     GetScriptPubKey(pwallet, scriptPubKey);
-    vout.emplace_back(CTxOut(0, scriptPubKey));
+    CAmount splitValue = 0;
+    CAmount thresholdValue = 0;
 
     // Calculate if we need to split the output
-    if (fsplitStake) {
+    CAmount newValue = 5000 * COIN;
+    if (value > newValue + (0.1 * COIN)) {
+        splitValue = value - newValue;
+        value = newValue;
+    }
+
+    if (value >= 100 * COIN) {
+        thresholdValue = value / 2;
+        vout.emplace_back(CTxOut(thresholdValue, scriptPubKey));
+    }
+
+    vout.emplace_back(CTxOut(value - thresholdValue, scriptPubKey));
+
+    if (splitValue) {
         scriptPubKey.clear();
         GetScriptPubKey(pwallet, scriptPubKey, false);
-        vout.emplace_back(CTxOut(0, scriptPubKey));
+        vout.emplace_back(CTxOut(splitValue, scriptPubKey));
     }
 
     return true;

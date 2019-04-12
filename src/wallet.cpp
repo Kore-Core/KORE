@@ -2204,7 +2204,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
             //use the block time
             int64_t nTxTime = out.tx->GetTxTime();
 
-            if (out.nDepth > Params().GetCoinMaturity() || GetAdjustedTime() - nTxTime < Params().GetStakeMinAge())
+            if (out.nDepth < Params().GetCoinMaturity() && GetAdjustedTime() - nTxTime < Params().GetStakeMinAge())
                 continue;
                 
             if (out.tx->IsLegacyCoinStake() && out.nDepth < Params().GetCoinMaturity())

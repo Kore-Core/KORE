@@ -4649,7 +4649,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
             return state.DoS(100, error("CheckBlock(): second tx, first vout is not locking"));
         // Second vout must be a locking transaction if total value bigger than 100 KORE
         int startCheckingNotStake = 1;
-        if (block.vtx[1].vout[0].nValue >= 1100 * COIN) {
+        if (block.vtx[1].vout[0].nValue + block.vtx[1].vout[1].nValue >= 2200 * COIN) {
             if (!block.vtx[1].vout[1].IsCoinStake())
                 return state.DoS(100, error("CheckBlock(): second tx, second vout is not locking"));
             

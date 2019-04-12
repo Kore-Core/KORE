@@ -88,7 +88,7 @@ bool CKoreStake::CreateLockingTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAm
         value = newValue;
     }
 
-    if (value >= 100 * COIN) {
+    if (value >= 2200 * COIN) {
         thresholdValue = value / 2;
         vout.emplace_back(CTxOut(thresholdValue, scriptPubKey));
     }

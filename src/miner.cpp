@@ -117,13 +117,8 @@ CAmount GetBlockReward(CBlockIndex* pindexPrev)
             return reward;
         else
             return (MAX_MONEY)-pindexPrev->nMoneySupply;
-    } else {
-        if ((Params().GetNetworkID() == CBaseChainParams::TESTNET || Params().GetNetworkID() == CBaseChainParams::UNITTEST) && pindexPrev->nHeight >= 0 && pindexPrev->nHeight < 500) {
-            return 10000 * COIN;
-        }
-
-        return 5 * COIN;
-    }
+    } else
+        return GetBlockValue(pindexPrev->nHeight);
 }
 
 void UpdateTime(CBlockHeader* pblock, const CBlockIndex* pindexPrev, bool fProofOfStake)
@@ -324,7 +319,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         }
         if (fDebug) {
             LogPrintf("CreateNewBlock found a stake? %s \n", fStakeFound ? "true" : "false");
-            LogPrintf("CreateNewBlock block is pos? %s \n", pblock->IsProofOfStake() ? "true" : "false");
+            LogPrintf("CreateNewBlock block is pos? %s \n", fProofOfStake ? "true" : "false");
         }
 
         if (!fStakeFound)
@@ -1055,7 +1050,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                     LogPrintf("BitcoinMiner Wallet Locked               ? %s (should be false) \n", pwallet->IsLocked() ? "true" : "false");
                     LogPrintf("BitcoinMiner Is there Mintable Coins     ? %s (should be true) \n", fMintableCoins ? "true" : "false");
                     LogPrintf("BitcoinMiner Masternode is Synced        ? %s (should be true)\n", masternodeSync.IsSynced() ? "true" : "false");
-                    LogPrintf("BitcoinMiner How Many MN are Enabled     ? %d (should be %d)\n", mnodeman.CountEnabled(), mnodeman.size());
+                    LogPrintf("BitcoinMiner How Many MN are Enabled     ? %d (should be %d)\n", mnodeman.CountEnabled(), 2);
                     LogPrintf("BitcoinMiner Balance > 0                 ? %s (should be true)\n", pwallet->GetBalance() > 0 ? "true" : "false");
                     LogPrintf("BitcoinMiner Balance is >= than reserved ? %s (should be true)\n", nReserveBalance >= pwallet->GetBalance() ? "false" : "true");
                     LogPrintf("***************************************************************\n");

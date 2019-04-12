@@ -2204,7 +2204,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
             //use the block time
             int64_t nTxTime = out.tx->GetTxTime();
 
-            if (GetAdjustedTime() - nTxTime < Params().GetStakeMinAge())
+            if (out.nDepth > Params().GetCoinMaturity() || GetAdjustedTime() - nTxTime < Params().GetStakeMinAge())
                 continue;
                 
             if (out.tx->IsLegacyCoinStake() && out.nDepth < Params().GetCoinMaturity())
@@ -2245,7 +2245,7 @@ bool CWallet::MintableCoins()
 
         for (const COutput& out : vCoins) {
             int64_t nTxTime = out.tx->GetTxTime();
-            if (GetAdjustedTime() - nTxTime > Params().GetStakeMinAge())
+            if (out.nDepth > Params().GetCoinMaturity() || GetAdjustedTime() - nTxTime > Params().GetStakeMinAge())
                 return true;
         }
     }

@@ -2204,7 +2204,7 @@ CAmount GetMasternodePayment(CAmount blockReward, CAmount stakedBalance, CBlockI
     double blockRewardDouble = (double)blockReward;
     double stakedBalanceDouble = (double)min(stakedBalance, 5000 * COIN);
 
-    return (1 - ((4e-13 * stakedBalanceDouble) + (1e-58 * pow(stakedBalanceDouble, 2) * moneySupplyDouble) + 0.43)) * stakedBalanceDouble;
+    return (1 - ((4e-13 * stakedBalanceDouble) + (1e-58 * pow(stakedBalanceDouble, 2) * moneySupplyDouble) + 0.43)) * blockReward;
 }
 
 int GetBestPeerHeight()
@@ -4649,7 +4649,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
             return state.DoS(100, error("CheckBlock(): second tx, first vout is not locking"));
         // Second vout must be a locking transaction if total value bigger than 100 KORE
         int startCheckingNotStake = 1;
-        if (block.vtx[1].vout[0].nValue >= 50 * COIN) {
+        if (block.vtx[1].vout[0].nValue >= 1100 * COIN) {
             if (!block.vtx[1].vout[1].IsCoinStake())
                 return state.DoS(100, error("CheckBlock(): second tx, second vout is not locking"));
             

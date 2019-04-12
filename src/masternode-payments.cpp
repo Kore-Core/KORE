@@ -632,9 +632,9 @@ bool CMasternodeBlockPayees::IsTransactionValid(const CTransaction& txNew, CBloc
 
     std::string strPayeesPossible = "";
 
-    CAmount nReward = GetBlockReward(pindexPrev);
+    CAmount nReward = UseLegacyCode(nBlockHeight) ? GetBlockValue(nBlockHeight) : GetBlockReward(pindexPrev);
 
-    CAmount requiredMasternodePayment = GetMasternodePayment(nBlockHeight, nReward, pindexPrev);
+    CAmount requiredMasternodePayment = UseLegacyCode(nBlockHeight) ? GetMasternodePayment_Legacy(nBlockHeight, nReward) : GetMasternodePayment(nBlockHeight, nReward, pindexPrev);
 
     //require at least 6 signatures
     BOOST_FOREACH (CMasternodePayee& payee, vecPayments)

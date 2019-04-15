@@ -1833,7 +1833,7 @@ bool ReadBlockFromDisk(CBlock& block, const CBlockIndex* pindex, const Consensus
 CAmount GetProofOfWorkSubsidy(int nHeight, const Consensus::Params& consensusParams)
 {
     if (Params().NetworkIDString() == CBaseChainParams::TESTNET) {
-        if (nHeight >= 0 && nHeight < 50)
+        if (nHeight >= 0 && nHeight= <= 50)
             return 40000 * COIN;
     }
     return 5 * COIN;

@@ -766,7 +766,16 @@ UniValue getbalance(const UniValue& params, bool fHelp)
     if (fHelp || params.size() > 3)
         throw runtime_error(
             "getbalance ( \"account\" minconf includeWatchonly )\n"
-            "\nIf account is not specified, returns the server's total available balance (excluding zerocoins).\n"
+            "\nIf account is not specified, returns the server's total available balance.\n"
+            "\nResult:\n"
+            "{\n"
+            "  \"available\": xxxxx,            (numeric) The total amount available\n"
+            "  \"staked\": xxxxx,               (numeric) The total amount staked\n"
+            "  \"immature\": xxxxx,             (numeric) The total immature balance\n"
+            "  \"total\": xxxxx,                (numeric) The total amount held by wallet\n"
+            "  \"unconfirmed\": xxxxx,          (numeric) The total unconfirmed balance\n"
+            "}\n"
+
             "If account is specified, returns the balance in the account.\n"
             "Note that the account \"\" is not the same as leaving the parameter out.\n"
             "The server total may be different to the balance in the default \"\" account.\n"
@@ -793,8 +802,20 @@ UniValue getbalance(const UniValue& params, bool fHelp)
 
     LOCK2(cs_main, pwalletMain->cs_wallet);
 
-    if (params.size() == 0)
-        return ValueFromAmount(pwalletMain->GetBalance());
+    UniValue obj(UniValue::VOBJ);
+    if (params.size() == 0) {
+        CAmount balance  = pwalletMain->GetBalance();
+        CAmount staked   = pwalletMain->GetStakedBalance();
+        CAmount immature = pwalletMain->GetImmatureBalance();
+        CAmount total    = balance + staked + immature;
+
+        obj.push_back(Pair("available",     ValueFromAmount(balance)));
+        obj.push_back(Pair("staked",        ValueFromAmount(staked)));
+        obj.push_back(Pair("immature",      ValueFromAmount(immature)));
+        obj.push_back(Pair("total",         ValueFromAmount(total)));
+        obj.push_back(Pair("unconfirmed",   ValueFromAmount(pwalletMain->GetUnconfirmedBalance())));
+        return obj;
+    }
 
     int nMinDepth = 1;
     if (params.size() > 1)
@@ -836,36 +857,6 @@ UniValue getbalance(const UniValue& params, bool fHelp)
 
     return ValueFromAmount(nBalance);
 }
-
-UniValue getstakedbalance(const UniValue& params, bool fHelp)
-{
-    if (fHelp || params.size() > 0)
-        throw runtime_error(
-            "getstakedbalance\n"
-            
-            "\nResult:\n"
-            "amount              (numeric) The total amount in KORE staked that is not spendable yet.\n"
-
-            "\nExamples:\n"
-            "\nThe total staked amount in the server across all accounts\n" +
-            HelpExampleCli("getstakedbalance", "")
-        );
-    
-    return ValueFromAmount(pwalletMain->GetStakedBalance());
-}
-
-UniValue getunconfirmedbalance(const UniValue& params, bool fHelp)
-{
-    if (fHelp || params.size() > 0)
-        throw runtime_error(
-            "getunconfirmedbalance\n"
-            "Returns the server's total unconfirmed balance\n");
-
-    LOCK2(cs_main, pwalletMain->cs_wallet);
-
-    return ValueFromAmount(pwalletMain->GetUnconfirmedBalance());
-}
-
 
 UniValue movecmd(const UniValue& params, bool fHelp)
 {

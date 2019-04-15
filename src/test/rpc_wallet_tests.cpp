@@ -182,11 +182,6 @@ BOOST_AUTO_TEST_CASE(rpc_wallet)
     BOOST_CHECK(arr.size() > 0);
     BOOST_CHECK(CBitcoinAddress(arr[0].get_str()).Get() == demoAddress.Get());
 
-    /*********************************
-     * 		getstakedbalance
-     *********************************/
-    BOOST_CHECK_NO_THROW(CallRPC("getstakedbalance"));
-    BOOST_CHECK_THROW(CallRPC("getstakedbalance " + strAccount), runtime_error);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

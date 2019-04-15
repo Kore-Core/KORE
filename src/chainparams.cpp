@@ -238,14 +238,14 @@ public:
         vAlertPubKey = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         nDefaultPort = 11743;
 
-        genesis = CreateGenesisBlock(1554993017, 2, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+        genesis = CreateGenesisBlock(1555366374, 4, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
 
         LogPrintf("genesis.GetHash = %s\n",  genesis.GetHash().ToString().c_str());
         LogPrintf("genesis.hashMerkleRoot = %s\n",  genesis.hashMerkleRoot.ToString().c_str());
 
-        assert(consensus.hashGenesisBlock == uint256S("0x15df50f016d3e2296ac84433b7a4f6364b2541829938889e7c2e22895d649524"));
-        assert(genesis.hashMerkleRoot == uint256S("0x979e29c82f4158cb634e2596a416f85b9138fca527a93207256fb9496b1cdb7e"));
+        assert(consensus.hashGenesisBlock == uint256S("0x124964c50e05df7306235fd3e479cc3bb2493c49b0dff7213f5ab78605ea6b83"));
+        assert(genesis.hashMerkleRoot == uint256S("0xc1ea8351c67a6246dab594c138ab47a2948834ebf3fc5c850cec68858d8f80e3"));
 
         vFixedSeeds.clear();
         vSeeds.clear();

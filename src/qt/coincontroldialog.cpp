@@ -135,10 +135,10 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
     ui->treeWidget->setColumnWidth(COLUMN_AMOUNT, 100);
     ui->treeWidget->setColumnWidth(COLUMN_LABEL, 170);
     ui->treeWidget->setColumnWidth(COLUMN_ADDRESS, 190);
-    ui->treeWidget->setColumnWidth(COLUMN_OBFUSCATION_ROUNDS, 88);
     ui->treeWidget->setColumnWidth(COLUMN_DATE, 80);
     ui->treeWidget->setColumnWidth(COLUMN_CONFIRMATIONS, 100);
     ui->treeWidget->setColumnWidth(COLUMN_PRIORITY, 100);
+    ui->treeWidget->setColumnWidth(COLUMN_OBFUSCATION_ROUNDS, 88);
     ui->treeWidget->setColumnHidden(COLUMN_TXHASH, true);         // store transacton hash in this column, but dont show it
     ui->treeWidget->setColumnHidden(COLUMN_VOUT_INDEX, true);     // store vout index in this column, but dont show it
     ui->treeWidget->setColumnHidden(COLUMN_AMOUNT_INT64, true);   // store amount int64 in this column, but dont show it
@@ -857,14 +857,15 @@ void CoinControlDialog::updateView()
             }
 
             // amount
+            float amount = (float)out.tx->vout[out.i].nValue / COIN;
             itemOutput->setText(COLUMN_AMOUNT, BitcoinUnits::format(nDisplayUnit, out.tx->vout[out.i].nValue));
             itemOutput->setToolTip(COLUMN_AMOUNT, BitcoinUnits::format(nDisplayUnit, out.tx->vout[out.i].nValue));
-            itemOutput->setText(COLUMN_AMOUNT_INT64, strPad(QString::number(out.tx->vout[out.i].nValue), 15, " ")); // padding so that sorting works correctly
+            itemOutput->setData(COLUMN_AMOUNT_INT64, Qt::DisplayRole, amount);// strPad(QString::number(out.tx->vout[out.i].nValue), 15, " ")); // padding so that sorting works correctly
 
             // date
             itemOutput->setText(COLUMN_DATE, GUIUtil::dateTimeStr(out.tx->GetTxTime()));
             itemOutput->setToolTip(COLUMN_DATE, GUIUtil::dateTimeStr(out.tx->GetTxTime()));
-            itemOutput->setText(COLUMN_DATE_INT64, strPad(QString::number(out.tx->GetTxTime()), 20, " "));
+            itemOutput->setData(COLUMN_DATE_INT64, Qt::DisplayRole, (qlonglong)out.tx->GetTxTime());
 
 
             // ds+ rounds
@@ -878,12 +879,12 @@ void CoinControlDialog::updateView()
 
 
             // confirmations
-            itemOutput->setText(COLUMN_CONFIRMATIONS, strPad(QString::number(out.nDepth), 8, " "));
+            itemOutput->setData(COLUMN_CONFIRMATIONS, Qt::DisplayRole, out.nDepth);
 
             // priority
             double dPriority = ((double)out.tx->vout[out.i].nValue / (nInputSize + 78)) * (out.nDepth + 1); // 78 = 2 * 34 + 10
             itemOutput->setText(COLUMN_PRIORITY, CoinControlDialog::getPriorityLabel(dPriority, mempoolEstimatePriority));
-            itemOutput->setText(COLUMN_PRIORITY_INT64, strPad(QString::number((int64_t)dPriority), 20, " "));
+            itemOutput->setData(COLUMN_PRIORITY_INT64, Qt::DisplayRole, dPriority);
             dPrioritySum += (double)out.tx->vout[out.i].nValue * (out.nDepth + 1);
             nInputSum += nInputSize;
 

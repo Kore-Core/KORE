@@ -176,8 +176,8 @@ public:
         CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1508884606, 22, 12624920, 58284520, 0x201fffff, 1, pow (7,2) * COIN);
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256("0x0aab10677b4fe0371a67f99e78a69e7d9fa03a1c7d48747978da405dc5abeb99"));
-        assert(genesis.hashMerkleRoot == uint256S("0x53e2105c87e985ab3a3a3b3c6921f660f18535f935e447760758d4ed7c4c748c"));
+        assert(nHashGenesisBlock == uint256("0x1a655711fe2b444eb468648ca6fa7346dde1378f2d2ad9f8dfa75383b256e3b9"));
+        assert(genesis.hashMerkleRoot == uint256S("0x8a22020be8732c29dc3b7bba4a3761c4081f4e25ff1fb4eaece2332e20d657c9"));
 
         // Primary DNS Seeder
         vSeeds.push_back(CDNSSeedData("kore-dnsseed-1", "dnsseed.kore.life"));
@@ -254,10 +254,11 @@ public:
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
         
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1554993017, 2, 2500634, 64441706, bnProofOfWorkLimit.GetCompact(), 1, 49 * COIN);
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1555366374, 4, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x15df50f016d3e2296ac84433b7a4f6364b2541829938889e7c2e22895d649524"));
-        assert(genesis.hashMerkleRoot == uint256S("0x979e29c82f4158cb634e2596a416f85b9138fca527a93207256fb9496b1cdb7e"));
+        assert(nHashGenesisBlock == uint256S("0x124964c50e05df7306235fd3e479cc3bb2493c49b0dff7213f5ab78605ea6b83"));
+        assert(genesis.hashMerkleRoot == uint256S("0xc1ea8351c67a6246dab594c138ab47a2948834ebf3fc5c850cec68858d8f80e3"));
         
         vFixedSeeds.clear();
         vSeeds.clear();

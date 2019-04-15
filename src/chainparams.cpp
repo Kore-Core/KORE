@@ -176,8 +176,8 @@ public:
         CScript genesisOutputScript = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1508884606, 22, 12624920, 58284520, 0x201fffff, 1, pow (7,2) * COIN);
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256("0x1a655711fe2b444eb468648ca6fa7346dde1378f2d2ad9f8dfa75383b256e3b9"));
-        assert(genesis.hashMerkleRoot == uint256S("0x8a22020be8732c29dc3b7bba4a3761c4081f4e25ff1fb4eaece2332e20d657c9"));
+        assert(nHashGenesisBlock == uint256("0x0aab10677b4fe0371a67f99e78a69e7d9fa03a1c7d48747978da405dc5abeb99"));
+        assert(genesis.hashMerkleRoot == uint256S("0x53e2105c87e985ab3a3a3b3c6921f660f18535f935e447760758d4ed7c4c748c"));
 
         // Primary DNS Seeder
         vSeeds.push_back(CDNSSeedData("kore-dnsseed-1", "dnsseed.kore.life"));

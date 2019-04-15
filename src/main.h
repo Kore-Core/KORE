@@ -165,6 +165,10 @@ struct BlockHasher {
     size_t operator()(const uint256& hash) const { return hash.GetLow64(); }
 };
 
+static const CAmount STAKE_SPLIT_TRESHOLD = 985 * 2 * COIN;
+static const CAmount MAXIMUM_STAKE_VALUE = 2500 * COIN;
+static const CAmount MINIMUM_STAKE_VALUE = 25 * COIN;
+
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;
 extern CTxMemPool mempool;
@@ -359,7 +363,7 @@ bool AbortNode(CValidationState& state, const std::string& strMessage, const std
 /** Get statistics from node state */
 bool GetNodeStateStats(NodeId nodeid, CNodeStateStats& stats);
 /** Increase a node's misbehavior score. */
-void Misbehaving(NodeId nodeid, int howmuch);
+void Misbehaving(NodeId nodeid, int howmuch, std::string reason);
 /** Flush all state, indexes and buffers to disk. */
 void FlushStateToDisk();
 /** Prune block files and flush state to disk. */

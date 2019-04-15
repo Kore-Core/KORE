@@ -11,6 +11,7 @@
 #include "masternode-sync.h"
 #include "masternode.h"
 #include "masternodeman.h"
+#include "miner.h"
 #include "obfuscation.h"
 #include "util.h"
 #include <boost/filesystem.hpp>
@@ -550,7 +551,7 @@ void CBudgetManager::FillBlockPayee(CMutableTransaction& txNew, CAmount nFees, b
         ++it;
     }
 
-    CAmount blockValue = GetBlockValue(pindexPrev->nHeight);
+    CAmount blockReward = GetBlockReward(pindexPrev);
 
     if (fProofOfStake) {
         if (nHighestCount > 0) {
@@ -568,7 +569,7 @@ void CBudgetManager::FillBlockPayee(CMutableTransaction& txNew, CAmount nFees, b
         }
     } else {
         //miners get the full amount on these blocks
-        txNew.vout[0].nValue = blockValue;
+        txNew.vout[0].nValue = blockReward;
 
         if (nHighestCount > 0) {
             txNew.vout.resize(2);
@@ -1140,7 +1141,7 @@ void CBudgetManager::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             if (nProp == 0) {
                 if (pfrom->HasFulfilledRequest(NetMsgType::MNVS)) {
                     LogPrint("mnbudget", "mnvs - peer already asked me for the list\n");
-                    Misbehaving(pfrom->GetId(), 2);
+                    Misbehaving(pfrom->GetId(), 2, "Peer already asked for the list");
                     return;
                 }
                 pfrom->FulfilledRequest(NetMsgType::MNVS);
@@ -1210,7 +1211,7 @@ void CBudgetManager::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         mapSeenMasternodeBudgetVotes.insert(make_pair(vote.GetHash(), vote));
         if (!vote.SignatureValid(true)) {
             LogPrint("mnbudget", "mvote - signature invalid\n");
-            if (masternodeSync.IsSynced()) Misbehaving(pfrom->GetId(), 2);
+            if (masternodeSync.IsSynced()) Misbehaving(pfrom->GetId(), 2, "Invalid signature");
             // it could just be a non-synced masternode
             mnodeman.AskForMN(pfrom, vote.vin);
             return;
@@ -1284,7 +1285,7 @@ void CBudgetManager::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         mapSeenFinalizedBudgetVotes.insert(make_pair(vote.GetHash(), vote));
         if (!vote.SignatureValid(true)) {
             LogPrint("mnbudget", "fbvote - signature invalid\n");
-            if (masternodeSync.IsSynced()) Misbehaving(pfrom->GetId(), 2);
+            if (masternodeSync.IsSynced()) Misbehaving(pfrom->GetId(), 3, "Invalid signature");
             // it could just be a non-synced masternode
             mnodeman.AskForMN(pfrom, vote.vin);
             return;

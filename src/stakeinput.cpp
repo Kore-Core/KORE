@@ -82,13 +82,13 @@ bool CKoreStake::CreateLockingTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAm
     CAmount thresholdValue = 0;
 
     // Calculate if we need to split the output
-    CAmount newValue = 5000 * COIN;
+    CAmount newValue = MAXIMUM_STAKE_VALUE;
     if (value > newValue + (0.1 * COIN)) {
         splitValue = value - newValue;
         value = newValue;
     }
 
-    if (value >= 2200 * COIN) {
+    if (value >= STAKE_SPLIT_TRESHOLD) {
         thresholdValue = value / 2;
         vout.emplace_back(CTxOut(thresholdValue, scriptPubKey));
     }

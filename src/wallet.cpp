@@ -3392,9 +3392,6 @@ bool CWallet::CreateTransaction(CScript scriptPubKey, const CAmount& nValue, CWa
 // ppcoin: create coin stake transaction
 bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CMutableTransaction& txNew, CMutableTransaction& txLock, unsigned int& nTxNewTime, bool fProofOfStake, CKey& key)
 {
-    // The following split & combine thresholds are important to security
-    // Should not be adjusted if you don't understand the consequences
-    static int64_t nCombineThreshold = 5000 * COIN;
     txNew.vin.clear();
     txNew.vout.clear();
     txLock.vin.clear();
@@ -3463,7 +3460,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         uint160 destination;
         ExtractDestination(tx.vout[stakeInput->GetPosition()].scriptPubKey, destination);
         CAmount addressBalance = stakeableBalance[destination.ToString()];
-        if (addressBalance < 50 * COIN)
+        if (addressBalance < MINIMUM_STAKE_VALUE)
             continue;
 
         nTxNewTime = GetAdjustedTime();

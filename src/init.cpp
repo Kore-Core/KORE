@@ -72,7 +72,6 @@ using namespace std;
 
 #ifdef ENABLE_WALLET
 CWallet* pwalletMain = NULL;
-//CzKOREWallet* zwalletMain = NULL;
 int nWalletBackups = 10;
 #endif
 volatile bool fFeeEstimatesInitialized = false;
@@ -387,7 +386,7 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageOpt("-pid=<file>", strprintf(_("Specify pid file (default: %s)"), "kored.pid"));
 #endif
     strUsage += HelpMessageOpt("-reindex", _("Rebuild block chain index from current blk000??.dat files") + " " + _("on startup"));
-    strUsage += HelpMessageOpt("-reindexmoneysupply", _("Reindex the KORE and zKORE money supply statistics") + " " + _("on startup"));
+    strUsage += HelpMessageOpt("-reindexmoneysupply", _("Reindex the KORE money supply statistics") + " " + _("on startup"));
     strUsage += HelpMessageOpt("-resync", _("Delete blockchain folders and resync from scratch") + " " + _("on startup"));
 #if !defined(WIN32)
     strUsage += HelpMessageOpt("-sysperms", _("Create new files with system default permissions, instead of umask 077 (only effective with disabled wallet functionality)"));
@@ -523,7 +522,6 @@ std::string HelpMessage(HelpMessageMode mode)
     strUsage += HelpMessageGroup(_("Staking options:"));
     strUsage += HelpMessageOpt("-staking=<n>", strprintf(_("Enable staking functionality (0-1, default: %u)"), 0));
     strUsage += HelpMessageOpt("-korestake=<n>", strprintf(_("Enable or disable staking functionality for KORE inputs (0-1, default: %u)"), 1));
-    strUsage += HelpMessageOpt("-zkorestake=<n>", strprintf(_("Enable or disable staking functionality for zKORE inputs (0-1, default: %u)"), 1));
     strUsage += HelpMessageOpt("-reservebalance=<amt>", _("Keep the specified amount available for spending at all times (default: 0)"));
     if (GetBoolArg("-help-debug", false)) {
         strUsage += HelpMessageOpt("-printstakemodifier", _("Display the stake modifier calculations in the debug.log file."));
@@ -1741,17 +1739,8 @@ bool AppInit2()
         pwalletMain->SetBroadcastTransactions(GetBoolArg("-walletbroadcast", DEFAULT_WALLETBROADCAST));
         fVerifyingBlocks = false;
 
-        //Inititalize zKOREWallet
-        //uiInterface.InitMessage(_("Syncing zKORE wallet..."));
-
-        //bool fEnableZkoreBackups = GetBoolArg("-backupzkore", true);
-        //pwalletMain->setZkoreAutoBackups(fEnableZkoreBackups);
-
-        //Load zerocoin mint hashes to memory
-        //pwalletMain->zkoreTracker->Init();
-        //zwalletMain->LoadMintPoolFromDB();
-        //zwalletMain->SyncWithChain();
-    }  // (!fDisableWallet)
+        
+    }
 #else  // ENABLE_WALLET
     LogPrintf("No wallet compiled in!\n");
 #endif // !ENABLE_WALLET

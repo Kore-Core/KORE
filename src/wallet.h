@@ -216,8 +216,6 @@ public:
     std::string strWalletFile;
     bool fBackupMints;
 
-    //std::unique_ptr<CzKORETracker> zkoreTracker;
-
     std::set<int64_t> setKeyPool;
     std::map<CKeyID, CKeyMetadata> mapKeyMetadata;
 
@@ -610,9 +608,6 @@ public:
 
     /** MultiSig address added */
     boost::signals2::signal<void(bool fHaveMultiSig)> NotifyMultiSigChanged;
-
-    /** zKORE reset */
-    boost::signals2::signal<void()> NotifyzKOREReset;
 
     /** notify wallet file backed up */
     boost::signals2::signal<void(const bool& fSuccess, const std::string& filename)> NotifyWalletBacked;

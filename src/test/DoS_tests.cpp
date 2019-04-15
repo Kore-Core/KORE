@@ -46,7 +46,7 @@ BOOST_AUTO_TEST_CASE(DoS_banning)
     CAddress addr1(ip(0xa0b0c001));
     CNode dummyNode1(INVALID_SOCKET, addr1, "", true);
     dummyNode1.nVersion = 1;
-    Misbehaving(dummyNode1.GetId(), 100); // Should get banned
+    Misbehaving(dummyNode1.GetId(), 100, "Test49"); // Should get banned
     SendMessages(&dummyNode1);
     BOOST_CHECK(CNode::IsBanned(addr1));
     BOOST_CHECK(!CNode::IsBanned(ip(0xa0b0c001|0x0000ff00))); // Different IP, not banned
@@ -54,11 +54,11 @@ BOOST_AUTO_TEST_CASE(DoS_banning)
     CAddress addr2(ip(0xa0b0c002));
     CNode dummyNode2(INVALID_SOCKET, addr2, "", true);
     dummyNode2.nVersion = 1;
-    Misbehaving(dummyNode2.GetId(), 50);
+    Misbehaving(dummyNode2.GetId(), 50, "Test57");
     SendMessages(&dummyNode2);
     BOOST_CHECK(!CNode::IsBanned(addr2)); // 2 not banned yet...
     BOOST_CHECK(CNode::IsBanned(addr1));  // ... but 1 still should be
-    Misbehaving(dummyNode2.GetId(), 50);
+    Misbehaving(dummyNode2.GetId(), 50, "Test61");
     SendMessages(&dummyNode2);
     BOOST_CHECK(CNode::IsBanned(addr2));
 }
@@ -70,13 +70,13 @@ BOOST_AUTO_TEST_CASE(DoS_banscore)
     CAddress addr1(ip(0xa0b0c001));
     CNode dummyNode1(INVALID_SOCKET, addr1, "", true);
     dummyNode1.nVersion = 1;
-    Misbehaving(dummyNode1.GetId(), 100);
+    Misbehaving(dummyNode1.GetId(), 100, "Test73");
     SendMessages(&dummyNode1);
     BOOST_CHECK(!CNode::IsBanned(addr1));
-    Misbehaving(dummyNode1.GetId(), 10);
+    Misbehaving(dummyNode1.GetId(), 10, "Test76");
     SendMessages(&dummyNode1);
     BOOST_CHECK(!CNode::IsBanned(addr1));
-    Misbehaving(dummyNode1.GetId(), 1);
+    Misbehaving(dummyNode1.GetId(), 1, "Test79");
     SendMessages(&dummyNode1);
     BOOST_CHECK(CNode::IsBanned(addr1));
     mapArgs.erase("-banscore");
@@ -92,7 +92,7 @@ BOOST_AUTO_TEST_CASE(DoS_bantime)
     CNode dummyNode(INVALID_SOCKET, addr, "", true);
     dummyNode.nVersion = 1;
 
-    Misbehaving(dummyNode.GetId(), 100);
+    Misbehaving(dummyNode.GetId(), 100, "Test95");
     SendMessages(&dummyNode);
     BOOST_CHECK(CNode::IsBanned(addr));
 

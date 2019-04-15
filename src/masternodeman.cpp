@@ -742,7 +742,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         int nDoS = 0;
         if (!mnb.CheckAndUpdate(nDoS)) {
             if (nDoS > 0)
-                Misbehaving(pfrom->GetId(), nDoS);
+                Misbehaving(pfrom->GetId(), nDoS, "Can't update masternode");
 
             //failed
             return;
@@ -752,7 +752,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         //  - this is expensive, so it's only done once per Masternode
         if (!obfuScationSigner.IsVinAssociatedWithPubkey(mnb.vin, mnb.pubKeyCollateralAddress)) {
             LogPrint("masternode", "mnb - Got mismatched pubkey and vin\n");
-            Misbehaving(pfrom->GetId(), 33);
+            Misbehaving(pfrom->GetId(), 33, "Got mismatched pubkey and vin");
             return;
         }
 
@@ -766,7 +766,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
             LogPrint("masternode", "mnb - Rejected Masternode entry %s\n", mnb.vin.prevout.hash.ToString());
 
             if (nDoS > 0)
-                Misbehaving(pfrom->GetId(), nDoS);
+                Misbehaving(pfrom->GetId(), nDoS, "Rejected Masternode entry");
         }
     }
 
@@ -784,7 +784,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
         if (nDoS > 0) {
             // if anything significant failed, mark that node
-            Misbehaving(pfrom->GetId(), nDoS);
+            Misbehaving(pfrom->GetId(), nDoS, "Masternode ping failed");
         } else {
             // if nothing significant failed, search existing Masternode list
             CMasternode* pmn = Find(mnp.vin);
@@ -810,7 +810,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
                 if (i != mAskedUsForMasternodeList.end()) {
                     int64_t t = (*i).second;
                     if (GetTime() < t) {
-                        Misbehaving(pfrom->GetId(), 1);
+                        Misbehaving(pfrom->GetId(), 1, "Peer already asked for the list");
                         LogPrint("masternode", "dseg - peer already asked me for the list\n");
                         return;
                     }
@@ -878,7 +878,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         // make sure signature isn't in the future (past is OK)
         if (sigTime > GetAdjustedTime() + 60 * 60) {
             LogPrint("masternode", "dsee - Signature rejected, too far into the future %s\n", vin.prevout.hash.ToString());
-            Misbehaving(pfrom->GetId(), 1);
+            Misbehaving(pfrom->GetId(), 1, "Signature too far in the future");
             return;
         }
 
@@ -889,7 +889,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
         if (protocolVersion < masternodePayments.GetMinMasternodePaymentsProto()) {
             LogPrint("masternode", "dsee - ignoring outdated Masternode %s protocol version %d < %d\n", vin.prevout.hash.ToString(), protocolVersion, masternodePayments.GetMinMasternodePaymentsProto());
-            Misbehaving(pfrom->GetId(), 1);
+            Misbehaving(pfrom->GetId(), 1, "Outdated masternode");
             return;
         }
 
@@ -898,7 +898,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
         if (pubkeyScript.size() != 25) {
             LogPrint("masternode", "dsee - pubkey the wrong size\n");
-            Misbehaving(pfrom->GetId(), 100);
+            Misbehaving(pfrom->GetId(), 100, "Pubkey has the wrong size");
             return;
         }
 
@@ -907,20 +907,20 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
         if (pubkeyScript2.size() != 25) {
             LogPrint("masternode", "dsee - pubkey2 the wrong size\n");
-            Misbehaving(pfrom->GetId(), 100);
+            Misbehaving(pfrom->GetId(), 100, "Pubkey2 has the wrong size");
             return;
         }
 
         if (!vin.scriptSig.empty()) {
             LogPrint("masternode", "dsee - Ignore Not Empty ScriptSig %s\n", vin.prevout.hash.ToString());
-            Misbehaving(pfrom->GetId(), 100);
+            Misbehaving(pfrom->GetId(), 100, "Empty scriptsig");
             return;
         }
 
         std::string errorMessage = "";
         if (!obfuScationSigner.VerifyMessage(pubkey, vchSig, strMessage, errorMessage)) {
             LogPrint("masternode", "dsee - Got bad Masternode address signature\n");
-            Misbehaving(pfrom->GetId(), 100);
+            Misbehaving(pfrom->GetId(), 100, "Bad masternode address signature");
             return;
         }
 
@@ -972,7 +972,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         //  - this is expensive, so it's only done once per Masternode
         if (!obfuScationSigner.IsVinAssociatedWithPubkey(vin, pubkey)) {
             LogPrint("masternode", "dsee - Got mismatched pubkey and vin\n");
-            Misbehaving(pfrom->GetId(), 100);
+            Misbehaving(pfrom->GetId(), 100, "Mismatched pubkey and vin");
             return;
         }
 
@@ -999,7 +999,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
         if (fAcceptable) {
             if (GetInputAge(vin) < Params().GetMasternodeMinConfirmations()) {
                 LogPrint("masternode", "dsee - Input must have least %d confirmations\n", Params().GetMasternodeMinConfirmations());
-                Misbehaving(pfrom->GetId(), 2);
+                Misbehaving(pfrom->GetId(), 2, "Input has not enough confirmations");
                 return;
             }
 
@@ -1054,7 +1054,7 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
                 LogPrint("masternode", "dsee - %s from %i %s was not accepted into the memory pool\n", tx.GetHash().ToString().c_str(),
                     pfrom->GetId(), pfrom->cleanSubVer.c_str());
                 if (nDoS > 0)
-                    Misbehaving(pfrom->GetId(), nDoS);
+                    Misbehaving(pfrom->GetId(), nDoS, state.GetRejectReason());
             }
         }
     }
@@ -1073,13 +1073,13 @@ void CMasternodeMan::ProcessMessage(CNode* pfrom, std::string& strCommand, CData
 
         if (sigTime > GetAdjustedTime() + 60 * 60) {
             LogPrint("masternode", "dseep - Signature rejected, too far into the future %s\n", vin.prevout.hash.ToString());
-            Misbehaving(pfrom->GetId(), 1);
+            Misbehaving(pfrom->GetId(), 1, "Signature too far in the future");
             return;
         }
 
         if (sigTime <= GetAdjustedTime() - 60 * 60) {
             LogPrint("masternode", "dseep - Signature rejected, too far into the past %s - %d %d \n", vin.prevout.hash.ToString(), sigTime, GetAdjustedTime());
-            Misbehaving(pfrom->GetId(), 1);
+            Misbehaving(pfrom->GetId(), 1, "Signature too far in the past");
             return;
         }
 

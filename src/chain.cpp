@@ -86,8 +86,9 @@ uint256 CBlockIndex::GetBlockTrust() const
 
 int64_t CBlockIndex::GetMedianTimeSpacing() const
 {
-    if (nHeight != 0)
-    return 0;
+    if (nHeight == 0)
+        return 0;
+        
     int64_t nActualTimespan = 0;
     const CBlockIndex* BlockReading = this;
     int64_t CountBlocks = 0;

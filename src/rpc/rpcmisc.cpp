@@ -662,7 +662,7 @@ UniValue getforkstatus(const UniValue& params, bool fHelp)
     obj.push_back(Pair("newClientCount", std::to_string(nUpgraded)));
     obj.push_back(Pair("newClientPercentage", std::to_string(nUpgraded * 100 / BlocksToMeasure) + "%"));
     obj.push_back(Pair("blocksVerified",  strprintf("latest %d blocks", std::to_string(count))));
-    obj.push_back(Pair("timeUntilFork", strprintf("%d minutes until the fork - based on 1 blcok/minute", (forkHeight - blockHeight)/2)));
+    obj.push_back(Pair("timeUntilFork", strprintf("%d minutes until the fork - based on 1 blcok/minute", forkHeight - blockHeight)));
 
     return obj;
 }

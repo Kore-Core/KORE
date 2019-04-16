@@ -95,8 +95,10 @@ QList<TransactionRecord> TransactionRecord::decomposeTransaction(const CWallet* 
                     sub.address = mapValue["from"];
                 }
                 if (wtx.IsCoinBase()) {
-                    // Generated
-                    sub.type = TransactionRecord::Generated;
+                    if (wtx.GetVersion() == 1)
+                        sub.type = TransactionRecord::Generated;
+                    else
+                        sub.type = TransactionRecord::StakeMint;
                 }
 
                 parts.append(sub);

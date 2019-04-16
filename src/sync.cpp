@@ -79,27 +79,31 @@ boost::thread_specific_ptr<LockStack> lockstack;
 static void potential_deadlock_detected(const std::pair<void*, void*>& mismatch, const LockStack& s1, const LockStack& s2)
 {
     if (fDebug) {
-    LogPrintf("POTENTIAL DEADLOCK DETECTED\n");
-    LogPrintf("Previous lock order was:\n");
+        LogPrintf("POTENTIAL DEADLOCK DETECTED\n");
+        LogPrintf("Previous lock order was:\n");
     }
     BOOST_FOREACH (const PAIRTYPE(void*, CLockLocation) & i, s2) {
-        if (i.first == mismatch.first) {
-            if (fDebug) LogPrintf(" (1)");
-        }
-        if (i.first == mismatch.second) {
-            if (fDebug) LogPrintf(" (2)");
-        }
-        if (fDebug) LogPrintf(" %s\n", i.second.ToString());
+        if (i.first == mismatch.first && fDebug)
+            LogPrintf(" (1)");
+        
+        if (i.first == mismatch.second && fDebug) 
+            LogPrintf(" (2)");
+        
+        if (fDebug)
+            LogPrintf(" %s\n", i.second.ToString());
     }
-    if (fDebug) LogPrintf("Current lock order is:\n");
+    if (fDebug)
+        LogPrintf("Current lock order is:\n");
+    
     BOOST_FOREACH (const PAIRTYPE(void*, CLockLocation) & i, s1) {
-        if (i.first == mismatch.first) {
-            if (fDebug) LogPrintf(" (1)");
-        }
-        if (i.first == mismatch.second) {
-            if (fDebug) LogPrintf(" (2)");
-        }
-        if (fDebug) LogPrintf(" %s\n", i.second.ToString());
+        if (i.first == mismatch.first && fDebug)
+            LogPrintf(" (1)");
+        
+        if (i.first == mismatch.second && fDebug)
+            LogPrintf(" (2)");
+        
+        if (fDebug)
+            LogPrintf(" %s\n", i.second.ToString());
     }
 }
 

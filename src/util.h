@@ -218,14 +218,17 @@ void LoopForever(const char* name, Callable func, int64_t msecs)
 {
     std::string s = strprintf("cteam-%s", name);
     RenameThread(s.c_str());
-    if (fDebug) LogPrintf("%s thread start\n", name);
+    if (fDebug)
+        LogPrintf("%s thread start\n", name);
+    
     try {
         while (1) {
             MilliSleep(msecs);
             func();
         }
     } catch (boost::thread_interrupted) {
-        if (fDebug) LogPrintf("%s thread stop\n", name);
+        LogPrintf("%s thread stop\n", name);
+        
         throw;
     } catch (std::exception& e) {
         PrintExceptionContinue(&e, name);
@@ -245,11 +248,16 @@ void TraceThread(const char* name, Callable func)
     std::string s = strprintf("kore-%s", name);
     RenameThread(s.c_str());
     try {
-        if (fDebug) LogPrintf("%s thread start\n", name);
+        if (fDebug)
+            LogPrintf("%s thread start\n", name);
+        
         func();
-        if (fDebug) LogPrintf("%s thread exit\n", name);
+
+        if (fDebug)
+            LogPrintf("%s thread exit\n", name);
     } catch (boost::thread_interrupted) {
-        if (fDebug) LogPrintf("%s thread interrupt\n", name);
+        LogPrintf("%s thread interrupt\n", name);
+        
         throw;
     } catch (std::exception& e) {
         PrintExceptionContinue(&e, name);

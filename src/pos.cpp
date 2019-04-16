@@ -70,7 +70,9 @@ bool CheckStakeKernelHash_Legacy(const CBlockIndex* pindexPrev, unsigned int nBi
 
     // Now check if proof-of-stake hash meets target protocol
     if (UintToArith256(hashProofOfStake) / nValueIn > bnTarget) {
-        if (fDebug) LogPrintf("CheckStakeKernelHash_Legacy() : hash does not meet protocol target   previous = %x  target = %x\n", nBits, bnTarget.GetCompact());
+        if (fDebug)
+            LogPrintf("CheckStakeKernelHash_Legacy() : hash does not meet protocol target   previous = %x  target = %x\n", nBits, bnTarget.GetCompact());
+        
         return false;
     }
 

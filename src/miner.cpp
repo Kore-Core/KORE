@@ -182,7 +182,13 @@ uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock
         if (bnNew <= 0 || bnNew > bnTargetLimit)
             bnNew = bnTargetLimit;
 
-        if (fDebug) LogPrintf("GetNextTarget: %s \n", bnNew.ToString().c_str());
+        if (fDebug){
+            static uint256 oldTarget = 0;
+            if (bnNew != oldTarget) {
+                LogPrintf("%s(): %s \n", __func__, bnNew.ToString().c_str());
+                oldTarget = bnNew;
+            }
+        }
         
         return bnNew.GetCompact();
     }
@@ -304,12 +310,10 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         CBlockIndex* pindexPrev = chainActive.Tip();
         pblock->nBits = GetNextTarget(pindexPrev, pblock, fProofOfStake);
         int64_t nSearchTime = pblock->nTime; // search to current time
-        if (fDebug)
-            LogPrintf("%s(): Current nBits=%x", __func__, pblock->nBits);
+
         if (nSearchTime >= nLastCoinStakeSearchTime) {
             if (pwallet->CreateCoinStake(*pwallet, pblock->nBits, nSearchTime - nLastCoinStakeSearchTime, txCoinbase, txCoinStake, nTxNewTime, fProofOfStake, key)) {
                 pblock->nTime = nTxNewTime;
-                if (fDebug) LogPrintf("txCoinStake: %s", txCoinStake.ToString());
                 pblock->vtx[0] = CTransaction(txCoinbase);
                 pblock->vtx.push_back(CTransaction(txCoinStake));
                 fStakeFound = true;
@@ -317,11 +321,9 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             nLastCoinStakeSearchInterval = nSearchTime - nLastCoinStakeSearchTime;
             nLastCoinStakeSearchTime = nSearchTime;
         }
-        if (fDebug) {
-            LogPrintf("CreateNewBlock found a stake? %s \n", fStakeFound ? "true" : "false");
-            LogPrintf("CreateNewBlock block is pos? %s \n", fProofOfStake ? "true" : "false");
-        }
-
+        if (fDebug && fStakeFound)
+            LogPrintf("%s(): stake found\n", __func__);
+        
         if (!fStakeFound)
             return NULL;
     }
@@ -403,7 +405,9 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
 
                 //Check for invalid/fraudulent inputs. They shouldn't make it through mempool, but check anyways.
                 if (invalid_out::ContainsOutPoint(txin.prevout)) {
-                    if (fDebug) LogPrintf("%s : found invalid input %s in tx %s", __func__, txin.prevout.ToString(), tx.GetHash().ToString());
+                    if (fDebug)
+                        LogPrintf("%s : found invalid input %s in tx %s", __func__, txin.prevout.ToString(), tx.GetHash().ToString());
+                    
                     fMissingInputs = true;
                     break;
                 }
@@ -564,7 +568,8 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             mempool.clear();
             return NULL;
         }
-        if (fDebug) LogPrintf("CreateNewBlock() : Block is VALID !!! \n");
+        if (fDebug)
+            LogPrintf("CreateNewBlock() : Block is VALID !!! \n");
     }
 
     return pblocktemplate.release();
@@ -770,7 +775,8 @@ CBlockTemplate* CreateNewBlock_Legacy(const CChainParams& chainparams, const CSc
                 double dPriority = iter->GetPriority(nHeight);
                 CAmount dummy;
                 mempool.ApplyDeltas(tx.GetHash(), dPriority, dummy);
-                if (fDebug) LogPrintf("priority %.1f fee %s txid %s\n", dPriority, CFeeRate(iter->GetModifiedFee(), nTxSize).ToString(), tx.GetHash().ToString());
+                if (fDebug)
+                    LogPrintf("priority %.1f fee %s txid %s\n", dPriority, CFeeRate(iter->GetModifiedFee(), nTxSize).ToString(), tx.GetHash().ToString());
             }
 
             inBlock.insert(iter);
@@ -795,7 +801,8 @@ CBlockTemplate* CreateNewBlock_Legacy(const CChainParams& chainparams, const CSc
         nLastBlockTx = nBlockTx;
         nLastBlockSize = nBlockSize;
 
-        if (fDebug) LogPrintf("CreateNewBlock_Legacy(): total size %u txs: %u fees: %ld sigops %d\n", nBlockSize, nBlockTx, nFees, nBlockSigOps);
+        if (fDebug)
+            LogPrintf("CreateNewBlock_Legacy(): total size %u txs: %u fees: %ld sigops %d\n", nBlockSize, nBlockTx, nFees, nBlockSigOps);
 
         pblock->vtx[0] = CreateCoinbaseTransaction_Legacy(scriptPubKeyIn, nFees, nHeight, fProofOfStake);
 
@@ -918,13 +925,15 @@ bool ProcessBlockFound_Legacy(const CBlock* pblock, const CChainParams& chainpar
             return error("ProcessBlockFound(): generated/staked block is stale");
     }
 
-    if (fDebug) LogPrintf("%s \n ", pblock->ToString());
+    if (fDebug)
+        LogPrintf("%s \n ", pblock->ToString());
 
     // verify hash target and signature of coinstake tx
     if (pblock->IsProofOfStake() && !CheckProofOfStake_Legacy(mapBlockIndex[pblock->hashPrevBlock], pblock->vtx[1], pblock->nBits, state))
         return false;
 
-    if (fDebug) LogPrintf("%s %s\n", pblock->IsProofOfStake() ? "Stake " : "Mined ", pblock->IsProofOfStake() ? FormatMoney(pblock->vtx[1].GetValueOut()) : FormatMoney(pblock->vtx[0].GetValueOut()));
+    if (fDebug)
+        LogPrintf("%s %s\n", pblock->IsProofOfStake() ? "Stake " : "Mined ", pblock->IsProofOfStake() ? FormatMoney(pblock->vtx[1].GetValueOut()) : FormatMoney(pblock->vtx[0].GetValueOut()));
 
     // Inform about the new block
     GetMainSignals().BlockFound(pblock->GetHash());
@@ -945,14 +954,17 @@ bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock)
     // if we are trying to sign
     //    something except proof-of-stake block template
     if (!pblock->vtx[0].vout[0].IsEmpty()) {
-        if (fDebug) LogPrintf("something except proof-of-stake block\n");
+        if (fDebug)
+            LogPrintf("something except proof-of-stake block\n");
         return false;
     }
 
     // if we are trying to sign
     //    a complete proof-of-stake block
     if (pblock->IsProofOfStake()) {
-        if (fDebug) LogPrintf("trying to sign a complete proof-of-stake block\n");
+        if (fDebug)
+            LogPrintf("trying to sign a complete proof-of-stake block\n");
+        
         return true;
     }
 
@@ -1008,7 +1020,7 @@ int nMintableLastCheck = 0;
 
 void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
 {
-    if (fDebug) LogPrintf("KOREMiner started, fProofOfStake:%s \n", fProofOfStake ? "true" : "false");
+    LogPrintf("KOREMiner started, fProofOfStake:%s \n", fProofOfStake ? "true" : "false");
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("kore-miner");
 
@@ -1027,7 +1039,9 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
         // check every 5 seconds
         MilliSleep(5000);
     }
-    if (fDebug) LogPrintf("We are Free to create Block: %s \n", GetnHeight(chainActive.Tip()) + 1);
+    if (fDebug)
+        LogPrintf("We are Free to create Block: %s \n", GetnHeight(chainActive.Tip()) + 1);
+    
     while (!ShutdownRequested() && (fGenerateBitcoins || fProofOfStake)) {
         boost::this_thread::interruption_point();
         if (fProofOfStake) {
@@ -1041,26 +1055,29 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                    nReserveBalance > pwallet->GetBalance() || !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >= 2))
             {
                 if (fDebug) {
-                    LogPrintf("***************************************************************\n");
-                    LogPrintf("***************************************************************\n");
-                    LogPrintf("***************************************************************\n");
-                    LogPrintf("BitcoinMiner Checking if it is already time to stake \n");
-                    LogPrintf("BitcoinMiner vNodes Empty                ? %s (should be false)\n", vNodes.empty() ? "true" : "false");
-                    LogPrintf("BitcoinMiner Wallet Locked               ? %s (should be false) \n", pwallet->IsLocked() ? "true" : "false");
-                    LogPrintf("BitcoinMiner Is there Mintable Coins     ? %s (should be true) \n", fMintableCoins ? "true" : "false");
-                    LogPrintf("BitcoinMiner Masternode is Synced        ? %s (should be true)\n", masternodeSync.IsSynced() ? "true" : "false");
-                    LogPrintf("BitcoinMiner How Many MN are Enabled     ? %d (should be %d)\n", mnodeman.CountEnabled(), 2);
-                    LogPrintf("BitcoinMiner Balance > 0                 ? %s (should be true)\n", pwallet->GetBalance() > 0 ? "true" : "false");
-                    LogPrintf("BitcoinMiner Balance is >= than reserved ? %s (should be true)\n", nReserveBalance >= pwallet->GetBalance() ? "false" : "true");
-                    LogPrintf("***************************************************************\n");
-                    LogPrintf("***************************************************************\n");
-                    LogPrintf("***************************************************************\n");
+                    LogPrintf("%s(): still unable to stake.\n", __func__);
+                    if (vNodes.empty())
+                        LogPrintf("\tThere are no nodes connected;\n");
+                    if (pwallet->IsLocked())
+                        LogPrintf("\tThe wallet is locked;\n");
+                    if (fMintableCoins)
+                        LogPrintf("\tThere are no mintable coins;\n");
+                    if (masternodeSync.IsSynced())
+                        LogPrintf("\tMasternodes are not synced;\n");
+                    if (mnodeman.CountEnabled() < 2)
+                        LogPrintf("\tThere are not enough masternodes enabled;\n");
+                    if (pwallet->GetBalance() == 0)
+                        LogPrintf("\tZero balance;\n");
+                    if (nReserveBalance >= pwallet->GetBalance())
+                        LogPrintf("\tThe wallet balance is lower than the reserved balance;\n");
                 }
 
                 MilliSleep(5000);
                 boost::this_thread::interruption_point();
                 if (!fGenerateBitcoins && !fProofOfStake) {
-                    if (fDebug) LogPrintf("BitcoinMiner Going out of Loop !!! \n");
+                    if (fDebug)
+                        LogPrintf("BitcoinMiner Going out of Loop !!! \n");
+
                     continue;
                 }
 
@@ -1082,7 +1099,9 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                     MilliSleep(5000);
                     boost::this_thread::interruption_point();
                     if (!fGenerateBitcoins && !fProofOfStake) {
-                        if (fDebug) LogPrintf("BitcoinMiner Going out of Loop !!! \n");
+                        if (fDebug)
+                            LogPrintf("BitcoinMiner Going out of Loop !!! \n");
+                        
                         continue;
                     }
                 }
@@ -1097,21 +1116,12 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
         if (!fProofOfStake && (chainActive.Tip()->nHeight > Params().GetLastPoWBlock())) {
              if (fDebug) 
                LogPrintf("Pow Period has ended, we need to exit this thread \n");
+             
              break;
         }
         //
         // Create new block
         //
-        if (fDebug) {
-            LogPrintf("KOREMiner: Creating new Block \n");
-            LogPrintf("vNodes Empty  ? %s \n", vNodes.empty() ? "true" : "false");
-            LogPrintf("Wallet Locked ? %s \n", pwallet->IsLocked() ? "true" : "false");
-            LogPrintf("Is there Mintable Coins ? %s \n", fMintableCoins ? "true" : "false");
-            LogPrintf("Masternode is Synced ? %s \n", masternodeSync.IsSynced() ? "true" : "false");
-            LogPrintf("BitcoinMiner How Many MN are Enabled ? %d (should be %d)\n", mnodeman.CountEnabled(), mnodeman.size());
-            LogPrintf("Do we have Balance ? %s \n", pwallet->GetBalance() > 0 ? "true" : "false");
-            LogPrintf("Balance is Greater than reserved one ? %s \n", nReserveBalance >= pwallet->GetBalance() ? "false" : "true");
-        }
         unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
         CBlockIndex* pindexPrev = chainActive.Tip();
         if (!pindexPrev) {
@@ -1128,14 +1138,17 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
 
         //Stake miner main
         if (fProofOfStake) {
-            if (fDebug) LogPrintf("BitcoinMiner: proof-of-stake block found %s \n", pblock->GetHash().ToString().c_str());
+            LogPrintf("%s(): proof-of-stake block found %s \n", __func__, pblock->GetHash().ToString().c_str());
+            
             if (!SignBlock(*pblock, *pwallet)) {
-                if (fDebug) LogPrintf("BitcoinMiner(): Signing new block with UTXO key failed \n");
+                LogPrintf("%s(): Signing new block with UTXO key failed \n", __func__);
                 MilliSleep(500);
                 continue;
             }
 
-            if (fDebug) LogPrintf("BitcoinMiner : proof-of-stake block was signed %s \n", pblock->GetHash().ToString().c_str());
+            if (fDebug)
+                LogPrintf("BitcoinMiner : proof-of-stake block was signed %s \n", pblock->GetHash().ToString().c_str());
+            
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             ProcessBlockFound(pblock, *pwallet, reservekey);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);
@@ -1143,25 +1156,28 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             continue;
         }
 
-        if (fDebug) LogPrintf("Running KOREMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+        if (fDebug)
+            LogPrintf("Running KOREMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
         //
         // Search
         //
         int64_t nStart = GetTime();
         uint256 hashTarget = uint256().SetCompact(pblock->nBits);
-        if (fDebug) LogPrintf("target: %s\n", hashTarget.GetHex());
+        if (fDebug)
+            LogPrintf("target: %s\n", hashTarget.GetHex());
+        
         while (true) {
             unsigned int nHashesDone = 0;
 
             uint256 hash;
 
-            if (fDebug) LogPrintf("nbits : %08x \n", pblock->nBits);
+            if (fDebug)
+                LogPrintf("nbits : %08x \n", pblock->nBits);
+            
             while (true) {
                 hash = pblock->GetHash();
                 if (fDebug) {
-                    LogPrintf("pblock.nBirthdayA: %d\n", pblock->nBirthdayA);
-                    LogPrintf("pblock.nBirthdayB: %d\n", pblock->nBirthdayB);
                     LogPrintf("hash      %s\n", hash.ToString().c_str());
                     LogPrintf("hashTarget %s\n", hashTarget.ToString().c_str());
                 }
@@ -1169,10 +1185,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                 if (hash <= hashTarget) {
                     // Found a solution
                     SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                    if (fDebug) {
-                        LogPrintf("BitcoinMiner:\n");
-                        LogPrintf("proof-of-work found  \n  hash: %s  \ntarget: %s\n", hash.GetHex(), hashTarget.GetHex());
-                    }
+                    LogPrintf("%s(): proof-of-work found  \n  hash: %s  \ntarget: %s\n", __func__, hash.GetHex(), hashTarget.GetHex());
                     ProcessBlockFound(pblock, *pwallet, reservekey);
                     SetThreadPriority(THREAD_PRIORITY_LOWEST);
                     MilliSleep(Params().GetTargetSpacing() * 1000);
@@ -1186,7 +1199,9 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                 }
                 pblock->nNonce += 1;
                 nHashesDone += 1;
-                if (fDebug) LogPrintf("Looking for a solution with nounce: %d hashesDone : %d \n", pblock->nNonce, nHashesDone);
+                if (fDebug)
+                    LogPrintf("Looking for a solution with nounce: %d hashesDone : %d \n", pblock->nNonce, nHashesDone);
+                
                 if ((pblock->nNonce & 0xFF) == 0)
                     break;
             }
@@ -1209,7 +1224,8 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                         static int64_t nLogTime;
                         if (GetTime() - nLogTime > 30 * 60) {
                             nLogTime = GetTime();
-                            if (fDebug) LogPrintf("hashmeter %6.0f khash/s\n", dHashesPerMin / 1000.0);
+                            if (fDebug)
+                                LogPrintf("hashmeter %6.0f khash/s\n", dHashesPerMin / 1000.0);
                         }
                     }
                 }
@@ -1233,7 +1249,8 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             hashTarget.SetCompact(pblock->nBits);
         }
     }
-    if (fDebug) LogPrintf("Exiting kore-miner \n");
+    if (fDebug)
+        LogPrintf("Exiting kore-miner \n");
 }
 
 void static ThreadBitcoinMiner(void* parg)
@@ -1254,7 +1271,9 @@ void static ThreadBitcoinMiner(void* parg)
 
 void ThreadStakeMinter_Legacy(CWallet* pwallet)
 {
-    if (fDebug) LogPrintf("StakeMiner Legacy started\n");
+    if (fDebug)
+        LogPrintf("StakeMiner Legacy started\n");
+    
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("kore-pos-legacy");
 
@@ -1326,12 +1345,15 @@ void ThreadStakeMinter_Legacy(CWallet* pwallet)
         MilliSleep(500);
     }
 
-    if (fDebug) LogPrintf("Exiting stake-miner-legacy at block: %d", GetnHeight(chainActive.Tip()));
+    if (fDebug)
+        LogPrintf("Exiting stake-miner-legacy at block: %d", GetnHeight(chainActive.Tip()));
 }
 
 void KoreMiner_Legacy()
 {
-    if (fDebug) LogPrintf("KoreMiner_Legacy started\n");
+    if (fDebug)
+        LogPrintf("KoreMiner_Legacy started\n");
+    
     const CChainParams& chainparams = Params();
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("kore-pow-legacy");
@@ -1346,7 +1368,9 @@ void KoreMiner_Legacy()
         // due to some internal error but also if the keypool is empty.
         // In the latter case, already the pointer is NULL.
         if (!coinbaseScript || coinbaseScript->reserveScript.empty()) {
-            if (fDebug) LogPrintf("No coinbase script available (mining requires a wallet)\n");
+            if (fDebug)
+                LogPrintf("No coinbase script available (mining requires a wallet)\n");
+            
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
         }
 
@@ -1355,13 +1379,16 @@ void KoreMiner_Legacy()
             if (chainActive.Tip()->nHeight > Params().GetLastPoWBlock() ) {
                 if (fDebug)
                     LogPrintf("Pow Period has ended, we need to exit this thread \n");
+                
                 break;
             }
             if (chainparams.DoesMiningRequiresPeers()) {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do {
-                    if (fDebug) LogPrintf("KoreMiner_Legacy is waiting for a Peer!!! \n");
+                    if (fDebug)
+                        LogPrintf("KoreMiner_Legacy is waiting for a Peer!!! \n");
+                    
                     bool fvNodesEmpty;
                     {
                         LOCK(cs_vNodes);
@@ -1382,13 +1409,15 @@ void KoreMiner_Legacy()
             unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock_Legacy(chainparams, coinbaseScript->reserveScript, NULL, false));
 
             if (!pblocktemplate.get()) {
-                if (fDebug) LogPrintf("Error in KoreMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                LogPrintf("Error in KoreMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
+                
                 return;
             }
             CBlock* pblock = &pblocktemplate->block;
             IncrementExtraNonce_Legacy(pblock, pindexPrev, nExtraNonce);
 
-            if (fDebug) LogPrintf("KoreMiner_Legacy Running with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+            if (fDebug)
+                LogPrintf("KoreMiner_Legacy Running with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             //
             // Search
@@ -1400,7 +1429,9 @@ void KoreMiner_Legacy()
             for (;;) {
                 unsigned int nHashesDone = 0;
                 unsigned int nNonceFound = (unsigned int)-1;
-                if (fDebug) LogPrintf("KoreMiner_Legacy Looking for a Hash Solution \n");
+                if (fDebug)
+                    LogPrintf("KoreMiner_Legacy Looking for a Hash Solution \n");
+                
                 for (int i = 0; i < 1; i++) {
                     pblock->nNonce = pblock->nNonce + 1;
                     testHash = pblock->CalculateBestBirthdayHash();
@@ -1471,23 +1502,26 @@ void KoreMiner_Legacy()
         }
 
     } catch (const boost::thread_interrupted&) {
-        if (fDebug) LogPrintf("KoreMiner_Legacy Exiting at block: %d", GetnHeight(chainActive.Tip()));
+        LogPrintf("KoreMiner_Legacy Exiting at block: %d", GetnHeight(chainActive.Tip()));
+        
         throw;
     } catch (const std::runtime_error& e) {
-        if (fDebug) { 
-            LogPrintf("KoreMiner runtime error: %s\n", e.what());
-            LogPrintf("KoreMiner_Legacy Runtime Error : %s Exiting at block: %d", e.what(), GetnHeight(chainActive.Tip()));
-        }
+        LogPrintf("KoreMiner runtime error: %s\n", e.what());
+        LogPrintf("KoreMiner_Legacy Runtime Error : %s Exiting at block: %d", e.what(), GetnHeight(chainActive.Tip()));
+        
         return;
     }
-    if (fDebug) LogPrintf("Exiting stake-miner-legacy at block: %d", GetnHeight(chainActive.Tip()));
+    if (fDebug)
+        LogPrintf("Exiting stake-miner-legacy at block: %d", GetnHeight(chainActive.Tip()));
 }
 
 // ppcoin: stake minter thread
 void ThreadStakeMinter()
 {
     boost::this_thread::interruption_point();
-    if (fDebug) LogPrintf("ThreadStakeMinter started\n");
+    if (fDebug)
+        LogPrintf("ThreadStakeMinter started\n");
+    
     CWallet* pwallet = pwalletMain;
     try {
         BitcoinMiner(pwallet, true);
@@ -1523,7 +1557,8 @@ void StakingCoins(bool fStaking)
 
 void GenerateBitcoins(bool fGenerate, CWallet* pwallet, int nThreads)
 {
-    if (fDebug) LogPrintf("GenerateBitcoins with %d threads\n", nThreads);
+    LogPrintf("GenerateBitcoins with %d threads\n", nThreads);
+    
     static boost::thread_group* minerThreads = NULL;
     fGenerateBitcoins = fGenerate;
 

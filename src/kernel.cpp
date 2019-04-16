@@ -285,7 +285,7 @@ bool GetKernelStakeModifier(uint256 hashBlockFrom, uint64_t& nStakeModifier, boo
         if (!pindexNext) {
             // there is no more modifier generated, this situation should
             // never happen! Check your configuration
-            if (fDebug) LogPrintf("Should never happen, there is no next !!! \n");
+            LogPrintf("Should never happen, there is no next !!! \n");
             return error("Null pindexNext\n");
         }
 
@@ -295,7 +295,8 @@ bool GetKernelStakeModifier(uint256 hashBlockFrom, uint64_t& nStakeModifier, boo
             nStakeModifierHeight = pindex->nHeight;
             nStakeModifierTime = pindex->GetBlockTime();
         }
-        if (fDebug) LogPrintf("GetKernelStakeModifier nStakeModifierTime           : %u  nStakeModifierHeight : %d block: %d \n", nStakeModifierTime, nStakeModifierHeight, pindex->nHeight);
+        if (fDebug)
+            LogPrintf("GetKernelStakeModifier nStakeModifierTime           : %u  nStakeModifierHeight : %d block: %d \n", nStakeModifierTime, nStakeModifierHeight, pindex->nHeight);
     }
     nStakeModifier = pindex->nStakeModifier;
     return true;
@@ -327,14 +328,18 @@ bool CheckStake(const CDataStream& ssUniqueID, CAmount nValueIn, const uint64_t 
     return canStake;
 }
 
+bool CheckMinAge(const int nDepth, const unsigned int nTimeBlockFrom, const unsigned int nTimeTx)
+{
+    return (nDepth < Params().GetCoinMaturity() && nTimeTx - nTimeBlockFrom < Params().GetStakeMinAge());
+}
 
-bool Stake(CStakeInput* stakeInput, unsigned int nBits, unsigned int nTimeBlockFrom, unsigned int& nTimeTx, CAmount stakeableBalance)
+bool Stake(CStakeInput* stakeInput, unsigned int nBits, unsigned int nTimeBlockFrom, unsigned int& nTimeTx, CAmount stakeableBalance, int nDepth)
 {
     if (nTimeTx < nTimeBlockFrom)
         return error("Stake() : nTime violation => nTimeTx=%d nTimeBlockFrom=%d", nTimeTx, nTimeBlockFrom );
 
-    if (nTimeTx - nTimeBlockFrom < Params().GetStakeMinAge()) // Min age requirement
-        return error("Stake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d",
+    if (CheckMinAge(nDepth, nTimeBlockFrom, nTimeTx))
+      return error("Stake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d",
             nTimeBlockFrom, Params().GetStakeMinAge(), nTimeTx);
 
     //grab difficulty

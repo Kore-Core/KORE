@@ -162,16 +162,19 @@ CCoinsModifier CCoinsViewCache::ModifyCoins(const uint256& txid)
             // The parent view does not have this entry; mark it as fresh.
             ret.first->second.coins.Clear();
             ret.first->second.flags = CCoinsCacheEntry::FRESH;
-            if (fDebug) LogPrintf("The parent view does not have this entry; mark it as fresh \n");
+            if (fDebug)
+                LogPrintf("The parent view does not have this entry; mark it as fresh \n");
         } else if (ret.first->second.coins.IsPruned()) {
             // The parent view only has a pruned entry for this; mark it as fresh.
             ret.first->second.flags = CCoinsCacheEntry::FRESH;
-            if (fDebug) LogPrintf("The parent view only has a pruned entry for this; mark it as fresh. \n");
+            if (fDebug)
+                LogPrintf("The parent view only has a pruned entry for this; mark it as fresh. \n");
         }
     } else {
         cachedCoinUsage = ret.first->second.coins.DynamicMemoryUsage();
     }
-    if (fDebug) LogPrintf("coin height=%d ntime=%d \n", ret.first->second.coins.nHeight, ret.first->second.coins.nTime);
+    if (fDebug)
+        LogPrintf("coin height=%d ntime=%d \n", ret.first->second.coins.nHeight, ret.first->second.coins.nTime);
 
     // Assume that whenever ModifyCoins is called, the entry will be modified.
     ret.first->second.flags |= CCoinsCacheEntry::DIRTY;

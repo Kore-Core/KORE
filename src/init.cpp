@@ -1499,7 +1499,8 @@ bool AppInit2()
 
                 // If the loaded chain has a wrong genesis, bail out immediately
                 // (we're likely using a testnet datadir, or the other way around).
-                if (fDebug) LogPrintf("mapBlockIndex.size: %d genesis-hash: %s\n", mapBlockIndex.size(), Params().HashGenesisBlock().ToString().c_str());
+                if (fDebug)
+                    LogPrintf("mapBlockIndex.size: %d genesis-hash: %s\n", mapBlockIndex.size(), Params().HashGenesisBlock().ToString().c_str());
                 if (!mapBlockIndex.empty() && mapBlockIndex.count(Params().HashGenesisBlock()) == 0)
                     return InitError(_("Incorrect or no genesis block found. Wrong datadir for network?"));
 
@@ -1558,7 +1559,8 @@ bool AppInit2()
                     break;
                 }
             } catch (std::exception& e) {
-                if (fDebug) LogPrintf("%s\n", e.what());
+                if (fDebug)
+                    LogPrintf("%s\n", e.what());
                 strLoadError = _("Error opening block database");
                 fVerifyingBlocks = false;
                 break;
@@ -1878,10 +1880,11 @@ bool AppInit2()
 
     if (GetBoolArg("-mnconflock", true) && pwalletMain) {
         LOCK(pwalletMain->cs_wallet);
-        if (fDebug) LogPrintf("Locking Masternodes:\n");
+        LogPrintf("Locking Masternodes:\n");
         uint256 mnTxHash;
         BOOST_FOREACH (CMasternodeConfig::CMasternodeEntry mne, masternodeConfig.getEntries()) {
-            if (fDebug) LogPrintf("  %s %s\n", mne.getTxHash(), mne.getOutputIndex());
+            if (fDebug)
+                LogPrintf("  %s %s\n", mne.getTxHash(), mne.getOutputIndex());
             mnTxHash.SetHex(mne.getTxHash());
             COutPoint outpoint = COutPoint(mnTxHash, boost::lexical_cast<unsigned int>(mne.getOutputIndex()));
             pwalletMain->LockCoin(outpoint);

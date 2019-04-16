@@ -1003,7 +1003,8 @@ bool CObfuscationPool::IsCollateralValid(const CTransaction& txCollateral)
         LOCK(cs_main);
         CValidationState state;
         if (!AcceptableInputs(mempool, state, txCollateral, true, NULL)) {
-            if (fDebug) LogPrintf("CObfuscationPool::IsCollateralValid - didn't pass IsAcceptable\n");
+            LogPrintf("CObfuscationPool::IsCollateralValid - didn't pass IsAcceptable\n");
+            
             return false;
         }
     }
@@ -2184,7 +2185,7 @@ bool CObfuScationSigner::VerifyMessage(CPubKey pubkey, vector<unsigned char>& vc
         return false;
     }
 
-    if (fDebug && pubkey2.GetID() != pubkey.GetID())
+    if (pubkey2.GetID() != pubkey.GetID())
         LogPrintf("CObfuScationSigner::VerifyMessage -- keys don't match: %s %s\n", pubkey2.GetID().ToString(), pubkey.GetID().ToString());
 
     return (pubkey2.GetID() == pubkey.GetID());

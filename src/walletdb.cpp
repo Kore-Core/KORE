@@ -889,7 +889,8 @@ void ThreadFlushWalletDB(const string& strFile)
             }
         }
     }
-    if (fDebug) LogPrintf("Exiting kore-wallet at block: %d", GetnHeight(chainActive.Tip()));
+    if (fDebug)
+        LogPrintf("Exiting kore-wallet at block: %d", GetnHeight(chainActive.Tip()));
 }
 
 void NotifyBacked(const CWallet& wallet, bool fSuccess, string strMessage)

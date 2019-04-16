@@ -92,13 +92,15 @@ bool CheckProofOfWork(uint256 hash, unsigned int nBits)
 
     // Check range
     if (fNegative || bnTarget == 0 || fOverflow || bnTarget > Params().ProofOfWorkLimit()) {
-        if (fDebug) LogPrintf("CheckProofOfWork() : nBits below minimum work");
+        LogPrintf("CheckProofOfWork() : nBits below minimum work");
+        
         return false;
     }
 
 
     if (hash > bnTarget) {
-        if (fDebug) LogPrintf("CheckProofOfWork() : hash doesn't match nBits");
+        LogPrintf("CheckProofOfWork() : hash doesn't match nBits");
+        
         return false;
     }
 

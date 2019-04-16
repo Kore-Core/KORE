@@ -241,7 +241,9 @@ void AdvertizeLocal(CNode* pnode)
             addrLocal.SetIP(pnode->addrLocal);
         }
         if (addrLocal.IsRoutable()) {
-            if (fDebug) LogPrintf("AdvertiseLocal: advertising address %s\n", addrLocal.ToString());
+            if (fDebug)
+                LogPrintf("AdvertiseLocal: advertising address %s\n", addrLocal.ToString());
+            
             pnode->PushAddress(addrLocal);
         }
     }
@@ -1687,7 +1689,8 @@ void ThreadOpenAddedConnections()
         }
         MilliSleep(5000); // Retry every 5 seconds
     }
-    if (fDebug) LogPrintf("Exiting addnode at block: %d", GetnHeight(chainActive.Tip()));
+    if (fDebug)
+        LogPrintf("Exiting addnode at block: %d", GetnHeight(chainActive.Tip()));
 }
 
 // if successful, this moves the passed grant to the constructed node

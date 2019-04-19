@@ -4679,6 +4679,9 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         // Second transaction must have at least 1 vin
         if (block.vtx[1].vin.size() < 1)
             return state.DoS(100, error("CheckBlock(): coinstake second transaction must have at least 1 vin"));
+        // Second transaction must have at most 25 vin
+        if (block.vtx[1].vin.size() > MAXIMUM_STAKE_INPUT_SIZE)
+            return state.DoS(100, error("CheckBlock(): coinstake second transaction must have at most 25 vin"));
 
         // First vout must be a locking transaction
         if (!block.vtx[1].vout[0].IsCoinStake())
@@ -4695,6 +4698,15 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         for (unsigned int i = startCheckingNotStake; i < block.vtx[1].vout.size(); i++)
             if (block.vtx[1].vout[i].IsCoinStake())
                 return state.DoS(100, error("CheckBlock(): too many locking vout"));
+
+        // TODO: URGENTE
+        // //Check minimum stake value
+        // if (stakedBalance < MINIMUM_STAKE_VALUE)
+        //     return state.DoS(100, error("CheckBlock(): staked balance too low"));
+
+        // //Check maximum stake value
+        // if (stakedBalance > MAXIMUM_STAKE_VALUE)
+        //     return state.DoS(100, error("CheckBlock(): staked balance too low"));
 
         CTransaction originTx;
         uint256 hashBlock;
@@ -4728,26 +4740,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
             if (pubKeyID != lockPubKeyID)
                 return state.DoS(100, error("CheckBlock(): more than one pubkey on lock tx"));
         }
-
-        // The staked balance gives the target easing
-        CAmount stakedBalance = block.vtx[1].GetValueOut();
-        CKoreStake stakeInput;
-        if (!stakeInput.SetInput(originTx, block.vtx[1].vin[0].prevout.n))
-            return state.DoS(100, error("CheckBlock(): unable to proccess origin transaction"));
-        uint256 bnTargetPerCoinDay;
-        bnTargetPerCoinDay.SetCompact(block.nBits);
-        CBlockIndex* pindex = stakeInput.GetIndexFrom();
-        if (!pindex || pindex->nHeight < 1)
-            return state.DoS(100, error("CheckBlock(): failed to get block header from origin transaction"));
-        uint64_t nStakeModifier;
-        bool isGeneratedStakeModifier;
-        if (!stakeInput.GetModifier(nStakeModifier))
-            return state.DoS(10, error("CheckBlock(): failed to get stake modifier"));
-        CBlockHeader originBlock = pindex->GetBlockHeader();
-        CDataStream ssUniqueID = stakeInput.GetUniqueness();
-        uint32_t stakeTime = block.vtx[1].nTime;
-        if (!CheckStake(ssUniqueID, stakedBalance, nStakeModifier, bnTargetPerCoinDay, originBlock.GetBlockTime(), stakeTime))
-            return state.DoS(100, error("CheckBlock(): target was easier than it should be"));
     }
 
     // ----------- swiftTX transaction scanning -----------
@@ -5323,7 +5315,7 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
 
     if (block.IsProofOfStake()) {
         uint256 hashProofOfStake = 0;
-        std::list<std::unique_ptr<CStakeInput> > listStake;
+        std::list<CKoreStake> listStake;
 
         if (!CheckProofOfStake(block, hashProofOfStake, listStake))
             return state.DoS(100, error("%s: proof of stake check failed", __func__));
@@ -5331,12 +5323,9 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
         if (listStake.empty())
             return error("%s: empty list stake ptr", __func__);
 
-        for (std::list<std::unique_ptr<CStakeInput> >::iterator it = listStake.begin(); it != listStake.end(); ++it) {
-            CStakeInput* stake = (*it).release();
-            if (!stake)
+        for (std::list<CKoreStake>::iterator it = listStake.begin(); it != listStake.end(); ++it) {
+            if ((*it).IsNull())
                 return error("%s: null stake ptr", __func__);
-
-            //delete stake;
         }
 
         uint256 hash = block.GetHash();

@@ -793,6 +793,7 @@ void CoinControlDialog::updateView()
         double dPrioritySum = 0;
         int nChildren = 0;
         int nInputSum = 0;
+        int n = 0;
         for(const COutput& out: coins.second) {
             isminetype mine = pwalletMain->IsMine(out.tx->vout[out.i]);
             bool fMultiSigUTXO = (mine & ISMINE_MULTISIG);
@@ -866,7 +867,6 @@ void CoinControlDialog::updateView()
             itemOutput->setText(COLUMN_DATE, GUIUtil::dateTimeStr(out.tx->GetTxTime()));
             itemOutput->setToolTip(COLUMN_DATE, GUIUtil::dateTimeStr(out.tx->GetTxTime()));
             itemOutput->setData(COLUMN_DATE_INT64, Qt::DisplayRole, (qlonglong)out.tx->GetTxTime());
-
 
             // ds+ rounds
             CTxIn vin = CTxIn(out.tx->GetHash(), out.i);

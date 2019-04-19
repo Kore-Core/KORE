@@ -8,6 +8,7 @@
 #include "main.h"
 #include "stakeinput.h"
 
+class COutput;
 
 // MODIFIER_INTERVAL: time to elapse before new modifier is computed
 static const unsigned int MODIFIER_INTERVAL = 60;
@@ -24,13 +25,13 @@ bool GetKernelStakeModifier(uint256 hashBlockFrom, uint64_t& nStakeModifier, boo
 void StartStakeModifier_Legacy(CBlockIndex* pindexNew);
 bool ComputeNextStakeModifier(const CBlockIndex* pindexPrev, uint64_t& nStakeModifier, bool& fGeneratedStakeModifier);
 
-bool CheckMinAge(const int nDepth, const unsigned int nTimeBlockFrom, const unsigned int nTimeTx);
+bool IsBelowMinAge(const COutput& output, const unsigned int nTimeBlockFrom, const unsigned int nTimeTx);
 bool CheckStake(const CDataStream& ssUniqueID, CAmount nValueIn, const uint64_t nStakeModifier, const uint256& bnTarget, unsigned int nTimeBlockFrom, unsigned int& nTimeTx);
-bool Stake(CStakeInput* stakeInput, unsigned int nBits, unsigned int nTimeBlockFrom, unsigned int& nTimeTx, CAmount stakeableBalance, const int nDepth);
+bool Stake(CStakeInput* stakeInput, unsigned int nBits, unsigned int nTimeBlockFrom, unsigned int& nTimeTx, CAmount stakeableBalance, const COutput& output);
 
 // Check kernel hash target and coinstake signature
 // Sets hashProofOfStake on success return
-bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<std::unique_ptr<CStakeInput>>& listStake);
+bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<CKoreStake>& listStake);
 
 // Check whether the coinstake timestamp meets protocol
 bool CheckCoinStakeTimestamp(int64_t nTimeBlock, int64_t nTimeTx);

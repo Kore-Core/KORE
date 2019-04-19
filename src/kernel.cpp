@@ -12,6 +12,7 @@
 #include "stakeinput.h"
 #include "timedata.h"
 #include "util.h"
+#include "wallet.h"
 
 using namespace std;
 
@@ -328,17 +329,21 @@ bool CheckStake(const CDataStream& ssUniqueID, CAmount nValueIn, const uint64_t 
     return canStake;
 }
 
-bool CheckMinAge(const int nDepth, const unsigned int nTimeBlockFrom, const unsigned int nTimeTx)
+bool IsBelowMinAge(const COutput& output, const unsigned int nTimeBlockFrom, const unsigned int nTimeTx)
 {
-    return (nDepth < Params().GetCoinMaturity() && nTimeTx - nTimeBlockFrom < Params().GetStakeMinAge());
+    // If the first vout in my tx is a coinstake and i'm not: I'm the change and can be spent.
+    if (output.tx->vout[0].IsCoinStake() && !output.tx->vout[output.i].IsCoinStake())
+        return true;
+
+    return (output.nDepth < Params().GetCoinMaturity() && nTimeTx - nTimeBlockFrom < Params().GetStakeMinAge());
 }
 
-bool Stake(CStakeInput* stakeInput, unsigned int nBits, unsigned int nTimeBlockFrom, unsigned int& nTimeTx, CAmount stakeableBalance, int nDepth)
+bool Stake(CStakeInput* stakeInput, unsigned int nBits, unsigned int nTimeBlockFrom, unsigned int& nTimeTx, CAmount stakeableBalance, const COutput& output)
 {
     if (nTimeTx < nTimeBlockFrom)
         return error("Stake() : nTime violation => nTimeTx=%d nTimeBlockFrom=%d", nTimeTx, nTimeBlockFrom );
 
-    if (CheckMinAge(nDepth, nTimeBlockFrom, nTimeTx))
+    if (IsBelowMinAge(output, nTimeBlockFrom, nTimeTx))
       return error("Stake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d",
             nTimeBlockFrom, Params().GetStakeMinAge(), nTimeTx);
 
@@ -382,13 +387,19 @@ bool Stake(CStakeInput* stakeInput, unsigned int nBits, unsigned int nTimeBlockF
 }
 
 // Check kernel hash target and coinstake signature
-bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<std::unique_ptr<CStakeInput>>& listStake)
+bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<CKoreStake>& listStake)
 {
     const CTransaction tx = block.vtx[1];
     if (!tx.IsCoinStake())
-        return error("CheckProofOfStake() : called on non-coinstake %s", tx.GetHash().ToString().c_str());
+        return error("CheckProofOfStake(): called on non-coinstake %s", tx.GetHash().ToString().c_str());
 
-    std::unique_ptr<CStakeInput> kernel;
+    
+    uint256 bnTargetPerCoinDay;
+    bnTargetPerCoinDay.SetCompact(block.nBits);
+    if (bnTargetPerCoinDay > Params().ProofOfStakeLimit())
+        return error("%s(): Target is easier than limit %s", __func__, bnTargetPerCoinDay.ToString());
+
+    CKoreStake kernel;
     CAmount nTotalValue = 0;
     for (int i = 0; i < tx.vin.size(); i++)
     {
@@ -398,44 +409,41 @@ bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<
         uint256 hashBlock;
         CTransaction txPrev;
         if (!GetTransaction(txin.prevout.hash, txPrev, hashBlock, true))
-            return error("CheckProofOfStake() : INFO: read txPrev failed");
+            return error("CheckProofOfStake(): INFO: read txPrev failed");
 
         //verify signature and script
         if (!VerifyScript(txin.scriptSig, txPrev.vout[txin.prevout.n].scriptPubKey, STANDARD_SCRIPT_VERIFY_FLAGS, TransactionSignatureChecker(&tx, i)))
-            return error("CheckProofOfStake() : VerifySignature failed on coinstake %s", tx.GetHash().ToString().c_str());
+            return error("CheckProofOfStake(): VerifySignature failed on coinstake %s", tx.GetHash().ToString().c_str());
 
         //Construct the stakeinput object
-        CKoreStake* koreInput = new CKoreStake();
-        koreInput->SetInput(txPrev, txin.prevout.n);
-        std::unique_ptr<CStakeInput> stake = std::unique_ptr<CStakeInput>(koreInput);
-        nTotalValue += stake->GetValue();
+        CKoreStake koreInput;
+        koreInput.SetInput(txPrev, txin.prevout.n);
+        CBlockIndex* pindex = koreInput.GetIndexFrom();
+        if (!pindex)
+            return error("%s: Failed to find the block index", __func__);
 
-        listStake.emplace_back(std::move(stake));
+        nTotalValue += koreInput.GetValue();
+
+        listStake.emplace_back(koreInput);
 
         if (i == 0)
-            kernel = std::unique_ptr<CStakeInput>(koreInput);
+            kernel = koreInput;
     }
 
-    CBlockIndex* pindex = kernel->GetIndexFrom();
-    if (!pindex)
-        return error("%s: Failed to find the block index", __func__);
+    CBlockIndex* pindex = kernel.GetIndexFrom();
 
-    // Read block header
-    CBlock blockprev;
-    if (!ReadBlockFromDisk(blockprev, pindex->GetBlockPos()))
-        return error("CheckProofOfStake(): INFO: failed to find block");
-
-    uint256 bnTargetPerCoinDay;
-    bnTargetPerCoinDay.SetCompact(block.nBits);
+    CTransaction kernelTxFrom;
+    kernel.GetTxFrom(kernelTxFrom);
+    if (kernelTxFrom.IsNull())
+        return error("%s failed to get parent tx for stake input\n", __func__);
 
     uint64_t nStakeModifier = 0;
-    if (!kernel->GetModifier(nStakeModifier))
+    if (!kernel.GetModifier(nStakeModifier))
         return error("%s failed to get modifier for stake input\n", __func__);
 
-    unsigned int nBlockFromTime = blockprev.nTime;
     unsigned int nTxTime = block.nTime;
-    if (!CheckStake(kernel->GetUniqueness(), nTotalValue, nStakeModifier, bnTargetPerCoinDay, nBlockFromTime, nTxTime)) {
-        return error("CheckProofOfStake() : INFO: check kernel failed on coinstake %s \n", tx.GetHash().GetHex());
+    if (!CheckStake(kernel.GetUniqueness(), nTotalValue, nStakeModifier, bnTargetPerCoinDay, kernelTxFrom.nTime, nTxTime)) {
+        return error("CheckProofOfStake(): INFO: check kernel failed on coinstake %s \n", tx.GetHash().GetHex());
     }
 
     return true;

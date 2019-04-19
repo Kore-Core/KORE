@@ -56,6 +56,9 @@ public:
     virtual bool CreateLockingTxOuts(CWallet* pwallet, vector<CTxOut>& vout, CAmount value) override;
     virtual bool CreateTxOut(CWallet* pwallet, CTxOut& txOut) override;
     int GetPosition() override;
+    bool IsNull() const {
+        return this->pindexFrom == nullptr;
+    }
 };
 
 

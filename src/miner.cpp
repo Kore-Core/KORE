@@ -144,26 +144,27 @@ uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock
     if (UseLegacyCode(pindexLast->nHeight))
         return GetNextWorkRequired_Legacy(pindexLast, pblock, fProofOfStake);
 
-    /* current difficulty formula, kore - DarkGravity v3, written by Evan Duffield - evan@dashpay.io */
+    /* current difficulty formula, KoreCorrectionAlgorithm, written by The Kore Developers - 2019 */
+    static int64_t nPastBlocksMin = Params().GetPastBlocksMin();
+    static int64_t nPastBlocksMax = Params().GetPastBlocksMax();
+    static int64_t nTargetSpacing = Params().GetTargetSpacing();
+    static int64_t nTargetTimespan = Params().GetTargetTimespan();
+    
     const CBlockIndex* BlockLastSolved = pindexLast;
     const CBlockIndex* BlockReading = pindexLast;
     int64_t nActualTimespan = 0;
     int64_t LastBlockTime = 0;
-    int64_t PastBlocksMin = Params().GetPastBlocksMin();
-    int64_t PastBlocksMax = Params().GetPastBlocksMax();
+
     int64_t CountBlocks = 0;
     uint256 PastDifficultyAverage;
     uint256 PastDifficultyAveragePrev;
 
-    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
+    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < nPastBlocksMin) {
         return fProofOfStake ?  Params().ProofOfStakeLimit().GetCompact() : Params().ProofOfWorkLimit().GetCompact();
     }
 
     if (pindexLast->nHeight > Params().GetLastPoWBlock() || fProofOfStake) {
         uint256 bnTargetLimit = fProofOfStake ? Params().ProofOfStakeLimit() : Params().ProofOfWorkLimit();
-        int64_t nTargetSpacing = Params().GetTargetSpacing();
-        int64_t nTargetTimespan = Params().GetTargetTimespan();
-
         int64_t nMedianTimeSpacing = pindexLast->GetMedianTimeSpacing();
         int64_t nMyBlockSpacing = pblock->GetBlockTime() - pindexLast->GetBlockTime();
 
@@ -172,12 +173,12 @@ uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock
         uint256 bnNew;
         bnNew.SetCompact(pindexLast->nBits);
 
-        int64_t nInterval = nTargetTimespan / nTargetSpacing;
-        int64_t pastDueSpacing = nMyBlockSpacing - nMedianTimeSpacing > 0 ? nMyBlockSpacing - nMedianTimeSpacing : 0;
+        int64_t nInterval = (nMyBlockSpacing + nMedianTimeSpacing - 2 * nTargetSpacing) / 2;
+        int64_t pastDueSpacing = nInterval > 0 ? nInterval : 0;
         int64_t howManyDue = pastDueSpacing / nTargetSpacing;
 
-        bnNew *= ((nInterval - 1) * nTargetSpacing + nMedianTimeSpacing + pow(pastDueSpacing, howManyDue));
-        bnNew /= ((nInterval + 1) * nTargetSpacing);
+        bnNew *= (nMedianTimeSpacing + pow(pastDueSpacing, howManyDue));
+        bnNew /= (2 * nTargetSpacing);
 
         if (bnNew <= 0 || bnNew > bnTargetLimit)
             bnNew = bnTargetLimit;
@@ -190,16 +191,16 @@ uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock
             }
         }
         
-        return bnNew.GetCompact();
+        return bnNew <= Params().ProofOfStakeLimit() ? bnNew.GetCompact() : Params().ProofOfStakeLimit().GetCompact();
     }
 
     for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
-        if (PastBlocksMax > 0 && i > PastBlocksMax) {
+        if (nPastBlocksMax > 0 && i > nPastBlocksMax) {
             break;
         }
         CountBlocks++;
 
-        if (CountBlocks <= PastBlocksMin) {
+        if (CountBlocks <= nPastBlocksMin) {
             if (CountBlocks == 1) {
                 PastDifficultyAverage.SetCompact(BlockReading->nBits);
             } else {
@@ -1051,8 +1052,8 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                 fMintableCoins = pwallet->MintableCoins();
             }
 
-            while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || pwallet->GetBalance() == 0 ||
-                   nReserveBalance > pwallet->GetBalance() || !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >= 2))
+            while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || pwallet->GetBalance() == 0 || nReserveBalance > pwallet->GetBalance()
+              || !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >= 2))
             {
                 if (fDebug) {
                     LogPrintf("%s(): still unable to stake.\n", __func__);

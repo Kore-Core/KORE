@@ -168,6 +168,7 @@ struct BlockHasher {
 static const CAmount STAKE_SPLIT_TRESHOLD = 985 * 2 * COIN;
 static const CAmount MAXIMUM_STAKE_VALUE = 2500 * COIN;
 static const CAmount MINIMUM_STAKE_VALUE = 25 * COIN;
+static const int MAXIMUM_STAKE_INPUT_SIZE = 25;
 
 extern CScript COINBASE_FLAGS;
 extern CCriticalSection cs_main;

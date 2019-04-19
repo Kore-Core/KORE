@@ -120,7 +120,7 @@ public:
     int32_t                   GetMaxStakeModifierInterval() const      { return std::min(nCoinMaturity, 64U); }
     int64_t                   GetMaxTipAge() const                     { return nMaxTipAge; }
     uint32_t                  GetMinerConfirmationWindow() const       { return nMinerConfirmationWindow; }
-    uint32_t                  GetModifierInterval() const              { return nModifierInterval; }
+    uint32_t                  GetModifierInterval() const              { return nTargetSpacing; }
     CBaseChainParams::Network GetNetworkID() const                     { return networkID; }
     /** Return the BIP70 network string (main, test or regtest) */
     std::string               GetNetworkIDString() const               { return strNetworkID; }
@@ -136,8 +136,8 @@ public:
     int64_t                   GetStakeLockSequenceNumber() const       { return (nStakeLockInterval >> CTxIn::SEQUENCE_LOCKTIME_GRANULARITY) | CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG; }
     uint32_t                  GetStakeMinAge() const                   { return nStakeMinAge; }
     uint32_t                  GetTargetSpacing() const                 { return nTargetSpacing; }
-    int64_t                   GetTargetSpacingForStake() const         { return nModifierInterval * 0.75; }
-    uint32_t                  GetTargetTimespan() const                { return nTargetTimespan; }
+    int64_t                   GetTargetSpacingForStake() const         { return nTargetSpacing * 0.1; }
+    uint32_t                  GetTargetTimespan() const                { return nTargetSpacing; }
     /** Default value for -checkmempool and -checkblockindex argument */
     bool                      IsConsistencyChecksDefault() const       { return fDefaultConsistencyChecks; }
     uint64_t                  PruneAfterHeight() const                 { return nPruneAfterHeight; }
@@ -188,7 +188,6 @@ protected:
     CAmount                    nMaxMoneyOut;
     uint32_t                   nMinerConfirmationWindow;
     int32_t                    nMinerThreads;
-    uint32_t                   nModifierInterval;
     CBaseChainParams::Network  networkID;
     std::string                strNetworkID;
     int64_t                    nPastBlocksMin; // used when calculating the NextWorkRequired
@@ -198,7 +197,6 @@ protected:
     int64_t                    nStakeLockInterval;
     uint32_t                   nStakeMinAge;
     int64_t                    nStartMasternodePayments;
-    uint32_t                   nTargetTimespan;
     uint32_t                   nTargetSpacing;
     int64_t                    nTargetSpacingForStake;
     std::string                strDevFundPubKey;
@@ -233,9 +231,7 @@ public:
     virtual void setLastPowBlock(int aLastPOWBlock) = 0;
     virtual void setStakeLockInterval(int aStakeLockInterval) = 0;
     virtual void setStakeMinAge(int aStakeMinAge) = 0;
-    virtual void setStakeModifierInterval(int aStakeModifier) = 0;
     virtual void setTargetSpacing(uint32_t aTargetSpacing) = 0;
-    virtual void setTargetTimespan(uint32_t aTargetTimespan) = 0;
 };
 
 /**

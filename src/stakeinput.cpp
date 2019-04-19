@@ -143,6 +143,9 @@ CDataStream CKoreStake::GetUniqueness()
 //The block that the UTXO was added to the chain
 CBlockIndex* CKoreStake::GetIndexFrom()
 {
+    if (pindexFrom)
+        return pindexFrom;
+
     uint256 hashBlock = 0;
     CTransaction tx;
     if (GetTransaction(txFrom.GetHash(), tx, hashBlock, true)) {

@@ -95,7 +95,6 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
  * remember that the miminum spacing is 10 !!!
  * nCoinbaseMaturity = nStakeMinConfirmations = nCoinMaturity
  * nTargetSpacing    : max(nCoinMaturity-1, value)
- * nModifierInterval : [nTargetSpacing, nTargetSpacing)]
  * pow blocks        : max(nCoinMaturity+1, value), this way we will have 2 modifiers
  */
 class CMainParams : public CChainParams
@@ -122,8 +121,8 @@ public:
         base58Prefixes[PUBKEY_ADDRESS]                = std::vector<unsigned char>(1, 45);
         base58Prefixes[SCRIPT_ADDRESS]                = std::vector<unsigned char>(1, 85);
         base58Prefixes[SECRET_KEY]                    = std::vector<unsigned char>(1, 128);
-        bnProofOfStakeLimit                           = ~uint256(0) >> 16;
-        bnProofOfWorkLimit                            = ~uint256(0) >> 3;
+        bnProofOfStakeLimit                           = ~uint256(0) >> 16;   // 0000 FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF 
+        bnProofOfWorkLimit                            = ~uint256(0) >> 3;    // 1FFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF FFFF
         fDefaultConsistencyChecks                     = false;
         fEnableBigReward 							  = false;
         fMineBlocksOnDemand                           = false;
@@ -149,15 +148,13 @@ public:
         nMaxTipAge                                    = 24 * 60 * 60;
         nMinerConfirmationWindow                      = 50;                  // nPowTargetTimespan / nPowTargetSpacing
         nMinerThreads                                 = 0;
-        nModifierInterval                             = 60;                  // should be the same as nStakeMinConfirmations
-        nPastBlocksMax                                = 24;
+        nPastBlocksMax                                = 128;
         nPastBlocksMin                                = 24;
         nPoolMaxTransactions                          = 3;
         nPruneAfterHeight                             = 100000;              // Legacy
         nRuleChangeActivationThreshold                = 1916;                // 95% of 2016
         nStakeLockInterval                            = 4 * 60 * 60;         // Stake remains locked for 4 hours
         nStakeMinAge                                  = 4 * 60 * 60;
-        nTargetTimespan                               = 1 * 60;
         nTargetSpacing                                = 1 * 60;              // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
         nBlocksToBanOldWallets                        = 1440;                //Ban old nodes one day before fork
         //TODO: SET FORK BLOCK
@@ -240,7 +237,9 @@ public:
         nDefaultPort                                  = 11743;
         nBlocksToBanOldWallets                        = 60;                         //Ban old nodes one hour before fork 
         nHeightToFork                                 = 500;
-        nLastPOWBlock                                 = 50;
+        nLastPOWBlock                                 = 100;
+        nStakeLockInterval                            = 2 * 60 * 60;                // Stake remains locked for 4 hours
+        nStakeMinAge                                  = 2 * 60 * 60;
         vAlertPubKey                                  = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         strDevFundPubKey                              = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
         strSporkKey                                   = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
@@ -254,11 +253,11 @@ public:
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
         
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1555366374, 4, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1555632577, 11, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
 
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x124964c50e05df7306235fd3e479cc3bb2493c49b0dff7213f5ab78605ea6b83"));
-        assert(genesis.hashMerkleRoot == uint256S("0xc1ea8351c67a6246dab594c138ab47a2948834ebf3fc5c850cec68858d8f80e3"));
+        assert(nHashGenesisBlock == uint256S("0x1ddc70b6f1eb818e4a25f121abb4cfa801df621d58beb5fc66e10b7409fca8d4"));
+        assert(genesis.hashMerkleRoot == uint256S("0x06877e168d5d3620c59c9e4b7f7bf835e0e441eaff2a060906ab0c9f04481ac5"));
         
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -318,7 +317,6 @@ public:
         nHeightToFork                  = 900000;           //Height to perform the fork
         nMinerThreads                  = 1;
         nTargetSpacing                 = 1 * 60;           // consensus.nTargetSpacing 1 minutes
-        nTargetTimespan                = 60 * 60;          // consensus.nTargetTimespan one hour
 
         // TODO Lico removed assertion
         // assert(nHashGenesisBlock == uint256("0x4f023a2120d9127b21bbad01724fdb79b519f593f2a85b60d3d79160ec5f29df"));
@@ -359,8 +357,6 @@ public:
         nDefaultPort                               = 51478;
         nTargetSpacing                             = 10;
         nCoinMaturity                              = nTargetSpacing + 1;
-        nModifierInterval                          = nTargetSpacing;
-        nTargetTimespan                            = nTargetSpacing - 1;
         nPastBlocksMax                             = 128;
         nPastBlocksMin                             = 32;
         nStakeLockInterval                         = 32; // minimum value
@@ -376,8 +372,6 @@ public:
     virtual void setLastPowBlock(int aLastPOWBlock) { nLastPOWBlock = aLastPOWBlock; };
     virtual void setStakeLockInterval(int aStakeLockInterval) { nStakeLockInterval = aStakeLockInterval; };
     virtual void setStakeMinAge(int aStakeMinAge) { nStakeMinAge = aStakeMinAge; };
-    virtual void setStakeModifierInterval(int aStakeModifier) { nModifierInterval = aStakeModifier; }
-    virtual void setTargetTimespan(uint32_t aTargetTimespan) { nTargetTimespan = aTargetTimespan; };
     // PoS may fail to create new Blocks, if we try to set this to less than 10
     virtual void setTargetSpacing(uint32_t aTargetSpacing) { nTargetSpacing = aTargetSpacing; };
 };

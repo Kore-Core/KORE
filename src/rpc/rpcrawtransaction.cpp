@@ -388,6 +388,8 @@ UniValue createrawtransaction(const UniValue& params, bool fHelp)
         rawTx.vout.push_back(out);
     }
 
+    rawTx.nTime = GetTime();
+
     return EncodeHexTx(rawTx);
 }
 

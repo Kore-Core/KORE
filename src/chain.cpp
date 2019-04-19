@@ -89,15 +89,16 @@ int64_t CBlockIndex::GetMedianTimeSpacing() const
     if (nHeight == 0)
         return 0;
         
-    int64_t nActualTimespan = 0;
     const CBlockIndex* BlockReading = this;
+    static int64_t nPastBlocksMin = Params().GetPastBlocksMin();
+    static int64_t nPastBlocksMax = Params().GetPastBlocksMax();
+
+    int64_t nActualTimespan = 0;
     int64_t CountBlocks = 0;
     int64_t LastBlockTime = 0;
-    int64_t PastBlocksMin = Params().GetPastBlocksMin();
-    int64_t PastBlocksMax = Params().GetPastBlocksMax();
 
     for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
-        if (PastBlocksMax > 0 && i > PastBlocksMax) {
+        if (nPastBlocksMax > 0 && i > nPastBlocksMax) {
             break;
         }
         CountBlocks++;

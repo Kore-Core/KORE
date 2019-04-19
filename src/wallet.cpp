@@ -2074,9 +2074,8 @@ void CWallet::AvailableCoins(vector<COutput>& vCoins, bool fOnlyConfirmed, const
                 if (mine == ISMINE_WATCH_ONLY && nWatchonlyConfig == 1)
                     continue;
 
-                if (mine == ISMINE_STAKE)
-                    if (!pcoin->IsStakeSpendable())
-                        continue;
+                if (mine == ISMINE_STAKE && !pcoin->IsStakeSpendable())
+                    continue;
 
                 if (IsLockedCoin((*it).first, i) && nCoinType != ONLY_10000)
                     continue;
@@ -2178,7 +2177,7 @@ bool less_then_denom(const COutput& out1, const COutput& out2)
 
 bool SortOutputsByValueDesc(COutput i, COutput j)
 {
-    return (i.Value() < j.Value());
+    return (i.Value() > j.Value());
 }
 
 bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInputs, CAmount nTargetAmount, map<string, CAmount>& stakeableBalance, map<string, CAmount>& maxStakeableBalance)
@@ -2199,7 +2198,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
                 continue;
             string destinationString = destination.ToString();
 
-            if (numberOfSelectedCoinsPerAddress[destinationString] == 10)
+            if (numberOfSelectedCoinsPerAddress[destinationString] == MAXIMUM_STAKE_INPUT_SIZE)
                 continue;
 
             nTargetAmount = max(nTargetAmount, maxStakeableBalance[destinationString]);
@@ -2211,8 +2210,8 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
             //use the block time
             int64_t nTxTime = out.tx->GetTxTime();
 
-            if (CheckMinAge(out.nDepth, GetAdjustedTime(), nTxTime))
-                continue;
+            if (IsBelowMinAge(out, GetAdjustedTime(), nTxTime))
+                continue;            
                 
             if (out.tx->IsLegacyCoinStake() && out.nDepth < Params().GetCoinMaturity())
                 continue;
@@ -3430,8 +3429,8 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     if (listInputs.empty())
         return false;
 
-    if ((uint32_t)(GetAdjustedTime() - chainActive.Tip()->GetBlockTime()) < (int)(Params().GetTargetSpacing() * 0.75))
-        MilliSleep(Params().GetTargetSpacing() * 0.75 * 1000);
+    if ((uint32_t)(GetAdjustedTime() - chainActive.Tip()->GetBlockTime()) < (int)(Params().GetTargetSpacingForStake()))
+        MilliSleep(Params().GetTargetSpacingForStake() * 1000);
 
     CAmount nCredit;
     CScript scriptPubKeyKernel;
@@ -3466,18 +3465,17 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             continue;
 
         nTxNewTime = GetAdjustedTime();
-
-        // Send the address' stakeable balance to ease the difficulty        
+  
+        // TODO - better perfomance if we store the depth when selection the coin
+        const CWalletTx* pcoin = GetWalletTx(tx.GetHash());
+        // Send the address' stakeable balance to ease the difficulty     
         int nDepth;
         {
-            // TODO - better perfomance if we store the depth when selection the coin
-            const CWalletTx* pcoin = GetWalletTx(tx.GetHash());
-
             LOCK(cs_main);
             nDepth = pcoin->GetDepthInMainChain(false);
         }
 
-        if (Stake(stakeInput.get(), nBits, tx.nTime, nTxNewTime, addressBalance, nDepth)) {
+        if (Stake(stakeInput.get(), nBits, tx.nTime, nTxNewTime, addressBalance, COutput(pcoin, stakeInput->GetPosition(), nDepth, true))) {
             LOCK(cs_main);
             //Double check that this will pass time requirements
             if (nTxNewTime <= chainActive.Tip()->GetMedianTimePast()) {

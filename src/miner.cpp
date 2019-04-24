@@ -138,123 +138,102 @@ inline CBlockIndex* GetParentIndex(CBlockIndex* index)
     return index->pprev;
 }
 
-uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock, bool fProofOfStake)
+unsigned int static DarkGravityWave3(const CBlockIndex* pindexLast, const CBlockHeader *pblock, bool fProofOfStake) 
 {
-    // Lico
-    if (UseLegacyCode(pindexLast->nHeight))
-        return GetNextWorkRequired_Legacy(pindexLast, pblock, fProofOfStake);
-
-    /* current difficulty formula, KoreCorrectionAlgorithm, written by The Kore Developers - 2019 */
-    static int64_t nPastBlocksMin = Params().GetPastBlocksMin();
-    static int64_t nPastBlocksMax = Params().GetPastBlocksMax();
-    static int64_t nTargetSpacing = Params().GetTargetSpacing();
-    static int64_t nTargetTimespan = Params().GetTargetTimespan();
-    
-    const CBlockIndex* BlockLastSolved = pindexLast;
-    const CBlockIndex* BlockReading = pindexLast;
+    /* current difficulty formula, darkcoin - DarkGravity v3, written by Evan Duffield - evan@darkcoin.io */
+    const CBlockIndex *BlockLastSolved = pindexLast;
+    const CBlockIndex *BlockReading = pindexLast;
+    const CBlockHeader *BlockCreating = pblock;
     int64_t nActualTimespan = 0;
     int64_t LastBlockTime = 0;
-
+    static int64_t PastBlocksMin = 24;
+    static int64_t PastBlocksMax = 24;
     int64_t CountBlocks = 0;
     uint256 PastDifficultyAverage;
     uint256 PastDifficultyAveragePrev;
+    static int64_t nTargetSpacing = Params().GetTargetSpacing();
 
-    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < nPastBlocksMin) {
+    if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
         return fProofOfStake ?  Params().ProofOfStakeLimit().GetCompact() : Params().ProofOfWorkLimit().GetCompact();
     }
+    
+    uint256 bnTargetLimit = fProofOfStake ? Params().ProofOfStakeLimit() : Params().ProofOfWorkLimit();
 
-    if (pindexLast->nHeight > Params().GetLastPoWBlock() || fProofOfStake) {
-        uint256 bnTargetLimit = fProofOfStake ? Params().ProofOfStakeLimit() : Params().ProofOfWorkLimit();
-        int64_t nMedianTimeSpacing = pindexLast->GetMedianTimeSpacing();
-        int64_t nMyBlockSpacing = pblock->GetBlockTime() - pindexLast->GetBlockTime();
-
-        // ppcoin: target change every block
-        // ppcoin: retarget with exponential moving toward target spacing
-        uint256 bnNew;
-        bnNew.SetCompact(pindexLast->nBits);
-
-        int64_t nInterval = (nMyBlockSpacing + nMedianTimeSpacing - 2 * nTargetSpacing) / 2;
-        int64_t pastDueSpacing = nInterval > 0 ? nInterval : 0;
-        int64_t howManyDue = pastDueSpacing / nTargetSpacing;
-
-        bnNew *= (nMedianTimeSpacing + pow(pastDueSpacing, howManyDue));
-        bnNew /= (2 * nTargetSpacing);
-
-        if (bnNew <= 0 || bnNew > bnTargetLimit)
-            bnNew = bnTargetLimit;
-
-        if (fDebug){
-            static uint256 oldTarget = 0;
-            if (bnNew != oldTarget) {
-                LogPrintf("%s(): %s \n", __func__, bnNew.ToString().c_str());
-                oldTarget = bnNew;
-            }
-        }
-        
-        return bnNew <= Params().ProofOfStakeLimit() ? bnNew.GetCompact() : Params().ProofOfStakeLimit().GetCompact();
-    }
-
+    // loop over the past n blocks, where n == PastBlocksMax
     for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
-        if (nPastBlocksMax > 0 && i > nPastBlocksMax) {
-            break;
-        }
+        if (PastBlocksMax > 0 && i > PastBlocksMax) { break; }
         CountBlocks++;
 
-        if (CountBlocks <= nPastBlocksMin) {
-            if (CountBlocks == 1) {
-                PastDifficultyAverage.SetCompact(BlockReading->nBits);
-            } else {
-                PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks) + (uint256().SetCompact(BlockReading->nBits))) / (CountBlocks + 1);
-            }
+        // Calculate average difficulty based on the blocks we iterate over in this for loop
+        if(CountBlocks <= PastBlocksMin) {
+            if (CountBlocks == 1) { PastDifficultyAverage.SetCompact(BlockReading->nBits); }
+            else { PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks)+(uint256().SetCompact(BlockReading->nBits))) / (CountBlocks+1); }
             PastDifficultyAveragePrev = PastDifficultyAverage;
         }
 
-        if (LastBlockTime > 0) {
+        // If this is the second iteration (LastBlockTime was set)
+        if(LastBlockTime > 0){
+            // Calculate time difference between previous block and current block
             int64_t Diff = (LastBlockTime - BlockReading->GetBlockTime());
+            // Increment the actual timespan
             nActualTimespan += Diff;
         }
-        LastBlockTime = BlockReading->GetBlockTime();
+        // Set LasBlockTime to the block time for the block in current iteration
+        LastBlockTime = BlockReading->GetBlockTime();      
 
-        if (BlockReading->pprev == NULL) {
-            assert(BlockReading);
-            break;
-        }
+        if (BlockReading->pprev == NULL) { assert(BlockReading); break; }
         BlockReading = BlockReading->pprev;
     }
-
-    int64_t Diff = (pblock->nTime - BlockLastSolved->GetBlockTime());
-    nActualTimespan += Diff;
-
+    
+    // bnNew is the difficulty
     uint256 bnNew(PastDifficultyAverage);
 
-    int64_t _nTargetTimespan = CountBlocks * Params().GetTargetSpacing();
-    if (fDebug) {
-        LogPrintf("nActualTimespan: %d \n", nActualTimespan);
-        LogPrintf("PastDifficultyAverage: %s \n", PastDifficultyAverage.ToString().c_str());
-        LogPrintf("_nTargetTimespan : %d \n", _nTargetTimespan);
-    }
+    // nTargetTimespan is the time that the CountBlocks should have taken to be generated.
+    int64_t nTargetTimespan = CountBlocks*nTargetSpacing;
 
-    if (nActualTimespan < _nTargetTimespan / 3)
-        nActualTimespan = _nTargetTimespan / 3;
-    if (nActualTimespan > _nTargetTimespan * 3)
-        nActualTimespan = _nTargetTimespan * 3;
+    // Limit the re-adjustment to 3x or 0.33x
+    // We don't want to increase/decrease diff too much.
+    if (nActualTimespan < nTargetTimespan/3)
+        nActualTimespan = nTargetTimespan/3;
+    if (nActualTimespan > nTargetTimespan*3)
+        nActualTimespan = nTargetTimespan*3;
 
 
-    // Retarget
-    bnNew *= nActualTimespan;
-    bnNew /= _nTargetTimespan;
+    int64_t nMyBlockSpacing = pblock->GetBlockTime() - pindexLast->GetBlockTime();
+    int64_t nInterval = (nMyBlockSpacing - 2 * nTargetSpacing) / 2;
+    // this only will take effect after we are 2 blocks away from the target
+    int64_t pastDueSpacing = nInterval > 0 ? nInterval : 0;
+    int64_t howManyDue = pastDueSpacing / nTargetSpacing;
 
-    if (bnNew > Params().ProofOfWorkLimit()) {
-        bnNew = Params().ProofOfWorkLimit();
-    }
+    // Calculate the new difficulty based on actual and target timespan.
+    bnNew *= (nActualTimespan + pow(nTargetSpacing, howManyDue));
+    bnNew /= nTargetTimespan;
 
-    if (fDebug) {
-        LogPrintf("nActualTimespan: %d \n", nActualTimespan);
-        LogPrintf("GetNextTarget: %s \n", bnNew.ToString().c_str());
-    }
+    // If calculated difficulty is lower than the minimal diff, set the new difficulty to be the minimal diff.
+    if (bnNew <= 0 || bnNew > bnTargetLimit)
+        bnNew = bnTargetLimit;
+    
+    // Some logging.
+    // TODO: only display these log messages for a certain debug option.
+    //printf("Difficulty Retarget - DGW 3\n");
+    //printf("Before: %08x %s\n", BlockLastSolved->nBits, uint256().SetCompact(BlockLastSolved->nBits).ToString().c_str());
+    //printf("After : %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
+    //printf("Turbo mode ? %s  -> pow(%ld, %ld) \n", pastDueSpacing > 0 ? "true" : "false", nTargetSpacing, howManyDue);
 
+    // Return the new diff.
     return bnNew.GetCompact();
+    
 }
+
+uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock, bool fProofOfStake)
+{
+    // Lico    
+    return UseLegacyCode(pindexLast->nHeight + 1) ? 
+        GetNextWorkRequired_Legacy(pindexLast, pblock, fProofOfStake) :
+        DarkGravityWave3(pindexLast, pblock, fProofOfStake);
+        
+}
+
 
 
 inline CMutableTransaction CreateCoinbaseTransaction(const CScript& scriptPubKeyIn)
@@ -602,7 +581,7 @@ inline CMutableTransaction CreateCoinbaseTransaction_Legacy(const CScript& scrip
         txNew.vout[0].nValue = reward - devsubsidy;
         txNew.vout[0].scriptPubKey = scriptPubKeyIn;
         txNew.vout[1].nValue = devsubsidy;
-        txNew.vout[1].scriptPubKey = CScript() << ParseHex(Params().GetDevFundPubKey().c_str()) << OP_CHECKSIG;
+        txNew.vout[1].scriptPubKey = CScript() << ParseHex(Params().GetDevFundPubKey()) << OP_CHECKSIG;
         txNew.vout[2].SetEmpty();
         txNew.vout[2].scriptPubKey = CScript() << vecMessage << OP_RETURN;
     }
@@ -1299,7 +1278,7 @@ void ThreadStakeMinter_Legacy(CWallet* pwallet)
             boost::this_thread::interruption_point();
         }
 
-        while (vNodes.empty() || IsInitialBlockDownload()) {
+        while (vNodes.empty() || IsInitialBlockDownload() ) {
             fTryToSync = true;
             // nLastCoinStakeSearchInterval = 0;
             MilliSleep(2000);
@@ -1395,7 +1374,7 @@ void KoreMiner_Legacy()
                         LOCK(cs_vNodes);
                         fvNodesEmpty = vNodes.empty();
                     }
-                    if (!fvNodesEmpty && !IsInitialBlockDownload())
+                    if (!fvNodesEmpty && !IsInitialBlockDownload() )
                         break;
                     MilliSleep(1000);
                 } while (true);

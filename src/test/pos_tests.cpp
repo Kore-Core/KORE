@@ -668,7 +668,12 @@ BOOST_AUTO_TEST_CASE(pos_CreateTransaction)
     CReserveKey reserveKey(&wallet);
     CAmount feeRate;
     string failReason;
-    BOOST_CHECK(wallet.CreateTransaction(CScript() << OP_RETURN, 13.99996830 * COIN, wtx6, reserveKey, feeRate, failReason));
+    vector<CRecipient> vecSend;
+    CAmount nValue = 13.99996830 * COIN;
+    CRecipient recipient = {CScript() << OP_RETURN, nValue, false};
+    vecSend.push_back(recipient);
+
+    BOOST_CHECK(wallet.CreateTransaction(vecSend, wtx6, reserveKey, feeRate, failReason));
     CBlock block6 = GetNewPoWBlock(block5.GetHash(), wtx6);
     // Set mock time to time in block
     SetMockTime(nTime);

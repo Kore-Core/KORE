@@ -1202,8 +1202,8 @@ static const char* strMainNetOnionSeed[][1] = {
 };
 
 static const char* strTestNetOnionSeed[][1] = {
-    // {"tv37hpwd5ntlsdmj.onion"},
-    // {"j2zii4hsm44jbxv5.onion"},
+     {"tv37hpwd5ntlsdmj.onion"},
+     {"j2zii4hsm44jbxv5.onion"},
     {NULL} // last element => couldn't use size ?
 };
 

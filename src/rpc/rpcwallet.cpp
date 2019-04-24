@@ -358,7 +358,6 @@ static void SendMoney(const CTxDestination& address, CAmount nValue, bool fSubtr
     string strError;
     if (pwalletMain->IsLocked()) {
         strError = "Error: Wallet locked, unable to create transaction!";
-        LogPrintf("SendMoney() : %s", strError);
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
 
@@ -369,54 +368,21 @@ static void SendMoney(const CTxDestination& address, CAmount nValue, bool fSubtr
     CReserveKey reservekey(pwalletMain);
     CAmount nFeeRequired;
     vector<CRecipient> vecSend;
-    int nChangePosRet = -1;
-    CRecipient recipient = {scriptPubKey, nValue, fSubtractFeeFromAmount};
-    vecSend.push_back(recipient);
-    if (!pwalletMain->CreateTransaction(scriptPubKey, nValue, wtxNew, reservekey, nFeeRequired, strError, NULL, ALL_COINS, fUseIX, (CAmount)0)) {
-        if (nValue + nFeeRequired > pwalletMain->GetBalance())
-            strError = strprintf("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!", FormatMoney(nFeeRequired));
-        LogPrintf("SendMoney() : %s\n", strError);
-        throw JSONRPCError(RPC_WALLET_ERROR, strError);
-    }
-    if (!pwalletMain->CommitTransaction(wtxNew, reservekey, (!fUseIX ? "tx" : "ix")))
-        throw JSONRPCError(RPC_WALLET_ERROR, "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
-}
-
-static void SendMoney_Legacy(const CTxDestination& address, CAmount nValue, bool fSubtractFeeFromAmount, CWalletTx& wtxNew, bool fUseIX = false)
-{
-    CAmount curBalance = pwalletMain->GetBalance();
-
-    // Check amount
-    if (nValue <= 0)
-        throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid amount");
-
-    if (nValue > curBalance)
-        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, "Insufficient funds");
-
-    // Parse Koreaddress
-    CScript scriptPubKey = GetScriptForDestination(address);
-
-    // Create and send the transaction
-    CReserveKey reservekey(pwalletMain);
-    CAmount nFeeRequired;
-    std::string strError;
-    vector<CRecipient> vecSend;
-    int nChangePosRet = -1;
     CRecipient recipient = {scriptPubKey, nValue, fSubtractFeeFromAmount};
     vecSend.push_back(recipient);
 
-    if (!pwalletMain->CreateTransaction_Legacy(vecSend, wtxNew, reservekey, nFeeRequired, nChangePosRet, strError)) {
+    if (!pwalletMain->CreateTransaction(vecSend, wtxNew, reservekey, nFeeRequired, strError, NULL, ALL_COINS, fUseIX, true)) {
         if (!fSubtractFeeFromAmount && nValue + nFeeRequired > pwalletMain->GetBalance())
             strError = strprintf("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!", FormatMoney(nFeeRequired));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
-    if (!pwalletMain->CommitTransaction_Legacy(wtxNew, reservekey))
+    if (!pwalletMain->CommitTransaction(wtxNew, reservekey, (fUseIX ? "ix" : "tx")))
         throw JSONRPCError(RPC_WALLET_ERROR, "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
 }
 
 UniValue sendtoaddress(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() < 2 || params.size() > 4)
+    if (fHelp || params.size() < 2 || params.size() > 5)
         throw runtime_error(
             "sendtoaddress \"koreaddress\" amount ( \"comment\" \"comment-to\" )\n"
             "\nSend an amount to a given address. The amount is a real and is rounded to the nearest 0.00000001\n" +
@@ -430,7 +396,8 @@ UniValue sendtoaddress(const UniValue& params, bool fHelp)
                                         "4. \"comment-to\"  (string, optional) A comment to store the name of the person or organization \n"
                                         "                             to which you're sending the transaction. This is not part of the \n"
                                         "                             transaction, just kept in your wallet.\n"
-
+                                        "5. subtractfeefromamount  (boolean, optional, default=false) The fee will be deducted from the amount being sent.\n"
+                                        "                             The recipient will receive less kores than you enter in the amount field.\n"
                                         "\nResult:\n"
                                         "\"transactionid\"  (string) The transaction id.\n"
 
@@ -461,12 +428,7 @@ UniValue sendtoaddress(const UniValue& params, bool fHelp)
 
     EnsureWalletIsUnlocked();
 
-    if (UseLegacyCode(chainActive.Height())) {
-        SendMoney_Legacy(address.Get(), nAmount, fSubtractFeeFromAmount, wtx);
-    } else {
-        SendMoney(address.Get(), nAmount, fSubtractFeeFromAmount, wtx);
-    }
-
+    SendMoney(address.Get(), nAmount, fSubtractFeeFromAmount, wtx);
 
     return wtx.GetHash().GetHex();
 }
@@ -1084,21 +1046,10 @@ UniValue sendmany(const UniValue& params, bool fHelp)
     CAmount nFeeRequired = 0;
     string strFailReason;
 
-    if (UseLegacyCode(chainActive.Height())) {
-        int nChangePosRet = -1;
-        bool fCreated = pwalletMain->CreateTransaction_Legacy(vecSend, wtx, keyChange, nFeeRequired, nChangePosRet, strFailReason);
-        if (!fCreated)
-            throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, strFailReason);
-        if (!pwalletMain->CommitTransaction_Legacy(wtx, keyChange))
-            throw JSONRPCError(RPC_WALLET_ERROR, "Transaction commit failed");
-
-    } else {
-        bool fCreated = pwalletMain->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, strFailReason);
-        if (!fCreated)
-            throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, strFailReason);
-        if (!pwalletMain->CommitTransaction(wtx, keyChange))
-            throw JSONRPCError(RPC_WALLET_ERROR, "Transaction commit failed");
-    }
+    if (!pwalletMain->CreateTransaction(vecSend, wtx, keyChange, nFeeRequired, strFailReason))
+        throw JSONRPCError(RPC_WALLET_INSUFFICIENT_FUNDS, strFailReason);
+    if (!pwalletMain->CommitTransaction(wtx, keyChange))
+        throw JSONRPCError(RPC_WALLET_ERROR, "Transaction commit failed");
 
     return wtx.GetHash().GetHex();
 }

@@ -2190,7 +2190,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
 
     CAmount nAmountSelected = 0;
     map<string, int> numberOfSelectedCoinsPerAddress;
-    if (GetBoolArg("-korestake", true)) {
+    if (GetBoolArg("-staking", false)) {
         //cout << "SelectStakeCoins -->" << endl;
         for (const COutput& out : vCoins) {
             uint160 destination;
@@ -2857,7 +2857,7 @@ bool CWallet::ConvertList(std::vector<CTxIn> vCoins, std::vector<CAmount>& vecAm
     return true;
 }
 
-bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
+bool CWallet::CreateTransaction_Actual(const std::vector<CRecipient>& vecSend,
     CWalletTx& wtxNew,
     CReserveKey& reservekey,
     CAmount& nFeeRet,
@@ -3379,15 +3379,292 @@ bool CWallet::CreateTransaction_Legacy(const vector<CRecipient>& vecSend, CWalle
     return true;
 }
 
-bool CWallet::CreateTransaction(CScript scriptPubKey, const CAmount& nValue, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, std::string& strFailReason, const CCoinControl* coinControl, AvailableCoinsType coin_type, bool useIX, CAmount nFeePay)
-{
-    vector<CRecipient> vecSend;
-    CRecipient recipient = {scriptPubKey, nValue, false};
-    vecSend.push_back(recipient);
+bool CWallet::CreateTransaction(const std::vector<CRecipient>& vecSend,
+    CWalletTx& wtxNew,
+    CReserveKey& reservekey,
+    CAmount& nFeeRet,
+    std::string& strFailReason,
+    const CCoinControl* coinControl,
+    AvailableCoinsType coin_type,
+    bool useIX,
+    bool sign)
+    {
 
-    return CreateTransaction(vecSend, wtxNew, reservekey, nFeeRet, strFailReason, coinControl, coin_type, useIX, nFeePay);
-}
+        CAmount nValue = 0;
+        unsigned int nSubtractFeeFromAmount = 0;
 
+        for (const auto& recipient : vecSend) {
+            if (nValue < 0 || recipient.nAmount < 0) {
+                strFailReason = _("Transaction amounts must not be negative");
+                return false;
+            }
+            nValue += recipient.nAmount;
+            if (recipient.fSubtractFeeFromAmount)
+                nSubtractFeeFromAmount++;
+        }
+        if (vecSend.empty()) {
+            strFailReason = _("Transaction must have at least one recipient");
+            return false;
+        }
+
+        wtxNew.fTimeReceivedIsTxTime = true;
+        wtxNew.BindWallet(pwalletMain);
+        CMutableTransaction txNew;
+        txNew.nTime = GetAdjustedTime();
+        txNew.nVersion = UseLegacyCode() ? 1 : 2;
+        txNew.nLockTime = chainActive.Height();
+        // Secondly occasionally randomly pick a nLockTime even further back, so
+        // that transactions that are delayed after signing for whatever reason,
+        // e.g. high-latency mix networks and some CoinJoin implementations, have
+        // better privacy.
+        if (GetRandInt(10) == 0)
+            txNew.nLockTime = std::max(0, (int)txNew.nLockTime - GetRandInt(100));
+        
+        assert(txNew.nLockTime <= chainActive.Height());
+        assert(txNew.nLockTime < LOCKTIME_THRESHOLD);
+
+        {
+            LOCK2(cs_main, cs_wallet);
+            {
+                nFeeRet = 0;
+                while (true) {
+                    int nChangePosInOut = -1;
+                    txNew.vin.clear();
+                    txNew.vout.clear();
+                    bool fFirst = true;
+                    double dPriority = 0;
+
+                    CAmount nValueToSelect = nValue;
+                    if (nSubtractFeeFromAmount == 0)
+                        nValueToSelect += nFeeRet;
+                    // vouts to the payees
+                    if (coinControl && !coinControl->fSplitBlock) {
+                        for (const auto& recipient : vecSend) {
+                            CTxOut txout(recipient.nAmount, recipient.scriptPubKey);
+                            if (recipient.fSubtractFeeFromAmount) {
+                                assert(nSubtractFeeFromAmount != 0);
+                                txout.nValue -= nFeeRet / nSubtractFeeFromAmount; // Subtract fee equally from each selected recipient
+                                // first receiver pays the remainder not divisible by output count
+                                if (fFirst) { 
+                                    fFirst = false;
+                                    txout.nValue -= nFeeRet % nSubtractFeeFromAmount;
+                                }
+                            }
+                            if (txout.IsDust(::minRelayTxFee)) {
+                                if (recipient.fSubtractFeeFromAmount && nFeeRet > 0) {
+                                    if (txout.nValue < 0)
+                                        strFailReason = _("The transaction amount is too small to pay the fee");
+                                    else
+                                        strFailReason = _("The transaction amount is too small to send after the fee has been deducted");
+                                } else
+                                    strFailReason = _("Transaction amount too small");
+                                return false;
+                            }
+                            txNew.vout.push_back(txout);
+                        }
+                    // UTXOs Splitter Transaction
+                    } else {
+                        int nSplitBlock;
+                        if (coinControl)
+                            nSplitBlock = coinControl->nSplitBlock;
+                        else
+                            nSplitBlock = 1;
+                        for (const auto& recipient : vecSend) {
+                            for (int i = 0; i < nSplitBlock; i++) {
+                                if (i == nSplitBlock - 1) {
+                                    uint64_t nRemainder = recipient.nAmount % nSplitBlock;
+                                    txNew.vout.push_back(CTxOut((recipient.nAmount / nSplitBlock) + nRemainder, recipient.scriptPubKey));
+                                } else
+                                    txNew.vout.push_back(CTxOut(recipient.nAmount / nSplitBlock, recipient.scriptPubKey));
+                            }
+                        }
+                    }
+
+                    // Choose coins to use
+                    set<pair<const CWalletTx*, unsigned int> > setCoins;
+                    CAmount nValueIn = 0;
+
+                    bool isCoinSelected;
+                    if (UseLegacyCode())
+                        isCoinSelected = SelectCoins_Legacy(nValueToSelect, setCoins, nValueIn, coinControl, coin_type, useIX, false);
+                    else
+                        isCoinSelected = SelectCoins(nValueToSelect, setCoins, nValueIn, coinControl, coin_type, useIX);
+                    if (!isCoinSelected) {
+                        if (coin_type == ALL_COINS) {
+                            strFailReason = _("Insufficient funds.");
+                        } else if (coin_type == ONLY_NOT10000IFMN) {
+                            strFailReason = _("Unable to locate enough funds for this transaction that are not equal 500 KORE.");
+                        } else if (coin_type == ONLY_NONDENOMINATED_NOT10000IFMN) {
+                            strFailReason = _("Unable to locate enough Obfuscation non-denominated funds for this transaction that are not equal 500 KORE.");
+                        } else {
+                            strFailReason = _("Unable to locate enough Obfuscation denominated funds for this transaction.");
+                            strFailReason += " " + _("Obfuscation uses exact denominated amounts to send funds, you might simply need to anonymize some more coins.");
+                        }
+                        if (useIX) {
+                            strFailReason += " " + _("SwiftTX requires inputs with at least 25 confirmations, you might need to wait a few minutes and try again.");
+                        }
+                        return false;
+                    }
+                    for (const auto& coin : setCoins) {
+                        CAmount nCredit = coin.first->vout[coin.second].nValue;
+                        //The coin age after the next block (depth+1) is used instead of the current,
+                        //reflecting an assumption the user would accept a bit more delay for
+                        //a chance at a free transaction.
+                        //But mempool inputs might still be in the mempool, so their age stays 0
+                        int age = coin.first->GetDepthInMainChain();
+                        assert(age >= 0);
+                        if (age != 0)
+                            age += 1;
+                        dPriority += (double)nCredit * age;
+                    }
+                    CAmount nChange = nValueIn - nValueToSelect;
+                    //over pay for denominated transactions
+                    if (coin_type == ONLY_DENOMINATED) {
+                        nFeeRet += nChange;
+                        nChange = 0;
+                        wtxNew.mapValue["DS"] = "1";
+                    }
+
+                    if (nChange > 0) {
+                        // Fill a vout to ourself
+                        // TODO: pass in scriptChange instead of reservekey so
+                        // change transaction isn't always pay-to-kore-address
+                        CScript scriptChange;
+                        bool combineChange = false;
+
+                        // coin control: send change to custom address
+                        if (coinControl && !boost::get<CNoDestination>(&coinControl->destChange)) {
+                            scriptChange = GetScriptForDestination(coinControl->destChange);
+
+                            vector<CTxOut>::iterator it = txNew.vout.begin();
+                            while (it != txNew.vout.end()) {
+                                if (scriptChange == it->scriptPubKey) {
+                                    it->nValue += nChange;
+                                    nChange = 0;
+                                    reservekey.ReturnKey();
+                                    combineChange = true;
+                                    break;
+                                }
+                                ++it;
+                            }
+                        // no coin control: send change to newly generated address
+                        } else {
+                            // Note: We use a new key here to keep it from being obvious which side is the change.
+                            //  The drawback is that by not reusing a previous key, the change may be lost if a
+                            //  backup is restored, if the backup doesn't have the new private key for the change.
+                            //  If we reused the old key, it would be possible to add code to look for and
+                            //  rediscover unknown transactions that were written with keys of ours to recover
+                            //  post-backup change.
+
+                            // Reserve a new key pair from key pool
+                            CPubKey vchPubKey;
+                            bool ret;
+                            ret = reservekey.GetReservedKey(vchPubKey);
+                            assert(ret); // should never fail, as we just unlocked
+
+                            scriptChange = GetScriptForDestination(vchPubKey.GetID());
+                        }
+
+                        if (!combineChange) {
+                            CTxOut newTxOut(nChange, scriptChange);
+
+                            // Never create dust outputs; if we would, just
+                            // add the dust to the fee.
+                            if (newTxOut.IsDust(::minRelayTxFee)) {
+                                nChangePosInOut = -1;
+                                nFeeRet += nChange;
+                                nChange = 0;
+                                reservekey.ReturnKey();
+                            } else {
+                                // Insert change txn at random position:
+                                if (nChangePosInOut == -1){
+                                    nChangePosInOut = GetRandInt(txNew.vout.size()+1);
+                                } 
+                                else if ((unsigned int)nChangePosInOut > txNew.vout.size())
+                                {
+                                    strFailReason = _("Change index out of range");
+                                    return false;
+                                }
+
+                                vector<CTxOut>::iterator position = txNew.vout.begin() + nChangePosInOut;
+                                txNew.vout.insert(position, newTxOut);
+                            }
+                        }
+                    } else
+                        reservekey.ReturnKey();
+
+                    // Fill vin
+                    //
+                    // Note how the sequence number is set to max()-1 or to the sequence for LockTx
+                    // nLockTime set above actually works.
+                    int nIn = 0;
+                    for (const auto& coin : setCoins) {
+                        txNew.vin.push_back(CTxIn(coin.first->GetHash(), coin.second));
+                        txNew.vin[nIn++].prevPubKey = coin.first->vout[coin.second].scriptPubKey;
+                    }
+                    SetSequenceForLockTxVIn(txNew.vin);
+
+                    // Sign
+                    nIn = 0;
+                    if (sign) {
+                        for (const auto& coin : setCoins) {
+                            if (!SignSignature(*this, *coin.first, txNew, nIn++)) {
+                                strFailReason = _("Signing transaction failed");
+                                return false;
+                            }
+                        }
+                    }
+
+                    // Embed the constructed transaction data in wtxNew.
+                    *static_cast<CTransaction*>(&wtxNew) = CTransaction(txNew);
+
+                    // Limit size
+                    unsigned int nBytes = ::GetSerializeSize(*(CTransaction*)&wtxNew, SER_NETWORK, PROTOCOL_VERSION);
+                    if (nBytes >= MAX_STANDARD_TX_SIZE) {
+                        strFailReason = _("Transaction too large");
+                        return false;
+                    }
+
+                    dPriority = wtxNew.ComputePriority(dPriority, nBytes);
+
+                    // Can we complete this as a free transaction?
+                    if (fSendFreeTransactions && nBytes <= MAX_FREE_TRANSACTION_CREATE_SIZE) {
+                        // Not enough fee: enough priority?
+                        double dPriorityNeeded = mempool.estimateSmartPriority(nTxConfirmTarget);
+                        // Require at least hard-coded AllowFree.
+                        if (dPriority >= dPriorityNeeded && AllowFree(dPriority))
+                            break;
+                        // Not enough mempool history to estimate: use hard-coded AllowFree.
+                        if (dPriorityNeeded <= 0 && AllowFree(dPriority))
+                            break;
+                        // Small enough, and priority high enough, to send for free
+                        if (dPriority >= dPriorityNeeded && dPriorityNeeded > 0)
+                            break;
+                    }
+                    
+                    CAmount nFeeNeeded = GetMinimumFee(nBytes, nTxConfirmTarget, mempool);
+                    if (coinControl && nFeeNeeded > 0 && coinControl->nMinimumTotalFee > nFeeNeeded) {
+                        nFeeNeeded = coinControl->nMinimumTotalFee;
+                    }
+
+                    // If we made it here and we aren't even able to meet the relay fee on the next pass, give up
+                    // because we must be at the maximum allowed fee.
+                    if (nFeeNeeded < ::minRelayTxFee.GetFee(nBytes)) {
+                        strFailReason = _("Transaction too large for fee policy");
+                        return false;
+                    }
+
+                    if (nFeeRet >= nFeeNeeded)
+                        break; // Done, enough fee included.
+
+                    // Include more fee and try again.
+                    nFeeRet = nFeeNeeded;
+                    continue;
+                }
+            }
+        }
+        return true;
+    }
 // ppcoin: create coin stake transaction
 bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CMutableTransaction& txNew, CMutableTransaction& txLock, unsigned int& nTxNewTime, bool fProofOfStake, CKey& key)
 {
@@ -3827,56 +4104,10 @@ bool CWallet::CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, std:
 
             // Add tx to wallet, because if it has change it's also ours,
             // otherwise just for transaction history.
-            AddToWallet(wtxNew, false, pwalletdb);
-
-            // Notify that old coins are spent
-            BOOST_FOREACH (const CTxIn& txin, wtxNew.vin) {
-                CWalletTx& coin = mapWallet[txin.prevout.hash];
-                coin.BindWallet(this);
-                NotifyTransactionChanged(this, coin.GetHash(), CT_UPDATED);
-            }
-            if (fFileBacked)
-                delete pwalletdb;
-        }
-
-        // Track how many getdata requests our transaction gets
-        mapRequestCount[wtxNew.GetHash()] = 0;
-
-        if (fBroadcastTransactions) {
-            // Broadcast
-            if (!wtxNew.AcceptToMemoryPool(false)) {
-                // This must not fail. The transaction has already been signed and recorded.
-                LogPrintf("CommitTransaction(): Error: Transaction not valid\n");
-                return false;
-            }
-            wtxNew.RelayWalletTransaction(command);
-        }
-    }
-    return true;
-}
-
-/**
- * Call after CreateTransaction unless you want to abort
- */
-bool CWallet::CommitTransaction_Legacy(CWalletTx& wtxNew, CReserveKey& reservekey, std::string command)
-{
-    {
-        LOCK2(cs_main, cs_wallet);
-        if (fDebug)
-            LogPrintf("CommitTransaction:\n%s", wtxNew.ToString());
-        
-        {
-            // This is only to keep the database open to defeat the auto-flush for the
-            // duration of this scope.  This is the only place where this optimization
-            // maybe makes sense; please don't do it anywhere else.
-            CWalletDB* pwalletdb = fFileBacked ? new CWalletDB(strWalletFile, "r+") : NULL;
-
-            // Take key pair from key pool so it won't be used again
-            reservekey.KeepKey();
-
-            // Add tx to wallet, because if it has change it's also ours,
-            // otherwise just for transaction history.
-            AddToWallet_Legacy(wtxNew, false, pwalletdb);
+            if (UseLegacyCode())
+                AddToWallet_Legacy(wtxNew, false, pwalletdb);
+            else
+                AddToWallet(wtxNew, false, pwalletdb);
 
             // Notify that old coins are spent
             BOOST_FOREACH (const CTxIn& txin, wtxNew.vin) {

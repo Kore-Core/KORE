@@ -1,31 +1,43 @@
 Mac OS X Build Instructions and Notes
 ====================================
-This guide will show you how to build kored (headless client) for OSX.
+* This guide will show you how to build the full set of Kore wallet binaries,
+
+`kore-qt` - Full Qt GUI client
+
+`kored` - daemon
+
+`kore-cli` - daemon control client
+
+`kore-tx` - tx client
+
 
 Notes
 -----
 
-* Tested on OS X 10.7 through 10.10 on 64-bit Intel processors only.
+* Build process tested on MacOS Mojave (10.14)
+
+* Build Result tested on MacOS Sierra (10.12), MacOS High Sierra (10.13) & MacOS Mojave (10.14)
 
 * All of the commands should be executed in a Terminal application. The
 built-in one is located in `/Applications/Utilities`.
+
+* This process relies on the  depends folder for all its build dependencies
 
 Preparation
 -----------
 
 You need to install XCode with all the options checked so that the compiler
-and everything is available in /usr not just /Developer. XCode should be
-available on your OS X installation media, but if not, you can get the
-current version from https://developer.apple.com/xcode/. If you install
-Xcode 4.3 or later, you'll need to install its command line tools. This can
-be done in `Xcode > Preferences > Downloads > Components` and generally must
-be re-done or updated every time Xcode is updated.
+and everything is available in /usr not just /Developer. You can get the
+latest for your MacOS version from https://developer.apple.com/xcode/. You will
+need to install the XCode developer tools.
+
+XCode developer tools can be installed seperatley by runing `xcode-select --install`
+
+Note: you must also install this SDK headers package located here:
+`/MacOS/Library/Developer/CommandLineTools/Packages/macOS_SDK_headers_for_macOS_10.14.pkg`
 
 There's also an assumption that you already have `git` installed. If
-not, it's the path of least resistance to install [Github for Mac](https://mac.github.com/)
-(OS X 10.7+) or
-[Git for OS X](https://code.google.com/p/git-osx-installer/). It is also
-available via Homebrew.
+not, It is  available via Homebrew. `brew install git`
 
 You will also need to install [Homebrew](http://brew.sh) in order to install library
 dependencies.
@@ -36,35 +48,31 @@ sections below.
 Instructions: Homebrew
 ----------------------
 
-#### Install dependencies using Homebrew
+### Build environment dependencies using Homebrew
 
-        brew install autoconf automake berkeley-db4 libtool boost miniupnpc openssl pkg-config protobuf qt5 zmq libevent
+        brew install git autoconf automake libtool pkg-config librsvg
 
-### Building `kored`
+
+### Cloning the source files.
 
 1. Clone the github tree to get the source code and go into the directory.
 
         git clone https://github.com/KORE-Project/KORE.git
         cd KORE
 
-2.  Make the Homebrew OpenSSL headers visible to the configure script  (do ```brew info openssl``` to find out why this is necessary, or if you use Homebrew with installation folders different from the default).
 
-        export LDFLAGS+=-L/usr/local/opt/openssl/lib
-        export CPPFLAGS+=-I/usr/local/opt/openssl/include
+### Building the depends folder
 
-3.  Build kored:
+1. `make -C depends HOST=x86_64-apple-darwin`
 
-        ./autogen.sh
-        ./configure --with-gui=qt5
-        make
+2. `./autogen.sh`
 
-4.  It is also a good idea to build and run the unit tests:
+3. `CONFIG_SITE=$PWD/depends/x86_64-apple-darwin/share/config.site ./configure --prefix=/ --disable-tests --enable-obfuscation`
 
-        make check
+4. `make`
 
-5.  (Optional) You can also install kored to your path:
+5. `make deploy` (optional task to create a portable .dmg image)
 
-        make install
 
 Use Qt Creator as IDE
 ------------------------
@@ -82,23 +90,6 @@ Download Qt Creator from http://www.qt.io/download/. Download the "community edi
 9. Select LLDB as debugger (you might need to set the path to your installtion)
 10. Start debugging with Qt Creator
 
-Creating a release build
-------------------------
-You can ignore this section if you are building `kored` for your own use.
-
-kored/kore-cli binaries are not included in the kore-Qt.app bundle.
-
-If you are building `kored` or `kore-qt` for others, your build machine should be set up
-as follows for maximum compatibility:
-
-All dependencies should be compiled with these flags:
-
- -mmacosx-version-min=10.7
- -arch x86_64
- -isysroot $(xcode-select --print-path)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk
-
-Once dependencies are compiled, see release-process.md for how the KORE-Qt.app
-bundle is packaged and signed to create the .dmg disk image that is distributed.
 
 Running
 -------
@@ -121,6 +112,7 @@ you can monitor its process by looking at the debug.log file, like this:
 Other commands:
 -------
 
+    ./kore-qt # start the Full Qt client
     ./kored -daemon # to start the kore daemon.
     ./kore-cli --help  # for a list of command-line options.
     ./kore-cli help    # When the daemon is running, to get a list of RPC commands

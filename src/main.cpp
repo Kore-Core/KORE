@@ -4669,6 +4669,10 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         if (block.vtx[0].vout.size() < 2)
             return state.DoS(100, error("CheckBlock(): coinstake first transaction must have at least 2 vout"));
 
+        // First Transaction must pay to dev fund
+        if (block.vtx.empty() || !block.vtx[0].PaiedToDev())
+            return state.DoS(100, error("CheckBlock(): first tx, first vout did not pay to dev"));
+
         // Second transaction must be coinstake, the rest must not be
         if (block.vtx.empty() || !block.vtx[1].IsCoinStake())
             return state.DoS(100, error("CheckBlock(): second tx is not coinstake"));

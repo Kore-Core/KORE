@@ -253,11 +253,11 @@ public:
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
         
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1555632577, 11, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1556128927, 4, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
 
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x1ddc70b6f1eb818e4a25f121abb4cfa801df621d58beb5fc66e10b7409fca8d4"));
-        assert(genesis.hashMerkleRoot == uint256S("0x06877e168d5d3620c59c9e4b7f7bf835e0e441eaff2a060906ab0c9f04481ac5"));
+        assert(nHashGenesisBlock == uint256S("0x1a646885d25f9a87d8abaa8b8c24da33e4f8c558161339777c2b930ce35f2135"));
+        assert(genesis.hashMerkleRoot == uint256S("0x61afa6613b6322205063d71ed4c6fb5be8b9a8cb6a8a97aa0dd664a6a8c5ee61"));
         
         vFixedSeeds.clear();
         vSeeds.clear();

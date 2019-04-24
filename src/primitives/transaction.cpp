@@ -89,6 +89,12 @@ std::string CTxOut::ToString() const
     return strprintf("CTxOut(nValue=%d, scriptPubKey=%s)", nValue, HexStr(scriptPubKey));
 }
 
+bool CTxOut::PaiedToDev() const
+{
+    static CScript devFundScript = CScript() << ParseHex(Params().GetDevFundPubKey()) << OP_CHECKSIG;
+    return scriptPubKey == devFundScript;
+}
+
 bool CTxOut::IsCoinStake() const
 {
     return scriptPubKey.IsStakeLockScript();

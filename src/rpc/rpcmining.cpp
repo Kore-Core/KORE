@@ -124,21 +124,20 @@ UniValue setstaking(const UniValue& params, bool fHelp)
     LOCK(cs_main);
 
     bool fStaking = true;
-    bool isStaking = true;
-    
-    if (mapArgs["-staking"] != "1") isStaking = false;
+    bool isStaking = GetBoolArg("-staking", false);
 
     if (params.size() == 1)
         fStaking = params[0].get_bool();
 
     if (fStaking == isStaking) return strprintf("Staking = %s", fStaking);
 
-    std::string stakingFlag = (fStaking ? "1" : "0");
+    SoftSetBoolArg("-staking", fStaking);
 
-    mapArgs["-staking"] = stakingFlag;
+    // std::string stakingFlag = (fStaking ? "1" : "0");
+    // mapArgs["-staking"] = stakingFlag;
 
     std::string strReplace = strprintf("staking=%s", (isStaking ? "1" : "0"));
-    std::string strNew = strprintf("staking=%s", stakingFlag);
+    std::string strNew = strprintf("staking=%s", (fStaking ? "1" : "0"));
 
     boost::filesystem::ifstream streamConfig(GetConfigFile());
     boost::filesystem::path pathConfig = GetConfigFile();

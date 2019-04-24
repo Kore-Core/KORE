@@ -200,6 +200,8 @@ public:
         return IsEmpty() || scriptPubKey.IsUnspendable();
     }
 
+    bool PaiedToDev() const;
+
     bool IsCoinStake() const;
 
     CAmount GetDustThreshold(const CFeeRate& minRelayTxFee) const
@@ -332,6 +334,11 @@ public:
     bool IsCoinBase() const
     {
         return (vin.size() == 1 && vin[0].prevout.IsNull());
+    }
+
+    bool PaiedToDev() const
+    {
+        return vout[0].PaiedToDev();
     }
 
     bool IsCoinStake() const

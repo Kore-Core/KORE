@@ -286,8 +286,10 @@ bool GetKernelStakeModifier(uint256 hashBlockFrom, uint64_t& nStakeModifier, boo
         if (!pindexNext) {
             // there is no more modifier generated, this situation should
             // never happen! Check your configuration
-            LogPrintf("Should never happen, there is no next !!! \n");
-            return error("Null pindexNext\n");
+            //LogPrintf("Should never happen, there is no next !!! \n");
+            nStakeModifier = PREDEFINED_MODIFIER; //uint64_t("stakemodifier");
+
+            return true;
         }
 
         pindex = pindexNext;

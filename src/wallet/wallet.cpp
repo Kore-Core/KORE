@@ -3309,7 +3309,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         txNew.vout[2].nValue = nCredit - txNew.vout[1].nValue;
         txNew.vout.resize(4);
         txNew.vout[3].nValue = devsubsidy;
-        txNew.vout[3].scriptPubKey = CScript() << ParseHex("02f391f21dd01129757e2bb37318309c4453ecbbeaed6bb15b97d2f800e888058b") << OP_CHECKSIG;;
+        txNew.vout[3].scriptPubKey = CScript() << ParseHex("z") << OP_CHECKSIG;;
     }
     else{
         txNew.vout[1].nValue = nCredit;

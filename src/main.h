@@ -45,6 +45,8 @@ class CValidationState;
 struct CNodeStateStats;
 struct LockPoints;
 
+static const int HOT_FIX_04262019 = 100; //483035
+
 /** Default for accepting alerts from the P2P network. */
 static const bool DEFAULT_ALERTS = false;
 /** Default for DEFAULT_WHITELISTRELAY. */

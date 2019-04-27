@@ -2594,13 +2594,6 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     CTxUndo undoDummy;
     CBlockUndo blockundo;
 
-    int nHeighFix = 486035;
-
-    if (pindex->nHeight > nHeighFix){
-        Shutdown();
-        return false;
-    }
-
     // Check it again in case a previous version let a bad block in
     if (!CheckBlock(block, state, !fJustCheck, !fJustCheck))
         return false;
@@ -2768,7 +2761,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
         CAmount blockReward = nFees + GetProofOfStakeSubsidy(pindex->nHeight, nValueIns);
 
-        if (pindex->nHeight > nHeighFix){
+        if (pindex->nHeight > 483062){
             if (nActualStakeReward != blockReward - nValueIns - nFees){
                 return state.DoS(100, error("ConnectBlock(): coinstake pays too much (actual=%d vs limit=%d)", nActualStakeReward, blockReward), REJECT_INVALID, "bad-cs-amount");
             }

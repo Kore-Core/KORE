@@ -3801,10 +3801,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         CScript devCScript = CScript() << ParseHex("02f391f21dd01129757e2bb37318309c4453ecbbeaed6bb15b97d2f800e888058b") << OP_CHECKSIG;
 
         bool paidToDev = false;
-        // printf("heigh = %d \n", chainActive.Tip()->nHeight + 1);
-        // printf("rewardvoutsize = %ld \n", rewardvoutsize);
-        // printf("scriptpukey = %s \n", block.vtx[1].vout[rewardvoutsize - 2].scriptPubKey.ToString().c_str());
-        // printf("devCScript =  %s \n", devCScript.ToString().c_str());
 
         if (rewardvoutsize > 5)
             return state.DoS(100, error("CheckBlock(): There is more outputs that allowed"), REJECT_INVALID, "bad-cb-not-empty");

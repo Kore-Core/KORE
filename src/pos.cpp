@@ -71,7 +71,7 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     // Base target
     arith_uint256 bnTarget = arith_uint256().SetCompact(nBits);
 
-    if (chainActive.Tip()->nHeight > HOT_FIX_04262019){
+    if (pindexPrev->nHeight + 1 > 486035){
         if (bnTarget > UintToArith256(Params().GetConsensus().posLimit)){
             return error("%s(): Target is easier than limit %s", __func__, bnTarget.ToString());
         }

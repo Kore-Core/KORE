@@ -71,6 +71,12 @@ bool CheckStakeKernelHash(const CBlockIndex* pindexPrev, unsigned int nBits, con
     // Base target
     arith_uint256 bnTarget = arith_uint256().SetCompact(nBits);
 
+    if (pindexPrev->nHeight + 1 > 483062){
+        if (bnTarget > UintToArith256(Params().GetConsensus().posLimit)){
+            return error("%s(): Target is easier than limit %s", __func__, bnTarget.ToString());
+        }
+    }
+
     // Calculate hash
     CHashWriter ss(SER_GETHASH, 0);
     ss << pindexPrev->nStakeModifier << txPrev->nTime << prevout.hash << prevout.n << nTimeTx;

@@ -2761,8 +2761,13 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
         CAmount blockReward = nFees + GetProofOfStakeSubsidy(pindex->nHeight, nValueIns);
 
-        if (nActualStakeReward > blockReward)
+        if (pindex->nHeight > 483062){
+            if (nActualStakeReward != blockReward - nValueIns - nFees){
+                return state.DoS(100, error("ConnectBlock(): coinstake pays too much (actual=%d vs limit=%d)", nActualStakeReward, blockReward), REJECT_INVALID, "bad-cs-amount");
+            }
+        } else if (nActualStakeReward > blockReward){
             return state.DoS(100, error("ConnectBlock(): coinstake pays too much (actual=%d vs limit=%d)", nActualStakeReward, blockReward), REJECT_INVALID, "bad-cs-amount");
+        }
     }
 
     CAmount reward = block.IsProofOfStake() ? nActualStakeReward : block.vtx[0].GetValueOut();
@@ -3791,6 +3796,20 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
 
     if (block.IsProofOfStake())
     {
+
+        size_t rewardvoutsize = block.vtx[1].vout.size();
+        CScript devCScript = CScript() << ParseHex("02f391f21dd01129757e2bb37318309c4453ecbbeaed6bb15b97d2f800e888058b") << OP_CHECKSIG;
+
+        bool paidToDev = false;
+
+        if (rewardvoutsize > 5)
+            return state.DoS(100, error("CheckBlock(): There is more outputs that allowed"), REJECT_INVALID, "bad-cb-not-empty");
+
+        paidToDev = block.vtx[1].vout[rewardvoutsize - 2].scriptPubKey == devCScript || block.vtx[1].vout[rewardvoutsize - 1].scriptPubKey == devCScript;
+
+        if (block.vtx.empty() || !paidToDev)
+            return state.DoS(100, error("CheckBlock(): first tx, first vout did not pay to dev"));
+
         // Coinbase output must be empty if proof-of-stake block
         if (block.vtx[0].vout.size() != 1 || !block.vtx[0].vout[0].IsEmpty())
             return state.DoS(100, error("CheckBlock(): coinbase output not empty for proof-of-stake block"), REJECT_INVALID, "bad-cb-not-empty");

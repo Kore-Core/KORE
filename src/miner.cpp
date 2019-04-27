@@ -468,6 +468,7 @@ void ThreadStakeMiner(CWallet* pwallet)
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             ProcessBlockFound(pblock, chainparams);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);
+            MilliSleep(30 * 1000);
         }
 
         MilliSleep(500);

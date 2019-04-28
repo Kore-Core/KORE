@@ -3257,8 +3257,14 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             break; // if kernel is found stop searching
     }
 
+/* Select coins already get most limited to (nBalance - nReserveBalance), so this test is not necessary !!!
     if (nCredit == 0 || nCredit > nBalance - nReserveBalance)
         return false;
+        */
+    // credit == 0 means we couldnt find a kernel
+    if (nCredit == 0)
+        return false;
+
 
     BOOST_FOREACH(const PAIRTYPE(const CWalletTx*, unsigned int)& pcoin, setCoins){
         // Attempt to add more inputs

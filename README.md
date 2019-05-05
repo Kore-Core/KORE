@@ -105,6 +105,9 @@ make
 ```bash
 Here are some testnet onion address.
 you can use the console from kore-qt and give the command to add
-addnode a3y4tqttfcj7dvf3.onion onetry
-addnode mnzwvlk7lme5yuht.onion onetry
+addnode cravxw62erl3vkgi.onion onetry
+addnode 5y7ld2knghrucfxw.onion onetry
+addnode pauvgfrlh3pvepsi.onion onetry
+addnode svhdetenyf5jn2ba.onion
+
 ```

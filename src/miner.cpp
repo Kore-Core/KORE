@@ -1430,8 +1430,7 @@ void KoreMiner_Legacy()
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
                         ProcessBlockFound_Legacy(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                        // TODO: ROLLBACK MilliSleep(Params().GetTargetSpacing() * 1000);
-                        MilliSleep(1000);
+                        MilliSleep(Params().GetTargetSpacing() * 1000);
                         break;
                     }
                 }

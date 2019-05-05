@@ -1382,7 +1382,7 @@ bool CheckSequenceLocks(const CTransaction& tx, int flags, LockPoints* lp, bool 
 }
 
 
-void LimitMempoolSize_Legacy(CTxMemPool& pool, size_t limit, unsigned long age)
+void LimitMempoolSize(CTxMemPool& pool, size_t limit, unsigned long age)
 {
     int expired = pool.Expire(GetTime() - age);
     if (expired != 0)
@@ -1801,7 +1801,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
         pool.addUnchecked(hash, entry, setAncestors, !IsInitialBlockDownload());
         // trim mempool and check if tx was trimmed
         if (!fOverrideMempoolLimit) {
-            LimitMempoolSize_Legacy(pool, GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE_LEGACY) * 1000000, GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY_LEGACY) * 60 * 60);
+            LimitMempoolSize(pool, GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE_LEGACY) * 1000000, GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY_LEGACY) * 60 * 60);
             if (!pool.exists(hash))
                 return state.DoS(0, false, REJECT_INSUFFICIENTFEE, "mempool full");
         }
@@ -3205,8 +3205,8 @@ bool ConnectBlock_Legacy(const CBlock& block, CValidationState& state, CBlockInd
         if (pindex->nHeight - coins->nHeight < Params().GetCoinMaturity())
             return state.DoS(100, error("%s: tried to stake at depth %d", __func__, pindex->nHeight - coins->nHeight), REJECT_INVALID, "bad-cs-premature");
 
-        if (coins->nTime + Params().GetStakeMinAge() > block.vtx[1].nTime) // Min age requirement
-            return error("CheckProofOfStake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d \n", coins->nTime, Params().GetStakeMinAge(), block.vtx[1].nTime);
+        // if (coins->nTime + 4 * 60 * 60 > block.vtx[1].nTime) // Min age requirement
+        //     return error("CheckProofOfStake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d \n", coins->nTime, Params().GetStakeMinAge(), block.vtx[1].nTime);
         if (!CheckStakeKernelHash_Legacy(pindex->pprev, block.nBits, coins, prevout, block.vtx[1].nTime))
             return state.DoS(100, error("%s: proof-of-stake hash doesn't match nBits", __func__), REJECT_INVALID, "bad-cs-proofhash");
     }
@@ -3345,7 +3345,7 @@ bool ConnectBlock_Legacy(const CBlock& block, CValidationState& state, CBlockInd
 
         CAmount blockReward = nFees + GetProofOfStakeSubsidy_Legacy(pindex->nHeight, nValueIns);
 
-        if (nActualStakeReward > blockReward)
+        if (nActualStakeReward != blockReward - nValueIns - nFees)
             return state.DoS(100, error("ConnectBlock(): coinstake pays too much (actual=%d vs limit=%d)", nActualStakeReward, blockReward), REJECT_INVALID, "bad-cs-amount");
     }
 
@@ -4151,6 +4151,7 @@ static bool ActivateBestChainStep(CValidationState& state, CBlockIndex* pindexMo
                 PruneBlockIndexCandidates();
                 if (!pindexOldTip || chainActive.Tip()->nChainWork > pindexOldTip->nChainWork) {
                     // We're in a better position than we were. Return temporarily to release the lock.
+                    LogPrintf("%s(): We have a new best chain.", __func__);
                     fContinue = false;
                     break;
                 }
@@ -4159,8 +4160,8 @@ static bool ActivateBestChainStep(CValidationState& state, CBlockIndex* pindexMo
     }
 
     if (fBlocksDisconnected) {
-        mempool.removeForReorg_Legacy(pcoinsTip, chainActive.Tip()->nHeight + 1, STANDARD_LOCKTIME_VERIFY_FLAGS);
-        LimitMempoolSize_Legacy(mempool, GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE_LEGACY) * 1000000, GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY_LEGACY) * 60 * 60);
+        mempool.removeForReorg(pcoinsTip, chainActive.Tip()->nHeight + 1, STANDARD_LOCKTIME_VERIFY_FLAGS);
+        LimitMempoolSize(mempool, GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE_LEGACY) * 1000000, GetArg("-mempoolexpiry", DEFAULT_MEMPOOL_EXPIRY_LEGACY) * 60 * 60);
     }
     mempool.check_Legacy(pcoinsTip);
 
@@ -4655,23 +4656,22 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
             return state.DoS(100, error("CheckBlock(): more than one coinbase"),
                 REJECT_INVALID, "bad-cb-multiple");
 
+    // Coinbase first transaction must have only 1 vin
+    if (block.vtx[0].vin.size() != 1)
+        return state.DoS(100, error("CheckBlock(): coinbase first transaction must have only 1 vin"));
+
+    // First transaction first input must have at least 2 vout
+    if (block.vtx[0].vout.size() < 2)
+        return state.DoS(100, error("CheckBlock(): coinbase first transaction must have at least 2 vout"));
+
+    // First Transaction must pay to dev fund
+    if (block.vtx.empty() || !block.vtx[0].PaiedToDev())
+        return state.DoS(100, error("CheckBlock(): first tx, first vout did not pay to dev"));
 
     if (fBlockIsProofOfStake) {
         // Must have at least 2 transactions
         if (block.vtx.empty() || block.vtx.size() < 2)
             return state.DoS(100, error("CheckBlock(): coinstake must have at least 2 transactions"));
-
-        // Coinbase first transaction must have only 1 vin
-        if (block.vtx[0].vin.size() != 1)
-            return state.DoS(100, error("CheckBlock(): coinstake first transaction must have only 1 vin"));
-
-        // First transaction first input must have at least 2 vout
-        if (block.vtx[0].vout.size() < 2)
-            return state.DoS(100, error("CheckBlock(): coinstake first transaction must have at least 2 vout"));
-
-        // First Transaction must pay to dev fund
-        if (block.vtx.empty() || !block.vtx[0].PaiedToDev())
-            return state.DoS(100, error("CheckBlock(): first tx, first vout did not pay to dev"));
 
         // Second transaction must be coinstake, the rest must not be
         if (block.vtx.empty() || !block.vtx[1].IsCoinStake())
@@ -4702,99 +4702,57 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         for (unsigned int i = startCheckingNotStake; i < block.vtx[1].vout.size(); i++)
             if (block.vtx[1].vout[i].IsCoinStake())
                 return state.DoS(100, error("CheckBlock(): too many locking vout"));
-
-        // TODO: URGENTE
-        // //Check minimum stake value
-        // if (stakedBalance < MINIMUM_STAKE_VALUE)
-        //     return state.DoS(100, error("CheckBlock(): staked balance too low"));
-
-        // //Check maximum stake value
-        // if (stakedBalance > MAXIMUM_STAKE_VALUE)
-        //     return state.DoS(100, error("CheckBlock(): staked balance too low"));
-
-        CTransaction originTx;
-        uint256 hashBlock;
-        if (!GetTransaction(block.vtx[1].vin[0].prevout.hash, originTx, hashBlock, true))
-            return state.DoS(100, error("CheckBlock(): origin transaction not found"));
-
-        // Second transaction must lock coins from same pubkey as coinbase
-        uint160 pubKeyID;
-        ExtractDestination(block.vtx[0].vout[1].scriptPubKey, pubKeyID);
-        uint160 lockPubKeyID;
-        ExtractDestination(originTx.vout[block.vtx[1].vin[0].prevout.n].scriptPubKey, lockPubKeyID);
-        if (lockPubKeyID != pubKeyID)
-            return state.DoS(100, error("CheckBlock(): locking pubkey different from coinbase pubkey"));
-
-        // There must be only one pubkey on the locking transaction
-        for (unsigned int i = 1; i < block.vtx[1].vin.size(); i++) {
-            CTransaction otherOriginTx;
-            uint256 otherHashBlock;
-            pubKeyID.SetNull();
-            if (!GetTransaction(block.vtx[1].vin[i].prevout.hash, otherOriginTx, otherHashBlock, true))
-                return state.DoS(100, error("CheckBlock(): origin transaction not found"));
-            ExtractDestination(otherOriginTx.vout[block.vtx[1].vin[i].prevout.n].scriptPubKey, pubKeyID);
-            if (lockPubKeyID != pubKeyID)
-                return state.DoS(100, error("CheckBlock(): more than one pubkey on lock"));
-        }
-
-        // All the outputs pubkeys must be the same as the locking pubkey
-        for (unsigned int i = 0; i < block.vtx[1].vout.size(); i++) {
-            pubKeyID.SetNull();
-            ExtractDestination(block.vtx[1].vout[i].scriptPubKey, pubKeyID);
-            if (pubKeyID != lockPubKeyID)
-                return state.DoS(100, error("CheckBlock(): more than one pubkey on lock tx"));
-        }
     }
 
     // ----------- swiftTX transaction scanning -----------
-    if (IsSporkActive(SPORK_3_SWIFTTX_BLOCK_FILTERING)) {
-        BOOST_FOREACH (const CTransaction& tx, block.vtx) {
-            if (!tx.IsCoinBase()) {
-                //only reject blocks when it's based on complete consensus
-                BOOST_FOREACH (const CTxIn& in, tx.vin) {
-                    if (mapLockedInputs.count(in.prevout)) {
-                        if (mapLockedInputs[in.prevout] != tx.GetHash()) {
-                            mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                            if (fDebug)
-                                LogPrintf("CheckBlock() : found conflicting transaction with transaction lock %s %s\n", mapLockedInputs[in.prevout].ToString(), tx.GetHash().ToString());
+    // if (IsSporkActive(SPORK_3_SWIFTTX_BLOCK_FILTERING)) {
+    //     BOOST_FOREACH (const CTransaction& tx, block.vtx) {
+    //         if (!tx.IsCoinBase()) {
+    //             //only reject blocks when it's based on complete consensus
+    //             BOOST_FOREACH (const CTxIn& in, tx.vin) {
+    //                 if (mapLockedInputs.count(in.prevout)) {
+    //                     if (mapLockedInputs[in.prevout] != tx.GetHash()) {
+    //                         mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
+    //                         if (fDebug)
+    //                             LogPrintf("CheckBlock() : found conflicting transaction with transaction lock %s %s\n", mapLockedInputs[in.prevout].ToString(), tx.GetHash().ToString());
                             
-                            return state.DoS(0, error("CheckBlock() : found conflicting transaction with transaction lock"),
-                                REJECT_INVALID, "conflicting-tx-ix");
-                        }
-                    }
-                }
-            }
-        }
-    } else if (fDebug)
-        LogPrintf("CheckBlock() : skipping transaction locking checks\n");
+    //                         return state.DoS(0, error("CheckBlock() : found conflicting transaction with transaction lock"),
+    //                             REJECT_INVALID, "conflicting-tx-ix");
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    // } else if (fDebug)
+    //     LogPrintf("CheckBlock() : skipping transaction locking checks\n");
 
     // masternode payments / budgets
-    CBlockIndex* pindexPrev = chainActive.Tip();
-    int nHeight = 0;
-    if (pindexPrev != NULL) {
-        if (pindexPrev->GetBlockHash() == block.hashPrevBlock) {
-            nHeight = pindexPrev->nHeight + 1;
-        } else { //out of order
-            BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
-            if (mi != mapBlockIndex.end() && (*mi).second)
-                nHeight = (*mi).second->nHeight + 1;
-        }
+    // CBlockIndex* pindexPrev = chainActive.Tip();
+    // int nHeight = 0;
+    // if (pindexPrev != NULL) {
+    //     if (pindexPrev->GetBlockHash() == block.hashPrevBlock) {
+    //         nHeight = pindexPrev->nHeight + 1;
+    //     } else { //out of order
+    //         BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
+    //         if (mi != mapBlockIndex.end() && (*mi).second)
+    //             nHeight = (*mi).second->nHeight + 1;
+    //     }
 
-        // KORE
-        // It is entierly possible that we don't have enough data and this could fail
-        // (i.e. the block could indeed be valid). Store the block for later consideration
-        // but issue an initial reject message.
-        // The case also exists that the sending peer could not have enough data to see
-        // that this block is invalid, so don't issue an outright ban.
-        if (nHeight != 0 && !IsInitialBlockDownload()) {
-            if (!IsBlockPayeeValid(block, nHeight)) {
-                mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                return state.DoS(0, error("CheckBlock() : Couldn't find masternode/budget payment"),
-                    REJECT_INVALID, "bad-cb-payee");
-            }
-        } else if (fDebug)
-            LogPrintf("CheckBlock(): Masternode payment check skipped on sync - skipping IsBlockPayeeValid()\n");
-    }
+    //     // KORE
+    //     // It is entierly possible that we don't have enough data and this could fail
+    //     // (i.e. the block could indeed be valid). Store the block for later consideration
+    //     // but issue an initial reject message.
+    //     // The case also exists that the sending peer could not have enough data to see
+    //     // that this block is invalid, so don't issue an outright ban.
+    //     // if (nHeight != 0 && !IsInitialBlockDownload()) {
+    //     //     if (!IsBlockPayeeValid(block, nHeight)) {
+    //     //         mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
+    //     //         return state.DoS(0, error("CheckBlock() : Couldn't find masternode/budget payment"),
+    //     //             REJECT_INVALID, "bad-cb-payee");
+    //     //     }
+    //     // } else if (fDebug)
+    //     //     LogPrintf("CheckBlock(): Masternode payment check skipped on sync - skipping IsBlockPayeeValid()\n");
+    // }
 
     // Check transactions
     //vector<CBigNum> vBlockSerials;
@@ -4802,7 +4760,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         if (!CheckTransaction(tx, state))
             return error("CheckBlock() : CheckTransaction failed");
     }
-
 
     unsigned int nSigOps = 0;
     BOOST_FOREACH (const CTransaction& tx, block.vtx) {
@@ -5320,10 +5277,23 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
     if (block.IsProofOfStake()) {
         uint256 hashProofOfStake = 0;
         std::list<CKoreStake> listStake;
+        CAmount stakedBalance;
 
-        if (!CheckProofOfStake(block, hashProofOfStake, listStake))
-            return state.DoS(100, error("%s: proof of stake check failed", __func__));
+        if (!CheckProofOfStake(block, hashProofOfStake, listStake, stakedBalance))
+            return state.DoS(25, error("%s: proof of stake check failed", __func__));
 
+        //Check minimum stake value
+        if (stakedBalance < MINIMUM_STAKE_VALUE)
+            return state.DoS(100, error("CheckBlock(): staked balance too low"));
+
+        //Check maximum stake value
+        CAmount stakedValue = block.vtx[1].vout[0].nValue;
+        if (stakedBalance >= STAKE_SPLIT_TRESHOLD)
+            stakedValue += block.vtx[1].vout[1].nValue;
+
+        if (stakedValue > MAXIMUM_STAKE_VALUE)
+            return state.DoS(100, error("CheckBlock(): staked balance too low"));
+        
         if (listStake.empty())
             return error("%s: empty list stake ptr", __func__);
 
@@ -5473,13 +5443,13 @@ bool ProcessNewBlock(CValidationState& state, CNode* pfrom, CBlock* pblock, CDis
     if (!ActivateBestChain(state, pblock))
         return error("%s : ActivateBestChain failed", __func__);
 
-    if (!fLiteMode) {
-        if (masternodeSync.RequestedMasternodeAssets > MASTERNODE_SYNC_LIST) {
-            obfuScationPool.NewBlock();
-            masternodePayments.ProcessBlock(GetHeight() + 10);
-            budget.NewBlock();
-        }
-    }
+    // if (!fLiteMode) {
+    //     if (masternodeSync.RequestedMasternodeAssets > MASTERNODE_SYNC_LIST) {
+    //         obfuScationPool.NewBlock();
+    //         masternodePayments.ProcessBlock(GetHeight() + 10);
+    //         budget.NewBlock();
+    //     }
+    // }
 
     if (pwalletMain) {
         // If turned on MultiSend will send a transaction (or more) on the after maturity of a stake

@@ -126,7 +126,7 @@ static std::vector<CRecipient> PopulateWalletByWealth(double numberOfWallets, do
 
             walletCount++;
         } else {
-            CRecipient recipient = { script0, val, false};
+            CRecipient recipient = {script0, val, false};
             vecSend.push_back(recipient);
         }
 
@@ -244,8 +244,7 @@ void StartPreMineAndWalletAllocation()
             }
 
             if (wallets[0].CreateTransaction(vecSend, txNew, reserveKey, feeRate, failReason, (const CCoinControl*)__null, ALL_COINS, false, 0L))
-                if(wallets[0].CommitTransaction(txNew, reserveKey))
-                {
+                if (wallets[0].CommitTransaction(txNew, reserveKey)) {
 #ifdef LOG_INTEGRATION_TESTS
                     printf("Transactions done for case %d in block %d.\n", populate++, i);
 #endif
@@ -685,7 +684,7 @@ BOOST_AUTO_TEST_CASE(pos_BigStakeValidation)
     CWallet wallet;
     wallet.strWalletFile = "pos_BigStakeValidation.dat";
     CWalletDB walletDB(wallet.strWalletFile, "crw");
-    
+
     CMutableTransaction txin = GetNewTransaction(CScript() << OP_RETURN, 1000 * COIN, true, false);
     CKoreStake stake;
     stake.SetInput(txin, 0);
@@ -742,5 +741,73 @@ BOOST_AUTO_TEST_CASE(pos_BigStakeValidation)
     BOOST_CHECK(vout[1].nValue == MAXIMUM_STAKE_VALUE / 2 + 0.00000003 * COIN);
 }
 
-BOOST_AUTO_TEST_SUITE_END()
+BOOST_AUTO_TEST_CASE(pos_OrderTxToStake)
+{
+    // Set ChainParams for the test
+    SelectParams(CBaseChainParams::UNITTEST);
+    ModifiableParams()->setHeightToFork(0);
+    ModifiableParams()->setCoinMaturity(1);
+    ModifiableParams()->setStakeLockInterval(60);
+    SoftSetBoolArg("-staking", true);
 
+    SetMockTime(GetTime());
+
+    CBitcoinSecret bsecret;
+    bsecret.SetString(strSecret);
+    CKey key = bsecret.GetKey();
+    CPubKey pubKey = key.GetPubKey();
+    CKeyID keyID = pubKey.GetID();
+    CScript script = GetScriptForDestination(keyID);
+
+
+    CWallet wallet;
+    wallet.strWalletFile = "pos_OrderTxToStake.dat";
+    {
+        LOCK(wallet.cs_wallet);
+        wallet.AddKeyPubKey(key, pubKey);
+    }
+    CWalletDB walletDB(wallet.strWalletFile, "crw");
+
+    for (int i = 1; i < 100; i++) {
+        // Add a PoW 5 KORE tx to the wallet
+        CMutableTransaction tx1 = GetNewTransaction(script, i * 1e7);
+        CBlock block1 = GetNewPoWBlock(chainActive.Genesis()->GetBlockHash(), tx1);
+        // Set mock time to time in block
+        SetMockTime(nTime);
+        CWalletTx wtx1 = AddToWallet(&wallet, tx1, block1);
+    }
+
+    // Choose coins to use
+    CAmount nBalance = wallet.GetBalance();
+
+    static int nLastStakeSetUpdate = 0;
+    static list<std::unique_ptr<CStakeInput> > listInputs;
+    static map<string, CAmount> stakeableBalance;
+    static map<string, CAmount> maxStakeableBalance;
+
+    listInputs.clear();
+    stakeableBalance.clear();
+    BOOST_ASSERT(wallet.SelectStakeCoins(listInputs, nBalance - nReserveBalance, stakeableBalance, maxStakeableBalance));
+
+    BOOST_ASSERT(!listInputs.empty());
+    BOOST_ASSERT(!stakeableBalance.empty());
+    BOOST_ASSERT(!maxStakeableBalance.empty());
+
+    uint160 destination;
+    BOOST_ASSERT(ExtractDestination(script, destination));
+
+    CAmount lastValue = 2000000 * COIN;
+
+    for (std::unique_ptr<CStakeInput>& otherStakeInput : listInputs) {
+        CScript scriptPubKey;
+        uint160 otherDestination;
+        ExtractDestination(otherStakeInput->GetScriptPubKey(&wallet, scriptPubKey), otherDestination);
+        if (otherDestination != destination)
+            continue;
+        
+        BOOST_ASSERT(otherStakeInput->GetValue() < lastValue);
+        lastValue = otherStakeInput->GetValue();
+    }
+}
+
+BOOST_AUTO_TEST_SUITE_END()

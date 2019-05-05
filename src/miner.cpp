@@ -510,15 +510,15 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             }
         }
 
-        if (!fProofOfStake) {
+        // if (!fProofOfStake) {
             //Masternode and general budget payments
-            FillBlockPayee(txNew, nFees, fProofOfStake, false);
+            //FillBlockPayee(txNew, nFees, fProofOfStake, false);
 
             //Make payee
-            if (txNew.vout.size() > 1) {
-                pblock->payee = txNew.vout[1].scriptPubKey;
-            }
-        }
+            // if (txNew.vout.size() > 1) {
+            //     pblock->payee = txNew.vout[1].scriptPubKey;
+            // }
+        // }
 
         nLastBlockTx = nBlockTx;
         nLastBlockSize = nBlockSize;
@@ -574,16 +574,11 @@ inline CMutableTransaction CreateCoinbaseTransaction_Legacy(const CScript& scrip
 
         return txNew;
     } else {
-        static string message = "Created on version 13 pre-fork";
-        static vector<u_char> vecMessage(message.begin(), message.end());
-
-        txNew.vout.resize(3);
+        txNew.vout.resize(2);
         txNew.vout[0].nValue = reward - devsubsidy;
         txNew.vout[0].scriptPubKey = scriptPubKeyIn;
         txNew.vout[1].nValue = devsubsidy;
         txNew.vout[1].scriptPubKey = CScript() << ParseHex(Params().GetDevFundPubKey()) << OP_CHECKSIG;
-        txNew.vout[2].SetEmpty();
-        txNew.vout[2].scriptPubKey = CScript() << vecMessage << OP_RETURN;
     }
 
     //Masternode and general budget payments
@@ -1009,6 +1004,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
     unsigned int nExtraNonce = 0;
 
     while (!ShutdownRequested() && UseLegacyCode(GetnHeight(chainActive.Tip()) + 1)) {
+        boost::this_thread::interruption_point();
         // while nobody requested to shutdown and we should use the legacy code
         // this thread should wait
         if (fDebug) {
@@ -1031,8 +1027,8 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                 fMintableCoins = pwallet->MintableCoins();
             }
 
-            while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || pwallet->GetBalance() == 0 || nReserveBalance > pwallet->GetBalance()
-              || !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >= 2))
+            while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || pwallet->GetBalance() == 0 || nReserveBalance > pwallet->GetBalance())
+              // || !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >= 2))
             {
                 if (fDebug) {
                     LogPrintf("%s(): still unable to stake.\n", __func__);
@@ -1040,12 +1036,12 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                         LogPrintf("\tThere are no nodes connected;\n");
                     if (pwallet->IsLocked())
                         LogPrintf("\tThe wallet is locked;\n");
-                    if (fMintableCoins)
+                    if (!fMintableCoins)
                         LogPrintf("\tThere are no mintable coins;\n");
-                    if (masternodeSync.IsSynced())
-                        LogPrintf("\tMasternodes are not synced;\n");
-                    if (mnodeman.CountEnabled() < 2)
-                        LogPrintf("\tThere are not enough masternodes enabled;\n");
+                    // if (masternodeSync.IsSynced())
+                    //     LogPrintf("\tMasternodes are not synced;\n");
+                    // if (mnodeman.CountEnabled() < 2)
+                    //     LogPrintf("\tThere are not enough masternodes enabled;\n");
                     if (pwallet->GetBalance() == 0)
                         LogPrintf("\tZero balance;\n");
                     if (nReserveBalance >= pwallet->GetBalance())
@@ -1088,7 +1084,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             }
         }
 
-        if (vNodes.size() < 2 || nChainHeight < GetBestPeerHeight()) {
+        if (vNodes.size() < 3 || nChainHeight < GetBestPeerHeight()) {
             MilliSleep(60000);
             continue;
         }
@@ -1319,7 +1315,7 @@ void ThreadStakeMinter_Legacy(CWallet* pwallet)
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             ProcessBlockFound_Legacy(pblock, chainparams);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);
-            MilliSleep(Params().GetTargetSpacingForStake() * 1000);
+            MilliSleep(Params().GetTargetSpacing()/2 * 1000);
         }
 
         MilliSleep(500);
@@ -1434,7 +1430,8 @@ void KoreMiner_Legacy()
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
                         ProcessBlockFound_Legacy(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                        MilliSleep(Params().GetTargetSpacing() * 1000);
+                        // TODO: ROLLBACK MilliSleep(Params().GetTargetSpacing() * 1000);
+                        MilliSleep(1000);
                         break;
                     }
                 }

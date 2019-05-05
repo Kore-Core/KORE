@@ -136,7 +136,7 @@ public:
     int64_t                   GetStakeLockSequenceNumber() const       { return (nStakeLockInterval >> CTxIn::SEQUENCE_LOCKTIME_GRANULARITY) | CTxIn::SEQUENCE_LOCKTIME_TYPE_FLAG; }
     uint32_t                  GetStakeMinAge() const                   { return nStakeMinAge; }
     uint32_t                  GetTargetSpacing() const                 { return nTargetSpacing; }
-    int64_t                   GetTargetSpacingForStake() const         { return nTargetSpacing * 0.1; }
+    int64_t                   GetTargetSpacingForStake() const         { return nTargetSpacing * .75; }
     uint32_t                  GetTargetTimespan() const                { return nTargetSpacing; }
     /** Default value for -checkmempool and -checkblockindex argument */
     bool                      IsConsistencyChecksDefault() const       { return fDefaultConsistencyChecks; }

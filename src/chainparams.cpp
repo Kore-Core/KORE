@@ -153,8 +153,8 @@ public:
         nPoolMaxTransactions                          = 3;
         nPruneAfterHeight                             = 100000;              // Legacy
         nRuleChangeActivationThreshold                = 1916;                // 95% of 2016
-        nStakeLockInterval                            = 4 * 60 * 60;         // Stake remains locked for 4 hours
-        nStakeMinAge                                  = 4 * 60 * 60;
+        nStakeLockInterval                            = 2 * 60 * 60;         // Stake remains locked for 4 hours
+        nStakeMinAge                                  = 2 * 60 * 60;
         nTargetSpacing                                = 1 * 60;              // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
         nBlocksToBanOldWallets                        = 1440;                //Ban old nodes one day before fork
         //TODO: SET FORK BLOCK
@@ -236,10 +236,8 @@ public:
         fEnableBigReward                              = true;
         nDefaultPort                                  = 11743;
         nBlocksToBanOldWallets                        = 60;                         //Ban old nodes one hour before fork 
-        nHeightToFork                                 = 500;
-        nLastPOWBlock                                 = 100;
-        nStakeLockInterval                            = 2 * 60 * 60;                // Stake remains locked for 4 hours
-        nStakeMinAge                                  = 2 * 60 * 60;
+        nHeightToFork                                 = 40;
+        nLastPOWBlock                                 = 35;
         vAlertPubKey                                  = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         strDevFundPubKey                              = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
         strSporkKey                                   = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
@@ -253,11 +251,11 @@ public:
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
         
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1556128927, 4, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1556918243, 0, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
 
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x1a646885d25f9a87d8abaa8b8c24da33e4f8c558161339777c2b930ce35f2135"));
-        assert(genesis.hashMerkleRoot == uint256S("0x61afa6613b6322205063d71ed4c6fb5be8b9a8cb6a8a97aa0dd664a6a8c5ee61"));
+        assert(nHashGenesisBlock == uint256S("0x1422e285c9cdb782bcea9a41e22b67dd3e508a26428daa2d4db8bda59efe7971"));
+        assert(genesis.hashMerkleRoot == uint256S("0x2446f532c7703bf9436b202c7f05dc0c9cce6f41cf68b03a959e68c9864bbbee"));
         
         vFixedSeeds.clear();
         vSeeds.clear();

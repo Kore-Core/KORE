@@ -2215,7 +2215,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
                 
             if (out.tx->IsLegacyCoinStake() && out.nDepth < Params().GetCoinMaturity())
                 continue;
-            else if (out.tx->IsCoinStake() && !out.tx->IsStakeSpendable())
+            else if (out.tx->vout[out.i].IsCoinStake() && !out.tx->IsStakeSpendable())
                 continue;
 
             //add to our stake set
@@ -2248,7 +2248,7 @@ bool CWallet::MintableCoins()
 
         for (const COutput& out : vCoins) {
             int64_t nTxTime = out.tx->GetTxTime();
-            if (out.nDepth > Params().GetCoinMaturity() || GetAdjustedTime() - nTxTime > Params().GetStakeMinAge())
+            if (!IsBelowMinAge(out, GetAdjustedTime(), nTxTime))
                 return true;
         }
     }
@@ -2422,8 +2422,8 @@ bool CWallet::SelectCoins_Legacy(const CAmount& nTargetValue, set<pair<const CWa
                 continue;
 
             //check for min age
-            if (GetTime() - output.tx->GetTxTime() < Params().GetStakeMinAge())
-                continue;
+            // if (GetTime() - output.tx->GetTxTime() < 4 * 60 * 60)
+            //     continue;
 
             if (coin_type == ONLY_DENOMINATED) {
                 CTxIn vin = CTxIn(output.tx->GetHash(), output.i);
@@ -3838,7 +3838,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             }
 
             // Deal again with txNew to add masternode payment
-            FillBlockPayee(txNew, 0, true, nBalance);
+            // FillBlockPayee(txNew, 0, true, nBalance);
 
             // Create output for the locking transaction and update its value
             vector<CTxOut> vout;
@@ -4057,14 +4057,6 @@ bool CWallet::CreateCoinStake_Legacy(const CKeyStore& keystore, CBlock* pblock, 
         pblock->nTime = txNew.nTime = pblock->vtx[0].nTime;
     else
         return error("CreateCoinStake : failed to update coinstake time");
-
-    static string message = "Created on version 13 pre-fork";
-    static vector<u_char> vecMessage(message.begin(), message.end());
-
-    CTxOut messageTxOut;
-    messageTxOut.SetEmpty();
-    messageTxOut.scriptPubKey = CScript() << vecMessage << OP_RETURN;
-    txNew.vout.emplace_back(messageTxOut);
 
     // Sign
     int nIn = 0;

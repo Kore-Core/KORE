@@ -25,7 +25,7 @@ static arith_uint256 GetTargetLimit_Legacy(int64_t nTime, bool fProofOfStake)
 }
 
 
-unsigned int CalculateNextWorkRequired_Legacy(const CBlockIndex* pindexLast, int64_t nFirstBlockTime)
+unsigned int CalculateNextWorkRequired_Legacy(const CBlockIndex* pindexLast, int64_t nFirstBlockTime,  bool fProofOfStake)
 {
     int64_t nActualSpacing = pindexLast->GetBlockTime() - nFirstBlockTime;
     int64_t nTargetSpacing = Params().GetTargetSpacing();
@@ -37,18 +37,18 @@ unsigned int CalculateNextWorkRequired_Legacy(const CBlockIndex* pindexLast, int
         nActualSpacing = nTargetSpacing;
 
     // Retarget
-    const arith_uint256 bnPowLimit = GetTargetLimit_Legacy(pindexLast->GetBlockTime(), pindexLast->IsProofOfStake());
+    const arith_uint256 bnLimit = GetTargetLimit_Legacy(pindexLast->GetBlockTime(), fProofOfStake);
     arith_uint256 bnNew, bnOld;
     if ((Params().GetNetworkID() == CBaseChainParams::TESTNET || Params().GetNetworkID() == CBaseChainParams::UNITTEST) && pindexLast->nHeight < 100) {
-        return bnPowLimit.GetCompact();
+        return bnLimit.GetCompact();
     }
     bnNew.SetCompact(pindexLast->nBits);
     bnOld = bnNew;
     bnNew *= (((nTargetTimespan / nTargetSpacing) - 1) * nTargetSpacing + nActualSpacing + nActualSpacing);
     bnNew /= (((nTargetTimespan / nTargetSpacing) + 1) * nTargetSpacing);
 
-    if (bnNew <= 0 || bnNew > bnPowLimit)
-        bnNew = bnPowLimit;
+    if (bnNew <= 0 || bnNew > bnLimit)
+        bnNew = bnLimit;
 
     if (fDebug) {
         LogPrintf("RETARGET\n");
@@ -62,20 +62,14 @@ unsigned int CalculateNextWorkRequired_Legacy(const CBlockIndex* pindexLast, int
 
 unsigned int GetNextWorkRequired_Legacy(const CBlockIndex* pindexLast, const CBlockHeader* pblock, bool fProofOfStake)
 {
-    unsigned int nTargetLimit = UintToArith256(Params().ProofOfWorkLimit()).GetCompact();
+    // Genesis block and first block
+    if (pindexLast == NULL || pindexLast->pprev == NULL)
+        return UintToArith256(Params().ProofOfWorkLimit()).GetCompact();
 
-    // Genesis block
-    if (pindexLast == NULL)
-        return nTargetLimit;
+    if (pindexLast->nHeight == Params().GetLastPoWBlock())
+        return UintToArith256(Params().ProofOfStakeLimit()).GetCompact();
 
-    const CBlockIndex* pindexPrev = GetLastBlockIndex_Legacy(pindexLast, fProofOfStake);
-    if (pindexPrev->pprev == NULL)
-        return nTargetLimit; // first block
-    const CBlockIndex* pindexPrevPrev = GetLastBlockIndex_Legacy(pindexPrev->pprev, fProofOfStake);
-    if (pindexPrevPrev->pprev == NULL)
-        return nTargetLimit; // second block
-
-    return CalculateNextWorkRequired_Legacy(pindexPrev, pindexPrevPrev->GetBlockTime());
+    return CalculateNextWorkRequired_Legacy(pindexLast, pindexLast->GetBlockTime(), fProofOfStake);
 }
 
 

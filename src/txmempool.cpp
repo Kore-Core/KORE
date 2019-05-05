@@ -547,42 +547,6 @@ void CTxMemPool::removeForReorg(const CCoinsViewCache* pcoins, unsigned int nMem
     }
 }
 
-void CTxMemPool::removeForReorg_Legacy(const CCoinsViewCache* pcoins, unsigned int nMemPoolHeight, int flags)
-{
-    // Remove transactions spending a coinbase or coinstake which are now immature and no-longer-final transactions
-    LOCK(cs);
-    list<CTransaction> transactionsToRemove;
-    for (indexed_transaction_set::const_iterator it = mapTx.begin(); it != mapTx.end(); it++) {
-        const CTransaction& tx = it->GetTx();
-        LockPoints lp = it->GetLockPoints();
-        bool validLP = TestLockPointValidity(&lp);
-        if (!CheckFinalTx(tx, flags) || !CheckSequenceLocks(tx, flags, &lp, validLP)) {
-            // Note if CheckSequenceLocks fails the LockPoints may still be invalid
-            // So it's critical that we remove the tx and not depend on the LockPoints.
-            transactionsToRemove.push_back(tx);
-        } else if (it->GetSpendsCoinbase()) {
-            BOOST_FOREACH (const CTxIn& txin, tx.vin) {
-                indexed_transaction_set::const_iterator it2 = mapTx.find(txin.prevout.hash);
-                if (it2 != mapTx.end())
-                    continue;
-                const CCoins* coins = pcoins->AccessCoins(txin.prevout.hash);
-                if (nCheckFrequency != 0) assert(coins);
-                if (!coins || ((coins->IsCoinBase() || coins->IsCoinStake()) && ((signed long)nMemPoolHeight) - coins->nHeight < Params().GetCoinMaturity())) {
-                    transactionsToRemove.push_back(tx);
-                    break;
-                }
-            }
-        }
-        if (!validLP) {
-            mapTx.modify(it, update_lock_points(lp));
-        }
-    }
-    BOOST_FOREACH (const CTransaction& tx, transactionsToRemove) {
-        list<CTransaction> removed;
-        remove(tx, removed, true);
-    }
-}
-
 void CTxMemPool::removeCoinbaseSpends(const CCoinsViewCache* pcoins, unsigned int nMemPoolHeight)
 {
     // Remove transactions spending a coinbase which are now immature

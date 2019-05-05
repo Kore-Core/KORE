@@ -735,6 +735,7 @@ UniValue getbalance(const UniValue& params, bool fHelp)
             "  \"staked\": xxxxx,               (numeric) The total amount staked\n"
             "  \"immature\": xxxxx,             (numeric) The total immature balance\n"
             "  \"total\": xxxxx,                (numeric) The total amount held by wallet\n"
+            "  \"reserved\": xxxxx,             (numeric) The total reserved for transactions\n"
             "  \"unconfirmed\": xxxxx,          (numeric) The total unconfirmed balance\n"
             "}\n"
 
@@ -775,6 +776,7 @@ UniValue getbalance(const UniValue& params, bool fHelp)
         obj.push_back(Pair("staked",        ValueFromAmount(staked)));
         obj.push_back(Pair("immature",      ValueFromAmount(immature)));
         obj.push_back(Pair("total",         ValueFromAmount(total)));
+        obj.push_back(Pair("reserved",      ValueFromAmount(nReserveBalance)));
         obj.push_back(Pair("unconfirmed",   ValueFromAmount(pwalletMain->GetUnconfirmedBalance())));
         return obj;
     }

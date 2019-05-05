@@ -1945,7 +1945,7 @@ bool AppInit2()
 
     obfuScationPool.InitCollateralAddress();
 
-    threadGroup.create_thread(boost::bind(&ThreadCheckObfuScationPool));
+    // threadGroup.create_thread(boost::bind(&ThreadCheckObfuScationPool));
 
     // ********************************************************* Step 11: start node
 

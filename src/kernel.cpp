@@ -312,7 +312,7 @@ bool CheckStake(const CDataStream& ssUniqueID, CAmount nValueIn, const uint64_t 
     uint256 hashProofOfStake = ss.GetHash();
 
     //get the stake weight - weight is equal to coin amount
-    uint256 bnCoinDayWeight = uint256(nValueIn) / 100;
+    uint256 bnCoinDayWeight = uint256(nValueIn) / MINIMUM_STAKE_VALUE;
 
     // Now check if proof-of-stake hash meets target protocol
     bool canStake = hashProofOfStake < (bnCoinDayWeight * bnTarget);
@@ -333,9 +333,9 @@ bool CheckStake(const CDataStream& ssUniqueID, CAmount nValueIn, const uint64_t 
 
 bool IsBelowMinAge(const COutput& output, const unsigned int nTimeBlockFrom, const unsigned int nTimeTx)
 {
-    // If the first vout in my tx is a coinstake and i'm not: I'm the change and can be spent.
-    if (output.tx->vout[0].IsCoinStake() && !output.tx->vout[output.i].IsCoinStake())
-        return true;
+//     // If the first vout in my tx is a coinstake and i'm not: I'm the change and can be spent.
+//     if (output.tx->vout[0].IsCoinStake() && !output.tx->vout[output.i].IsCoinStake() && output.nDepth > 0)
+//         return false;
 
     return (output.nDepth < Params().GetCoinMaturity() && nTimeTx - nTimeBlockFrom < Params().GetStakeMinAge());
 }
@@ -389,7 +389,7 @@ bool Stake(CStakeInput* stakeInput, unsigned int nBits, unsigned int nTimeBlockF
 }
 
 // Check kernel hash target and coinstake signature
-bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<CKoreStake>& listStake)
+bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<CKoreStake>& listStake, CAmount& stakedBalance)
 {
     const CTransaction tx = block.vtx[1];
     if (!tx.IsCoinStake())
@@ -400,9 +400,51 @@ bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<
     bnTargetPerCoinDay.SetCompact(block.nBits);
     if (bnTargetPerCoinDay > Params().ProofOfStakeLimit())
         return error("%s(): Target is easier than limit %s", __func__, bnTargetPerCoinDay.ToString());
+        
+    CTransaction originTx;
+    uint256 hashBlock = 0;
+    if (!GetTransaction(block.vtx[1].vin[0].prevout.hash, originTx, hashBlock, true))
+        return error("%s(): Origin tx (%s) not found for block %s. Possible reorg underway so we are skipping a few checks.", __func__, block.GetHash().ToString(), block.vtx[1].vin[0].prevout.hash.ToString());
+    
+    uint160 lockPubKeyID;
+    if (!ExtractDestination(originTx.vout[block.vtx[1].vin[0].prevout.n].scriptPubKey, lockPubKeyID))
+        return error("%s(): Couldn't get destination from script: %s", __func__, originTx.vout[block.vtx[1].vin[0].prevout.n].scriptPubKey.ToString());
+
+    // Second transaction must lock coins from same pubkey as coinbase
+    uint160 pubKeyID;
+    if (!ExtractDestination(block.vtx[0].vout[1].scriptPubKey, pubKeyID))
+        return error("%s(): Couldn't get destination from script: %s", __func__, block.vtx[0].vout[1].scriptPubKey.ToString());
+
+    if (lockPubKeyID != pubKeyID)
+        return error("%s(): locking pubkey different from coinbase pubkey", __func__);
+
+    // There must be only one pubkey on the locking transaction
+    for (unsigned int i = 1; i < block.vtx[1].vin.size(); i++) {
+        CTransaction otherOriginTx;
+        uint256 otherHashBlock;
+        pubKeyID.SetNull();
+        if (!GetTransaction(block.vtx[1].vin[i].prevout.hash, otherOriginTx, otherHashBlock, true))
+            return error("%s(): Other origin tx (%s) not found for block %s. Possible reorg underway so we are skipping a few checks.", __func__, block.GetHash().ToString(), block.vtx[1].vin[i].prevout.hash.ToString());
+        
+        if (!ExtractDestination(otherOriginTx.vout[block.vtx[1].vin[i].prevout.n].scriptPubKey, pubKeyID))
+            return error("%s(): Couldn't get destination from script: %s", __func__, otherOriginTx.vout[block.vtx[1].vin[i].prevout.n].scriptPubKey.ToString());
+
+        if (lockPubKeyID != pubKeyID)
+            return error("%s(): more than one pubkey on lock", __func__);
+    }
+
+    // All the outputs pubkeys must be the same as the locking pubkey
+    for (unsigned int i = 0; i < block.vtx[1].vout.size(); i++) {
+        pubKeyID.SetNull();
+        if (!ExtractDestination(block.vtx[1].vout[i].scriptPubKey, pubKeyID))
+            return error("%s(): Couldn't get destination from script: %s", __func__, block.vtx[1].vout[i].scriptPubKey.ToString());
+
+        if (pubKeyID != lockPubKeyID)
+            return error("%s(): more than one pubkey on lock tx", __func__);
+    }
 
     CKoreStake kernel;
-    CAmount nTotalValue = 0;
+    stakedBalance = 0;
     for (int i = 0; i < tx.vin.size(); i++)
     {
         const CTxIn& txin = tx.vin[i];
@@ -424,7 +466,7 @@ bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<
         if (!pindex)
             return error("%s: Failed to find the block index", __func__);
 
-        nTotalValue += koreInput.GetValue();
+        stakedBalance += koreInput.GetValue();
 
         listStake.emplace_back(koreInput);
 
@@ -444,7 +486,7 @@ bool CheckProofOfStake(const CBlock block, uint256& hashProofOfStake, std::list<
         return error("%s failed to get modifier for stake input\n", __func__);
 
     unsigned int nTxTime = block.nTime;
-    if (!CheckStake(kernel.GetUniqueness(), nTotalValue, nStakeModifier, bnTargetPerCoinDay, kernelTxFrom.nTime, nTxTime)) {
+    if (!CheckStake(kernel.GetUniqueness(), stakedBalance, nStakeModifier, bnTargetPerCoinDay, kernelTxFrom.nTime, nTxTime)) {
         return error("CheckProofOfStake(): INFO: check kernel failed on coinstake %s \n", tx.GetHash().GetHex());
     }
 

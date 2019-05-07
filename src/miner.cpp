@@ -1084,7 +1084,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             }
         }
 
-        if (vNodes.size() < 3) { // || nChainHeight < GetBestPeerHeight()) {
+        if (vNodes.size() < 3 || nChainHeight < GetBestPeerHeight()) {
             MilliSleep(60000);
             continue;
         }

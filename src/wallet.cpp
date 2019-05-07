@@ -3724,8 +3724,8 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             return false;
 
         //make sure that enough time has elapsed between
-        CBlockIndex* pindex = stakeInput->GetIndexFrom();
-        if (!pindex || pindex->nHeight < 1) {
+        CBlockIndex* pindexfrom = stakeInput->GetIndexFrom();
+        if (!pindexfrom || pindexfrom->nHeight < 1) {
             if (fDebug)
                 LogPrintf("*** no pindexfrom\n");
             
@@ -3755,7 +3755,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if (Stake(stakeInput.get(), nBits, tx.nTime, nTxNewTime, addressBalance, COutput(pcoin, stakeInput->GetPosition(), nDepth, true))) {
             LOCK(cs_main);
             //Double check that this will pass time requirements
-            if (nTxNewTime <= pindex->GetMedianTimePast()) {
+            if (nTxNewTime <= pindexfrom->GetMedianTimePast()) {
                 if (fDebug)
                     LogPrintf("CreateCoinStake() : kernel found, but it is too far in the past \n");
                 

@@ -4660,15 +4660,19 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
     if (block.vtx[0].vin.size() != 1)
         return state.DoS(100, error("CheckBlock(): coinbase first transaction must have only 1 vin"));
 
-    // First transaction first input must have at least 2 vout
-    if (block.vtx[0].vout.size() < 2)
-        return state.DoS(100, error("CheckBlock(): coinbase first transaction must have at least 2 vout"));
+    // First transaction first input must have exactly 3 vout
+    if (block.vtx[0].vout.size() != 3)
+        return state.DoS(100, error("CheckBlock(): coinbase first transaction must have exactly 3 vout"));
 
     // First Transaction must pay to dev fund
-    if (block.vtx.empty() || !block.vtx[0].PaiedToDev())
+    if (block.vtx.empty() || !block.vtx[0].PaidToDev())
         return state.DoS(100, error("CheckBlock(): first tx, first vout did not pay to dev"));
 
     if (fBlockIsProofOfStake) {
+        // Third tx must pay MNFund
+        if (block.vtx.empty() || !block.vtx[0].PaidToMNFund())
+            return state.DoS(100, error("CheckBlock(): first tx, third vout did not pay to mn fund"));
+
         // Must have at least 2 transactions
         if (block.vtx.empty() || block.vtx.size() < 2)
             return state.DoS(100, error("CheckBlock(): coinstake must have at least 2 transactions"));

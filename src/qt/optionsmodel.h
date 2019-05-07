@@ -44,9 +44,9 @@ public:
         ThreadsScriptVerif,  // int
         DatabaseCache,       // int
         SpendZeroConfChange, // bool
-        ObfuscationRounds,   // int
-        AnonymizeKoreAmount, //int
-        ShowMasternodesTab,  // bool
+        // ObfuscationRounds,   // int
+        // AnonymizeKoreAmount, //int
+        // ShowMasternodesTab,  // bool
         Listen,              // bool
         OptionIDRowCount,
     };
@@ -91,8 +91,8 @@ private:
 
 signals:
     void displayUnitChanged(int unit);
-    void obfuscationRoundsChanged(int);
-    void anonymizeKoreAmountChanged(int);
+    // void obfuscationRoundsChanged(int);
+    // void anonymizeKoreAmountChanged(int);
     void coinControlFeaturesChanged(bool);
     void hideZeroBalancesChanged(bool);
 };

@@ -214,19 +214,19 @@ void OptionsDialog::setMapper()
 
 
     /* Obfuscation Rounds */
-    mapper->addMapping(ui->obfuscationRounds, OptionsModel::ObfuscationRounds);
-    mapper->addMapping(ui->anonymizeKore, OptionsModel::AnonymizeKoreAmount);
-    mapper->addMapping(ui->showMasternodesTab, OptionsModel::ShowMasternodesTab);
-#ifdef ENABLE_OBFUSCATION
-    ui->obfuscationRounds->setEnabled(true);
-    ui->anonymizeKore->setEnabled(true);
+    // mapper->addMapping(ui->obfuscationRounds, OptionsModel::ObfuscationRounds);
+    // mapper->addMapping(ui->anonymizeKore, OptionsModel::AnonymizeKoreAmount);
+    // mapper->addMapping(ui->showMasternodesTab, OptionsModel::ShowMasternodesTab);
+// #ifdef ENABLE_OBFUSCATION
+//     ui->obfuscationRounds->setEnabled(true);
+//     ui->anonymizeKore->setEnabled(true);
 
-#else
-    ui->obfuscationRounds->setEnabled(false);
-    ui->obfuscationRounds->setToolTip("Currently Disabled");
-    ui->anonymizeKore->setEnabled(false);
-    ui->anonymizeKore->setToolTip("Currently Disabled");
-#endif
+// #else
+//     ui->obfuscationRounds->setEnabled(false);
+//     ui->obfuscationRounds->setToolTip("Currently Disabled");
+//     ui->anonymizeKore->setEnabled(false);
+//     ui->anonymizeKore->setToolTip("Currently Disabled");
+// #endif
 
 }
 

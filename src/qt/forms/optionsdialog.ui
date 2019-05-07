@@ -142,7 +142,7 @@
            </property>
           </widget>
          </item>
-         <item>
+         <!-- <item>
           <widget class="QSpinBox" name="obfuscationRounds">
            <property name="minimum">
             <number>1</number>
@@ -151,7 +151,7 @@
             <number>100</number>
            </property>
           </widget>
-         </item>
+         </item> -->
         </layout>
        </item>
        <item>
@@ -159,7 +159,7 @@
          <property name="sizeConstraint">
           <enum>QLayout::SetFixedSize</enum>
          </property>
-         <item>
+         <!-- <item>
           <widget class="QLabel" name="label_2">
            <property name="toolTip">
             <string>This amount acts as a threshold to turn off Obfuscation once it's reached.</string>
@@ -180,8 +180,8 @@
             <string>Amount of KORE to keep anonymized</string>
            </property>
           </widget>
-         </item>
-         <item>
+         </item> -->
+         <!-- <item>
           <widget class="QSpinBox" name="anonymizeKore">
            <property name="minimum">
             <number>100</number>
@@ -196,7 +196,7 @@
             <number>1000</number>
            </property>
           </widget>
-         </item>
+         </item> -->
         </layout>
        </item>
       </layout>

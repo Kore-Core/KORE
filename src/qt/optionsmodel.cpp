@@ -73,17 +73,17 @@ void OptionsModel::Init()
         settings.setValue("fCoinControlFeatures", false);
     fCoinControlFeatures = settings.value("fCoinControlFeatures", false).toBool();
 
-    if (!settings.contains("nObfuscationRounds"))
-        settings.setValue("nObfuscationRounds", 2);
+    // if (!settings.contains("nObfuscationRounds"))
+    //     settings.setValue("nObfuscationRounds", 2);
 
-    if (!settings.contains("nAnonymizeKoreAmount"))
-        settings.setValue("nAnonymizeKoreAmount", 1000);
+    // if (!settings.contains("nAnonymizeKoreAmount"))
+    //     settings.setValue("nAnonymizeKoreAmount", 1000);
 
-    nObfuscationRounds = settings.value("nObfuscationRounds").toLongLong();
-    nAnonymizeKoreAmount = settings.value("nAnonymizeKoreAmount").toLongLong();
+    // nObfuscationRounds = settings.value("nObfuscationRounds").toLongLong();
+    // nAnonymizeKoreAmount = settings.value("nAnonymizeKoreAmount").toLongLong();
 
-    if (!settings.contains("fShowMasternodesTab"))
-        settings.setValue("fShowMasternodesTab", masternodeConfig.getCount());
+    // if (!settings.contains("fShowMasternodesTab"))
+    //     settings.setValue("fShowMasternodesTab", masternodeConfig.getCount());
 
     // These are shared with the core or have a command-line parameter
     // and we want command-line parameters to overwrite the GUI settings.
@@ -138,10 +138,10 @@ void OptionsModel::Init()
     if (!SoftSetArg("-lang", settings.value("language").toString().toStdString()))
         addOverriddenOption("-lang");
 
-    if (settings.contains("nObfuscationRounds"))
-        SoftSetArg("-obfuscationrounds", settings.value("nObfuscationRounds").toString().toStdString());
-    if (settings.contains("nAnonymizeKoreAmount"))
-        SoftSetArg("-anonymizekoreamount", settings.value("nAnonymizeKoreAmount").toString().toStdString());
+    // if (settings.contains("nObfuscationRounds"))
+    //     SoftSetArg("-obfuscationrounds", settings.value("nObfuscationRounds").toString().toStdString());
+    // if (settings.contains("nAnonymizeKoreAmount"))
+    //     SoftSetArg("-anonymizekoreamount", settings.value("nAnonymizeKoreAmount").toString().toStdString());
 
     language = settings.value("language").toString();
 }
@@ -197,10 +197,10 @@ QVariant OptionsModel::data(const QModelIndex& index, int role) const
             return strlIpPort.at(1);
         }
 
-#ifdef ENABLE_WALLET
-        case ShowMasternodesTab:
-            return settings.value("fShowMasternodesTab");
-#endif
+// #ifdef ENABLE_WALLET
+//         case ShowMasternodesTab:
+//             return settings.value("fShowMasternodesTab");
+// #endif
         case DisplayUnit:
 
             return nDisplayUnit;
@@ -218,10 +218,10 @@ QVariant OptionsModel::data(const QModelIndex& index, int role) const
             return settings.value("nDatabaseCache");
         case ThreadsScriptVerif:
             return settings.value("nThreadsScriptVerif");
-        case ObfuscationRounds:
-            return QVariant(nObfuscationRounds);
-        case AnonymizeKoreAmount:
-            return QVariant(nAnonymizeKoreAmount);
+        // case ObfuscationRounds:
+        //     return QVariant(nObfuscationRounds);
+        // case AnonymizeKoreAmount:
+        //     return QVariant(nAnonymizeKoreAmount);
         case Listen:
             return settings.value("fListen");
         default:
@@ -283,14 +283,14 @@ bool OptionsModel::setData(const QModelIndex& index, const QVariant& value, int 
                 setRestartRequired(true);
             }
         } break;
-#ifdef ENABLE_WALLET
-        case ShowMasternodesTab:
-            if (settings.value("fShowMasternodesTab") != value) {
-                settings.setValue("fShowMasternodesTab", value);
-                setRestartRequired(true);
-            }
-            break;
-#endif
+// #ifdef ENABLE_WALLET
+//         case ShowMasternodesTab:
+//             if (settings.value("fShowMasternodesTab") != value) {
+//                 settings.setValue("fShowMasternodesTab", value);
+//                 setRestartRequired(true);
+//             }
+//             break;
+// #endif
         case DisplayUnit:
             setDisplayUnit(value);
             break;
@@ -319,16 +319,16 @@ bool OptionsModel::setData(const QModelIndex& index, const QVariant& value, int 
                 setRestartRequired(true);
             }
             break;
-        case ObfuscationRounds:
-            nObfuscationRounds = value.toInt();
-            settings.setValue("nObfuscationRounds", nObfuscationRounds);
-            emit obfuscationRoundsChanged(nObfuscationRounds);
-            break;
-        case AnonymizeKoreAmount:
-            nAnonymizeKoreAmount = value.toInt();
-            settings.setValue("nAnonymizeKoreAmount", nAnonymizeKoreAmount);
-            emit anonymizeKoreAmountChanged(nAnonymizeKoreAmount);
-            break;
+        // case ObfuscationRounds:
+        //     nObfuscationRounds = value.toInt();
+        //     settings.setValue("nObfuscationRounds", nObfuscationRounds);
+        //     emit obfuscationRoundsChanged(nObfuscationRounds);
+        //     break;
+        // case AnonymizeKoreAmount:
+        //     nAnonymizeKoreAmount = value.toInt();
+        //     settings.setValue("nAnonymizeKoreAmount", nAnonymizeKoreAmount);
+        //     emit anonymizeKoreAmountChanged(nAnonymizeKoreAmount);
+        //     break;
         case CoinControlFeatures:
             fCoinControlFeatures = value.toBool();
             settings.setValue("fCoinControlFeatures", fCoinControlFeatures);

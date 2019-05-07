@@ -103,6 +103,7 @@ public:
     int32_t                   GetDefaultPort() const                   { return nDefaultPort; }
     /** Spork key and Masternode Handling **/
     std::string               GetDevFundPubKey() const                 { return strDevFundPubKey; }
+    std::string               GetMNFundPubKey() const                  { return strMNFundPubKey; }
     int32_t                   GetLastPoWBlock() const                  { return nLastPOWBlock; }
     int64_t                   GetMasternodeBudgetPaymentCycle() const  { return nMasternodeBudgetPaymentCycle; }
     int64_t                   GetMasternodeCheckSeconds() const        { return nMasternodeCheckSeconds; }
@@ -200,6 +201,7 @@ protected:
     uint32_t                   nTargetSpacing;
     int64_t                    nTargetSpacingForStake;
     std::string                strDevFundPubKey;
+    std::string                strMNFundPubKey;
     std::string                strObfuscationPoolDummyAddress;
     std::string                strSporkKey;
     //! Raw pub key bytes for the broadcast alert signing key.

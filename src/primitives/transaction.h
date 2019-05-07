@@ -200,7 +200,9 @@ public:
         return IsEmpty() || scriptPubKey.IsUnspendable();
     }
 
-    bool PaiedToDev() const;
+    bool PaidToDev() const;
+
+    bool PaidToMNFund() const;
 
     bool IsCoinStake() const;
 
@@ -336,9 +338,14 @@ public:
         return (vin.size() == 1 && vin[0].prevout.IsNull());
     }
 
-    bool PaiedToDev() const
+    bool PaidToDev() const
     {
-        return vout[0].PaiedToDev();
+        return vout[0].PaidToDev();
+    }
+
+    bool PaidToMNFund() const
+    {
+        return vout[2].PaidToMNFund();
     }
 
     bool IsCoinStake() const

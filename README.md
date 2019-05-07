@@ -71,16 +71,13 @@ b) disabling swap
 
 ```bash
 sudo apt-get update
+sudo apt-get install -y git curl jq
 sudo apt-get install -y software-properties-common
-sudo add-apt-repository -y ppa:bitcoin/bitcoin
-sudo apt-get update
-sudo apt-get install -y autotools-dev autoconf automake build-essential bsdmainutils
-sudo apt-get install -y libssl-dev libevent-dev libboost-all-dev libcurl4-openssl-dev
-sudo apt-get install -y libdb4.8-dev libdb4.8++-dev libzmq3-dev
-sudo apt-get install -y libtool pkg-config protobuf-compiler python3 qttools5-dev
-sudo apt-get install -y qttools5-dev-tools libprotobuf-dev libqrencode-dev git curl jq
+sudo apt-get install -y autotools-dev autoconf automake build-essential //bsdmainutils
+sudo apt-get install -y qttools5-dev-tools qttools5-dev libprotobuf-dev libqrencode-dev
+sudo apt-get install -y libtool pkg-config protobuf-compiler python3
 
-sudo apt-get update && sudo apt-get upgrade -y
+
 ```
 
 ### Building KORE dependencies
@@ -105,9 +102,6 @@ make
 ```bash
 Here are some testnet onion address.
 you can use the console from kore-qt and give the command to add
-addnode cravxw62erl3vkgi.onion onetry
-addnode 5y7ld2knghrucfxw.onion onetry
-addnode pauvgfrlh3pvepsi.onion onetry
-addnode svhdetenyf5jn2ba.onion
-
+addnode a3y4tqttfcj7dvf3.onion onetry
+addnode mnzwvlk7lme5yuht.onion onetry
 ```

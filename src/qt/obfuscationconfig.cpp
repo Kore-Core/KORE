@@ -82,11 +82,11 @@ void ObfuscationConfig::clickMax()
 
 void ObfuscationConfig::configure(bool enabled, int coins, int rounds)
 {
-    QSettings settings;
+    // QSettings settings;
 
-    settings.setValue("nObfuscationRounds", rounds);
-    settings.setValue("nAnonymizeKoreAmount", coins);
+    // settings.setValue("nObfuscationRounds", rounds);
+    // settings.setValue("nAnonymizeKoreAmount", coins);
 
-    nObfuscationRounds = rounds;
-    nAnonymizeKoreAmount = coins;
+    // nObfuscationRounds = rounds;
+    // nAnonymizeKoreAmount = coins;
 }

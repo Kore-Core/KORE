@@ -2210,7 +2210,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
             //use the block time
             int64_t nTxTime = out.tx->GetTxTime();
 
-            if (IsBelowMinAge(out, GetAdjustedTime(), nTxTime))
+            if (IsBelowMinAge(out, nTxTime, GetAdjustedTime()))
                 continue;            
                 
             if (out.tx->IsLegacyCoinStake() && out.nDepth < Params().GetCoinMaturity())
@@ -3706,7 +3706,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     if (listInputs.empty())
         return false;
 
-    if ((uint32_t)(GetAdjustedTime() - chainActive.Tip()->GetBlockTime()) < (int)(Params().GetTargetSpacingForStake()))
+    if ((uint32_t)(GetAdjustedTime() - pindex->GetBlockTime()) < (int)(Params().GetTargetSpacingForStake()))
         MilliSleep(Params().GetTargetSpacingForStake() * 1000);
 
     CAmount nCredit;
@@ -3755,7 +3755,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if (Stake(stakeInput.get(), nBits, tx.nTime, nTxNewTime, addressBalance, COutput(pcoin, stakeInput->GetPosition(), nDepth, true))) {
             LOCK(cs_main);
             //Double check that this will pass time requirements
-            if (nTxNewTime <= chainActive.Tip()->GetMedianTimePast()) {
+            if (nTxNewTime <= pindex->GetMedianTimePast()) {
                 if (fDebug)
                     LogPrintf("CreateCoinStake() : kernel found, but it is too far in the past \n");
                 
@@ -3768,7 +3768,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
             // Calculate reward
             CAmount nReward;
-            nReward = GetBlockReward(chainActive.Tip());
+            nReward = GetBlockReward(pindex);
 
             CTxOut txOut;
             // Add the dev fund
@@ -3780,7 +3780,6 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
             }
 
             // Create minter reward output
-            nCredit = nReward - devsubsidy;
             if (!stakeInput->CreateTxOut(this, txOut)) {
                 LogPrintf("%s: failed to get scriptPubKey\n", __func__);
                 
@@ -3788,8 +3787,14 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
                 txNew.vout.clear();
                 break;
             }
-            txOut.nValue = nCredit;
             txNew.vout.emplace_back(txOut);
+            
+            nCredit = nReward - devsubsidy;
+            txOut.nValue = GetMasternodePayment(nCredit, addressBalance, pindex);
+            txOut.scriptPubKey = CScript() << ParseHex(Params().GetMNFundPubKey()) << OP_CHECKSIG;
+            txNew.vout.emplace_back(txOut);
+
+            txNew.vout[1].nValue = nCredit - txNew.vout[2].nValue;
 
             // Add stake to locking tx
             uint256 hashTxOut = txLock.GetHash();

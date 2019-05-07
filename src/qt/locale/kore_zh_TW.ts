@@ -569,14 +569,6 @@
         <translation>請求付款 (會產生 QR Code跟 kore 位址)</translation>
     </message>
     <message>
-        <source>&amp;Masternodes</source>
-        <translation>&amp;Masternodes</translation>
-    </message>
-    <message>
-        <source>Browse masternodes</source>
-        <translation>瀏覽 Masternodes</translation>
-    </message>
-    <message>
         <source>&amp;About KORE Core</source>
         <translation>&amp;關於 KORE Core</translation>
     </message>
@@ -615,14 +607,6 @@
     <message>
         <source>Open Wallet &amp;Configuration File</source>
         <translation>&amp;打開錢包設定檔</translation>
-    </message>
-    <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>&amp;打開Masternode設定檔</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>打開Masternode設定檔</translation>
     </message>
     <message>
         <source>Open a KORE: URI or payment request</source>
@@ -680,13 +664,6 @@
     <message>
         <source>KORE Core</source>
         <translation>KORE Core</translation>
-    </message>
-    </context>
-<context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Address</source>
-        <translation>位址</translation>
     </message>
     </context>
 <context>

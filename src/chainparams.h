@@ -101,21 +101,8 @@ public:
     /** Used if GenerateBitcoins is called with a negative number of threads */
     int32_t                   GetDefaultMinerThreads() const           { return nMinerThreads; }
     int32_t                   GetDefaultPort() const                   { return nDefaultPort; }
-    /** Spork key and Masternode Handling **/
     std::string               GetDevFundPubKey() const                 { return strDevFundPubKey; }
-    std::string               GetMNFundPubKey() const                  { return strMNFundPubKey; }
     int32_t                   GetLastPoWBlock() const                  { return nLastPOWBlock; }
-    int64_t                   GetMasternodeBudgetPaymentCycle() const  { return nMasternodeBudgetPaymentCycle; }
-    int64_t                   GetMasternodeCheckSeconds() const        { return nMasternodeCheckSeconds; }
-    int64_t                   GetMasternodeCoinScore() const           { return nMasternodeCoinScore; }
-    /** The masternode count that we will allow the see-saw reward payments to be off by */
-    int64_t                   GetMasternodeExpirationSeconds() const   { return nMasternodeExpirationSeconds; }
-    int64_t                   GetMasternodeFinalizationWindow() const  { return nMasternodeFinalizationWindow; }
-    int64_t                   GetMasternodeMinConfirmations() const    { return nMasternodeMinConfirmations; }
-    int64_t                   GetMasternodeMinMNBSeconds() const       { return nMasternodeMinMNBSeconds; }
-    int64_t                   GetMasternodeMinMNPSeconds() const       { return nMasternodeMinMNPSeconds; }
-    int64_t                   GetMasternodePingSeconds() const         { return nMasternodePingSeconds; }
-    int64_t                   GetMasternodeRemovalSeconds() const      { return nMasternodeRemovalSeconds; }
     CAmount                   GetMaxMoneyOut() const                   { return nMaxMoneyOut; }
     int32_t                   GetMaxReorganizationDepth() const        { return nMaxReorganizationDepth; }
     int32_t                   GetMaxStakeModifierInterval() const      { return std::min(nCoinMaturity, 64U); }
@@ -125,11 +112,8 @@ public:
     CBaseChainParams::Network GetNetworkID() const                     { return networkID; }
     /** Return the BIP70 network string (main, test or regtest) */
     std::string               GetNetworkIDString() const               { return strNetworkID; }
-    std::string               GetObfuscationPoolDummyAddress() const   { return strObfuscationPoolDummyAddress; }
     int32_t                   GetPoolMaxTransactions() const           { return nPoolMaxTransactions; }
     uint32_t                  GetRuleChangeActivationThreshold() const { return nRuleChangeActivationThreshold; }
-    std::string               GetSporkKey() const                      { return strSporkKey; }
-    int64_t                   GetStartMasternodePayments() const       { return genesis.nTime; }
     int64_t                   GetPastBlocksMax() const                 { return nPastBlocksMax; }
     int64_t                   GetPastBlocksMin() const                 { return nPastBlocksMin; }
     // minimum spacing is maturity - 1
@@ -176,16 +160,6 @@ protected:
     int64_t                    nMaxTipAge;
     uint64_t                   nPruneAfterHeight; // Legacy
     int32_t                    nLastPOWBlock;
-    int64_t                    nMasternodeCheckSeconds;
-    int64_t                    nMasternodeCoinScore;
-    int64_t                    nMasternodeExpirationSeconds;
-    int64_t                    nMasternodeMinConfirmations;
-    int64_t                    nMasternodeMinMNPSeconds;
-    int64_t                    nMasternodeMinMNBSeconds;
-    int64_t                    nMasternodePingSeconds;
-    int64_t                    nMasternodeRemovalSeconds;
-    int64_t                    nMasternodeBudgetPaymentCycle;
-    int64_t                    nMasternodeFinalizationWindow;
     CAmount                    nMaxMoneyOut;
     uint32_t                   nMinerConfirmationWindow;
     int32_t                    nMinerThreads;
@@ -197,13 +171,9 @@ protected:
     uint32_t                   nRuleChangeActivationThreshold;
     int64_t                    nStakeLockInterval;
     uint32_t                   nStakeMinAge;
-    int64_t                    nStartMasternodePayments;
     uint32_t                   nTargetSpacing;
     int64_t                    nTargetSpacingForStake;
     std::string                strDevFundPubKey;
-    std::string                strMNFundPubKey;
-    std::string                strObfuscationPoolDummyAddress;
-    std::string                strSporkKey;
     //! Raw pub key bytes for the broadcast alert signing key.
     std::vector<unsigned char> vAlertPubKey;
     vDeployments_type          vDeployments;

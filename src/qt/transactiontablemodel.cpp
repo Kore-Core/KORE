@@ -335,12 +335,8 @@ QString TransactionTableModel::formatTxType(const TransactionRecord* wtx) const
     switch (wtx->type) {
     case TransactionRecord::RecvWithAddress:
         return tr("Received with");
-    case TransactionRecord::MNReward:
-        return tr("Masternode Reward");
     case TransactionRecord::RecvFromOther:
         return tr("Received from");
-    case TransactionRecord::RecvWithObfuscation:
-        return tr("Received via Obfuscation");
     case TransactionRecord::SendToAddress:
     case TransactionRecord::SendToOther:
         return tr("Sent to");
@@ -350,16 +346,6 @@ QString TransactionTableModel::formatTxType(const TransactionRecord* wtx) const
         return tr("Minted");
     case TransactionRecord::Generated:
         return tr("Mined");
-    case TransactionRecord::ObfuscationDenominate:
-        return tr("Obfuscation Denominate");
-    case TransactionRecord::ObfuscationCollateralPayment:
-        return tr("Obfuscation Collateral Payment");
-    case TransactionRecord::ObfuscationMakeCollaterals:
-        return tr("Obfuscation Make Collateral Inputs");
-    case TransactionRecord::ObfuscationCreateDenominations:
-        return tr("Obfuscation Create Denominations");
-    case TransactionRecord::Obfuscated:
-        return tr("Obfuscated");
 
     default:
         return QString();
@@ -371,9 +357,7 @@ QVariant TransactionTableModel::txAddressDecoration(const TransactionRecord* wtx
     switch (wtx->type) {
     case TransactionRecord::Generated:
     case TransactionRecord::StakeMint:
-    case TransactionRecord::MNReward:
         return QIcon(":/icons/tx_mined");
-    case TransactionRecord::RecvWithObfuscation:
     case TransactionRecord::RecvWithAddress:
     case TransactionRecord::RecvFromOther:
         return QIcon(":/icons/tx_input");
@@ -397,14 +381,10 @@ QString TransactionTableModel::formatTxToAddress(const TransactionRecord* wtx, b
     case TransactionRecord::RecvFromOther:
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::RecvWithAddress:
-    case TransactionRecord::MNReward:
-    case TransactionRecord::RecvWithObfuscation:
     case TransactionRecord::SendToAddress:
     case TransactionRecord::Generated:
     case TransactionRecord::StakeMint:
         return lookupAddress(wtx->address, tooltip);
-    case TransactionRecord::Obfuscated:
-        return lookupAddress(wtx->address, tooltip) + watchAddress;
     case TransactionRecord::SendToOther:
         return QString::fromStdString(wtx->address) + watchAddress;
     case TransactionRecord::SendToSelf:

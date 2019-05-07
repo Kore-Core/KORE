@@ -17,7 +17,6 @@
 #include "script/script_error.h"
 #include "script/sign.h"
 #include "script/standard.h"
-#include "swifttx.h"
 #include "uint256.h"
 #include "utilmoneystr.h"
 #ifdef ENABLE_WALLET
@@ -809,11 +808,6 @@ UniValue sendrawtransaction(const UniValue& params, bool fHelp)
     bool fHaveChain = existingCoins && existingCoins->nHeight < 1000000000;
     if (!fHaveMempool && !fHaveChain) {
         // push to local node and sync with wallets
-        if (fSwiftX) {
-            mapTxLockReq.insert(make_pair(tx.GetHash(), tx));
-            CreateNewLock(tx);
-            RelayTransactionLockReq(tx, true);
-        }
         CValidationState state;
         if (!AcceptToMemoryPool(mempool, state, tx, false, NULL, !fOverrideFees)) {
             if (state.IsInvalid())

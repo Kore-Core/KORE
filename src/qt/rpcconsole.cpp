@@ -398,9 +398,6 @@ void RPCConsole::setClientModel(ClientModel* model)
         setNumBlocks(model->getNumBlocks());
         connect(model, SIGNAL(numBlocksChanged(int)), this, SLOT(setNumBlocks(int)));
 
-        setMasternodeCount(model->getMasternodeCountString());
-        connect(model, SIGNAL(strMasternodesChanged(QString)), this, SLOT(setMasternodeCount(QString)));
-
         updateTrafficStats(model->getTotalBytesRecv(), model->getTotalBytesSent());
         connect(model, SIGNAL(bytesChanged(quint64, quint64)), this, SLOT(updateTrafficStats(quint64, quint64)));
 
@@ -676,11 +673,6 @@ void RPCConsole::setNumBlocks(int count)
         ui->lastBlockTime->setText(clientModel->getLastBlockDate().toString());
 }
 
-void RPCConsole::setMasternodeCount(const QString& strMasternodes)
-{
-    ui->masternodeCount->setText(strMasternodes);
-}
-
 void RPCConsole::on_lineEdit_returnPressed()
 {
     QString cmd = ui->lineEdit->text();
@@ -824,11 +816,6 @@ void RPCConsole::showRepair()
 void RPCConsole::showConfEditor()
 {
     GUIUtil::openConfigfile();
-}
-
-void RPCConsole::showMNConfEditor()
-{
-    GUIUtil::openMNConfigfile();
 }
 
 void RPCConsole::peerSelected(const QItemSelection& selected, const QItemSelection& deselected)

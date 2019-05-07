@@ -3,8 +3,18 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 DIST_SUBDIRS = secp256k1 univalue
-TOR_LIBS=  -ltor -lor -lor-ctime -lor-crypto -lor-event -lor-trunnel \
-	-lcurve25519_donna -led25519_donna -led25519_ref10 -lkeccak-tiny
+TOR_LIBS = \
+  ../tor/src/or/libtor.a \
+  ../tor/src/common/libor.a \
+  ../tor/src/common/libor-ctime.a \
+  ../tor/src/common/libor-crypto.a \
+  ../tor/src/common/libor-event.a \
+  ../tor/src/trunnel/libor-trunnel.a \
+  ../tor/src/common/libcurve25519_donna.a \
+  ../tor/src/ext/ed25519/donna/libed25519_donna.a \
+  ../tor/src/ext/ed25519/ref10/libed25519_ref10.a \
+  ../tor/src/ext/keccak-tiny/libkeccak-tiny.a
+
 LIBS+= -lssl -lcrypto
 
 if TARGET_WINDOWS
@@ -95,7 +105,6 @@ endif
 .PHONY: FORCE
 # kore core #
 BITCOIN_CORE_H = \
-  activemasternode.h \
   addrman.h \
   alert.h \
   allocators.h \
@@ -122,8 +131,6 @@ BITCOIN_CORE_H = \
   primitives/transaction.h \
   core_io.h \
   crypter.h \
-  obfuscation.h \
-  obfuscation-relay.h \
   db.h \
   hash.h \
   httprpc.h \
@@ -133,7 +140,6 @@ BITCOIN_CORE_H = \
   invalid_outpoints.json.h \
   invalid_serials.json.h \
   kernel.h \
-  swifttx.h \
   key.h \
   keystore.h \
   legacy/consensus/merkle.h \
@@ -142,12 +148,6 @@ BITCOIN_CORE_H = \
   leveldbwrapper.h \
   limitedmap.h \
   main.h \
-  masternode.h \
-  masternode-payments.h \
-  masternode-budget.h \
-  masternode-sync.h \
-  masternodeman.h \
-  masternodeconfig.h \
   memusage.h \
   merkleblock.h \
   miner.h \
@@ -176,8 +176,6 @@ BITCOIN_CORE_H = \
   script/standard.h \
   script/script_error.h \
   serialize.h \
-  spork.h \
-  sporkdb.h \
   stakeinput.h \
   streams.h \
   support/csviterator.h \
@@ -236,15 +234,12 @@ libbitcoin_server_a_SOURCES = \
   pow.cpp \
   rest.cpp \
   rpc/rpcblockchain.cpp \
-  rpc/rpcmasternode-budget.cpp \
-  rpc/rpcmasternode.cpp \
   rpc/rpcmining.cpp \
   rpc/rpcmisc.cpp \
   rpc/rpcnet.cpp \
   rpc/rpcrawtransaction.cpp \
   rpcserver.cpp \
   script/sigcache.cpp \
-  sporkdb.cpp \
   timedata.cpp \
   torcontrol.cpp \
   txdb.cpp \
@@ -267,19 +262,9 @@ endif
 libbitcoin_wallet_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
 libbitcoin_wallet_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
 libbitcoin_wallet_a_SOURCES = \
-  activemasternode.cpp \
   bip38.cpp \
-  obfuscation.cpp \
-  obfuscation-relay.cpp \
   db.cpp \
   crypter.cpp \
-  swifttx.cpp \
-  masternode.cpp \
-  masternode-budget.cpp \
-  masternode-payments.cpp \
-  masternode-sync.cpp \
-  masternodeconfig.cpp \
-  masternodeman.cpp \
   rpc/rpcdump.cpp \
   rpc/rpcwallet.cpp \
   kernel.cpp \
@@ -367,8 +352,6 @@ libbitcoin_common_a_SOURCES = \
   script/sign.cpp \
   script/standard.cpp \
   script/script_error.cpp \
-  spork.cpp \
-  sporkdb.cpp \
   $(BITCOIN_CORE_H)
 
 # util: shared between all executables.

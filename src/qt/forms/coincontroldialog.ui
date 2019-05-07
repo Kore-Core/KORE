@@ -500,11 +500,6 @@
      </column>
      <column>
       <property name="text">
-       <string>Obfuscation Rounds</string>
-      </property>
-     </column>
-     <column>
-      <property name="text">
        <string/>
       </property>
      </column>

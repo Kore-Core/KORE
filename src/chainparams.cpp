@@ -130,18 +130,6 @@ public:
         fRequireStandard                              = true;
         fSkipProofOfWorkCheck                         = false;
         nDefaultPort                                  = 10743;
-        nBudgetFeeConfirmations                       = 6;                   // Number of confirmations for the finalization fee
-        nBudgetVoteUpdate                             = 60 * 60;             // can only change vote after 1 hour
-        nMasternodeBudgetPaymentCycle                 = 60 * 24 * 30 * 1;    // Amount of blocks in a months period of time using 1 minute per block
-        nMasternodeCheckSeconds                       = 5;   
-        nMasternodeCoinScore                          = 499;   
-        nMasternodeExpirationSeconds                  = 120 * 60;
-        nMasternodeFinalizationWindow                 = ((GetMasternodeBudgetPaymentCycle() / 30) * 2); // Submit final budget during the last 2 days (2880 blocks) before payment for Mainnet
-        nMasternodeMinConfirmations                   = 15;
-        nMasternodeMinMNBSeconds                      = 5 * 60;
-        nMasternodeMinMNPSeconds                      = 10 * 60;
-        nMasternodePingSeconds                        = 5 * 60;
-        nMasternodeRemovalSeconds                     = 130 * 60;
         nCoinMaturity                                 = 25;
         nMaxMoneyOut                                  = MAX_MONEY;
         nMaxReorganizationDepth                       = 25;
@@ -161,9 +149,6 @@ public:
         nHeightToFork                                 = 900000;              //Height to perform the fork
         nLastPOWBlock                                 = 1000;
         strDevFundPubKey 				 			  = "04D410C4A7FEC6DBF6FEDC9721104ADA1571D5E3E4791085EFC083A9F3F4C007D240A6A647DDA0CA1466641B0739A86A67B97AC48484FC7CA88257804B7CE52ED2";
-        strMNFundPubKey                               = "04035CCA0B35BFACCD9D4FEC066015D1EBF34F7ED99E4ACABF21FEB7DE731F05AD6F303D1FCC1DD37A18109957169275E4E6E7A8AF88B8A20CC64964EB9750F044";
-        strSporkKey      				 			  = "0427E31B51989DB4DFEAB8C3901FB1862A621E6B0D4CF556E5C9AAD7283A46C915EC4508FB4F248534C3A03FC0475ED3785086B9C217E0F42ED4C8BF80ED2296C8";
-        strObfuscationPoolDummyAddress 	 			  = "KWFvN4Gb55dzG95cq3k5jXFmNVkJLftyjZ";
         vAlertPubKey                                  = ParseHex("042b0fb78026380244cc458a914dae461899b121f53bc42105d134158b9773e3fdadca67ca3015dc9c4ef9b9df91f2ef05b890a15cd2d2b85930d37376b2196002");
         
         // Deployment of BIP68, BIP112, and BIP113.
@@ -242,9 +227,6 @@ public:
         nLastPOWBlock                                 = 35;
         vAlertPubKey                                  = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         strDevFundPubKey                              = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
-        strMNFundPubKey                               = "0426FAB926016F045049A8EAABF5FDAF13C130014DF11523A81B08AA8A2DB42BEA23F437FFB6852B8AEB71E1D6155977B6C5E44955BE952777E99267CD12F66FC8";
-        strSporkKey                                   = "04ca99e36f198eedd11b386cf2127a036ec1f0028c2b2a5ec0ff71aa2045c1c4494d45013467a5653eb64442a4d8f93ca62e00f5d9004a3a6469e72b8516ed4a99";
-        strObfuscationPoolDummyAddress                = "jPt4RY7Nfs5XCWqCBmmDWAUza475KR42iU";
         // Deployment of BIP68, BIP112, and BIP113.
         vDeployments[DEPLOYMENT_CSV].bit              = 0;
         vDeployments[DEPLOYMENT_CSV].nStartTime       = 0;
@@ -254,11 +236,11 @@ public:
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
         
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1557177518, 1, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1557262736, 1, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
 
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x0e741ded556140c3f781244a7436cba82de6d88033a151c379d1fa70dbba0be2"));
-        assert(genesis.hashMerkleRoot == uint256S("0x22f6943fe2843a61eebffe40ae510e1892a5fad96cfeb93a344c9861a86672b7"));
+        assert(nHashGenesisBlock == uint256S("0x13d6a98407dee59e9cacda857458eec89d69d22f358a33c01047ca0a91e382c1"));
+        assert(genesis.hashMerkleRoot == uint256S("0x096ef948c2ae1f0397df57c46cdfce6dfe99a6fe8c60178149f7b415868fb658"));
         
         vFixedSeeds.clear();
         vSeeds.clear();

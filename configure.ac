@@ -1,9 +1,9 @@
 dnl require autoconf 2.60 (AS_ECHO/AS_ECHO_N)
-AC_PREREQ([2.60])
+AC_PREREQ([2.69])
 define(_CLIENT_VERSION_MAJOR, 0)
 define(_CLIENT_VERSION_MINOR, 13)
 define(_CLIENT_VERSION_REVISION, 0)
-define(_CLIENT_VERSION_BUILD, 24)
+define(_CLIENT_VERSION_BUILD, 25)
 define(_CLIENT_VERSION_IS_RELEASE, false)
 define(_COPYRIGHT_YEAR, 2019)
 AC_INIT([Kore Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[www.kore.org],[kore])
@@ -11,6 +11,10 @@ AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([src/config/bitcoin-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
+
+# Configuring tor in order to compile correctly
+# check if the --prefix parameter is used!
+AX_SUBDIRS_CONFIGURE([tor], [ [--enable-lzma=no], [--disable-unittests], [--disable-tool-name-check], [--disable-seccomp], [--disable-asciidoc], [--with-openssl-dir=$($PKG_CONFIG --variable=libdir zlib libevent openssl)] ])
 
 BITCOIN_DAEMON_NAME=kored
 BITCOIN_GUI_NAME=kore-qt

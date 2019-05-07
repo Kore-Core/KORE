@@ -55,7 +55,7 @@ public slots:
     SendCoinsEntry* addEntry();
     void updateTabsAndLabels();
     void setBalance(const CAmount& balance, const CAmount& unconfirmedBalance, 
-		            const CAmount& immatureBalance, const CAmount& stakedBalance, const CAmount& anonymizedBalance, const CAmount& watchBalance, 
+		            const CAmount& immatureBalance, const CAmount& stakedBalance, const CAmount& watchBalance, 
 		            const CAmount& watchUnconfirmedBalance, const CAmount& watchImmatureBalance);
 
 private:
@@ -79,7 +79,6 @@ private slots:
     void on_buttonMinimizeFee_clicked();
     void removeEntry(SendCoinsEntry* entry);
     void updateDisplayUnit();
-    void updateSwiftTX();
     void coinControlFeatureChanged(bool);
     void coinControlButtonClicked();
     void coinControlChangeChecked(int);

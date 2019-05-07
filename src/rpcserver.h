@@ -289,36 +289,6 @@ extern UniValue invalidateblock(const UniValue& params, bool fHelp);
 extern UniValue reconsiderblock(const UniValue& params, bool fHelp);
 extern UniValue getchaintxstats(const UniValue& params, bool fHelp);
 
-extern UniValue getpoolinfo(const UniValue& params, bool fHelp); // in rpcmasternode.cpp
-extern UniValue masternode(const UniValue& params, bool fHelp);
-extern UniValue listmasternodes(const UniValue& params, bool fHelp);
-extern UniValue getmasternodecount(const UniValue& params, bool fHelp);
-extern UniValue createmasternodebroadcast(const UniValue& params, bool fHelp);
-extern UniValue decodemasternodebroadcast(const UniValue& params, bool fHelp);
-extern UniValue relaymasternodebroadcast(const UniValue& params, bool fHelp);
-extern UniValue masternodeconnect(const UniValue& params, bool fHelp);
-extern UniValue masternodecurrent(const UniValue& params, bool fHelp);
-extern UniValue masternodedebug(const UniValue& params, bool fHelp);
-extern UniValue startmasternode(const UniValue& params, bool fHelp);
-extern UniValue createmasternodekey(const UniValue& params, bool fHelp);
-extern UniValue getmasternodeoutputs(const UniValue& params, bool fHelp);
-extern UniValue listmasternodeconf(const UniValue& params, bool fHelp);
-extern UniValue getmasternodestatus(const UniValue& params, bool fHelp);
-extern UniValue getmasternodewinners(const UniValue& params, bool fHelp);
-extern UniValue getmasternodescores(const UniValue& params, bool fHelp);
-
-extern UniValue mnbudget(const UniValue& params, bool fHelp); // in rpcmasternode-budget.cpp
-extern UniValue preparebudget(const UniValue& params, bool fHelp);
-extern UniValue submitbudget(const UniValue& params, bool fHelp);
-extern UniValue mnbudgetvote(const UniValue& params, bool fHelp);
-extern UniValue getbudgetvotes(const UniValue& params, bool fHelp);
-extern UniValue getnextsuperblock(const UniValue& params, bool fHelp);
-extern UniValue getbudgetprojection(const UniValue& params, bool fHelp);
-extern UniValue getbudgetinfo(const UniValue& params, bool fHelp);
-extern UniValue mnbudgetrawvote(const UniValue& params, bool fHelp);
-extern UniValue mnfinalbudget(const UniValue& params, bool fHelp);
-extern UniValue checkbudgets(const UniValue& params, bool fHelp);
-
 extern UniValue getinfo(const UniValue& params, bool fHelp); // in rpcmisc.cpp
 extern UniValue mnsync(const UniValue& params, bool fHelp);
 extern UniValue spork(const UniValue& params, bool fHelp);

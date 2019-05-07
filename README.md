@@ -3,11 +3,8 @@ KORE Core integration/staging repository
 
 [![Build Status](https://travis-ci.org/KORE-Project/KORE.svg?branch=master)](https://travis-ci.org/KORE-Project/KORE) [![GitHub version](https://badge.fury.io/gh/KORE-Project%2FKORE.svg)](https://badge.fury.io/gh/KORE-Project%2FKORE)
 
-KORE is an open source crypto-currency focused on fast private transactions with low transaction fees & environmental footprint.  It utilizes a custom Proof of Stake protocol for securing its network and uses an innovative variable seesaw reward mechanism that dynamically balances 90% of its block reward size between masternodes and staking nodes and 10% dedicated for budget proposals. The goal of KORE is to achieve a decentralized sustainable crypto currency with near instant full-time private transactions, fair governance and community intelligence.
+KORE is an open source crypto-currency focused on fast private transactions with low transaction fees & environmental footprint.  It utilizes a custom Proof of Stake protocol for securing its network and uses an innovative variable seesaw reward mechanism that dynamically balances 90% of its block reward size between masternode fund and staking nodes and 10% dedicated for budget proposals. The goal of KORE is to achieve a decentralized sustainable crypto currency with near instant full-time private transactions, fair governance and community intelligence.
 
-- Anonymized transactions using the [_Zerocoin Protocol_](http://www.kore.org/zpiv).
-- Fast transactions featuring guaranteed zero confirmation transactions, we call it _SwiftX_.
-- Decentralized blockchain voting utilizing Masternode technology to form a DAO. The blockchain will distribute monthly treasury funds based on successful proposals submitted by the community and voted on by the DAO.
 
 More information at [kore.org](http://www.kore.org) Visit our ANN thread at [BitcoinTalk](https://bitcointalk.org/index.php?topic=2096416.0
 
@@ -35,7 +32,7 @@ More information at [kore.org](http://www.kore.org) Visit our ANN thread at [Bit
 ### PoW Rewards Breakdown
 
 <table>
-<th>Block Height</th><th>Masternodes</th><th>Miner</th><th>Budget</th>
+<th>Block Height</th><th>Masternode Fund</th><th>Miner</th><th>Budget</th>
 <tr><td>2-43200</td><td>20% (50 KORE)</td><td>80% (200 KORE)</td><td>N/A</td></tr>
 <tr><td>43201-151200</td><td>20% (50 KORE)</td><td>70% (200 KORE)</td><td>10% (25 KORE)</td></tr>
 <tr><td>151201-259200</td><td>45% (22.5 KORE)</td><td>45% (22.5 KORE)</td><td>10% (5 KORE)</td></tr>
@@ -102,6 +99,9 @@ make
 ```bash
 Here are some testnet onion address.
 you can use the console from kore-qt and give the command to add
-addnode a3y4tqttfcj7dvf3.onion onetry
-addnode mnzwvlk7lme5yuht.onion onetry
+addnode wi2lfbdfpj5zowoc.onion onetry
+addnode rho4ruzngsxdh4j7.onion onetry
+addnode bonh4mbx52trursl.onion onetry
+addnode qsozfddbfh6cl2rv.onion onetry
+
 ```

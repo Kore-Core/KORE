@@ -115,9 +115,6 @@ void openDebugLogfile();
 // Open kore.conf
 void openConfigfile();
 
-// Open masternode.conf
-void openMNConfigfile();
-
 // Browse backup folder
 void showBackups();
 
@@ -183,7 +180,7 @@ private slots:
 
 /**
      * Extension to QTableWidgetItem that facilitates proper ordering for "DHMS"
-     * strings (primarily used in the masternode's "active" listing).
+     * strings.
      */
 class DHMSTableWidgetItem : public QTableWidgetItem
 {

@@ -19,7 +19,6 @@
 #include "wallet.h"
 #include "walletdb.h"
 
-#include "spork.h"
 #include <boost/assign/list_of.hpp>
 #include <boost/thread/thread.hpp>
 #include <stdint.h>
@@ -46,8 +45,8 @@ void EnsureWalletIsUnlocked(bool fAllowAnonOnly)
 
 void WalletTxToJSON(const CWalletTx& wtx, UniValue& entry)
 {
-    int confirms = wtx.GetDepthInMainChain(false);
-    int confirmsTotal = GetIXConfirmations(wtx.GetHash()) + confirms;
+    int confirms = wtx.GetDepthInMainChain();
+    int confirmsTotal = confirms;
     entry.push_back(Pair("confirmations", confirmsTotal));
     entry.push_back(Pair("bcconfirmations", confirms));
     if (wtx.IsCoinBase() || wtx.IsCoinStake())
@@ -1105,14 +1104,12 @@ UniValue addmultisigaddress(const UniValue& params, bool fHelp)
 struct tallyitem {
     CAmount nAmount;
     int nConf;
-    int nBCConf;
     vector<uint256> txids;
     bool fIsWatchonly;
     tallyitem()
     {
         nAmount = 0;
         nConf = std::numeric_limits<int>::max();
-        nBCConf = std::numeric_limits<int>::max();
         fIsWatchonly = false;
     }
 };
@@ -1143,7 +1140,6 @@ UniValue ListReceived(const UniValue& params, bool fByAccounts)
             continue;
 
         int nDepth = wtx.GetDepthInMainChain();
-        int nBCDepth = wtx.GetDepthInMainChain(false);
         if (nDepth < nMinDepth)
             continue;
 
@@ -1159,7 +1155,6 @@ UniValue ListReceived(const UniValue& params, bool fByAccounts)
             tallyitem& item = mapTally[address];
             item.nAmount += txout.nValue;
             item.nConf = min(item.nConf, nDepth);
-            item.nBCConf = min(item.nBCConf, nBCDepth);
             item.txids.push_back(wtx.GetHash());
             if (mine & ISMINE_WATCH_ONLY)
                 item.fIsWatchonly = true;
@@ -1183,7 +1178,6 @@ UniValue ListReceived(const UniValue& params, bool fByAccounts)
         if (it != mapTally.end()) {
             nAmount = (*it).second.nAmount;
             nConf = (*it).second.nConf;
-            nBCConf = (*it).second.nBCConf;
             fIsWatchonly = (*it).second.fIsWatchonly;
         }
 
@@ -1191,7 +1185,6 @@ UniValue ListReceived(const UniValue& params, bool fByAccounts)
             tallyitem& item = mapAccountTally[strAccount];
             item.nAmount += nAmount;
             item.nConf = min(item.nConf, nConf);
-            item.nBCConf = min(item.nBCConf, nBCConf);
             item.fIsWatchonly = fIsWatchonly;
         } else {
             UniValue obj(UniValue::VOBJ);
@@ -1217,14 +1210,12 @@ UniValue ListReceived(const UniValue& params, bool fByAccounts)
         for (map<string, tallyitem>::iterator it = mapAccountTally.begin(); it != mapAccountTally.end(); ++it) {
             CAmount nAmount = (*it).second.nAmount;
             int nConf = (*it).second.nConf;
-            int nBCConf = (*it).second.nBCConf;
             UniValue obj(UniValue::VOBJ);
             if ((*it).second.fIsWatchonly)
                 obj.push_back(Pair("involvesWatchonly", true));
             obj.push_back(Pair("account", (*it).first));
             obj.push_back(Pair("amount", ValueFromAmount(nAmount)));
             obj.push_back(Pair("confirmations", (nConf == std::numeric_limits<int>::max() ? 0 : nConf)));
-            obj.push_back(Pair("bcconfirmations", (nBCConf == std::numeric_limits<int>::max() ? 0 : nBCConf)));
             ret.push_back(obj);
         }
     }
@@ -1655,7 +1646,7 @@ UniValue listsinceblock(const UniValue& params, bool fHelp)
     for (map<uint256, CWalletTx>::iterator it = pwalletMain->mapWallet.begin(); it != pwalletMain->mapWallet.end(); it++) {
         CWalletTx tx = (*it).second;
 
-        if (depth == -1 || tx.GetDepthInMainChain(false) < depth)
+        if (depth == -1 || tx.GetDepthInMainChain() < depth)
             ListTransactions(tx, "*", 0, true, transactions, filter);
     }
 
@@ -2283,7 +2274,6 @@ UniValue printMultiSend()
     UniValue ret(UniValue::VARR);
     UniValue act(UniValue::VOBJ);
     act.push_back(Pair("MultiSendStake Activated?", pwalletMain->fMultiSendStake));
-    act.push_back(Pair("MultiSendMasternode Activated?", pwalletMain->fMultiSendMasternodeReward));
     ret.push_back(act);
 
     if (pwalletMain->vDisabledAddresses.size() >= 1) {
@@ -2379,26 +2369,7 @@ UniValue multisend(const UniValue& params, bool fHelp)
 
             if (CBitcoinAddress(pwalletMain->vMultiSend[0].first).IsValid()) {
                 pwalletMain->fMultiSendStake = true;
-                if (!walletdb.WriteMSettings(true, pwalletMain->fMultiSendMasternodeReward, pwalletMain->nLastMultiSendHeight)) {
-                    UniValue obj(UniValue::VOBJ);
-                    obj.push_back(Pair("error", "MultiSend activated but writing settings to DB failed"));
-                    UniValue arr(UniValue::VARR);
-                    arr.push_back(obj);
-                    arr.push_back(printMultiSend());
-                    return arr;
-                } else
-                    return printMultiSend();
-            }
-
-            throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to activate MultiSend, check MultiSend vector");
-        } else if (strCommand == "enablemasternode" || strCommand == "activatemasternode") {
-            if (pwalletMain->vMultiSend.size() < 1)
-                throw JSONRPCError(RPC_INVALID_REQUEST, "Unable to activate MultiSend, check MultiSend vector");
-
-            if (CBitcoinAddress(pwalletMain->vMultiSend[0].first).IsValid()) {
-                pwalletMain->fMultiSendMasternodeReward = true;
-
-                if (!walletdb.WriteMSettings(pwalletMain->fMultiSendStake, true, pwalletMain->nLastMultiSendHeight)) {
+                if (!walletdb.WriteMSettings(true, pwalletMain->nLastMultiSendHeight)) {
                     UniValue obj(UniValue::VOBJ);
                     obj.push_back(Pair("error", "MultiSend activated but writing settings to DB failed"));
                     UniValue arr(UniValue::VARR);
@@ -2412,7 +2383,7 @@ UniValue multisend(const UniValue& params, bool fHelp)
             throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Unable to activate MultiSend, check MultiSend vector");
         } else if (strCommand == "disable" || strCommand == "deactivate") {
             pwalletMain->setMultiSendDisabled();
-            if (!walletdb.WriteMSettings(false, false, pwalletMain->nLastMultiSendHeight))
+            if (!walletdb.WriteMSettings(false, pwalletMain->nLastMultiSendHeight))
                 throw JSONRPCError(RPC_DATABASE_ERROR, "MultiSend deactivated but writing settings to DB failed");
 
             return printMultiSend();
@@ -2470,7 +2441,6 @@ UniValue multisend(const UniValue& params, bool fHelp)
             " print - displays the current MultiSend vector \n"
             " clear - deletes the current MultiSend vector \n"
             " enablestake/activatestake - activates the current MultiSend vector to be activated on stake rewards\n"
-            " enablemasternode/activatemasternode - activates the current MultiSend vector to be activated on masternode rewards\n"
             " disable/deactivate - disables the current MultiSend vector \n"
             " delete <Address #> - deletes an address from the MultiSend vector \n"
             " disable <address> - prevents a specific address from sending MultiSend transactions\n"

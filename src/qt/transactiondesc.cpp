@@ -33,54 +33,6 @@ QString TransactionDesc::FormatTxStatus(const CWalletTx& wtx)
             return tr("Open for %n more block(s)", "", wtx.nLockTime - chainActive.Height());
         else
             return tr("Open until %1").arg(GUIUtil::dateTimeStr(wtx.nLockTime));
-    } else {
-        int signatures = wtx.GetTransactionLockSignatures();
-        QString strUsingIX = "";
-        if (signatures >= 0) {
-            if (signatures >= SWIFTTX_SIGNATURES_REQUIRED) {
-                int nDepth = wtx.GetDepthInMainChain();
-                if (nDepth < 0)
-                    return tr("conflicted");
-                else if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
-                    return tr("%1/offline (verified via SwiftTX)").arg(nDepth);
-                else if (nDepth < 6)
-                    return tr("%1/confirmed (verified via SwiftTX)").arg(nDepth);
-                else
-                    return tr("%1 confirmations (verified via SwiftTX)").arg(nDepth);
-            } else {
-                if (!wtx.IsTransactionLockTimedOut()) {
-                    int nDepth = wtx.GetDepthInMainChain();
-                    if (nDepth < 0)
-                        return tr("conflicted");
-                    else if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
-                        return tr("%1/offline (SwiftTX verification in progress - %2 of %3 signatures)").arg(nDepth).arg(signatures).arg(SWIFTTX_SIGNATURES_TOTAL);
-                    else if (nDepth < 6)
-                        return tr("%1/confirmed (SwiftTX verification in progress - %2 of %3 signatures )").arg(nDepth).arg(signatures).arg(SWIFTTX_SIGNATURES_TOTAL);
-                    else
-                        return tr("%1 confirmations (SwiftTX verification in progress - %2 of %3 signatures)").arg(nDepth).arg(signatures).arg(SWIFTTX_SIGNATURES_TOTAL);
-                } else {
-                    int nDepth = wtx.GetDepthInMainChain();
-                    if (nDepth < 0)
-                        return tr("conflicted");
-                    else if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
-                        return tr("%1/offline (SwiftTX verification failed)").arg(nDepth);
-                    else if (nDepth < 6)
-                        return tr("%1/confirmed (SwiftTX verification failed)").arg(nDepth);
-                    else
-                        return tr("%1 confirmations").arg(nDepth);
-                }
-            }
-        } else {
-            int nDepth = wtx.GetDepthInMainChain();
-            if (nDepth < 0)
-                return tr("conflicted");
-            else if (GetAdjustedTime() - wtx.nTimeReceived > 2 * 60 && wtx.GetRequestCount() == 0)
-                return tr("%1/offline").arg(nDepth);
-            else if (nDepth < 6)
-                return tr("%1/unconfirmed").arg(nDepth);
-            else
-                return tr("%1 confirmations").arg(nDepth);
-        }
     }
 }
 

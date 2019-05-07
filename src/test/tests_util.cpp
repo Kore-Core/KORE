@@ -1174,7 +1174,6 @@ void GeneratePOWLegacyBlocks(int startBlock, int endBlock, CWallet* pwallet, CSc
         BOOST_CHECK(chainActive.Tip()->nHeight == lastBlock + 1);
         // lets check if the block was created and if the balance is correct
         CAmount bValue = GetBlockValue(chainActive.Tip()->nHeight);
-        // 10% to dev fund, we don't have masternode
         if(fDebug) {
             LogPrintf("Checking balance is %s \n", (pwallet->GetBalance() + pwallet->GetImmatureBalance() + pwallet->GetUnconfirmedBalance() == oldBalance + bValue * 0.9 ? "OK" : "NOK"));
         }

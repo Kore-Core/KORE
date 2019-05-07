@@ -8,7 +8,6 @@
 #include "clientversion.h"
 #include "init.h"
 #include "main.h"
-#include "masternodeconfig.h"
 #include "noui.h"
 #include "scheduler.h"
 #include "rpcserver.h"
@@ -100,13 +99,6 @@ bool AppInit(int argc, char* argv[])
             fprintf(stderr, "Error: Invalid combination of -regtest and -testnet.\n");
             return false;
         }
-
-        // parse masternode.conf
-        // std::string strErr;
-        // if (!masternodeConfig.read(strErr)) {
-        //     fprintf(stderr, "Error reading masternode configuration file: %s\n", strErr.c_str());
-        //     return false;
-        // }
 
         // Command-line RPC
         bool fCommandLine = false;

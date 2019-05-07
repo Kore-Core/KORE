@@ -335,13 +335,6 @@
     <name>Intro</name>
     </context>
 <context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Address</source>
-        <translation>Dirección</translation>
-    </message>
-    </context>
-<context>
     <name>MultiSendDialog</name>
     <message>
         <source>Alt+A</source>

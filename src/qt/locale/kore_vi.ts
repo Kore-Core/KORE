@@ -111,9 +111,6 @@
     <name>Intro</name>
     </context>
 <context>
-    <name>MasternodeList</name>
-    </context>
-<context>
     <name>MultiSendDialog</name>
     </context>
 <context>

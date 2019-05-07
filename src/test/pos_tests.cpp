@@ -27,7 +27,6 @@ BOOST_AUTO_TEST_SUITE(pos_tests)
 // #define LOG_INTEGRATION_TESTS
 
 static const string strSecret("5HxWvvfubhXpYYpS3tJkw6fq9jE9j18THftkZjHHfmFiWtmAbrj");
-static const int MASTERNODES_AVAILABLE = 20;
 
 static int WALLETS_AVAILABLE = 100;
 static CWallet* wallets = new CWallet[WALLETS_AVAILABLE];
@@ -39,9 +38,6 @@ static uint32_t genesisTime;
 int blockCount = 200;
 int lastPoSWallet = -1;
 int nextToLastPoSWallet = -1;
-
-static CAmount* masternodes = new CAmount[MASTERNODES_AVAILABLE];
-static int currMasternode = 0;
 
 static std::map<int, int> lastBlockStaked;
 
@@ -159,15 +155,6 @@ bool ProcessBlockFound(CBlock* pblock, CWallet& wallet)
     }
 
     return true;
-}
-
-void UpdateMasternodeBalance(CAmount amount)
-{
-    if (currMasternode > MASTERNODES_AVAILABLE - 1)
-        currMasternode = 0;
-
-    masternodes[currMasternode] += amount;
-    currMasternode++;
 }
 
 void StartPreMineAndWalletAllocation()
@@ -371,7 +358,6 @@ BOOST_AUTO_TEST_CASE(pos_integration)
 #endif
 
     delete[] wallets;
-    delete[] masternodes;
 }
 
 #endif

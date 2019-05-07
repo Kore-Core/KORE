@@ -661,14 +661,6 @@
         <translation>&amp;Поверителност</translation>
     </message>
     <message>
-        <source>&amp;Masternodes</source>
-        <translation>&amp;Мастърноуд</translation>
-    </message>
-    <message>
-        <source>Browse masternodes</source>
-        <translation>Разгледай мастърноудове</translation>
-    </message>
-    <message>
         <source>&amp;About KORE Core</source>
         <translation>&amp;Относно KORE Ядрото</translation>
     </message>
@@ -707,14 +699,6 @@
     <message>
         <source>Open Wallet &amp;Configuration File</source>
         <translation>Отвори &amp;Конфигурационния Файл на Портфейла</translation>
-    </message>
-    <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>Отвори &amp;Мастърноуд Конфигурационния Файл</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>Отвори Мастърноуд конфигурационния файл</translation>
     </message>
     <message>
         <source>Open a KORE: URI or payment request</source>
@@ -1323,109 +1307,6 @@ Address: %4
     </message>
 </context>
 <context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Form</source>
-        <translation>От</translation>
-    </message>
-    <message>
-        <source>MASTERNODES</source>
-        <translation>ГЛАВНИ ВЪЗЛИ</translation>
-    </message>
-    <message>
-        <source>Note: Status of your masternodes in local wallet can potentially be slightly incorrect.&lt;br /&gt;Always wait for wallet to sync additional data and then double check from another node&lt;br /&gt;if your node should be running but you still see "MISSING" in "Status" field.</source>
-        <translation>Внимание: Състоянието на Вашите мастърноудове в локалния портфейла може би да се показва леко некоректно. &lt;br /&gt;Винаги изчакайте за портфейла да се синхронизира напълно и после проверете с друг ноуд &lt;br /&gt;ако Вашия ноуд работи, но получавате "ЛИПСВАЩ" в полето за "Състояние".</translation>
-    </message>
-    <message>
-        <source>Alias</source>
-        <translation>Псевдоним</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Адрес</translation>
-    </message>
-    <message>
-        <source>Protocol</source>
-        <translation>Протокол</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Състояние</translation>
-    </message>
-    <message>
-        <source>Active</source>
-        <translation>Активен</translation>
-    </message>
-    <message>
-        <source>Last Seen (UTC)</source>
-        <translation>Последно видян (GMT)</translation>
-    </message>
-    <message>
-        <source>Pubkey</source>
-        <translation>Публичен адрес</translation>
-    </message>
-    <message>
-        <source>S&amp;tart alias</source>
-        <translation>&amp;Започни псевдоним</translation>
-    </message>
-    <message>
-        <source>Start &amp;all</source>
-        <translation>Започни &amp;всички</translation>
-    </message>
-    <message>
-        <source>Start &amp;MISSING</source>
-        <translation>Започни &amp;ЛИПСВАЩ</translation>
-    </message>
-    <message>
-        <source>&amp;Update status</source>
-        <translation>&amp;Обнови състояние</translation>
-    </message>
-    <message>
-        <source>Status will be updated automatically in (sec):</source>
-        <translation>Състоянието ще се обнови автоматично след (сек): </translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation>0</translation>
-    </message>
-    <message>
-        <source>Start alias</source>
-        <translation>Започни псевдоним</translation>
-    </message>
-    <message>
-        <source>Confirm masternode start</source>
-        <translation>Потвърди стартиране на мастърноуда</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start masternode %1?</source>
-        <translation>Сигурни ли сте, че искате да стартирате мастърноуд %1?</translation>
-    </message>
-    <message>
-        <source>Confirm all masternodes start</source>
-        <translation>Потвърдете започването на всички мастърноудове</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start ALL masternodes?</source>
-        <translation>Сигурни ли сте, че желате да стартирате ВСИЧКИ мастърноудове?</translation>
-    </message>
-    <message>
-        <source>Command is not available right now</source>
-        <translation>Тази команда не е разрешена в момента</translation>
-    </message>
-    <message>
-        <source>You can't use this command until masternode list is synced</source>
-        <translation>Тази команда не е разрешена преди списъка с мастърноудове да е напълно синхронизиран.</translation>
-    </message>
-    <message>
-        <source>Confirm missing masternodes start</source>
-        <translation>Потвърдете стартиране на липсващите мастърноудове</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start MISSING masternodes?</source>
-        <translation>Сигурни ли сте, че искате да стартирате ЛИПСВАЩИТЕ мастърноудове?</translation>
-    </message>
-</context>
-<context>
     <name>MultiSendDialog</name>
     <message>
         <source>MultiSend</source>
@@ -1444,11 +1325,11 @@ Address: %4
         <translation>Въведете адреса на Получателя</translation>
     </message>
     <message>
-        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other KORE addresses after it matures.
+        <source>MultiSend allows you to automatically send up to 100% of your stake reward to a list of other KORE addresses after it matures.
 To Add: enter percentage to give and KORE address to add to the MultiSend vector.
 To Delete: Enter address to delete and press delete.
 MultiSend will not be activated unless you have clicked Activate</source>
-        <translation>МултиИзпращане Ви позволява автоматично да изпращате до 100% от вашите стейк или мастърноуд възнаграждения към списък от други KORE адреси.
+        <translation>МултиИзпращане Ви позволява автоматично да изпращате до 100% от вашите стейк възнаграждения към списък от други KORE адреси.
 Да Добавите: въведете процент и задайте KORE адрес към вектора за МултиИзпращане
 Да Прамахнете: Въведете адрес за изстриване и натиснете истрий (del).
 МултиИзпращането няма да бъде активирано докато не кликнете "Активирай"</translation>
@@ -1528,10 +1409,6 @@ MultiSend will not be activated unless you have clicked Activate</source>
     <message>
         <source>Send For Stakes</source>
         <translation>Изпрати за Стейк</translation>
-    </message>
-    <message>
-        <source>Send For Masternode Rewards</source>
-        <translation>Изпрати за Мастърноуд награди</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1776,18 +1653,6 @@ Please be patient after clicking import.</source>
         <translation>Изберете ниво на поверителност.</translation>
     </message>
     <message>
-        <source>Use 2 separate masternodes to mix funds up to 10000 KORE</source>
-        <translation>Използвай 2 различни мастърноуда за смесване на средства над 10000 KORE</translation>
-    </message>
-    <message>
-        <source>Use 8 separate masternodes to mix funds up to 10000 KORE</source>
-        <translation>Използвай 8 различни мастърноуда за да смесите средства до 10000 KORE</translation>
-    </message>
-    <message>
-        <source>Use 16 separate masternodes</source>
-        <translation>Използвай 16 различни мастърноуда</translation>
-    </message>
-    <message>
         <source>This option is the quickest and will cost about ~0.025 KORE to anonymize 10000 KORE</source>
         <translation>Това е най-бързия метод и ще струва около 0.025 KORE за да скриете 10000 KORE</translation>
     </message>
@@ -1912,14 +1777,6 @@ Please be patient after clicking import.</source>
     <message>
         <source>Enable coin &amp;control features</source>
         <translation>Включи възможностите за &amp;контрол на монетите.</translation>
-    </message>
-    <message>
-        <source>Show additional tab listing all your masternodes in first sub-tab&lt;br/&gt;and all masternodes on the network in second sub-tab.</source>
-        <translation>Добави още един таб да показва всичките мастърноудове под пръвия таб&lt;br/&gt;и всички мастърноудове по мрежата във втория таб.</translation>
-    </message>
-    <message>
-        <source>Show Masternodes Tab</source>
-        <translation>Покажи Мастърноуд Таба</translation>
     </message>
     <message>
         <source>&amp;Spend unconfirmed change</source>
@@ -2143,10 +2000,6 @@ https://www.transifex.com/kore-project/kore-project-translations</translation>
         <translation>Неузрели:</translation>
     </message>
     <message>
-        <source>Staked or masternode rewards that has not yet matured</source>
-        <translation>Възнаграждение от стейкване или мастърноуд, които все още не са узрели.</translation>
-    </message>
-    <message>
         <source>Current locked balance in watch-only addresses</source>
         <translation>Сегашния баланс по портфейли в режим на наблюдение само</translation>
     </message>
@@ -2179,10 +2032,6 @@ https://www.transifex.com/kore-project/kore-project-translations</translation>
         <translation>Непотвърдени преводи от портфейли, които само се набюдават</translation>
     </message>
     <message>
-        <source>Staked or masternode rewards in watch-only addresses that has not yet matured</source>
-        <translation>Възнаграждения от стейкване или мастърноуд портфейли, кото само се наблюдават и все още не са узрели за употреба</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>Общо:</translation>
     </message>
@@ -2201,10 +2050,6 @@ https://www.transifex.com/kore-project/kore-project-translations</translation>
     <message>
         <source>Spendable:</source>
         <translation>Налични за харчене:</translation>
-    </message>
-    <message>
-        <source>Locked KORE or Masternode collaterals. These are excluded from zKORE minting.</source>
-        <translation>Заключен KORE или допълнителни гаранции в Главни Възли. Тези не са включени в zKORE емитирането.</translation>
     </message>
     <message>
         <source>Locked:</source>
@@ -2368,10 +2213,6 @@ To enable AutoMint change 'enablezeromint=0' to 'enablezeromint=1' in kore.conf<
     <message>
         <source>zKORE</source>
         <translation>zKORE</translation>
-    </message>
-    <message>
-        <source>Available for minting are coins which are confirmed and not locked or Masternode collaterals.</source>
-        <translation>Наличните за емитиране са онези монети, които са биле потвърдени и не са заключени като гаранция в Главни Възли.</translation>
     </message>
     <message>
         <source>Available for Minting:</source>
@@ -3104,10 +2945,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Open the KORE debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Отвори KORE дебъг лог файла от сегашната папка. Това може да отнеме известно време за по-дълги файлове.</translation>
-    </message>
-    <message>
-        <source>Number of Masternodes</source>
-        <translation>Брой мастърноудове</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -4434,10 +4271,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Получен с</translation>
     </message>
     <message>
-        <source>Masternode Reward</source>
-        <translation>Мастърноуд възнаграждение</translation>
-    </message>
-    <message>
         <source>Received from</source>
         <translation>Получен от</translation>
     </message>
@@ -4567,10 +4400,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Minted</source>
         <translation>Изсечени</translation>
-    </message>
-    <message>
-        <source>Masternode Reward</source>
-        <translation>Мастърноуд възнаграждение</translation>
     </message>
     <message>
         <source>Zerocoin Mint</source>
@@ -4995,10 +4824,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Пиърите от Белия списък не може да са DoS забранени и техните преводи винаги ще бъдат предавани, дори и да са вече в мемпул басейна. Полезно за портал.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Трябва да зададете masternodeprivkey в конфигурационния файл. Консултирайте се с документацията за повече помощ.</translation>
-    </message>
-    <message>
         <source>(10743 could be used only on mainnet)</source>
         <translation>(10743 може да се ползва само в mainnet)</translation>
     </message>
@@ -5057,10 +4882,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Can't denominate: no compatible inputs left.</source>
         <translation>Не може да деноминира: не са останали съвместими входящи.</translation>
-    </message>
-    <message>
-        <source>Can't find random Masternode.</source>
-        <translation>Не откривам случан Главен възел.</translation>
     </message>
     <message>
         <source>Can't mix while sync in progress.</source>
@@ -5123,10 +4944,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Засечена е повредена блок база данни</translation>
     </message>
     <message>
-        <source>Could not parse masternode.conf</source>
-        <translation>Не можахме да прочетем masternode.conf файла</translation>
-    </message>
-    <message>
         <source>Debugging/Testing options:</source>
         <translation>Дебъг/Тест опции:</translation>
     </message>
@@ -5171,16 +4988,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Вкл. публикуването на сурова транзакция (закл. чрез swifttx) в &lt;address&gt;</translation>
     </message>
     <message>
-        <source>Enable the client to act as a masternode (0-1, default: %u)</source>
-        <translation>Вкл. клиента да действа като влаген възел (0-1, по подразбиране: %u)</translation>
-    </message>
-    <message>
         <source>Entries are full.</source>
         <translation>Запълнени полета.</translation>
-    </message>
-    <message>
-        <source>Error connecting to Masternode.</source>
-        <translation>Грешка при свързването с Главен възел.</translation>
     </message>
     <message>
         <source>Error initializing block database</source>
@@ -5363,16 +5172,8 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Невалидна стойност</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation>Невалиден masternodeprivkey. Моля консултирайте се с документацията.</translation>
-    </message>
-    <message>
         <source>Invalid netmask specified in -whitelist: '%s'</source>
         <translation>Невалидна netmask зададена в -whitelist: :'%s'</translation>
-    </message>
-    <message>
-        <source>Invalid port detected in masternode.conf</source>
-        <translation>Невалиден порт, засечен в masternode.conf</translation>
     </message>
     <message>
         <source>Invalid private key.</source>
@@ -5413,10 +5214,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
 </source>
         <translation>премахнати непотвърдени транзакции
 </translation>
-    </message>
-    <message>
-        <source>Disable all KORE specific functionality (Masternodes, Zerocoin, swifttx, Budgeting) (0-1, default: %u)</source>
-        <translation>Изключи KORE специфичната функционалност (Главни възли, Zerocoin, swifttx, Бюджетиране) (0-1, po podrazbirane: %u)</translation>
     </message>
     <message>
         <source>Enable swifttx, show confirmations for locked transactions (bool, default: %s)</source>
@@ -5555,14 +5352,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Зареждане на бюджетния кеш...</translation>
     </message>
     <message>
-        <source>Loading masternode cache...</source>
-        <translation>Зареждане на кеша от главни възли...</translation>
-    </message>
-    <message>
-        <source>Loading masternode payment cache...</source>
-        <translation>Зареждане кеша на плащания от главни възли...</translation>
-    </message>
-    <message>
         <source>Loading sporks...</source>
         <translation>Зареждане на вилицо-лъжици...</translation>
     </message>
@@ -5583,28 +5372,12 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Вече е заключен.</translation>
     </message>
     <message>
-        <source>Lock masternodes from masternode configuration file (default: %u)</source>
-        <translation>Заключи главен възел от конфигурационния файл (по подразбиране: %u)</translation>
-    </message>
-    <message>
         <source>Lookup(): Invalid -proxy address or hostname: '%s'</source>
         <translation>Lookup(): Невалиден -proxy адрес или име: '%s'</translation>
     </message>
     <message>
         <source>Maintain at most &lt;n&gt; connections to peers (default: %u)</source>
         <translation>Пази най-много &lt;n&gt; връзки към пиъри (по подразбиране: %u)</translation>
-    </message>
-    <message>
-        <source>Masternode options:</source>
-        <translation>Опции за Главни възли</translation>
-    </message>
-    <message>
-        <source>Masternode queue is full.</source>
-        <translation>Опашката за Главни възли е пълна.</translation>
-    </message>
-    <message>
-        <source>Masternode:</source>
-        <translation>Главен Възел:</translation>
     </message>
     <message>
         <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: %u)</source>
@@ -5635,14 +5408,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Нужно е да се зададе порт с -whitebind: '%s'</translation>
     </message>
     <message>
-        <source>No Masternodes detected.</source>
-        <translation>Не се засичат Мастърноудове.</translation>
-    </message>
-    <message>
-        <source>No compatible Masternode found.</source>
-        <translation>Не е намерен съвместим Мастърноуд.</translation>
-    </message>
-    <message>
         <source>No funds detected in need of denominating.</source>
         <translation>Не засякохме средства, които да имат нужда от деноминация.</translation>
     </message>
@@ -5665,10 +5430,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Not enough file descriptors available.</source>
         <translation>Недостатъчно налични файл описания.</translation>
-    </message>
-    <message>
-        <source>Not in the Masternode list.</source>
-        <translation>Не е в списъка с Главни възли.</translation>
     </message>
     <message>
         <source>Number of automatic wallet backups (default: 10)</source>
@@ -5787,10 +5548,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Задай размера на кеша за базите данни в мегабайти (%d до %d, по подразбиране: %d)</translation>
     </message>
     <message>
-        <source>Set external address:port to get to this masternode (example: %s)</source>
-        <translation>Задай външен адрес:порт за да достигнете този главен възел (например: %s)</translation>
-    </message>
-    <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
         <translation>Задай размер на басейна за ключове да бъде &lt;n&gt;(по подразбиране: %u) </translation>
     </message>
@@ -5805,10 +5562,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Set the Maximum reorg depth (default: %u)</source>
         <translation>Максимална дълбочина на reorg (default: %u)</translation>
-    </message>
-    <message>
-        <source>Set the masternode private key</source>
-        <translation>Задай тайния ключ на Главния възел</translation>
     </message>
     <message>
         <source>Set the number of threads to service RPC calls (default: %d)</source>
@@ -5851,10 +5604,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Задай възтановяване на данни</translation>
     </message>
     <message>
-        <source>Specify masternode configuration file (default: %s)</source>
-        <translation>Задай конфигурационен файл за Главен възел (default: %s)</translation>
-    </message>
-    <message>
         <source>Specify pid file (default: %s)</source>
         <translation>Задай pid файл (default: %s)</translation>
     </message>
@@ -5883,18 +5632,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
         <translation>Изключи се след импортирането на блоквоете от диска (default: %u)</translation>
     </message>
     <message>
-        <source>Submitted following entries to masternode: %u / %d</source>
-        <translation>Следните са изпратени до главния възел: %u / %d</translation>
-    </message>
-    <message>
-        <source>Submitted to masternode, waiting for more entries ( %u / %d ) %s</source>
-        <translation>Изпратени до главния възел, чакаме още ( %u %d ) %s</translation>
-    </message>
-    <message>
-        <source>Submitted to masternode, waiting in queue %s</source>
-        <translation>Изпратено до главния възел, чака си реда %s</translation>
-    </message>
-    <message>
         <source>Synchronization failed</source>
         <translation>Неуспешна синхронизация</translation>
     </message>
@@ -5909,14 +5646,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>Synchronizing budgets...</source>
         <translation>Синхронизиране на бюджетите...</translation>
-    </message>
-    <message>
-        <source>Synchronizing masternode winners...</source>
-        <translation>Синхронизиране печелившите Главни възли...</translation>
-    </message>
-    <message>
-        <source>Synchronizing masternodes...</source>
-        <translation>Синхронизиране с Главните възли...</translation>
     </message>
     <message>
         <source>Synchronizing sporks...</source>
@@ -5949,10 +5678,6 @@ Either mint higher denominations (so fewer inputs are needed) or reduce the amou
     <message>
         <source>This is intended for regression testing tools and app development.</source>
         <translation>Това е за регресионен тест и софтуерна разработка.</translation>
-    </message>
-    <message>
-        <source>This is not a Masternode.</source>
-        <translation>Това не е Главен Възел.</translation>
     </message>
     <message>
         <source>Threshold for disconnecting misbehaving peers (default: %u)</source>

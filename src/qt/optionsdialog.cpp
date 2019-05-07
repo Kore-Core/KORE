@@ -12,7 +12,6 @@
 
 #include "bitcoinunits.h"
 #include "guiutil.h"
-#include "obfuscation.h"
 #include "optionsmodel.h"
 
 #include "main.h" // for MAX_SCRIPTCHECK_THREADS
@@ -176,7 +175,6 @@ void OptionsDialog::setModel(OptionsModel* model)
     connect(ui->theme, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
     connect(ui->lang, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
     connect(ui->thirdPartyTxUrls, SIGNAL(textChanged(const QString&)), this, SLOT(showRestartWarning()));
-    connect(ui->showMasternodesTab, SIGNAL(clicked(bool)), this, SLOT(showRestartWarning()));
 }
 
 void OptionsDialog::setMapper()
@@ -211,23 +209,6 @@ void OptionsDialog::setMapper()
     mapper->addMapping(ui->lang, OptionsModel::Language);
     mapper->addMapping(ui->unit, OptionsModel::DisplayUnit);
     mapper->addMapping(ui->thirdPartyTxUrls, OptionsModel::ThirdPartyTxUrls);
-
-
-    /* Obfuscation Rounds */
-    // mapper->addMapping(ui->obfuscationRounds, OptionsModel::ObfuscationRounds);
-    // mapper->addMapping(ui->anonymizeKore, OptionsModel::AnonymizeKoreAmount);
-    // mapper->addMapping(ui->showMasternodesTab, OptionsModel::ShowMasternodesTab);
-// #ifdef ENABLE_OBFUSCATION
-//     ui->obfuscationRounds->setEnabled(true);
-//     ui->anonymizeKore->setEnabled(true);
-
-// #else
-//     ui->obfuscationRounds->setEnabled(false);
-//     ui->obfuscationRounds->setToolTip("Currently Disabled");
-//     ui->anonymizeKore->setEnabled(false);
-//     ui->anonymizeKore->setToolTip("Currently Disabled");
-// #endif
-
 }
 
 void OptionsDialog::enableOkButton()
@@ -267,7 +248,6 @@ void OptionsDialog::on_resetButton_clicked()
 void OptionsDialog::on_okButton_clicked()
 {
     mapper->submit();
-    obfuScationPool.cachedNumBlocks = std::numeric_limits<int>::max();
     accept();
 }
 

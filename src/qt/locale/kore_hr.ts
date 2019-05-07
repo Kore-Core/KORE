@@ -617,14 +617,6 @@
         <translation>&amp;Privatnost</translation>
     </message>
     <message>
-        <source>&amp;Masternodes</source>
-        <translation>&amp;Masternode</translation>
-    </message>
-    <message>
-        <source>Browse masternodes</source>
-        <translation>Pregledajte masternode</translation>
-    </message>
-    <message>
         <source>&amp;About KORE Core</source>
         <translation>&amp; O KORE Coreu</translation>
     </message>
@@ -764,21 +756,6 @@
     <message>
         <source>Error</source>
         <translation>Greška</translation>
-    </message>
-    </context>
-<context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Address</source>
-        <translation>Adresa</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Status</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation>0</translation>
     </message>
     </context>
 <context>

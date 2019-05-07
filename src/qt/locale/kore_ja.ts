@@ -151,13 +151,6 @@
     <name>Intro</name>
     </context>
 <context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Address</source>
-        <translation>アドレス</translation>
-    </message>
-    </context>
-<context>
     <name>MultiSendDialog</name>
     <message>
         <source>Address:</source>

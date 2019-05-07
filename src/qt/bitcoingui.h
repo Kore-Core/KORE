@@ -30,7 +30,6 @@ class SendCoinsRecipient;
 class UnitDisplayStatusBarControl;
 class WalletFrame;
 class WalletModel;
-class MasternodeList;
 
 class CWallet;
 
@@ -94,7 +93,6 @@ private:
     QMenuBar* appMenuBar;
     QAction* overviewAction;
     QAction* historyAction;
-    QAction* masternodeAction;
     QAction* quitAction;
     QAction* sendCoinsAction;
     QAction* usedSendingAddressesAction;
@@ -121,7 +119,6 @@ private:
     QAction* openPeersAction;
     QAction* openRepairAction;
     QAction* openConfEditorAction;
-    QAction* openMNConfEditorAction;
     QAction* showBackupsAction;
     QAction* openAction;
     QAction* openBlockExplorerAction;
@@ -203,8 +200,6 @@ private slots:
     void gotoHistoryPage();
     /** Switch to Explorer Page */
     void gotoBlockExplorerPage();
-    /** Switch to masternode page */
-    void gotoMasternodePage();
     /** Switch to privacy page */
     void gotoReceiveCoinsPage();
     /** Switch to send coins page */

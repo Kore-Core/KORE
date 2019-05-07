@@ -38,43 +38,14 @@ const char *FILTERADD="filteradd";
 const char *FILTERCLEAR="filterclear";
 const char *REJECT="reject";
 const char *SENDHEADERS="sendheaders";
-const char *TXLOCKREQUEST="tx lock request";
-const char *TXLOCKVOTE="tx lock vote";
-const char *SPORK="spork";
-const char *MNWINNER="mn winner";
-const char *MNSCANERROR="mn scan error";
-const char *MNBUDGETVOTE="mn budget vote";
-const char *MNBUDGETPROPOSAL="mn budget proposal";
-const char *MNBUDGETFINALIZED="mn budget finalized";
-const char *MNBUDGETFINALIZEDVOTE="mn budget finalized vote";
-const char *QUORUM="mn quorum";
-const char *ANNOUNCE="mn announce";
-const char *MNPING="mn ping";
-const char *DSTX="dstx";
-const char *SSC="ssc";
-const char *MNVS="mnvs";
 };
-
 
 static const char* ppszTypeName[] =
     {
         "ERROR",
         "tx",
         "block",
-        "filtered block",
-        "tx lock request",
-        "tx lock vote",
-        "spork",
-        "mn winner",
-        "mn scan error",
-        "mn budget vote",
-        "mn budget proposal",
-        "mn budget finalized",
-        "mn budget finalized vote",
-        "mn quorum",
-        "mn announce",
-        "mn ping",
-        "dstx"};
+        "filtered block"};
 
 CMessageHeader::CMessageHeader()
 {
@@ -177,10 +148,6 @@ bool operator<(const CInv& a, const CInv& b)
 bool CInv::IsKnownType() const
 {
     return (type >= 1 && type < (int)ARRAYLEN(ppszTypeName));
-}
-
-bool CInv::IsMasterNodeType() const{
- 	return (type >= 6);
 }
 
 const char* CInv::GetCommand() const

@@ -617,14 +617,6 @@
         <translation>&amp;Soukromí</translation>
     </message>
     <message>
-        <source>&amp;Masternodes</source>
-        <translation>&amp;Masternody</translation>
-    </message>
-    <message>
-        <source>Browse masternodes</source>
-        <translation>Procházet masternody</translation>
-    </message>
-    <message>
         <source>&amp;About KORE Core</source>
         <translation>&amp;O KORE Core</translation>
     </message>
@@ -663,14 +655,6 @@
     <message>
         <source>Open Wallet &amp;Configuration File</source>
         <translation>Otevřít Pěněženkový &amp;Konfigurační soubor</translation>
-    </message>
-    <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>Otevřít &amp;Masternodový Konfigurační Soubor</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>Otevřít Masternodový konfigurační soubor</translation>
     </message>
     <message>
         <source>Open a KORE: URI or payment request</source>
@@ -1207,97 +1191,6 @@ MultiSend: %1</translation>
     </message>
 </context>
 <context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Form</source>
-        <translation>Od</translation>
-    </message>
-    <message>
-        <source>Alias</source>
-        <translation>Alias</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adresa</translation>
-    </message>
-    <message>
-        <source>Protocol</source>
-        <translation>Protokol</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Stav</translation>
-    </message>
-    <message>
-        <source>Active</source>
-        <translation>Aktivní</translation>
-    </message>
-    <message>
-        <source>Pubkey</source>
-        <translation>Veřejný klíč</translation>
-    </message>
-    <message>
-        <source>S&amp;tart alias</source>
-        <translation>S&amp;pustit alias</translation>
-    </message>
-    <message>
-        <source>Start &amp;all</source>
-        <translation>Spustit &amp;vše</translation>
-    </message>
-    <message>
-        <source>Start &amp;MISSING</source>
-        <translation>Spustit &amp;CHYBĚJÍCÍ</translation>
-    </message>
-    <message>
-        <source>&amp;Update status</source>
-        <translation>&amp;Update stavu</translation>
-    </message>
-    <message>
-        <source>Status will be updated automatically in (sec):</source>
-        <translation>Stav bude automaticky updateován za (sec):</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation>0</translation>
-    </message>
-    <message>
-        <source>Start alias</source>
-        <translation>Spustit alias:</translation>
-    </message>
-    <message>
-        <source>Confirm masternode start</source>
-        <translation>Potvrdit spuštění masternodu</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start masternode %1?</source>
-        <translation>Opravdu chcete spustit masternode %1?</translation>
-    </message>
-    <message>
-        <source>Confirm all masternodes start</source>
-        <translation>Potvrdit spuštění všech masternodů</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start ALL masternodes?</source>
-        <translation>Opravdu chcete spustit VŠECHNY masternody?</translation>
-    </message>
-    <message>
-        <source>Command is not available right now</source>
-        <translation>Příkaz teď není dostupný</translation>
-    </message>
-    <message>
-        <source>You can't use this command until masternode list is synced</source>
-        <translation>Nemůžete použít tento příkaz, dokud nebude seznam masternodů synchronizován</translation>
-    </message>
-    <message>
-        <source>Confirm missing masternodes start</source>
-        <translation>Potvrdit spuštění chybějícího masternodu</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start MISSING masternodes?</source>
-        <translation>Opravdu chcete spostit CHYBĚJÍCÍ masternody?</translation>
-    </message>
-</context>
-<context>
     <name>MultiSendDialog</name>
     <message>
         <source>MultiSend</source>
@@ -1384,10 +1277,6 @@ MultiSend: %1</translation>
         <translation>Poslat pro sázky - stake</translation>
     </message>
     <message>
-        <source>Send For Masternode Rewards</source>
-        <translation>Poslat pro odměny masternodů</translation>
-    </message>
-    <message>
         <source>(no label)</source>
         <translation>(bez popisku)</translation>
     </message>
@@ -1466,14 +1355,6 @@ Prosím zkontrolujte adresu a zkuste to znovu.</translation>
     <message>
         <source>Please select a privacy level.</source>
         <translation>Vyberte úrpvěň ochrany soukromí</translation>
-    </message>
-    <message>
-        <source>Use 2 separate masternodes to mix funds up to 10000 KORE</source>
-        <translation>Použí 2 oddělené masternody k promíchání prostředků až do 10000 KORE</translation>
-    </message>
-    <message>
-        <source>Use 16 separate masternodes</source>
-        <translation>Použít 16 oddělených masternodů</translation>
     </message>
     <message>
         <source>This option is the quickest and will cost about ~0.025 KORE to anonymize 10000 KORE</source>
@@ -1556,10 +1437,6 @@ Prosím zkontrolujte adresu a zkuste to znovu.</translation>
     <message>
         <source>&amp;Start KORE on system login</source>
         <translation>&amp;Spusti KORE při přihlášení do systému</translation>
-    </message>
-    <message>
-        <source>Show Masternodes Tab</source>
-        <translation>Zobrazit záložku Masternodů</translation>
     </message>
     <message>
         <source>&amp;Network</source>
@@ -1837,10 +1714,6 @@ Prosím zkontrolujte adresu a zkuste to znovu.</translation>
     <message>
         <source>Block chain</source>
         <translation>Blockchain</translation>
-    </message>
-    <message>
-        <source>Number of Masternodes</source>
-        <translation>Počet Masternodů</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -2428,20 +2301,8 @@ Prosím zkontrolujte adresu a zkuste to znovu.</translation>
         <translation>Synchronizace rozpočtu...</translation>
     </message>
     <message>
-        <source>Synchronizing masternode winners...</source>
-        <translation>Synchronizace vítězných masternodů...</translation>
-    </message>
-    <message>
-        <source>Synchronizing masternodes...</source>
-        <translation>Synchronizace masternodů...</translation>
-    </message>
-    <message>
         <source>This is experimental software.</source>
         <translation>Toto je experimentální software.</translation>
-    </message>
-    <message>
-        <source>This is not a Masternode.</source>
-        <translation>Toto není Masternode.</translation>
     </message>
     <message>
         <source>Transaction amount too small</source>

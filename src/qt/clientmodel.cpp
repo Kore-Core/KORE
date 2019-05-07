@@ -15,8 +15,6 @@
 #include "checkpoints.h"
 #include "clientversion.h"
 #include "main.h"
-#include "masternode-sync.h"
-#include "masternodeman.h"
 #include "net.h"
 #include "ui_interface.h"
 #include "util.h"
@@ -34,7 +32,6 @@ ClientModel::ClientModel(OptionsModel* optionsModel, QObject* parent) : QObject(
                                                                         peerTableModel(0),
                                                                         banTableModel(0),
                                                                         cachedNumBlocks(0),
-                                                                        cachedMasternodeCountString(""),
                                                                         cachedReindexing(0), cachedImporting(0),
                                                                         numBlocksAtStartup(-1), pollTimer(0)
 {
@@ -43,11 +40,6 @@ ClientModel::ClientModel(OptionsModel* optionsModel, QObject* parent) : QObject(
     pollTimer = new QTimer(this);
     connect(pollTimer, SIGNAL(timeout()), this, SLOT(updateTimer()));
     pollTimer->start(MODEL_UPDATE_DELAY);
-
-    pollMnTimer = new QTimer(this);
-    connect(pollMnTimer, SIGNAL(timeout()), this, SLOT(updateMnTimer()));
-    // no need to update as frequent as data for balances/txes/blocks
-    pollMnTimer->start(MODEL_UPDATE_DELAY * 4);
 
     subscribeToCoreSignals();
 }
@@ -69,15 +61,6 @@ int ClientModel::getNumConnections(unsigned int flags) const
             nNum++;
 
     return nNum;
-}
-
-QString ClientModel::getMasternodeCountString() const
-{
-    int ipv4 = 0, ipv6 = 0, onion = 0;
-    mnodeman.CountNetworks(ActiveProtocol(), ipv4, ipv6, onion);
-    int nUnknown = mnodeman.size() - ipv4 - ipv6 - onion;
-    if(nUnknown < 0) nUnknown = 0;
-    return tr("Total: %1 (IPv4: %2 / IPv6: %3 / Tor: %4 / Unknown: %5)").arg(QString::number((int)mnodeman.size())).arg(QString::number((int)ipv4)).arg(QString::number((int)ipv6)).arg(QString::number((int)onion)).arg(QString::number((int)nUnknown));
 }
 
 int ClientModel::getNumBlocks() const
@@ -133,36 +116,15 @@ void ClientModel::updateTimer()
     static int prevAssets = -1;
 
     // check for changed number of blocks we have, number of blocks peers claim to have, reindexing state and importing state
-    if (cachedNumBlocks != newNumBlocks ||
-        cachedReindexing != fReindex || cachedImporting != fImporting ||
-        masternodeSync.RequestedMasternodeAttempt != prevAttempt || masternodeSync.RequestedMasternodeAssets != prevAssets) {
+    if (cachedNumBlocks != newNumBlocks || cachedReindexing != fReindex || cachedImporting != fImporting) {
         cachedNumBlocks = newNumBlocks;
         cachedReindexing = fReindex;
         cachedImporting = fImporting;
-        prevAttempt = masternodeSync.RequestedMasternodeAttempt;
-        prevAssets = masternodeSync.RequestedMasternodeAssets;
 
         emit numBlocksChanged(newNumBlocks);
     }
 
     emit bytesChanged(getTotalBytesRecv(), getTotalBytesSent());
-}
-
-void ClientModel::updateMnTimer()
-{
-    // Get required lock upfront. This avoids the GUI from getting stuck on
-    // periodical polls if the core is holding the locks for a longer time -
-    // for example, during a wallet rescan.
-    TRY_LOCK(cs_main, lockMain);
-    if (!lockMain)
-        return;
-    QString newMasternodeCountString = getMasternodeCountString();
-
-    if (cachedMasternodeCountString != newMasternodeCountString) {
-        cachedMasternodeCountString = newMasternodeCountString;
-
-        emit strMasternodesChanged(cachedMasternodeCountString);
-    }
 }
 
 void ClientModel::updateNumConnections(int numConnections)

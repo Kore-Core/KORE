@@ -661,14 +661,6 @@
         <translation>&amp;Privatsphäre</translation>
     </message>
     <message>
-        <source>&amp;Masternodes</source>
-        <translation>&amp;Masternodes</translation>
-    </message>
-    <message>
-        <source>Browse masternodes</source>
-        <translation>Masternodes durchsuchen</translation>
-    </message>
-    <message>
         <source>&amp;About KORE Core</source>
         <translation>Über.KORE Core</translation>
     </message>
@@ -703,14 +695,6 @@
     <message>
         <source>Open Wallet &amp;Configuration File</source>
         <translation>Öffne Wallet &amp;Einstellungsdatei </translation>
-    </message>
-    <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>Öffne &amp;Masternode Einstellungsdatei </translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>Öffne Masternode Einstellungsdatei</translation>
     </message>
     <message>
         <source>Open a KORE: URI or payment request</source>

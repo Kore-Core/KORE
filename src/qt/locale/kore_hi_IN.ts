@@ -99,13 +99,6 @@
     <name>Intro</name>
     </context>
 <context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Address</source>
-        <translation>पता</translation>
-    </message>
-    </context>
-<context>
     <name>MultiSendDialog</name>
     </context>
 <context>

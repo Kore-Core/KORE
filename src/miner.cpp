@@ -10,9 +10,9 @@
 #include "amount.h"
 #include "arith_uint256.h"
 #include "hash.h"
+#include "init.h"
 #include "legacy/consensus/merkle.h"
 #include "main.h"
-#include "masternode-sync.h"
 #include "net.h"
 #include "pos.h"
 #include "pow.h"
@@ -27,8 +27,6 @@
 #endif
 #include "blocksignature.h"
 #include "invalid.h"
-#include "masternode-payments.h"
-#include "spork.h"
 #include "validationinterface.h"
 
 
@@ -510,16 +508,6 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             }
         }
 
-        // if (!fProofOfStake) {
-            //Masternode and general budget payments
-            //FillBlockPayee(txNew, nFees, fProofOfStake, false);
-
-            //Make payee
-            // if (txNew.vout.size() > 1) {
-            //     pblock->payee = txNew.vout[1].scriptPubKey;
-            // }
-        // }
-
         nLastBlockTx = nBlockTx;
         nLastBlockSize = nBlockSize;
         // Compute final coinbase transaction.
@@ -580,10 +568,6 @@ inline CMutableTransaction CreateCoinbaseTransaction_Legacy(const CScript& scrip
         txNew.vout[1].nValue = devsubsidy;
         txNew.vout[1].scriptPubKey = CScript() << ParseHex(Params().GetDevFundPubKey()) << OP_CHECKSIG;
     }
-
-    //Masternode and general budget payments
-    if (!fProofOfStake)
-        FillBlockPayee_Legacy(txNew, 0, fProofOfStake);
 
     return txNew;
 }
@@ -1028,7 +1012,6 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             }
 
             while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || pwallet->GetBalance() == 0 || nReserveBalance > pwallet->GetBalance())
-              // || !(masternodeSync.IsSynced() && mnodeman.CountEnabled() >= 2))
             {
                 if (fDebug) {
                     LogPrintf("%s(): still unable to stake.\n", __func__);
@@ -1038,10 +1021,6 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                         LogPrintf("\tThe wallet is locked;\n");
                     if (!fMintableCoins)
                         LogPrintf("\tThere are no mintable coins;\n");
-                    // if (masternodeSync.IsSynced())
-                    //     LogPrintf("\tMasternodes are not synced;\n");
-                    // if (mnodeman.CountEnabled() < 2)
-                    //     LogPrintf("\tThere are not enough masternodes enabled;\n");
                     if (pwallet->GetBalance() == 0)
                         LogPrintf("\tZero balance;\n");
                     if (nReserveBalance >= pwallet->GetBalance())
@@ -1084,7 +1063,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             }
         }
 
-        if (vNodes.size() < 3 || nChainHeight < GetBestPeerHeight()) {
+        if (vNodes.size() < 3) {// || nChainHeight < GetBestPeerHeight()) {
             MilliSleep(60000);
             continue;
         }
@@ -1164,7 +1143,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                     LogPrintf("%s(): proof-of-work found  \n  hash: %s  \ntarget: %s\n", __func__, hash.GetHex(), hashTarget.GetHex());
                     ProcessBlockFound(pblock, *pwallet, reservekey);
                     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                    MilliSleep(Params().GetTargetSpacing() * 1000);
+                    // MilliSleep(Params().GetTargetSpacing() * 1000);
 
                     // In regression test mode, stop mining after a block is found. This
                     // allows developers to controllably generate a block on demand.
@@ -1315,7 +1294,7 @@ void ThreadStakeMinter_Legacy(CWallet* pwallet)
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             ProcessBlockFound_Legacy(pblock, chainparams);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);
-            MilliSleep(Params().GetTargetSpacing()/2 * 1000);
+            // MilliSleep(Params().GetTargetSpacing()/2 * 1000);
         }
 
         MilliSleep(500);
@@ -1430,7 +1409,7 @@ void KoreMiner_Legacy()
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
                         ProcessBlockFound_Legacy(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                        MilliSleep(Params().GetTargetSpacing() * 1000);
+                        // MilliSleep(Params().GetTargetSpacing() * 1000);
                         break;
                     }
                 }

@@ -661,14 +661,6 @@
         <translation>&amp;Privatliv</translation>
     </message>
     <message>
-        <source>&amp;Masternodes</source>
-        <translation>&amp;Masternoder</translation>
-    </message>
-    <message>
-        <source>Browse masternodes</source>
-        <translation>Vis masternoder</translation>
-    </message>
-    <message>
         <source>&amp;About KORE Core</source>
         <translation>&amp;Om KORE kerne</translation>
     </message>
@@ -707,14 +699,6 @@
     <message>
         <source>Open Wallet &amp;Configuration File</source>
         <translation>Åbn tegnebog &amp;konfigurationsfil</translation>
-    </message>
-    <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>Åbn &amp;Masternode konfigurationsfil</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>ÅbnMasternode konfigurationsfil</translation>
     </message>
     <message>
         <source>Open a KORE: URI or payment request</source>
@@ -1327,109 +1311,6 @@ Adresse: %4
     </message>
 </context>
 <context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Form</source>
-        <translation>Formular</translation>
-    </message>
-    <message>
-        <source>MASTERNODES</source>
-        <translation>MASTERNODES</translation>
-    </message>
-    <message>
-        <source>Note: Status of your masternodes in local wallet can potentially be slightly incorrect.&lt;br /&gt;Always wait for wallet to sync additional data and then double check from another node&lt;br /&gt;if your node should be running but you still see "MISSING" in "Status" field.</source>
-        <translation>Note: Status over Deres masternoder i den lokale tegnebog kan være let afvigende. &lt;br/&gt;De bør altid vente på at tegnebogen for synkroniseret nye data, hvorefter De bør dobbeltkontrollere fra en anden node&lt;br/ hvis Deres node burde køre men stadig viser "mangler" i statusfeltet.</translation>
-    </message>
-    <message>
-        <source>Alias</source>
-        <translation>Alias</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adresse</translation>
-    </message>
-    <message>
-        <source>Protocol</source>
-        <translation>Protokol</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Status</translation>
-    </message>
-    <message>
-        <source>Active</source>
-        <translation>Aktiv!</translation>
-    </message>
-    <message>
-        <source>Last Seen (UTC)</source>
-        <translation>Sidst set (UTC)</translation>
-    </message>
-    <message>
-        <source>Pubkey</source>
-        <translation>Offentlig nøgle</translation>
-    </message>
-    <message>
-        <source>S&amp;tart alias</source>
-        <translation>S&amp;tart alias</translation>
-    </message>
-    <message>
-        <source>Start &amp;all</source>
-        <translation>Start &amp;all</translation>
-    </message>
-    <message>
-        <source>Start &amp;MISSING</source>
-        <translation>Start &amp;MANGLER</translation>
-    </message>
-    <message>
-        <source>&amp;Update status</source>
-        <translation>&amp;opdateringsstatus</translation>
-    </message>
-    <message>
-        <source>Status will be updated automatically in (sec):</source>
-        <translation>Status opdateres automatisk om (sek):</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation>0</translation>
-    </message>
-    <message>
-        <source>Start alias</source>
-        <translation>Startalias</translation>
-    </message>
-    <message>
-        <source>Confirm masternode start</source>
-        <translation>Bekræft at masternoden skal startes</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start masternode %1?</source>
-        <translation>Er De sikker på at De vil starte masternoden %1?</translation>
-    </message>
-    <message>
-        <source>Confirm all masternodes start</source>
-        <translation>Bekræft at alle masternoder skal startes</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start ALL masternodes?</source>
-        <translation>Er De sikker på at de vil starte ALLE masternoderne?</translation>
-    </message>
-    <message>
-        <source>Command is not available right now</source>
-        <translation>Denne kommando er ikke tilgængelig lige nu</translation>
-    </message>
-    <message>
-        <source>You can't use this command until masternode list is synced</source>
-        <translation>De kan ikke bruge denne kommando før masternodelisten er synkroniseret</translation>
-    </message>
-    <message>
-        <source>Confirm missing masternodes start</source>
-        <translation>Bekræft at manglende masternoder skal startes</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start MISSING masternodes?</source>
-        <translation>Er De sikker på at De vil starte alle de manglende masternoder?</translation>
-    </message>
-</context>
-<context>
     <name>MultiSendDialog</name>
     <message>
         <source>MultiSend</source>
@@ -1446,16 +1327,6 @@ Adresse: %4
     <message>
         <source>Enter Address to Send to</source>
         <translation>Indtast modtageradresse</translation>
-    </message>
-    <message>
-        <source>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other KORE addresses after it matures.
-To Add: enter percentage to give and KORE address to add to the MultiSend vector.
-To Delete: Enter address to delete and press delete.
-MultiSend will not be activated unless you have clicked Activate</source>
-        <translation>Multisend tillader at De automatisk kan sende op til 100% af Deres belønninger fra såvel indskud som masternodebelønninger til en liste over andre KORE adressater når den er tilstrækkelig stor. 
-For at tilføje: Indtast procentsatsen De ønsker at overføre samt den KORE adresse som skal modtage via Multisendsystemet. 
-For at fjerne: Indtast adressen som skal slettes og klik på slet. 
-Multisend vil ikke fungere med mindre systemet er aktiveret.</translation>
     </message>
     <message>
         <source>Add to MultiSend Vector</source>
@@ -1532,10 +1403,6 @@ Multisend vil ikke fungere med mindre systemet er aktiveret.</translation>
     <message>
         <source>Send For Stakes</source>
         <translation>Send til indskud</translation>
-    </message>
-    <message>
-        <source>Send For Masternode Rewards</source>
-        <translation>Send til Masternodebelønning</translation>
     </message>
     <message>
         <source>(no label)</source>
@@ -1780,18 +1647,6 @@ Vær tålmodig efter at du har klikket på import.</translation>
         <translation>Vælg tilsløringsniveau</translation>
     </message>
     <message>
-        <source>Use 2 separate masternodes to mix funds up to 10000 KORE</source>
-        <translation>Brug 2 separate masternoder for at tilsløre beløb op til 10000 KORE</translation>
-    </message>
-    <message>
-        <source>Use 8 separate masternodes to mix funds up to 10000 KORE</source>
-        <translation>Brug 8 separate masternoder for at tilsløre op til 10000 KORE</translation>
-    </message>
-    <message>
-        <source>Use 16 separate masternodes</source>
-        <translation>Brug 16 separate masternoder</translation>
-    </message>
-    <message>
         <source>This option is the quickest and will cost about ~0.025 KORE to anonymize 10000 KORE</source>
         <translation>Dette valg er det hurtigste og vil koste i omegnen af 0.025 KORE for at anonymiser 10000 KORE</translation>
     </message>
@@ -1916,14 +1771,6 @@ Vær tålmodig efter at du har klikket på import.</translation>
     <message>
         <source>Enable coin &amp;control features</source>
         <translation>Aktiver mønt &amp;kontrolfeatures</translation>
-    </message>
-    <message>
-        <source>Show additional tab listing all your masternodes in first sub-tab&lt;br/&gt;and all masternodes on the network in second sub-tab.</source>
-        <translation>Vis en liste over alle Deres masternoder i første underfane &lt;br/&gt; og vis en liste over  alle masternoder på netværket i anden underfane</translation>
-    </message>
-    <message>
-        <source>Show Masternodes Tab</source>
-        <translation>Vis fane med masternoder</translation>
     </message>
     <message>
         <source>&amp;Spend unconfirmed change</source>
@@ -2147,10 +1994,6 @@ https://www.transifex.com/kore-project/kore-project-translations</translation>
         <translation>ikke færdigbehandlet</translation>
     </message>
     <message>
-        <source>Staked or masternode rewards that has not yet matured</source>
-        <translation>Indskyder- eller masternodebelønning er stadig under behandling</translation>
-    </message>
-    <message>
         <source>Current locked balance in watch-only addresses</source>
         <translation>Nuværende låst balance i kun-adresser</translation>
     </message>
@@ -2183,10 +2026,6 @@ https://www.transifex.com/kore-project/kore-project-translations</translation>
         <translation>Ubekræftede transaktioner til "vis kun" adresser</translation>
     </message>
     <message>
-        <source>Staked or masternode rewards in watch-only addresses that has not yet matured</source>
-        <translation>Indskyder- eller masternodebelønning for "vis kun" adresser er stadig under behandling</translation>
-    </message>
-    <message>
         <source>Total:</source>
         <translation>I alt:</translation>
     </message>
@@ -2205,10 +2044,6 @@ https://www.transifex.com/kore-project/kore-project-translations</translation>
     <message>
         <source>Spendable:</source>
         <translation>Brugbare:</translation>
-    </message>
-    <message>
-        <source>Locked KORE or Masternode collaterals. These are excluded from zKORE minting.</source>
-        <translation>Låste KORE eller Masternode collaterals. Disse er udelukket fra zKORE-mintning.</translation>
     </message>
     <message>
         <source>Locked:</source>
@@ -2379,10 +2214,6 @@ For at aktivere AutoMint-ændring 'enablezeromint = 0' til 'enablezeromint = 1' 
     <message>
         <source>zKORE</source>
         <translation>zKORE</translation>
-    </message>
-    <message>
-        <source>Available for minting are coins which are confirmed and not locked or Masternode collaterals.</source>
-        <translation>Til rådighed for mintning er mønter, som er bekræftet og ikke låst eller Masternode collaterals.</translation>
     </message>
     <message>
         <source>Available for Minting:</source>
@@ -3115,10 +2946,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     <message>
         <source>Open the KORE debug log file from the current data directory. This can take a few seconds for large log files.</source>
         <translation>Åbn KORE debug logfilen fra den aktuelle datamappe. Det kan godt tage lidt tid hvis filen er meget stor.</translation>
-    </message>
-    <message>
-        <source>Number of Masternodes</source>
-        <translation>Antal masternoder</translation>
     </message>
     <message>
         <source>&amp;Console</source>
@@ -4445,10 +4272,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Modtaget med</translation>
     </message>
     <message>
-        <source>Masternode Reward</source>
-        <translation>Masternodebelønning</translation>
-    </message>
-    <message>
         <source>Received from</source>
         <translation>Modtaget fra</translation>
     </message>
@@ -4578,10 +4401,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     <message>
         <source>Minted</source>
         <translation>Mintet</translation>
-    </message>
-    <message>
-        <source>Masternode Reward</source>
-        <translation>Masternodebelønning</translation>
     </message>
     <message>
         <source>Zerocoin Mint</source>
@@ -5007,10 +4826,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Peers, der optræder i listen over godkendte peers kan ikke blokeres på baggrund af DoS, og deres transaktioner vil altid blive videresendt - også selvom de allerede findes i mempoolen - anvendes til f.eks. gateways.</translation>
     </message>
     <message>
-        <source>You must specify a masternodeprivkey in the configuration. Please see documentation for help.</source>
-        <translation>Der skal angives en masternodeprivkey i konfigurationen. For mere information, se i dokumentationen.</translation>
-    </message>
-    <message>
         <source>(10743 could be used only on mainnet)</source>
         <translation>(10743 kunne kun bruges på hovednettet)</translation>
     </message>
@@ -5069,10 +4884,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     <message>
         <source>Can't denominate: no compatible inputs left.</source>
         <translation>Kan ikke designere: Ingen kompatible inputs tilbage.</translation>
-    </message>
-    <message>
-        <source>Can't find random Masternode.</source>
-        <translation>Kan ikke finde en tilfældig masternode.</translation>
     </message>
     <message>
         <source>Can't mix while sync in progress.</source>
@@ -5135,10 +4946,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Blokdatabasen er beskadiget</translation>
     </message>
     <message>
-        <source>Could not parse masternode.conf</source>
-        <translation>Kunne ikke fortolke masternode.conf</translation>
-    </message>
-    <message>
         <source>Debugging/Testing options:</source>
         <translation>Debug/testoptioner:</translation>
     </message>
@@ -5183,16 +4990,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Aktivér publicere rå transaktion (låst via swifttx) i &lt;address&gt;</translation>
     </message>
     <message>
-        <source>Enable the client to act as a masternode (0-1, default: %u)</source>
-        <translation>Slå tilstanden "masternode" til (0-1 default: %u)</translation>
-    </message>
-    <message>
         <source>Entries are full.</source>
         <translation>Der er ikke plads til flere poster</translation>
-    </message>
-    <message>
-        <source>Error connecting to Masternode.</source>
-        <translation>Fejl ved oprettelse af forbindelse til masternode.</translation>
     </message>
     <message>
         <source>Error initializing block database</source>
@@ -5375,16 +5174,8 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Ugyldigt beløb</translation>
     </message>
     <message>
-        <source>Invalid masternodeprivkey. Please see documenation.</source>
-        <translation> Ugyldig masternodeprivkey. Se dokumentationen</translation>
-    </message>
-    <message>
         <source>Invalid netmask specified in -whitelist: '%s'</source>
         <translation>Ugyldig netmask specificeret i -whitelist: '%s'</translation>
-    </message>
-    <message>
-        <source>Invalid port detected in masternode.conf</source>
-        <translation>Ugyldig port fundet i masternode.conf</translation>
     </message>
     <message>
         <source>Invalid private key.</source>
@@ -5425,10 +5216,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
 </source>
         <translation>ubekræftede transaktioner fjernet
 </translation>
-    </message>
-    <message>
-        <source>Disable all KORE specific functionality (Masternodes, Zerocoin, swifttx, Budgeting) (0-1, default: %u)</source>
-        <translation>Slå alle KORE funktioner fra (Masternoder, Tilsløring, SwiftTX, Budgetting)(0-1,default:%u)</translation>
     </message>
     <message>
         <source>Enable swifttx, show confirmations for locked transactions (bool, default: %s)</source>
@@ -5567,14 +5354,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Indlæser budgetcache...</translation>
     </message>
     <message>
-        <source>Loading masternode cache...</source>
-        <translation>Indlæser masternodecache...</translation>
-    </message>
-    <message>
-        <source>Loading masternode payment cache...</source>
-        <translation>Indlæser masternode betalingscache...</translation>
-    </message>
-    <message>
         <source>Loading sporks...</source>
         <translation>Indlæser sporks ...</translation>
     </message>
@@ -5595,28 +5374,12 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Er allerede låst</translation>
     </message>
     <message>
-        <source>Lock masternodes from masternode configuration file (default: %u)</source>
-        <translation>Lås masternoder fra masternode konfiguratinsfilen (default: %u)</translation>
-    </message>
-    <message>
         <source>Lookup(): Invalid -proxy address or hostname: '%s'</source>
         <translation>Opslag (): Ugyldig-proxy adresse eller værtsnavn: '%s'</translation>
     </message>
     <message>
         <source>Maintain at most &lt;n&gt; connections to peers (default: %u)</source>
         <translation>Vedligehold maksimalt &lt;n&gt; forbindelser til peers (default: %u)</translation>
-    </message>
-    <message>
-        <source>Masternode options:</source>
-        <translation>Masternodeoptioner</translation>
-    </message>
-    <message>
-        <source>Masternode queue is full.</source>
-        <translation>Masternodens kø er fyldt op.</translation>
-    </message>
-    <message>
-        <source>Masternode:</source>
-        <translation>Masternode:</translation>
     </message>
     <message>
         <source>Maximum per-connection receive buffer, &lt;n&gt;*1000 bytes (default: %u)</source>
@@ -5647,14 +5410,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Der skal specificeres en port med -whitebind: '%s'</translation>
     </message>
     <message>
-        <source>No Masternodes detected.</source>
-        <translation>Ingen masternoder fundet.</translation>
-    </message>
-    <message>
-        <source>No compatible Masternode found.</source>
-        <translation>Ingen kompatible masternoder fundet.</translation>
-    </message>
-    <message>
         <source>No funds detected in need of denominating.</source>
         <translation>Ingen midler fundet til eventuel designering</translation>
     </message>
@@ -5677,10 +5432,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     <message>
         <source>Not enough file descriptors available.</source>
         <translation>Ikke nok fildescriptors tilgængelige</translation>
-    </message>
-    <message>
-        <source>Not in the Masternode list.</source>
-        <translation>Findes ikke i masternodelisten</translation>
     </message>
     <message>
         <source>Number of automatic wallet backups (default: 10)</source>
@@ -5799,10 +5550,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Angiv databasecachens størrelse i megabytes (%d til  %d, default: %d)</translation>
     </message>
     <message>
-        <source>Set external address:port to get to this masternode (example: %s)</source>
-        <translation>Angiv den eksterne adresse:port for at komme til denne masternode (eksempel: %s)</translation>
-    </message>
-    <message>
         <source>Set key pool size to &lt;n&gt; (default: %u)</source>
         <translation>Angiv hoved poolstørrelse til &lt;n&gt; (default %u)</translation>
     </message>
@@ -5817,10 +5564,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     <message>
         <source>Set the Maximum reorg depth (default: %u)</source>
         <translation>Indstil højeste dybde dybde (standard: %u)</translation>
-    </message>
-    <message>
-        <source>Set the masternode private key</source>
-        <translation>angiv masternodens private nøgle</translation>
     </message>
     <message>
         <source>Set the number of threads to service RPC calls (default: %d)</source>
@@ -5863,10 +5606,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>angiv datamappe</translation>
     </message>
     <message>
-        <source>Specify masternode configuration file (default: %s)</source>
-        <translation>Specificer masternode konfigurationsfilen (default: %s)</translation>
-    </message>
-    <message>
         <source>Specify pid file (default: %s)</source>
         <translation>Angiv pid filen (default: %s)</translation>
     </message>
@@ -5895,18 +5634,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
         <translation>Stop kørsel efter import af blokke fra disken (default: %u)</translation>
     </message>
     <message>
-        <source>Submitted following entries to masternode: %u / %d</source>
-        <translation>Afsendt følgende posteringer til masternode %u / %d</translation>
-    </message>
-    <message>
-        <source>Submitted to masternode, waiting for more entries ( %u / %d ) %s</source>
-        <translation>Afsendt til masternode. Afventer flere posteringer (%u /%d) %s</translation>
-    </message>
-    <message>
-        <source>Submitted to masternode, waiting in queue %s</source>
-        <translation>Afsendt til masternode, venter i kø %s</translation>
-    </message>
-    <message>
         <source>Synchronization failed</source>
         <translation>Synkronisering mislykkedes.</translation>
     </message>
@@ -5921,14 +5648,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     <message>
         <source>Synchronizing budgets...</source>
         <translation>Synkronisere budgetter</translation>
-    </message>
-    <message>
-        <source>Synchronizing masternode winners...</source>
-        <translation>Synkroniserer masternodevinnere</translation>
-    </message>
-    <message>
-        <source>Synchronizing masternodes...</source>
-        <translation>Synkroniserer masternoder...</translation>
     </message>
     <message>
         <source>Synchronizing sporks...</source>
@@ -5961,10 +5680,6 @@ Enten mint højere nomineringer (så færre input er nødvendige) eller reducere
     <message>
         <source>This is intended for regression testing tools and app development.</source>
         <translation>Dette er ment som et tilbagekørings test- og appudviklingsværktøj.</translation>
-    </message>
-    <message>
-        <source>This is not a Masternode.</source>
-        <translation>Dette er ikke en masternode</translation>
     </message>
     <message>
         <source>Threshold for disconnecting misbehaving peers (default: %u)</source>

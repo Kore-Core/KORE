@@ -186,11 +186,10 @@ bool CWalletDB::EraseMultiSend(std::vector<std::pair<std::string, int> > vMultiS
     return ret;
 }
 //presstab HyperStake
-bool CWalletDB::WriteMSettings(bool fMultiSendStake, bool fMultiSendMasternode, int nLastMultiSendHeight)
+bool CWalletDB::WriteMSettings(bool fMultiSendStake, int nLastMultiSendHeight)
 {
     nWalletDBUpdated++;
-    std::pair<bool, bool> enabledMS(fMultiSendStake, fMultiSendMasternode);
-    std::pair<std::pair<bool, bool>, int> pSettings(enabledMS, nLastMultiSendHeight);
+    std::pair<bool, int> pSettings(fMultiSendStake, nLastMultiSendHeight);
 
     return Write(std::string("msettingsv2"), pSettings, true);
 }
@@ -623,10 +622,9 @@ bool ReadKeyValue(CWallet* pwallet, CDataStream& ssKey, CDataStream& ssValue, CW
             }
         } else if (strType == "msettingsv2") //presstab HyperStake
         {
-            std::pair<std::pair<bool, bool>, int> pSettings;
+            std::pair<bool, int> pSettings;
             ssValue >> pSettings;
-            pwallet->fMultiSendStake = pSettings.first.first;
-            pwallet->fMultiSendMasternodeReward = pSettings.first.second;
+            pwallet->fMultiSendStake = pSettings.first;
             pwallet->nLastMultiSendHeight = pSettings.second;
         } else if (strType == "mdisabled") //presstab HyperStake
         {

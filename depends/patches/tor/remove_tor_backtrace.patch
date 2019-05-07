@@ -1,0 +1,23 @@
+--- ./src/common/backtrace.c	2019-05-07 08:41:25.329092010 -0300
+@@ -42,6 +42,8 @@
+ #define EXPOSE_CLEAN_BACKTRACE
+ #include "backtrace.h"
+ 
++/* removing tor capability to trap signals. this way
++   we will know where the error is happening
+ #if defined(HAVE_EXECINFO_H) && defined(HAVE_BACKTRACE) && \
+   defined(HAVE_BACKTRACE_SYMBOLS_FD) && defined(HAVE_SIGACTION)
+ #define USE_BACKTRACE
+@@ -50,6 +52,11 @@
+ #if !defined(USE_BACKTRACE)
+ #define NO_BACKTRACE_IMPL
+ #endif
++*/
++
++#undef USE_BACKTRACE
++#define NO_BACKTRACE_IMPL
++
+ 
+ /** Version of Tor to report in backtrace messages. */
+ static char *bt_version = NULL;
+

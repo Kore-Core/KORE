@@ -146,7 +146,6 @@ public:
     friend bool operator<(const CInv& a, const CInv& b);
 
     bool IsKnownType() const;
-    bool IsMasterNodeType() const;
     const char* GetCommand() const;
     std::string ToString() const;
 
@@ -161,20 +160,7 @@ enum {
     MSG_BLOCK,
     // Nodes may always request a MSG_FILTERED_BLOCK in a getdata, however,
     // MSG_FILTERED_BLOCK should not appear in any invs except as a part of getdata.
-    MSG_FILTERED_BLOCK,
-    MSG_TXLOCK_REQUEST,
-    MSG_TXLOCK_VOTE,
-    MSG_SPORK,
-    MSG_MASTERNODE_WINNER,
-    MSG_MASTERNODE_SCANNING_ERROR,
-    MSG_BUDGET_VOTE,
-    MSG_BUDGET_PROPOSAL,
-    MSG_BUDGET_FINALIZED,
-    MSG_BUDGET_FINALIZED_VOTE,
-    MSG_MASTERNODE_QUORUM,
-    MSG_MASTERNODE_ANNOUNCE,
-    MSG_MASTERNODE_PING,
-    MSG_DSTX
+    MSG_FILTERED_BLOCK
 };
 
 /**
@@ -330,22 +316,5 @@ extern const char *REJECT;
  * @see https://kore.org/en/developer-reference#sendheaders
  */
 extern const char *SENDHEADERS;
-
-extern const char *TXLOCKREQUEST;
-extern const char *SPORK;
-extern const char *TXLOCKVOTE;
-extern const char *MNWINNER;
-extern const char *MNSCANERROR;
-extern const char *MNBUDGETVOTE;
-extern const char *MNBUDGETPROPOSAL;
-extern const char *MNBUDGETFINALIZED;
-extern const char *MNBUDGETFINALIZEDVOTE;
-extern const char *QUORUM;
-extern const char *ANNOUNCE;
-extern const char *MNPING;
-extern const char *DSTX;
-
-extern const char *SSC;
-extern const char *MNVS;
 };
 #endif // BITCOIN_PROTOCOL_H

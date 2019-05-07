@@ -16,7 +16,6 @@
 
 #include "coincontrol.h"
 #include "main.h"
-#include "obfuscation.h"
 #include "wallet.h"
 #include "multisigdialog.h"
 
@@ -131,14 +130,13 @@ CoinControlDialog::CoinControlDialog(QWidget* parent, bool fMultisigEnabled) : Q
     // see https://github.com/bitcoin/bitcoin/issues/5716
     ui->treeWidget->headerItem()->setText(COLUMN_CHECKBOX, QString());
 
-    ui->treeWidget->setColumnWidth(COLUMN_CHECKBOX, 84);
+    ui->treeWidget->setColumnWidth(COLUMN_CHECKBOX, 40);
     ui->treeWidget->setColumnWidth(COLUMN_AMOUNT, 100);
     ui->treeWidget->setColumnWidth(COLUMN_LABEL, 170);
-    ui->treeWidget->setColumnWidth(COLUMN_ADDRESS, 190);
-    ui->treeWidget->setColumnWidth(COLUMN_DATE, 80);
+    ui->treeWidget->setColumnWidth(COLUMN_ADDRESS, 214);
+    ui->treeWidget->setColumnWidth(COLUMN_DATE, 100);
     ui->treeWidget->setColumnWidth(COLUMN_CONFIRMATIONS, 100);
     ui->treeWidget->setColumnWidth(COLUMN_PRIORITY, 100);
-    ui->treeWidget->setColumnWidth(COLUMN_OBFUSCATION_ROUNDS, 88);
     ui->treeWidget->setColumnHidden(COLUMN_TXHASH, true);         // store transacton hash in this column, but dont show it
     ui->treeWidget->setColumnHidden(COLUMN_VOUT_INDEX, true);     // store vout index in this column, but dont show it
     ui->treeWidget->setColumnHidden(COLUMN_AMOUNT_INT64, true);   // store amount int64 in this column, but dont show it
@@ -437,17 +435,6 @@ void CoinControlDialog::viewItemChanged(QTreeWidgetItem* item, int column)
             coinControl->UnSelect(outpt);
         else if (item->isDisabled()) // locked (this happens if "check all" through parent node)
             item->setCheckState(COLUMN_CHECKBOX, Qt::Unchecked);
-        else {
-            coinControl->Select(outpt);
-            CTxIn vin(outpt);
-            int rounds = pwalletMain->GetInputObfuscationRounds(vin);
-            if (coinControl->useObfuScation && rounds < nObfuscationRounds) {
-                QMessageBox::warning(this, windowTitle(),
-                    tr("Non-anonymized input selected. <b>Obfuscation will be disabled.</b><br><br>If you still want to use Obfuscation, please deselect all non-nonymized inputs first and then check Obfuscation checkbox again."),
-                    QMessageBox::Ok, QMessageBox::Ok);
-                coinControl->useObfuScation = false;
-            }
-        }
 
         // selection changed -> update labels
         if (ui->treeWidget->isEnabled()){ // do not update on every click for (un)select all
@@ -628,8 +615,6 @@ void CoinControlDialog::updateLabels(WalletModel* model, QDialog* dialog)
         // Fee
         nPayFee = CWallet::GetMinimumFee(nBytes, nTxConfirmTarget, mempool);
 
-        // IX Fee
-        if (coinControl->useSwiftTX) nPayFee = max(nPayFee, CENT);
         // Allow free?
         double dPriorityNeeded = mempoolEstimatePriority;
         if (dPriorityNeeded <= 0)
@@ -643,11 +628,6 @@ void CoinControlDialog::updateLabels(WalletModel* model, QDialog* dialog)
         if (nPayAmount > 0) {
             nChange = nAmount - nPayFee - nPayAmount;
 
-            // DS Fee = overpay
-            if (coinControl->useObfuScation && nChange > 0) {
-                nPayFee += nChange;
-                nChange = 0;
-            }
             // Never create dust outputs; if we would, just add the dust to the fee.
             if (nChange > 0 && nChange < CENT) {
                 CTxOut txout(nChange, (CScript)vector<unsigned char>(24, 0));
@@ -867,16 +847,6 @@ void CoinControlDialog::updateView()
             itemOutput->setText(COLUMN_DATE, GUIUtil::dateTimeStr(out.tx->GetTxTime()));
             itemOutput->setToolTip(COLUMN_DATE, GUIUtil::dateTimeStr(out.tx->GetTxTime()));
             itemOutput->setData(COLUMN_DATE_INT64, Qt::DisplayRole, (qlonglong)out.tx->GetTxTime());
-
-            // ds+ rounds
-            CTxIn vin = CTxIn(out.tx->GetHash(), out.i);
-            int rounds = pwalletMain->GetInputObfuscationRounds(vin);
-
-            if (rounds >= 0)
-                itemOutput->setText(COLUMN_OBFUSCATION_ROUNDS, strPad(QString::number(rounds), 11, " "));
-            else
-                itemOutput->setText(COLUMN_OBFUSCATION_ROUNDS, strPad(QString(tr("n/a")), 11, " "));
-
 
             // confirmations
             itemOutput->setData(COLUMN_CONFIRMATIONS, Qt::DisplayRole, out.nDepth);

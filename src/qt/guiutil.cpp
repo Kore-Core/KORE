@@ -377,15 +377,6 @@ void openConfigfile()
         QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(pathConfig)));
 }
 
-void openMNConfigfile()
-{
-    boost::filesystem::path pathConfig = GetMasternodeConfigFile();
-
-    /* Open masternode.conf with the associated application */
-    if (boost::filesystem::exists(pathConfig))
-        QDesktopServices::openUrl(QUrl::fromLocalFile(boostPathToQString(pathConfig)));
-}
-
 void showBackups()
 {
     boost::filesystem::path pathBackups = GetDataDir() / "backups";
@@ -575,9 +566,8 @@ DHMSTableWidgetItem::DHMSTableWidgetItem(const int64_t seconds) : QTableWidgetIt
 }
 
 /**
- * Comparator overload to ensure that the "DHMS"-type durations as used in
- * the "active-since" list in the masternode tab are sorted by the elapsed
- * duration (versus the string value being sorted).
+ * Comparator overload to ensure that the "DHMS"-type are sorted by 
+ * the elapsed duration (versus the string value being sorted).
  * @param[in] item      Right hand side of the less than operator
  */
 bool DHMSTableWidgetItem::operator<(QTableWidgetItem const& item) const

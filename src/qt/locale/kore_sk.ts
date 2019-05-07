@@ -581,14 +581,6 @@
         <translation>Vyžiadať platby (generuje QR kódy a kore: identifikátory URI)</translation>
     </message>
     <message>
-        <source>&amp;Masternodes</source>
-        <translation>&amp;Masternodes</translation>
-    </message>
-    <message>
-        <source>Browse masternodes</source>
-        <translation>Prezrieť masternody</translation>
-    </message>
-    <message>
         <source>&amp;About KORE Core</source>
         <translation>O KORE Core</translation>
     </message>
@@ -627,14 +619,6 @@
     <message>
         <source>Open Wallet &amp;Configuration File</source>
         <translation>Otvoriť konfiguračný súbor peňaženky</translation>
-    </message>
-    <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>Otvoriť konfiguračný súbor masternodu</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>Otvoriť konfiguračný súbor masternodu</translation>
     </message>
     <message>
         <source>Open a KORE: URI or payment request</source>
@@ -880,17 +864,6 @@ MultiSend: %1</translation>
     <message>
         <source>Error</source>
         <translation>Chyba</translation>
-    </message>
-    </context>
-<context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Address</source>
-        <translation>Adresa</translation>
-    </message>
-    <message>
-        <source>Active</source>
-        <translation>Aktívny</translation>
     </message>
     </context>
 <context>

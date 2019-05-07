@@ -433,10 +433,6 @@
         <translation>&amp;Privacitat</translation>
     </message>
     <message>
-        <source>&amp;Masternodes</source>
-        <translation>&amp;Masternodes</translation>
-    </message>
-    <message>
         <source>&amp;About KORE Core</source>
         <translation>&amp;Sobre KORE Core</translation>
     </message>
@@ -451,14 +447,6 @@
     <message>
         <source>Open Wallet &amp;Configuration File</source>
         <translation>Obre el fitxer de &amp;configuració del moneder</translation>
-    </message>
-    <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>Obre el fitxer de &amp;configuració del Masternode</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>Obre el fitxer de configuració del Masternode</translation>
     </message>
     <message>
         <source>KORE Core client</source>
@@ -943,85 +931,6 @@
     </message>
 </context>
 <context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Form</source>
-        <translation>Formulari</translation>
-    </message>
-    <message>
-        <source>Alias</source>
-        <translation>Àlies</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>Adreça</translation>
-    </message>
-    <message>
-        <source>Protocol</source>
-        <translation>Protocol</translation>
-    </message>
-    <message>
-        <source>Status</source>
-        <translation>Estat</translation>
-    </message>
-    <message>
-        <source>Active</source>
-        <translation>Actiu</translation>
-    </message>
-    <message>
-        <source>Last Seen (UTC)</source>
-        <translation>Vist per últim cop (UTC)</translation>
-    </message>
-    <message>
-        <source>Pubkey</source>
-        <translation>ClauPública</translation>
-    </message>
-    <message>
-        <source>Status will be updated automatically in (sec):</source>
-        <translation>L'estat s'actualitzarà automàticament en (seg):</translation>
-    </message>
-    <message>
-        <source>0</source>
-        <translation>0</translation>
-    </message>
-    <message>
-        <source>Start alias</source>
-        <translation>Inicia àlies</translation>
-    </message>
-    <message>
-        <source>Confirm masternode start</source>
-        <translation>Confirma l'inici del Masternode</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start masternode %1?</source>
-        <translation>Estàs segur que vols iniciar el Masternode %1?</translation>
-    </message>
-    <message>
-        <source>Confirm all masternodes start</source>
-        <translation>Confirma l'inici de tots els Masternodes</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start ALL masternodes?</source>
-        <translation>Estàs segur que vols iniciar TOTS els Masternodes?</translation>
-    </message>
-    <message>
-        <source>Command is not available right now</source>
-        <translation>La comanda no està disponible en aquests moments</translation>
-    </message>
-    <message>
-        <source>You can't use this command until masternode list is synced</source>
-        <translation>No es pot utilitzar aquesta comanda fins que la llista de masternodes estigui sincronitzada.</translation>
-    </message>
-    <message>
-        <source>Confirm missing masternodes start</source>
-        <translation>Confirma l'inici dels Masternodes desapareguts</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to start MISSING masternodes?</source>
-        <translation>Estàs segur que vols iniciar els Masternodes DESAPAREGUTS?</translation>
-    </message>
-</context>
-<context>
     <name>MultiSendDialog</name>
     <message>
         <source>MultiSend</source>
@@ -1148,18 +1057,6 @@
         <translation>Si us plau, selecciona un nivell de privacitat.</translation>
     </message>
     <message>
-        <source>Use 2 separate masternodes to mix funds up to 10000 KORE</source>
-        <translation>Utilitza 2 masternodes diferents per mesclar fons de fins a 10000 KORE</translation>
-    </message>
-    <message>
-        <source>Use 8 separate masternodes to mix funds up to 10000 KORE</source>
-        <translation>Utilitza 8 masternodes diferents per mesclar fons de fins a 10000 KORE</translation>
-    </message>
-    <message>
-        <source>Use 16 separate masternodes</source>
-        <translation>Utilitza 16 masternodes diferents</translation>
-    </message>
-    <message>
         <source>This option is the quickest and will cost about ~0.025 KORE to anonymize 10000 KORE</source>
         <translation>Aquesta opció és la més ràpida i té un cost d'uns ~0.025 KORE per anonimitzar 10000 KORE</translation>
     </message>
@@ -1224,10 +1121,6 @@
     <message>
         <source>Enable coin &amp;control features</source>
         <translation>Activa la funcionalitat de &amp;control de monedes</translation>
-    </message>
-    <message>
-        <source>Show Masternodes Tab</source>
-        <translation>Mostra la pestanya de Masternodes</translation>
     </message>
     <message>
         <source>&amp;Port:</source>
@@ -1984,10 +1877,6 @@
         <translation>Opcions de connexió:</translation>
     </message>
     <message>
-        <source>Error connecting to Masternode.</source>
-        <translation>Error connectant al Masternode.</translation>
-    </message>
-    <message>
         <source>Error</source>
         <translation>Error</translation>
     </message>
@@ -2012,20 +1901,8 @@
         <translation>S'està carregant el moneder...</translation>
     </message>
     <message>
-        <source>Masternode:</source>
-        <translation>Masternode:</translation>
-    </message>
-    <message>
         <source>Mixing in progress...</source>
         <translation>Mescla en curs...</translation>
-    </message>
-    <message>
-        <source>No Masternodes detected.</source>
-        <translation>No s'han detectat masternodes.</translation>
-    </message>
-    <message>
-        <source>No compatible Masternode found.</source>
-        <translation>No s'han trobat masternodes compatibles.</translation>
     </message>
     <message>
         <source>Options:</source>
@@ -2038,18 +1915,6 @@
     <message>
         <source>Rescanning...</source>
         <translation>S'està reescanejant...</translation>
-    </message>
-    <message>
-        <source>Submitted following entries to masternode: %u / %d</source>
-        <translation>S'ha enviat les següents entrades al masternode: %u /%d</translation>
-    </message>
-    <message>
-        <source>Submitted to masternode, waiting for more entries ( %u / %d ) %s</source>
-        <translation>Enviat al masternode, esperant més entrades ( %u / %d ) %s</translation>
-    </message>
-    <message>
-        <source>Submitted to masternode, waiting in queue %s</source>
-        <translation>Enviat al masternode, esperant a la cua %s</translation>
     </message>
     <message>
         <source>Synchronization failed</source>

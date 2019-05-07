@@ -32,25 +32,6 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_Main" stretch="1,1,1,0,1,1,1">
      <item>
-      <widget class="QLabel" name="label_2">
-       <property name="lineWidth">
-        <number>1</number>
-       </property>
-       <property name="text">
-        <string>MultiSend allows you to automatically send up to 100% of your stake or masternode reward to a list of other KORE addresses after it matures.
-To Add: enter percentage to give and KORE address to add to the MultiSend vector.
-To Delete: Enter address to delete and press delete.
-MultiSend will not be activated unless you have clicked Activate</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-       </property>
-       <property name="wordWrap">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="Line" name="line">
        <property name="minimumSize">
         <size>
@@ -77,13 +58,6 @@ MultiSend will not be activated unless you have clicked Activate</string>
           <widget class="QCheckBox" name="multiSendStakeCheckBox">
            <property name="text">
             <string>Send For Stakes</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="multiSendMasternodeCheckBox">
-           <property name="text">
-            <string>Send For Masternode Rewards</string>
            </property>
           </widget>
          </item>

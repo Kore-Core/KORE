@@ -56,8 +56,7 @@ INCLUDEPATH += . \
                src/secp256k1/src/java
 
 # Input
-HEADERS += src/activemasternode.h \
-           src/addrman.h \
+HEADERS += src/addrman.h \
            src/alert.h \
            src/allocators.h \
            src/amount.h \
@@ -76,27 +75,18 @@ HEADERS += src/activemasternode.h \
            src/compressor.h \
            src/core_io.h \
            src/crypter.h \
-           src/obfuscation-relay.h \
-           src/obfuscation.h \
            src/bitcoin-config.h \
            src/db.h \
            src/eccryptoverify.h \
            src/ecwrapper.h \
            src/hash.h \
            src/init.h \
-           src/swifttx.h \
            src/keepass.h \
            src/key.h \
            src/keystore.h \
            src/leveldbwrapper.h \
            src/limitedmap.h \
            src/main.h \
-           src/masternode-budget.h \
-           src/masternode-payments.h \
-           src/masternode-sync.h \
-           src/masternode.h \
-           src/masternodeconfig.h \
-           src/masternodeman.h \
            src/merkleblock.h \
            src/miner.h \
            src/mruset.h \
@@ -111,7 +101,6 @@ HEADERS += src/activemasternode.h \
            src/rpcprotocol.h \
            src/rpcserver.h \
            src/serialize.h \
-           src/spork.h \
            src/streams.h \
            src/sync.h \
            src/threadsafety.h \
@@ -175,7 +164,6 @@ HEADERS += src/activemasternode.h \
            src/qt/coincontroldialog.h \
            src/qt/coincontroltreewidget.h \
            src/qt/csvmodelwriter.h \
-           src/qt/obfuscationconfig.h \
            src/qt/editaddressdialog.h \
            src/qt/guiconstants.h \
            src/qt/guiutil.h \
@@ -340,7 +328,6 @@ HEADERS += src/activemasternode.h \
 FORMS += src/qt/forms/addressbookpage.ui \
          src/qt/forms/askpassphrasedialog.ui \
          src/qt/forms/coincontroldialog.ui \
-         src/qt/forms/obfuscationconfig.ui \
          src/qt/forms/editaddressdialog.ui \
          src/qt/forms/helpmessagedialog.ui \
          src/qt/forms/intro.ui \
@@ -354,8 +341,7 @@ FORMS += src/qt/forms/addressbookpage.ui \
          src/qt/forms/sendcoinsentry.ui \
          src/qt/forms/signverifymessagedialog.ui \
          src/qt/forms/transactiondescdialog.ui
-SOURCES += src/activemasternode.cpp \
-           src/addrman.cpp \
+SOURCES += src/addrman.cpp \
            src/alert.cpp \
            src/allocators.cpp \
            src/amount.cpp \
@@ -371,8 +357,6 @@ SOURCES += src/activemasternode.cpp \
            src/core_read.cpp \
            src/core_write.cpp \
            src/crypter.cpp \
-           src/obfuscation-relay.cpp \
-           src/obfuscation.cpp \
            src/kore-cli.cpp \
            src/kore-tx.cpp \
            src/kore.cpp \
@@ -382,18 +366,11 @@ SOURCES += src/activemasternode.cpp \
            src/editaddressdialog.cpp \
            src/hash.cpp \
            src/init.cpp \
-           src/swifttx.cpp \
            src/keepass.cpp \
            src/key.cpp \
            src/keystore.cpp \
            src/leveldbwrapper.cpp \
            src/main.cpp \
-           src/masternode-budget.cpp \
-           src/masternode-payments.cpp \
-           src/masternode-sync.cpp \
-           src/masternode.cpp \
-           src/masternodeconfig.cpp \
-           src/masternodeman.cpp \
            src/merkleblock.cpp \
            src/miner.cpp \
            src/net.cpp \
@@ -407,8 +384,6 @@ SOURCES += src/activemasternode.cpp \
            src/rpcblockchain.cpp \
            src/rpcclient.cpp \
            src/rpcdump.cpp \
-           src/rpcmasternode-budget.cpp \
-           src/rpcmasternode.cpp \
            src/rpcmining.cpp \
            src/rpcmisc.cpp \
            src/rpcnet.cpp \
@@ -416,7 +391,6 @@ SOURCES += src/activemasternode.cpp \
            src/rpcrawtransaction.cpp \
            src/rpcserver.cpp \
            src/rpcwallet.cpp \
-           src/spork.cpp \
            src/sync.cpp \
            src/timedata.cpp \
            src/txdb.cpp \
@@ -469,7 +443,6 @@ SOURCES += src/activemasternode.cpp \
            src/qt/coincontroldialog.cpp \
            src/qt/coincontroltreewidget.cpp \
            src/qt/csvmodelwriter.cpp \
-           src/qt/obfuscationconfig.cpp \
            src/qt/kore.cpp \
            src/qt/korestrings.cpp \
            src/qt/editaddressdialog.cpp \

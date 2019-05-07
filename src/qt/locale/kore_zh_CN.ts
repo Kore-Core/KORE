@@ -585,14 +585,6 @@
         <translation>&amp;P隐私</translation>
     </message>
     <message>
-        <source>&amp;Masternodes</source>
-        <translation>&amp;M主节点</translation>
-    </message>
-    <message>
-        <source>Browse masternodes</source>
-        <translation>浏览主节点</translation>
-    </message>
-    <message>
         <source>&amp;About KORE Core</source>
         <translation>&amp;A关于KORE Core</translation>
     </message>
@@ -631,14 +623,6 @@
     <message>
         <source>Open Wallet &amp;Configuration File</source>
         <translation>打开钱包&amp;配置文件</translation>
-    </message>
-    <message>
-        <source>Open &amp;Masternode Configuration File</source>
-        <translation>打开&amp;主节点配置文件</translation>
-    </message>
-    <message>
-        <source>Open Masternode configuration file</source>
-        <translation>打开主节点配置文件</translation>
     </message>
     <message>
         <source>Open a KORE: URI or payment request</source>
@@ -835,41 +819,6 @@ Address: %4
     </message>
     </context>
 <context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Form</source>
-        <translation>来自</translation>
-    </message>
-    <message>
-        <source>Note: Status of your masternodes in local wallet can potentially be slightly incorrect.&lt;br /&gt;Always wait for wallet to sync additional data and then double check from another node&lt;br /&gt;if your node should be running but you still see "MISSING" in "Status" field.</source>
-        <translation>注意：在本地钱包您主节点状态可能会稍微不正确。&lt;br /&gt;总是等待钱包从另一个节点同步的附加数据，然后仔细检查&lt;br /&gt;如果您的节点正在运行，但您仍然在“Status”字段中看到“MISSING”。</translation>
-    </message>
-    <message>
-        <source>Address</source>
-        <translation>地址</translation>
-    </message>
-    <message>
-        <source>Active</source>
-        <translation>激活</translation>
-    </message>
-    <message>
-        <source>S&amp;tart alias</source>
-        <translation>S&amp;开始别名</translation>
-    </message>
-    <message>
-        <source>Start &amp;all</source>
-        <translation>开始&amp;全部</translation>
-    </message>
-    <message>
-        <source>Start &amp;MISSING</source>
-        <translation>开始&amp;MISSING</translation>
-    </message>
-    <message>
-        <source>&amp;Update status</source>
-        <translation>&amp;更新状态</translation>
-    </message>
-    </context>
-<context>
     <name>MultiSendDialog</name>
     <message>
         <source>Alt+A</source>
@@ -934,10 +883,6 @@ Address: %4
     <message>
         <source>Enable coin &amp;control features</source>
         <translation>启用硬币&amp;控制功能</translation>
-    </message>
-    <message>
-        <source>Show additional tab listing all your masternodes in first sub-tab&lt;br/&gt;and all masternodes on the network in second sub-tab.</source>
-        <translation>显示附加的标签，列出所有您的主节点在第一子列表上&lt;br/&gt;所有主节点的网络在第二个子列表上。</translation>
     </message>
     <message>
         <source>&amp;Spend unconfirmed change</source>

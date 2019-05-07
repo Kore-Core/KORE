@@ -12,7 +12,6 @@
 #include "walletmodeltransaction.h"
 
 #include "allocators.h" /* for SecureString */
-#include "swifttx.h"
 #include "wallet.h"
 
 #include <map>
@@ -53,7 +52,6 @@ public:
     QString address;
     QString label;
     AvailableCoinsType inputType;
-    bool useSwiftTX;
     CAmount amount;
     // If from a payment request, this is used for storing the memo
     QString message;
@@ -120,7 +118,6 @@ public:
         DuplicateAddress,
         TransactionCreationFailed, // Error returned when wallet is still locked
         TransactionCommitFailed,
-        AnonymizeOnlyUnlocked,
         InsaneFee
     };
 
@@ -140,7 +137,6 @@ public:
     CAmount getUnconfirmedBalance() const;
     CAmount getImmatureBalance() const;
     CAmount getStakedBalance() const;
-    CAmount getAnonymizedBalance() const;
     bool haveWatchOnly() const;
     CAmount getWatchBalance() const;
     CAmount getWatchUnconfirmedBalance() const;
@@ -171,8 +167,6 @@ public:
     // Passphrase only needed when unlocking
     bool setWalletLocked(bool locked, const SecureString& passPhrase = SecureString(), bool anonymizeOnly = false);
     bool changePassphrase(const SecureString& oldPass, const SecureString& newPass);
-    // Is wallet unlocked for anonymization only?
-    bool isAnonymizeOnlyUnlocked();
     // Wallet backup
     bool backupWallet(const QString& filename);
 
@@ -236,14 +230,12 @@ private:
     CAmount cachedUnconfirmedBalance;
     CAmount cachedImmatureBalance;
     CAmount cachedStakedBalance;
-    CAmount cachedAnonymizedBalance;
     CAmount cachedWatchOnlyBalance;
     CAmount cachedWatchUnconfBalance;
     CAmount cachedWatchImmatureBalance;
     EncryptionStatus cachedEncryptionStatus;
     int cachedNumBlocks;
     int cachedTxLocks;
-    int cachedObfuscationRounds;
 
     QTimer* pollTimer;
 
@@ -253,7 +245,7 @@ private:
 
 signals:
     // Signal that balance in wallet changed
-    void balanceChanged(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& stakedBalance, const CAmount& anonymizedBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
+    void balanceChanged(const CAmount& balance, const CAmount& unconfirmedBalance, const CAmount& immatureBalance, const CAmount& stakedBalance, const CAmount& watchOnlyBalance, const CAmount& watchUnconfBalance, const CAmount& watchImmatureBalance);
 
     // Encryption status of wallet changed
     void encryptionStatusChanged(int status);

@@ -29,9 +29,6 @@ static const int MIN_PEER_PROTO_VERSION_PRE_FORK = 70101;
 //! disconnect from peers older than this proto version
 static const int MIN_PEER_PROTO_VERSION = PROTOCOL_VERSION;
 
-//! masternodes older than this proto version use old strMessage format for mnannounce
-static const int MIN_PEER_MNANNOUNCE = PROTOCOL_VERSION;
-
 //! nTime field added to CAddress, starting with this version;
 //! if possible, avoid requesting addresses nodes older than this
 static const int CADDR_TIME_VERSION = 31402;
@@ -47,10 +44,6 @@ static const int MEMPOOL_GD_VERSION = 60002;
 
 //! "filter*" commands are disabled without NODE_BLOOM after and including this version
 static const int NO_BLOOM_VERSION = 70011;
-
-// Legacy
-//! minimum peer version for masternode budgets
-static const int MIN_BUDGET_PEER_PROTO_VERSION = 70101;
 
 //! demand canonical block signatures starting from this version
 static const int CANONICAL_BLOCK_SIG_VERSION = 70012;

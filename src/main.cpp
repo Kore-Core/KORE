@@ -9,6 +9,7 @@
 #include "addrman.h"
 #include "alert.h"
 #include "arith_uint256.h" // Legacy
+#include "base58.h"
 #include "blocksignature.h"
 #include "chainparams.h"
 #include "checkpoints.h"
@@ -17,24 +18,18 @@
 #include "invalid.h"
 #include "kernel.h"
 #include "legacy/consensus/merkle.h"
-#include "masternode-budget.h"
-#include "masternode-payments.h"
-#include "masternodeman.h"
 #include "merkleblock.h"
 #include "miner.h"
 #include "net.h"
-#include "obfuscation.h"
 #include "pos.h" // Old from Kore, will be deprecated
 #include "pow.h"
-#include "spork.h"
-#include "sporkdb.h"
-#include "swifttx.h"
 #include "txdb.h"
 #include "txmempool.h"
 #include "ui_interface.h"
 #include "util.h"
 #include "utilmoneystr.h"
 #include "validationinterface.h"
+#include "wallet.h"
 
 #include <condition_variable>
 #include <mutex>
@@ -674,7 +669,6 @@ CBlockIndex* FindForkInGlobalIndex(const CChain& chain, const CBlockLocator& loc
 
 CCoinsViewCache* pcoinsTip = NULL;
 CBlockTreeDB* pblocktree = NULL;
-CSporkDB* pSporkDB = NULL;
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -1005,40 +999,6 @@ int GetInputAge(CTxIn& vin)
     }
 }
 
-int GetInputAgeIX(uint256 nTXHash, CTxIn& vin)
-{
-    int sigs = 0;
-    int nResult = GetInputAge(vin);
-    if (nResult < 0) nResult = 0;
-
-    if (nResult < Params().GetCoinMaturity()) {
-        std::map<uint256, CTransactionLock>::iterator i = mapTxLocks.find(nTXHash);
-        if (i != mapTxLocks.end()) {
-            sigs = (*i).second.CountSignatures();
-        }
-        if (sigs >= SWIFTTX_SIGNATURES_REQUIRED) {
-            return nSwiftTXDepth + nResult;
-        }
-    }
-
-    return -1;
-}
-
-int GetIXConfirmations(uint256 nTXHash)
-{
-    int sigs = 0;
-
-    std::map<uint256, CTransactionLock>::iterator i = mapTxLocks.find(nTXHash);
-    if (i != mapTxLocks.end()) {
-        sigs = (*i).second.CountSignatures();
-    }
-    if (sigs >= SWIFTTX_SIGNATURES_REQUIRED) {
-        return nSwiftTXDepth;
-    }
-
-    return 0;
-}
-
 // ppcoin: total coin age spent in transaction, in the unit of coin-days.
 // Only those coins meeting minimum age requirement counts. As those
 // transactions not in main chain are not currently indexed so we
@@ -1297,14 +1257,12 @@ static std::pair<int, int64_t> CalculateSequenceLocks(const CTransaction& tx, in
 
 static bool EvaluateSequenceLocks(const CBlockIndex& block, std::pair<int, int64_t> lockPair)
 {
-    return lockPair.first >= block.nHeight || GetAdjustedTime() + chainActive.Tip()->GetMedianTimeSpacing() >= lockPair.second + Params().GetStakeLockInterval();
-    // Changed because in this consensus using PoS
-    // assert(block.pprev);
-    // int64_t nBlockTime = block.pprev->GetMedianTimePast();
-    // if (lockPair.first >= block.nHeight || lockPair.second >= nBlockTime)
-    //     return false;
+    assert(block.pprev);
+    int64_t nBlockTime = block.pprev->GetMedianTimePast();
+    if (lockPair.first >= block.nHeight || lockPair.second >= nBlockTime)
+        return false;
 
-    // return true;
+    return true;
 }
 
 bool SequenceLocks(const CTransaction& tx, int flags, std::vector<int>* prevHeights, const CBlockIndex& block)
@@ -1440,19 +1398,6 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
     if (pool.exists(hash))
         return state.Invalid(false, REJECT_ALREADY_KNOWN, "txn-already-in-mempool");
 
-
-    // ----------- swiftTX transaction scanning -----------
-
-    BOOST_FOREACH (const CTxIn& in, tx.vin) {
-        if (mapLockedInputs.count(in.prevout)) {
-            if (mapLockedInputs[in.prevout] != tx.GetHash()) {
-                //mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                return state.DoS(0,
-                    error("AcceptToMemoryPool : conflicts with existing transaction lock: %s", reason),
-                    REJECT_INVALID, "tx-lock-conflict");
-            }
-        }
-    }
 
     // Check for conflicts with in-memory transactions
     set<uint256> setConflicts;
@@ -1592,9 +1537,7 @@ bool AcceptToMemoryPoolWorker(CTxMemPool& pool, CValidationState& state, const C
 
         // Don't accept it if it can't get into a block
         // but prioritise dstx and don't check fees for it
-        if (mapObfuscationBroadcastTxes.count(hash)) {
-            mempool.PrioritiseTransaction(hash, hash.ToString(), 1000, 0.1 * COIN);
-        } else if (!ignoreFees) {
+        if (!ignoreFees) {
             CAmount mempoolRejectFee = pool.GetMinFee(GetArg("-maxmempool", DEFAULT_MAX_MEMPOOL_SIZE_LEGACY) * 1000000).GetFee(nSize);
             if (mempoolRejectFee > 0 && nModifiedFees < mempoolRejectFee) {
                 return state.DoS(0, false, REJECT_INSUFFICIENTFEE, "mempool min fee not met", false, strprintf("%d < %d", nFees, mempoolRejectFee));
@@ -1837,30 +1780,10 @@ bool AcceptableInputs(CTxMemPool& pool, CValidationState& state, const CTransact
         return state.DoS(100, error("AcceptableInputs: coinbase as individual tx"),
             REJECT_INVALID, "coinbase");
 
-    // Rather not work on nonstandard transactions (unless -testnet/-regtest)
-    string reason;
-    // for any real tx this will be checked on AcceptToMemoryPool anyway
-    //    if (Params().RequireStandard() && !IsStandardTx(tx, reason))
-    //        return state.DoS(0,
-    //                         error("AcceptableInputs : nonstandard transaction: %s", reason),
-    //                         REJECT_NONSTANDARD, reason);
-
     // is it already in the memory pool?
     uint256 hash = tx.GetHash();
     if (pool.exists(hash))
         return false;
-
-    // ----------- swiftTX transaction scanning -----------
-
-    BOOST_FOREACH (const CTxIn& in, tx.vin) {
-        if (mapLockedInputs.count(in.prevout)) {
-            if (mapLockedInputs[in.prevout] != tx.GetHash()) {
-                return state.DoS(0,
-                    error("AcceptableInputs: conflicts with existing transaction lock: %s", reason),
-                    REJECT_INVALID, "tx-lock-conflict");
-            }
-        }
-    }
 
     // Check for conflicts with in-memory transactions
     {
@@ -2198,12 +2121,7 @@ int64_t GetBlockValue(int nHeight)
     return 5 * COIN;
 }
 
-CAmount GetMasternodePayment_Legacy(int nHeight, CAmount blockValue)
-{
-    return blockValue * 0.4;
-}
-
-CAmount GetMasternodePayment(CAmount blockReward, CAmount stakedBalance, CBlockIndex* pindexPrev)
+CAmount GetMasternodeFundPayment(CAmount blockReward, CAmount stakedBalance, CBlockIndex* pindexPrev)
 {
     double moneySupplyDouble = pindexPrev->nMoneySupply;
     double blockRewardDouble = (double)blockReward;
@@ -2489,15 +2407,6 @@ bool CheckInputs(const CTransaction& tx, CValidationState& state, const CCoinsVi
         }
 
         if (!tx.IsCoinStake()) {
-            // ----------- swiftTX transaction scanning -----------
-            BOOST_FOREACH (const CTxIn& in, tx.vin) {
-                if (mapLockedInputs.count(in.prevout)) {
-                    if (mapLockedInputs[in.prevout] != tx.GetHash()) {
-                        return state.DoS(0, false, REJECT_INVALID, "CheckInputs() : conflicts with existing transaction lock: tx-lock-conflict");
-                    }
-                }
-            }
-
             if (nValueIn < tx.GetValueOut())
                 return state.DoS(100, error("CheckInputs() : %s value in (%s) < value out (%s)", tx.GetHash().ToString(), FormatMoney(nValueIn), FormatMoney(tx.GetValueOut())),
                     REJECT_INVALID, "bad-txns-in-belowout");
@@ -4151,7 +4060,7 @@ static bool ActivateBestChainStep(CValidationState& state, CBlockIndex* pindexMo
                 PruneBlockIndexCandidates();
                 if (!pindexOldTip || chainActive.Tip()->nChainWork > pindexOldTip->nChainWork) {
                     // We're in a better position than we were. Return temporarily to release the lock.
-                    LogPrintf("%s(): We have a new best chain.", __func__);
+                    LogPrintf("%s(): We have a new best chain.\n", __func__);
                     fContinue = false;
                     break;
                 }
@@ -4660,8 +4569,8 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
     if (block.vtx[0].vin.size() != 1)
         return state.DoS(100, error("CheckBlock(): coinbase first transaction must have only 1 vin"));
 
-    // First transaction first input must have exactly 3 vout
-    if (block.vtx[0].vout.size() != 3)
+    // First transaction first input must have exactly 2 vout
+    if (block.vtx[0].vout.size() != 2)
         return state.DoS(100, error("CheckBlock(): coinbase first transaction must have exactly 3 vout"));
 
     // First Transaction must pay to dev fund
@@ -4669,10 +4578,6 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         return state.DoS(100, error("CheckBlock(): first tx, first vout did not pay to dev"));
 
     if (fBlockIsProofOfStake) {
-        // Third tx must pay MNFund
-        if (block.vtx.empty() || !block.vtx[0].PaidToMNFund())
-            return state.DoS(100, error("CheckBlock(): first tx, third vout did not pay to mn fund"));
-
         // Must have at least 2 transactions
         if (block.vtx.empty() || block.vtx.size() < 2)
             return state.DoS(100, error("CheckBlock(): coinstake must have at least 2 transactions"));
@@ -4708,58 +4613,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                 return state.DoS(100, error("CheckBlock(): too many locking vout"));
     }
 
-    // ----------- swiftTX transaction scanning -----------
-    // if (IsSporkActive(SPORK_3_SWIFTTX_BLOCK_FILTERING)) {
-    //     BOOST_FOREACH (const CTransaction& tx, block.vtx) {
-    //         if (!tx.IsCoinBase()) {
-    //             //only reject blocks when it's based on complete consensus
-    //             BOOST_FOREACH (const CTxIn& in, tx.vin) {
-    //                 if (mapLockedInputs.count(in.prevout)) {
-    //                     if (mapLockedInputs[in.prevout] != tx.GetHash()) {
-    //                         mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-    //                         if (fDebug)
-    //                             LogPrintf("CheckBlock() : found conflicting transaction with transaction lock %s %s\n", mapLockedInputs[in.prevout].ToString(), tx.GetHash().ToString());
-                            
-    //                         return state.DoS(0, error("CheckBlock() : found conflicting transaction with transaction lock"),
-    //                             REJECT_INVALID, "conflicting-tx-ix");
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // } else if (fDebug)
-    //     LogPrintf("CheckBlock() : skipping transaction locking checks\n");
-
-    // masternode payments / budgets
-    // CBlockIndex* pindexPrev = chainActive.Tip();
-    // int nHeight = 0;
-    // if (pindexPrev != NULL) {
-    //     if (pindexPrev->GetBlockHash() == block.hashPrevBlock) {
-    //         nHeight = pindexPrev->nHeight + 1;
-    //     } else { //out of order
-    //         BlockMap::iterator mi = mapBlockIndex.find(block.hashPrevBlock);
-    //         if (mi != mapBlockIndex.end() && (*mi).second)
-    //             nHeight = (*mi).second->nHeight + 1;
-    //     }
-
-    //     // KORE
-    //     // It is entierly possible that we don't have enough data and this could fail
-    //     // (i.e. the block could indeed be valid). Store the block for later consideration
-    //     // but issue an initial reject message.
-    //     // The case also exists that the sending peer could not have enough data to see
-    //     // that this block is invalid, so don't issue an outright ban.
-    //     // if (nHeight != 0 && !IsInitialBlockDownload()) {
-    //     //     if (!IsBlockPayeeValid(block, nHeight)) {
-    //     //         mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-    //     //         return state.DoS(0, error("CheckBlock() : Couldn't find masternode/budget payment"),
-    //     //             REJECT_INVALID, "bad-cb-payee");
-    //     //     }
-    //     // } else if (fDebug)
-    //     //     LogPrintf("CheckBlock(): Masternode payment check skipped on sync - skipping IsBlockPayeeValid()\n");
-    // }
-
     // Check transactions
-    //vector<CBigNum> vBlockSerials;
     for (const CTransaction& tx : block.vtx) {
         if (!CheckTransaction(tx, state))
             return error("CheckBlock() : CheckTransaction failed");
@@ -4851,23 +4705,6 @@ bool CheckBlock_Legacy(const CBlock& block, CValidationState& state, bool fCheck
     if (!CheckBlockSignature_Legacy(block, block.GetHash()))
         return state.DoS(100, error("CheckBlock(): bad proof-of-stake block signature"), REJECT_INVALID, "bad-block-signature");
 
-    // ----------- swiftTX transaction scanning -----------
-    BOOST_FOREACH (const CTransaction& tx, block.vtx) {
-        if (!tx.IsCoinBase()) {
-            //only reject blocks when it's based on complete consensus
-            BOOST_FOREACH (const CTxIn& in, tx.vin) {
-                if (mapLockedInputs.count(in.prevout)) {
-                    if (mapLockedInputs[in.prevout] != tx.GetHash()) {
-                        mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                        return state.DoS(0, error("CheckBlock() : found conflicting transaction with transaction lock"),
-                            REJECT_INVALID, "conflicting-tx-ix");
-                    }
-                }
-            }
-        }
-    }
-
-
     // ----------- masternode payments / budgets -----------
 
 
@@ -4880,16 +4717,7 @@ bool CheckBlock_Legacy(const CBlock& block, CValidationState& state, bool fCheck
             if (mi != mapBlockIndex.end() && (*mi).second)
                 nHeight = (*mi).second->nHeight + 1;
         }
-
-        if (nHeight != 0 && !IsInitialBlockDownload()) {
-            if (!IsBlockPayeeValid_Legacy(block, nHeight)) {
-                mapRejectedBlocks.insert(make_pair(block.GetHash(), GetTime()));
-                return state.DoS(100, error("CheckBlock() : Couldn't find masternode/budget payment"));
-            }
-        } else if (fDebug)
-            LogPrintf("CheckBlock(): Masternode payment check skipped on sync - skipping IsBlockPayeeValid()\n");
     }
-
     // Check transactions
     BOOST_FOREACH (const CTransaction& tx, block.vtx) {
         if (!CheckTransaction(tx, state))
@@ -5447,13 +5275,6 @@ bool ProcessNewBlock(CValidationState& state, CNode* pfrom, CBlock* pblock, CDis
     if (!ActivateBestChain(state, pblock))
         return error("%s : ActivateBestChain failed", __func__);
 
-    // if (!fLiteMode) {
-    //     if (masternodeSync.RequestedMasternodeAssets > MASTERNODE_SYNC_LIST) {
-    //         obfuScationPool.NewBlock();
-    //         masternodePayments.ProcessBlock(GetHeight() + 10);
-    //         budget.NewBlock();
-    //     }
-    // }
 
     if (pwalletMain) {
         // If turned on MultiSend will send a transaction (or more) on the after maturity of a stake
@@ -5516,14 +5337,6 @@ bool ProcessNewBlock_Legacy(CValidationState& state, const CChainParams& chainpa
 
     if (!ActivateBestChain(state, pblock))
         return error("%s: ActivateBestChain failed", __func__);
-
-    if (!fLiteMode) {
-        if (masternodeSync.RequestedMasternodeAssets > MASTERNODE_SYNC_LIST) {
-            obfuScationPool.NewBlock();
-            masternodePayments.ProcessBlock(GetHeight() + 10);
-            budget.NewBlock();
-        }
-    }
 
     if (pwalletMain) {
         // If turned on MultiSend will send a transaction (or more) on the after maturity of a stake
@@ -6369,86 +6182,10 @@ bool static AlreadyHave(const CInv& inv)
                mapOrphanTransactions.count(inv.hash) ||
                pcoinsTip->HaveCoins(inv.hash);
     }
-    case MSG_DSTX:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_DSTX \n");
-        return mapObfuscationBroadcastTxes.count(inv.hash);
     case MSG_BLOCK:
         if (fDebug)
             LogPrintf("AlreadyHave inv.type = MSG_BLOCK \n");
         return mapBlockIndex.count(inv.hash);
-    case MSG_TXLOCK_REQUEST:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_TXLOCK_REQUEST \n");
-        return mapTxLockReq.count(inv.hash) ||
-               mapTxLockReqRejected.count(inv.hash);
-    case MSG_TXLOCK_VOTE:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_TXLOCK_VOTE \n");
-        return mapTxLockVote.count(inv.hash);
-    case MSG_SPORK:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_SPORK \n");
-        return mapSporks.count(inv.hash);
-    case MSG_MASTERNODE_WINNER:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_MASTERNODE_WINNER \n");
-        
-        if (masternodePayments.mapMasternodePayeeVotes.count(inv.hash)) {
-            masternodeSync.AddedMasternodeWinner(inv.hash);
-            return true;
-        }
-        return false;
-    case MSG_BUDGET_VOTE:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_BUDGET_VOTE \n");
-        
-        if (budget.mapSeenMasternodeBudgetVotes.count(inv.hash)) {
-            masternodeSync.AddedBudgetItem(inv.hash);
-            return true;
-        }
-        return false;
-    case MSG_BUDGET_PROPOSAL:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_BUDGET_PROPOSAL \n");
-        
-        if (budget.mapSeenMasternodeBudgetProposals.count(inv.hash)) {
-            masternodeSync.AddedBudgetItem(inv.hash);
-            return true;
-        }
-        return false;
-    case MSG_BUDGET_FINALIZED_VOTE:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_BUDGET_FINALIZED_VOTE \n");
-        
-        if (budget.mapSeenFinalizedBudgetVotes.count(inv.hash)) {
-            masternodeSync.AddedBudgetItem(inv.hash);
-            return true;
-        }
-        return false;
-    case MSG_BUDGET_FINALIZED:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_BUDGET_FINALIZED \n");
-        
-        if (budget.mapSeenFinalizedBudgets.count(inv.hash)) {
-            masternodeSync.AddedBudgetItem(inv.hash);
-            return true;
-        }
-        return false;
-    case MSG_MASTERNODE_ANNOUNCE:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_MASTERNODE_ANNOUNCE \n");
-        
-        if (mnodeman.mapSeenMasternodeBroadcast.count(inv.hash)) {
-            masternodeSync.AddedMasternodeList(inv.hash);
-            return true;
-        }
-        return false;
-    case MSG_MASTERNODE_PING:
-        if (fDebug)
-            LogPrintf("AlreadyHave inv.type = MSG_MASTERNODE_PING \n");
-        
-        return mnodeman.mapSeenMasternodePing.count(inv.hash);
     }
     // Don't know what it is, just say we already got one
     return true;
@@ -6560,116 +6297,6 @@ void static ProcessGetData(CNode* pfrom)
                         pushed = true;
                     }
                 }
-                if (!pushed && inv.type == MSG_TXLOCK_VOTE) {
-                    if (mapTxLockVote.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << mapTxLockVote[inv.hash];
-                        pfrom->PushMessage(NetMsgType::TX, ss);
-                        pushed = true;
-                    }
-                }
-                if (!pushed && inv.type == MSG_TXLOCK_REQUEST) {
-                    if (mapTxLockReq.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << mapTxLockReq[inv.hash];
-                        pfrom->PushMessage("ix", ss);
-                        pushed = true;
-                    }
-                }
-                if (!pushed && inv.type == MSG_SPORK) {
-                    if (mapSporks.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << mapSporks[inv.hash];
-                        pfrom->PushMessage(NetMsgType::SPORK, ss);
-                        pushed = true;
-                    }
-                }
-                if (!pushed && inv.type == MSG_MASTERNODE_WINNER) {
-                    if (masternodePayments.mapMasternodePayeeVotes.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << masternodePayments.mapMasternodePayeeVotes[inv.hash];
-                        pfrom->PushMessage("mnw", ss);
-                        pushed = true;
-                    }
-                }
-                if (!pushed && inv.type == MSG_BUDGET_VOTE) {
-                    if (budget.mapSeenMasternodeBudgetVotes.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << budget.mapSeenMasternodeBudgetVotes[inv.hash];
-                        pfrom->PushMessage("mvote", ss);
-                        pushed = true;
-                    }
-                }
-
-                if (!pushed && inv.type == MSG_BUDGET_PROPOSAL) {
-                    if (budget.mapSeenMasternodeBudgetProposals.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << budget.mapSeenMasternodeBudgetProposals[inv.hash];
-                        if (fDebug)
-                            LogPrintf("Send Back mprop to peer=%d\n", pfrom->id);
-                        
-                        pfrom->PushMessage("mprop", ss);
-                        pushed = true;
-                    }
-                }
-
-                if (!pushed && inv.type == MSG_BUDGET_FINALIZED_VOTE) {
-                    if (budget.mapSeenFinalizedBudgetVotes.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << budget.mapSeenFinalizedBudgetVotes[inv.hash];
-                        pfrom->PushMessage("fbvote", ss);
-                        pushed = true;
-                    }
-                }
-
-                if (!pushed && inv.type == MSG_BUDGET_FINALIZED) {
-                    if (budget.mapSeenFinalizedBudgets.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << budget.mapSeenFinalizedBudgets[inv.hash];
-                        pfrom->PushMessage("fbs", ss);
-                        pushed = true;
-                    }
-                }
-
-                if (!pushed && inv.type == MSG_MASTERNODE_ANNOUNCE) {
-                    if (mnodeman.mapSeenMasternodeBroadcast.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << mnodeman.mapSeenMasternodeBroadcast[inv.hash];
-                        pfrom->PushMessage("mnb", ss);
-                        pushed = true;
-                    }
-                }
-
-                if (!pushed && inv.type == MSG_MASTERNODE_PING) {
-                    if (mnodeman.mapSeenMasternodePing.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << mnodeman.mapSeenMasternodePing[inv.hash];
-                        pfrom->PushMessage("mnp", ss);
-                        pushed = true;
-                    }
-                }
-
-                if (!pushed && inv.type == MSG_DSTX) {
-                    if (mapObfuscationBroadcastTxes.count(inv.hash)) {
-                        CDataStream ss(SER_NETWORK, PROTOCOL_VERSION);
-                        ss.reserve(1000);
-                        ss << mapObfuscationBroadcastTxes[inv.hash].tx << mapObfuscationBroadcastTxes[inv.hash].vin << mapObfuscationBroadcastTxes[inv.hash].vchSig << mapObfuscationBroadcastTxes[inv.hash].sigTime;
-
-                        pfrom->PushMessage("dstx", ss);
-                        pushed = true;
-                    }
-                }
-
 
                 if (!pushed) {
                     vNotFound.push_back(inv);
@@ -7209,57 +6836,11 @@ bool static ProcessMessageTx(CNode* pfrom, string strCommand, CDataStream& vRecv
     vector<uint256> vWorkQueue;
     vector<uint256> vEraseQueue;
     CTransaction tx;
-
-
-    //masternode signed transaction
-    //bool ignoreFees = false;
     CTxIn vin;
     vector<unsigned char> vchSig;
     int64_t sigTime;
 
-    if (strCommand == NetMsgType::TX) {
-        vRecv >> tx;
-    } else if (strCommand == NetMsgType::DSTX) {
-        //these allow masternodes to publish a limited amount of free transactions
-        vRecv >> tx >> vin >> vchSig >> sigTime;
-
-        CMasternode* pmn = mnodeman.Find(vin);
-        if (pmn != NULL) {
-            if (!pmn->allowFreeTx) {
-                //multiple peers can send us a valid masternode transaction
-                if (fDebug)
-                   LogPrintf("dstx: Masternode sending too many transactions %s\n", tx.GetHash().ToString());
-                
-                return true;
-            }
-
-            std::string strMessage = tx.GetHash().ToString() + boost::lexical_cast<std::string>(sigTime);
-
-            std::string errorMessage = "";
-            if (!obfuScationSigner.VerifyMessage(pmn->pubKeyMasternode, vchSig, strMessage, errorMessage)) {
-                if (fDebug)
-                    LogPrintf("dstx: Got bad masternode address signature %s \n", vin.ToString());
-                //pfrom->Misbehaving(20);
-                return false;
-            }
-
-            if (fDebug)
-                LogPrintf("dstx: Got Masternode transaction %s\n", tx.GetHash().ToString());
-
-            //ignoreFees = true;
-            pmn->allowFreeTx = false;
-
-            if (!mapObfuscationBroadcastTxes.count(tx.GetHash())) {
-                CObfuscationBroadcastTx dstx;
-                dstx.tx = tx;
-                dstx.vin = vin;
-                dstx.vchSig = vchSig;
-                dstx.sigTime = sigTime;
-
-                mapObfuscationBroadcastTxes.insert(make_pair(tx.GetHash(), dstx));
-            }
-        }
-    }
+    vRecv >> tx;
 
     CInv inv(MSG_TX, tx.GetHash());
     pfrom->AddInventoryKnown(inv);
@@ -7359,11 +6940,6 @@ bool static ProcessMessageTx(CNode* pfrom, string strCommand, CDataStream& vRecv
             } else if (fDebug)
                 LogPrintf("Not relaying invalid transaction %s from whitelisted peer=%d (%s)\n", tx.GetHash().ToString(), pfrom->id, FormatStateMessage_Legacy(state));
         }
-    }
-
-    if (strCommand == "dstx") {
-        CInv inv(MSG_DSTX, tx.GetHash());
-        RelayInv(inv);
     }
 
     int nDoS = 0;
@@ -7646,8 +7222,6 @@ bool static ProcessMessageInventory(CNode* pfrom, CDataStream& vRecv)
     return true;
 }
 
-bool fRequestedSporksIDB = false;
-
 /* This asymmetric behavior for inbound and outbound connections was introduced
  * to prevent a fingerprinting attack: an attacker can send specific fake addresses
  * to users' AddrMan and later request them by sending getaddr messages.
@@ -7769,26 +7343,9 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
     else if (strCommand == NetMsgType::REJECT)
         return ProcessMessageReject(pfrom, strCommand, vRecv, nTimeReceived);
 
-    else {
-        obfuScationPool.ProcessMessageObfuscation(pfrom, strCommand, vRecv);
-
-        mnodeman.ProcessMessage(pfrom, strCommand, vRecv);
-        budget.ProcessMessage(pfrom, strCommand, vRecv);
-
-        masternodePayments.ProcessMessageMasternodePayments(pfrom, strCommand, vRecv);
-
-        ProcessMessageSwiftTX(pfrom, strCommand, vRecv);
-        ProcessSpork(pfrom, strCommand, vRecv);
-        masternodeSync.ProcessMessage(pfrom, strCommand, vRecv);
-    }
-
     return true;
 }
 
-// Note: whenever a protocol update is needed toggle between both implementations (comment out the formerly active one)
-//       so we can leave the existing clients untouched (old SPORK will stay on so they don't see even older clients).
-//       Those old clients won't react to the changes of the other (new) SPORK because at the time of their implementation
-//       it was the one which was commented out
 int ActiveProtocol()
 {
     return UseLegacyCode() ? MIN_PEER_PROTO_VERSION_PRE_FORK : MIN_PEER_PROTO_VERSION;

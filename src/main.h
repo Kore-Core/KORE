@@ -47,7 +47,6 @@
 
 class CBlockIndex;
 class CBlockTreeDB;
-class CSporkDB;
 class CBloomFilter;
 class CInv;
 class CScriptCheck;
@@ -327,8 +326,7 @@ bool DisconnectBlocksAndReprocess(int blocks);
 
 // ***TODO***
 double ConvertBitsToDouble(unsigned int nBits);
-CAmount GetMasternodePayment_Legacy(int nHeight, CAmount blockValue);
-CAmount GetMasternodePayment(CAmount blockReward, CAmount stakedBalance, CBlockIndex* pindexPrev);
+CAmount GetMasternodeFundPayment(CAmount blockReward, CAmount stakedBalance, CBlockIndex* pindexPrev);
 
 /**
  * Prune block and undo files (blk???.dat and undo???.dat) so that the disk space used is less than a user-defined target.
@@ -378,7 +376,6 @@ bool AcceptableInputs(CTxMemPool& pool, CValidationState& state, const CTransact
 int GetInputAge(CTxIn& vin);
 int GetInputAgeIX(uint256 nTXHash, CTxIn& vin);
 bool GetCoinAge(const CTransaction& tx, unsigned int nTxTime, uint64_t& nCoinAge);
-int GetIXConfirmations(uint256 nTXHash);
 
 struct CNodeStateStats {
     int nMisbehavior;
@@ -832,9 +829,6 @@ extern CCoinsViewCache* pcoinsTip;
 
 /** Global variable that points to the active block tree (protected by cs_main) */
 extern CBlockTreeDB* pblocktree;
-
-/** Global variable that points to the spork database (protected by cs_main) */
-extern CSporkDB* pSporkDB;
 
 struct CBlockTemplate {
     CBlock block;

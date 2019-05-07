@@ -227,13 +227,6 @@
     <name>Intro</name>
     </context>
 <context>
-    <name>MasternodeList</name>
-    <message>
-        <source>Address</source>
-        <translation>Адреса</translation>
-    </message>
-    </context>
-<context>
     <name>MultiSendDialog</name>
     <message>
         <source>(no label)</source>

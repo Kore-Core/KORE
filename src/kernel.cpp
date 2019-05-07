@@ -322,10 +322,18 @@ bool CheckStake(const CDataStream& ssUniqueID, CAmount nValueIn, const uint64_t 
     uint256 test = ss1.GetHash();
 
     if (fDebug) {    
-        LogPrintf("CheckStake hash:   %s\n", hashProofOfStake.ToString());
-        LogPrintf("CheckStake target: %s\n", (bnCoinDayWeight * bnTarget).ToString());        
-        LogPrintf("CheckStake: ssUniqueID=%s\n, hashProofOfStake=%s\n, nValueIn=%s\n, nStakeModifier=%u\n, bnTarget=%s\n, bnCoinDayWeight=%s\n, nTimeBlockFrom=%u\n, nTimeTx=%u\n, %s\n",
-            test.ToString(), hashProofOfStake.ToString(), nValueIn, nStakeModifier, bnTarget.ToString(), bnCoinDayWeight.ToString(), nTimeBlockFrom, nTimeTx, canStake ? "Can stake" : "Can't stake");
+        LogPrintf("CheckStake()");
+        LogPrintf("hash:            %s\n", hashProofOfStake.ToString());
+        LogPrintf("target:          %s\n", (bnCoinDayWeight * bnTarget).ToString());        
+        LogPrintf("ssUniqueID=      %s\n", test.ToString());
+        LogPrintf("hashPOS=         %s\n", hashProofOfStake.ToString());
+        LogPrintf("nValueIn=        %s\n", nValueIn);
+        LogPrintf("nStakeModifier=  %u\n", nStakeModifier);
+        LogPrintf("bnTarget=        %s\n", bnTarget.ToString());
+        LogPrintf("bnCoinDayWeight= %s\n", bnCoinDayWeight.ToString());
+        LogPrintf("nTimeBlockFrom=  %u\n", nTimeBlockFrom);
+        LogPrintf("nTimeTx=         %u\n", nTimeTx);
+        LogPrintf("%s\n", canStake ? "Can stake" : "Can't stake");
     }
 
     return canStake;

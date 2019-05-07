@@ -104,26 +104,6 @@ std::string to_internal(const std::string&);
 
 using namespace std;
 
-// KORE only features
-// Masternode
-bool fMasterNode = false;
-string strMasterNodePrivKey = "";
-string strMasterNodeAddr = "";
-bool fLiteMode = false;
-// SwiftX
-bool fEnableSwiftTX = true;
-int nSwiftTXDepth = 5;
-int nObfuscationRounds = 2;
-int nAnonymizeKoreAmount = 1000;
-int nLiquidityProvider = 0;
-/** Spork enforcement enabled time */
-int64_t enforceMasternodePaymentsTime = 4085657524;
-bool fSucessfullyLoaded = false;
-bool fEnableObfuscation = false;
-/** All denominations used by obfuscation */
-std::vector<int64_t> obfuScationDenominations;
-string strBudgetMode = "";
-
 map<string, string> mapArgs;
 map<string, vector<string> > mapMultiArgs;
 bool fDebug = false;
@@ -231,15 +211,6 @@ bool LogAcceptCategory(const char* category)
         if (ptrCategory.get() == NULL) {
             const vector<string>& categories = mapMultiArgs["-debug"];
             ptrCategory.reset(new set<string>(categories.begin(), categories.end()));
-            // thread_specific_ptr automatically deletes the set when the thread ends.
-            // "kore" is a composite category enabling all KORE-related debug output
-            if (ptrCategory->count(string("kore"))) {
-                ptrCategory->insert(string("obfuscation"));
-                ptrCategory->insert(string("swiftx"));
-                ptrCategory->insert(string("masternode"));
-                ptrCategory->insert(string("mnpayments"));
-                ptrCategory->insert(string("mnbudget"));
-            }
         }
         const set<string>& setCategories = *ptrCategory.get();
 
@@ -490,13 +461,6 @@ boost::filesystem::path GetConfigFile()
     if (!pathConfigFile.is_complete())
         pathConfigFile = GetDataDir(false) / pathConfigFile;
 
-    return pathConfigFile;
-}
-
-boost::filesystem::path GetMasternodeConfigFile()
-{
-    boost::filesystem::path pathConfigFile(GetArg("-mnconf", "masternode.conf"));
-    if (!pathConfigFile.is_complete()) pathConfigFile = GetDataDir() / pathConfigFile;
     return pathConfigFile;
 }
 

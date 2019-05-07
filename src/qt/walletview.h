@@ -8,7 +8,6 @@
 
 #include "amount.h"
 #include "askpassphrasedialog.h"
-#include "masternodelist.h"
 
 #include <QStackedWidget>
 #include <ui_interface.h>
@@ -67,7 +66,6 @@ private:
     ReceiveCoinsDialog* receiveCoinsPage;
     SendCoinsDialog* sendCoinsPage;
     BlockExplorer* explorerWindow;
-    MasternodeList* masternodeListPage;
 
     TransactionView* transactionView;
 
@@ -79,8 +77,6 @@ public slots:
     void gotoOverviewPage();
     /** Switch to history (transactions) page */
     void gotoHistoryPage();
-    /** Switch to masternode page */
-    void gotoMasternodePage();
     /** Switch to explorer page */
     void gotoBlockExplorerPage();
     /** Switch to receive coins page */

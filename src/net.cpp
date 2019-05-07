@@ -15,8 +15,8 @@
 #include "addrman.h"
 #include "chainparams.h"
 #include "clientversion.h"
+#include "init.h"
 #include "miner.h"
-#include "obfuscation.h"
 #include "primitives/transaction.h"
 #include "scheduler.h"
 #include "ui_interface.h"
@@ -402,19 +402,15 @@ CNode* FindNode(const CService& addr)
     return NULL;
 }
 
-CNode* ConnectNode(CAddress addrConnect, const char* pszDest, bool obfuScationMaster)
+CNode* ConnectNode(CAddress addrConnect, const char* pszDest)
 {
     if (pszDest == NULL) {
-        // we clean masternode connections in CMasternodeMan::ProcessMasternodeConnections()
-        // so should be safe to skip this and connect to local Hot MN on CActiveMasternode::ManageStatus()
-        if (IsLocal(addrConnect) && !obfuScationMaster)
+        if (IsLocal(addrConnect))
             return NULL;
 
         // Look for an existing connection
         CNode* pnode = FindNode((CService)addrConnect);
         if (pnode) {
-            pnode->fObfuScationMaster = obfuScationMaster;
-
             pnode->AddRef();
             return pnode;
         }
@@ -448,7 +444,6 @@ CNode* ConnectNode(CAddress addrConnect, const char* pszDest, bool obfuScationMa
         }
 
         pnode->nTimeConnected = GetTime();
-        if (obfuScationMaster) pnode->fObfuScationMaster = true;
 
         return pnode;
     } else if (!proxyConnectionFailed) {
@@ -1202,8 +1197,10 @@ static const char* strMainNetOnionSeed[][1] = {
 };
 
 static const char* strTestNetOnionSeed[][1] = {
-     {"tv37hpwd5ntlsdmj.onion"},
-     {"j2zii4hsm44jbxv5.onion"},
+     {"wi2lfbdfpj5zowoc.onion"},
+     {"rho4ruzngsxdh4j7.onion"},
+     {"bonh4mbx52trursl.onion"},
+     {"qsozfddbfh6cl2rv.onion"},
     {NULL} // last element => couldn't use size ?
 };
 
@@ -2088,25 +2085,10 @@ void RelayTransaction(const CTransaction& tx, const CDataStream& ss)
     }
 }
 
-void RelayTransactionLockReq(const CTransaction& tx, bool relayToAll)
-{
-    CInv inv(MSG_TXLOCK_REQUEST, tx.GetHash());
-
-    //broadcast the new lock
-    LOCK(cs_vNodes);
-    BOOST_FOREACH (CNode* pnode, vNodes) {
-        if (!relayToAll && !pnode->fRelayTxes)
-            continue;
-
-        pnode->PushMessage("ix", tx);
-    }
-}
-
 void RelayInv(CInv& inv)
 {
     LOCK(cs_vNodes);
     BOOST_FOREACH (CNode* pnode, vNodes) {
-        if ((pnode->nServices == NODE_BLOOM_WITHOUT_MN) && inv.IsMasterNodeType()) continue;
         if (pnode->nVersion >= ActiveProtocol())
             pnode->PushInventory(inv);
     }
@@ -2378,7 +2360,6 @@ CNode::CNode(SOCKET hSocketIn, CAddress addrIn, std::string addrNameIn, bool fIn
     nPingUsecStart = 0;
     nPingUsecTime = 0;
     fPingQueued = false;
-    fObfuScationMaster = false;
     nMinPingUsecTime = std::numeric_limits<int64_t>::max();
     {
         LOCK(cs_nLastNodeId);

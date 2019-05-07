@@ -44,7 +44,6 @@ public:
         n = (uint32_t)-1;
     }
     bool IsNull() const { return (hash.IsNull() && n == (uint32_t)-1); }
-    bool IsMasternodeReward(const CTransaction* tx) const;
 
     friend bool operator<(const COutPoint& a, const COutPoint& b)
     {
@@ -202,8 +201,6 @@ public:
 
     bool PaidToDev() const;
 
-    bool PaidToMNFund() const;
-
     bool IsCoinStake() const;
 
     CAmount GetDustThreshold(const CFeeRate& minRelayTxFee) const
@@ -341,11 +338,6 @@ public:
     bool PaidToDev() const
     {
         return vout[0].PaidToDev();
-    }
-
-    bool PaidToMNFund() const
-    {
-        return vout[2].PaidToMNFund();
     }
 
     bool IsCoinStake() const

@@ -63,14 +63,6 @@ std::string CTxIn::ToString() const
     return str;
 }
 
-bool COutPoint::IsMasternodeReward(const CTransaction* tx) const
-{
-    if(!tx->IsCoinStake())
-        return false;
-
-    return (n == tx->vout.size() - 2) && (tx->vout[1].scriptPubKey != tx->vout[n].scriptPubKey);
-}
-
 CTxOut::CTxOut(const CAmount& nValueIn, CScript scriptPubKeyIn)
 {
     nValue = nValueIn;
@@ -93,12 +85,6 @@ bool CTxOut::PaidToDev() const
 {
     static CScript devFundScript = CScript() << ParseHex(Params().GetDevFundPubKey()) << OP_CHECKSIG;
     return scriptPubKey == devFundScript;
-}
-
-bool CTxOut::PaidToMNFund() const
-{
-    static CScript mnFundScript = CScript() << ParseHex(Params().GetMNFundPubKey()) << OP_CHECKSIG;
-    return scriptPubKey == mnFundScript;
 }
 
 bool CTxOut::IsCoinStake() const

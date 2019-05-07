@@ -1,4 +1,4 @@
-packages:=boost openssl libevent zlib zeromq tor
+packages:=boost openssl libevent zlib zeromq
 native_packages:=native_ccache
 
 linux_packages:=gperftools

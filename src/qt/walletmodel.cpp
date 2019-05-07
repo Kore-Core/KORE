@@ -15,7 +15,6 @@
 #include "db.h"
 #include "keystore.h"
 #include "main.h"
-#include "spork.h"
 #include "sync.h"
 #include "ui_interface.h"
 #include "wallet.h"
@@ -70,12 +69,6 @@ CAmount WalletModel::getBalance(const CCoinControl* coinControl) const
     }
 
     return wallet->GetBalance();
-}
-
-
-CAmount WalletModel::getAnonymizedBalance() const
-{
-    return wallet->GetAnonymizedBalance();
 }
 
 CAmount WalletModel::getUnconfirmedBalance() const
@@ -133,12 +126,11 @@ void WalletModel::pollBalanceChanged()
     if (!lockWallet)
         return;
 
-    if (fForceCheckBalanceChanged || chainActive.Height() != cachedNumBlocks || nObfuscationRounds != cachedObfuscationRounds || cachedTxLocks != nCompleteTXLocks) {
+    if (fForceCheckBalanceChanged || chainActive.Height() != cachedNumBlocks) {
         fForceCheckBalanceChanged = false;
 
         // Balance and number of transactions might have changed
         cachedNumBlocks = chainActive.Height();
-        cachedObfuscationRounds = nObfuscationRounds;
 
         checkBalanceChanged();
         if (transactionTableModel) {
@@ -156,7 +148,6 @@ void WalletModel::checkBalanceChanged()
     CAmount newUnconfirmedBalance = getUnconfirmedBalance();
     CAmount newImmatureBalance = getImmatureBalance();
     CAmount newStakedBalance = getStakedBalance();
-    CAmount newAnonymizedBalance = getAnonymizedBalance();
     CAmount newWatchOnlyBalance = 0;
     CAmount newWatchUnconfBalance = 0;
     CAmount newWatchImmatureBalance = 0;
@@ -167,20 +158,17 @@ void WalletModel::checkBalanceChanged()
     }
 
     if (cachedBalance != newBalance || cachedUnconfirmedBalance != newUnconfirmedBalance || cachedImmatureBalance != newImmatureBalance ||
-        cachedStakedBalance != newStakedBalance || cachedAnonymizedBalance != newAnonymizedBalance || cachedTxLocks != nCompleteTXLocks ||
-        cachedWatchOnlyBalance != newWatchOnlyBalance || cachedWatchUnconfBalance != newWatchUnconfBalance ||
-        cachedWatchImmatureBalance != newWatchImmatureBalance)
+        cachedStakedBalance != newStakedBalance || cachedWatchOnlyBalance != newWatchOnlyBalance ||
+        cachedWatchUnconfBalance != newWatchUnconfBalance || cachedWatchImmatureBalance != newWatchImmatureBalance)
     {
         cachedBalance = newBalance;
         cachedUnconfirmedBalance = newUnconfirmedBalance;
         cachedImmatureBalance = newImmatureBalance;
         cachedStakedBalance = newStakedBalance;
-        cachedAnonymizedBalance = newAnonymizedBalance;
-        cachedTxLocks = nCompleteTXLocks;
         cachedWatchOnlyBalance = newWatchOnlyBalance;
         cachedWatchUnconfBalance = newWatchUnconfBalance;
         cachedWatchImmatureBalance = newWatchImmatureBalance;
-        emit balanceChanged(newBalance, newUnconfirmedBalance, newImmatureBalance, newStakedBalance, newAnonymizedBalance,
+        emit balanceChanged(newBalance, newUnconfirmedBalance, newImmatureBalance, newStakedBalance,
             newWatchOnlyBalance, newWatchUnconfBalance, newWatchImmatureBalance);
     }
 }
@@ -238,10 +226,6 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 
     if (recipients.empty()) {
         return OK;
-    }
-
-    if (isAnonymizeOnlyUnlocked()) {
-        return AnonymizeOnlyUnlocked;
     }
 
     QSet<QString> setAddress; // Used to detect duplicates
@@ -303,21 +287,8 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
         CWalletTx* newTx = transaction.getTransaction();
         CReserveKey* keyChange = transaction.getPossibleKeyChange();
 
-
-        if (recipients[0].useSwiftTX && total > GetSporkValue(SPORK_5_MAX_VALUE) * COIN) {
-            emit message(tr("Send Coins"), tr("SwiftTX doesn't support sending values that high yet. Transactions are currently limited to %1 KORE.").arg(GetSporkValue(SPORK_5_MAX_VALUE)),
-                CClientUIInterface::MSG_ERROR);
-            return TransactionCreationFailed;
-        }
-
-        bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, strFailReason, coinControl, recipients[0].inputType, recipients[0].useSwiftTX);
+        bool fCreated = wallet->CreateTransaction(vecSend, *newTx, *keyChange, nFeeRequired, strFailReason, coinControl, recipients[0].inputType);
         transaction.setTransactionFee(nFeeRequired);
-
-        if (recipients[0].useSwiftTX && newTx->GetValueOut() > GetSporkValue(SPORK_5_MAX_VALUE) * COIN) {
-            emit message(tr("Send Coins"), tr("SwiftTX doesn't support sending values that high yet. Transactions are currently limited to %1 KORE.").arg(GetSporkValue(SPORK_5_MAX_VALUE)),
-                CClientUIInterface::MSG_ERROR);
-            return TransactionCreationFailed;
-        }
 
         if (!fCreated) {
             if ((total + nFeeRequired) > nBalance) {
@@ -339,10 +310,6 @@ WalletModel::SendCoinsReturn WalletModel::prepareTransaction(WalletModelTransact
 WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& transaction)
 {
     QByteArray transaction_array; /* store serialized transaction */
-
-    if (isAnonymizeOnlyUnlocked()) {
-        return AnonymizeOnlyUnlocked;
-    }
 
     {
         LOCK2(cs_main, wallet->cs_wallet);
@@ -366,7 +333,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
 
         transaction.getRecipients();
 
-        if (!wallet->CommitTransaction(*newTx, *keyChange, (recipients[0].useSwiftTX) ? "ix" : "tx"))
+        if (!wallet->CommitTransaction(*newTx, *keyChange, "tx"))
             return TransactionCommitFailed;
 
         CTransaction* t = (CTransaction*)newTx;
@@ -447,11 +414,6 @@ bool WalletModel::setWalletLocked(bool locked, const SecureString& passPhrase, b
         // Unlock
         return wallet->Unlock(passPhrase, anonymizeOnly);
     }
-}
-
-bool WalletModel::isAnonymizeOnlyUnlocked()
-{
-    return wallet->fWalletUnlockAnonymizeOnly;
 }
 
 bool WalletModel::changePassphrase(const SecureString& oldPass, const SecureString& newPass)
@@ -587,9 +549,8 @@ WalletModel::UnlockContext WalletModel::requestUnlock(AskPassphraseDialog::Conte
 {
     bool was_locked = getEncryptionStatus() == Locked;
 
-    if (!was_locked && isAnonymizeOnlyUnlocked()) {
+    if (!was_locked) {
         setWalletLocked(true);
-        wallet->fWalletUnlockAnonymizeOnly = false;
         was_locked = getEncryptionStatus() == Locked;
     }
 

@@ -1385,38 +1385,6 @@
         <number>3</number>
        </property>
        <item>
-        <widget class="QCheckBox" name="checkUseObfuscation">
-         <property name="minimumSize">
-          <size>
-           <width>95</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Obfuscation</string>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QCheckBox" name="checkSwiftTX">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>85</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>SwiftTX</string>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QLabel" name="label">
          <property name="text">
           <string>Balance:</string>

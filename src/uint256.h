@@ -27,13 +27,8 @@ template <unsigned int BITS>
 class base_uint
 {
 protected:
-/* Lico */
     enum { WIDTH = BITS / 32 };
     uint32_t pn[WIDTH];
-/*
-    enum { WIDTH=BITS/8 };
-    uint8_t pn[WIDTH];
-*/
 
 public:
     base_uint()

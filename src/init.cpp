@@ -201,7 +201,6 @@ void PrepareShutdown()
 #endif
     StopNode();
     StopTorControl();
-    //StopTor();
     UnregisterNodeSignals(GetNodeSignals());
 
     // After everything has been shut down, but before things get flushed, stop the
@@ -222,9 +221,8 @@ void PrepareShutdown()
     {
         LOCK(cs_main);
         if (pcoinsTip != NULL) {
-            FlushStateToDisk();
-
             //record that client took the proper shutdown procedure
+            FlushStateToDisk();
             pblocktree->WriteFlag("shutdown", true);
         }
         delete pcoinsTip;
@@ -275,12 +273,9 @@ void Shutdown()
         PrepareShutdown();
     }
     // Shutdown part 2: delete wallet instance
-    //StopTorControl();
 #ifdef ENABLE_WALLET
     delete pwalletMain;
     pwalletMain = NULL;
-    //delete zwalletMain;
-    //zwalletMain = NULL;
 #endif
     globalVerifyHandle.reset();
     ECC_Stop();
@@ -1225,7 +1220,7 @@ bool AppInit2()
         if (!errorString.empty())
             return InitError(errorString);
 
-    }  // (!fDisableWallet)
+    }
 #endif // ENABLE_WALLET
     // ********************************************************* Step 6: network initialization
 
@@ -1541,7 +1536,6 @@ bool AppInit2()
 #ifdef ENABLE_WALLET
     if (fDisableWallet) {
         pwalletMain = NULL;
-        //zwalletMain = NULL;
         LogPrintf("Wallet disabled!\n");
     } else {
         // needed to restore wallet transaction meta data after -zapwallettxes

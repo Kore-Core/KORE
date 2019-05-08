@@ -469,13 +469,7 @@ public:
             if (IsProofOfStake()) {
                 READWRITE(prevoutStake);
                 READWRITE(nStakeTime);
-            } /* Lico they attributes are already initialized in the constructor
-            else {
-                const_cast<CDiskBlockIndex*>(this)->prevoutStake.SetNull();
-                const_cast<CDiskBlockIndex*>(this)->nStakeTime = 0;
-                const_cast<CDiskBlockIndex*>(this)->hashProofOfStake = uint256();
             }
-            */
         }
 
         // block header

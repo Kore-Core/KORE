@@ -290,7 +290,7 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
 {
     QActionGroup* tabGroup = new QActionGroup(this);
 
-    overviewAction = new QAction(QIcon(":/icons/overview"), tr("&Overview"), this);
+    overviewAction = new QAction(QIcon(":/icons/overview"), tr("&MY WALLET"), this);
     overviewAction->setStatusTip(tr("Show general overview of wallet"));
     overviewAction->setToolTip(overviewAction->statusTip());
     overviewAction->setCheckable(true);
@@ -301,7 +301,7 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
 #endif
     tabGroup->addAction(overviewAction);
 
-    sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&Send"), this);
+    sendCoinsAction = new QAction(QIcon(":/icons/send"), tr("&EASY SEND"), this);
     sendCoinsAction->setStatusTip(tr("Send coins to a KORE address"));
     sendCoinsAction->setToolTip(sendCoinsAction->statusTip());
     sendCoinsAction->setCheckable(true);
@@ -312,7 +312,7 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
 #endif
     tabGroup->addAction(sendCoinsAction);
 
-    receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("&Receive"), this);
+    receiveCoinsAction = new QAction(QIcon(":/icons/receiving_addresses"), tr("&EASY RECEIVE"), this);
     receiveCoinsAction->setStatusTip(tr("Request payments (generates QR codes and kore: URIs)"));
     receiveCoinsAction->setToolTip(receiveCoinsAction->statusTip());
     receiveCoinsAction->setCheckable(true);
@@ -323,10 +323,11 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
 #endif
     tabGroup->addAction(receiveCoinsAction);
 
-    historyAction = new QAction(QIcon(":/icons/history"), tr("&Transactions"), this);
-    historyAction->setStatusTip(tr("Browse transaction history"));
+    historyAction = new QAction(QIcon(":/icons/history"), tr("&TRANSACTIONS"), this);
+    historyAction->setStatusTip(tr("Browse your transaction history"));
     historyAction->setToolTip(historyAction->statusTip());
     historyAction->setCheckable(true);
+
 #ifdef Q_OS_MAC
     historyAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_4));
 #else
@@ -521,9 +522,9 @@ void BitcoinGUI::createToolBars()
     if (walletFrame) {
         QLabel* header = new QLabel();
         header->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        header->setPixmap(QPixmap(":/images/banner"));
+        header->setPixmap(QPixmap(":/images/about"));
         header->setAlignment(Qt::AlignHCenter);
-        header->setMaximumSize(220,124);
+        header->setMaximumSize(190,190);
         header->setScaledContents(true);
         QToolBar* toolbar = new QToolBar(tr("Tabs toolbar"));
         toolbar->setObjectName("Main-Toolbar"); // Name for CSS addressing
@@ -538,7 +539,7 @@ void BitcoinGUI::createToolBars()
         QSettings settings;
         toolbar->setMovable(false); // remove unused icon in upper left corner
         toolbar->setOrientation(Qt::Vertical);
-        toolbar->setIconSize(QSize(40,40));
+        toolbar->setIconSize(QSize(20,20));
         overviewAction->setChecked(true);
 
         /** Create additional container for toolbar and walletFrame and make it the central widget.

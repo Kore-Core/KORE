@@ -1169,22 +1169,6 @@ void ThreadSocketHandler()
 /* Tor implementation ---------------------------------*/
 
 // hidden service seeds
-/* just for testing we can add this nodes to kore.conf
-addnode=jsfoupaz7kwoibq2.onion
-addnode=4aynkbwmoje6p27p.onion
-addnode=hxgchjn2dom3teev.onion
-addnode=hzvrfa5xa2qulysi.onion 
-addnode=hggmh3vhkjebz4j5.onion
-addnode=gameldrtkm4u4ds2.onion
-addnode=k75pshpf226ra65s.onion
-addnode=zdwnbnrwty33uuev.onion
-addnode=l4meqo3zi74h7edw.onion
-addnode=k6a5ebhrkfxbwqvl.onion
-addnode=5j6hwetvycvjzdur.onion
-addnode=hvjjqjjajii2ycix.onion
-addnode=bqr7zsfgpztd4m4q.onion
-*/
-
 static const char* strMainNetOnionSeed[][1] = {
     {"ci5bvyjhizibhstq.onion"},
     {"iqjl3czk3vjlulka.onion"},
@@ -1197,10 +1181,6 @@ static const char* strMainNetOnionSeed[][1] = {
 };
 
 static const char* strTestNetOnionSeed[][1] = {
-     {"wi2lfbdfpj5zowoc.onion"},
-     {"rho4ruzngsxdh4j7.onion"},
-     {"bonh4mbx52trursl.onion"},
-     {"qsozfddbfh6cl2rv.onion"},
     {NULL} // last element => couldn't use size ?
 };
 
@@ -1964,8 +1944,6 @@ void StartNode(boost::thread_group& threadGroup, CScheduler& scheduler)
         LogPrintf("DNS seeding disabled\n");
     else
         threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "onionseed", &ThreadOnionSeed));
-    // Lico waiting for dnsseed
-    //threadGroup.create_thread(boost::bind(&TraceThread<void (*)()>, "dnsseed", &ThreadDNSAddressSeed));
 
     // Map ports with UPnP
     MapPort(GetBoolArg("-upnp", DEFAULT_UPNP));

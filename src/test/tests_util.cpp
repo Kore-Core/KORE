@@ -959,9 +959,7 @@ void GenerateBlocks(int startBlock, int endBlock, CWallet* pwallet, CScript& scr
                 fMintableCoins = pwallet->MintableCoins();
             }
 
-            while (pwallet->IsLocked() || !fMintableCoins ||
-                   (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance())) {
-                nLastCoinStakeSearchInterval = 0;
+            while (pwallet->IsLocked() || !fMintableCoins || (pwallet->GetBalance() > 0 && nReserveBalance >= pwallet->GetBalance())) {
                 // Do a separate 1 minute check here to ensure fMintableCoins is updated
                 if (!fMintableCoins) {
                     if (GetTime() - nMintableLastCheck > Params().GetTargetSpacing()) // 1 minute check time

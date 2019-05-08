@@ -27,16 +27,6 @@ struct SeedSpec6 {
 
 #include "chainparamsseeds.h"
 
-/**
-* Build the genesis block. Note that the output of the genesis coinbase cannot
-* be spent as it did not originally exist in the database.
-*
-* CBlock(hash=00000ffd590b14, ver=1, hashPrevBlock=00000000000000, hashMerkleRoot=e0028e, nTime=1390095618, nBits=1e0ffff0, nNonce=28917698, vtx=1)
-*   CTransaction(hash=e0028e, ver=1, vin.size=1, vout.size=1, nLockTime=0)
-*     CTxIn(COutPoint(000000, -1), coinbase 04ffff001d01044c5957697265642030392f4a616e2f3230313420546865204772616e64204578706572696d656e7420476f6573204c6976653a204f76657273746f636b2e636f6d204973204e6f7720416363657074696e6720426974636f696e73)
-*     CTxOut(nValue=50.00000000, scriptPubKey=0xA9037BAC7050C479B121CF)
-*   vMerkleTree: e0028e
-*/
 static CBlock CreateGenesisBlock(const char* pszTimestamp, const CScript& genesisOutputScript, uint32_t nTime, uint32_t nNonce, uint32_t nBirthdayA, uint32_t nBirthdayB, uint32_t nBits, int32_t nVersion, const CAmount& genesisReward)
 {
     CMutableTransaction txNew;
@@ -144,9 +134,9 @@ public:
         nStakeLockInterval                            = 2 * 60 * 60;         // Stake remains locked for 4 hours
         nStakeMinAge                                  = 2 * 60 * 60;
         nTargetSpacing                                = 1 * 60;              // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
-        nBlocksToBanOldWallets                        = 1440;                //Ban old nodes one day before fork
+        nBlocksToBanOldWallets                        = 1440;                // Ban old nodes one day before fork
         //TODO: SET FORK BLOCK
-        nHeightToFork                                 = 900000;              //Height to perform the fork
+        nHeightToFork                                 = 900000;              // Height to perform the fork
         nLastPOWBlock                                 = 1000;
         strDevFundPubKey 				 			  = "04D410C4A7FEC6DBF6FEDC9721104ADA1571D5E3E4791085EFC083A9F3F4C007D240A6A647DDA0CA1466641B0739A86A67B97AC48484FC7CA88257804B7CE52ED2";
         vAlertPubKey                                  = ParseHex("042b0fb78026380244cc458a914dae461899b121f53bc42105d134158b9773e3fdadca67ca3015dc9c4ef9b9df91f2ef05b890a15cd2d2b85930d37376b2196002");
@@ -222,9 +212,9 @@ public:
         base58Prefixes[SECRET_KEY]                    = std::vector<unsigned char>(1, 233);
         fEnableBigReward                              = true;
         nDefaultPort                                  = 11743;
-        nBlocksToBanOldWallets                        = 60;                         //Ban old nodes one hour before fork 
-        nHeightToFork                                 = 40;
-        nLastPOWBlock                                 = 35;
+        nBlocksToBanOldWallets                        = 60;           // Ban old nodes one hour before fork 
+        nHeightToFork                                 = 51;
+        nLastPOWBlock                                 = 50;
         vAlertPubKey                                  = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         strDevFundPubKey                              = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
         // Deployment of BIP68, BIP112, and BIP113.
@@ -236,11 +226,11 @@ public:
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
         
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1557262736, 1, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
-
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1557340145, 0, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+    
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x13d6a98407dee59e9cacda857458eec89d69d22f358a33c01047ca0a91e382c1"));
-        assert(genesis.hashMerkleRoot == uint256S("0x096ef948c2ae1f0397df57c46cdfce6dfe99a6fe8c60178149f7b415868fb658"));
+        assert(nHashGenesisBlock == uint256S("0x108f21fa13f48ef6f4edfdbe4d18b09475aa9b5488d9f4ef8a1b02d2c081e7cb"));
+        assert(genesis.hashMerkleRoot == uint256S("0x1b889cb87b7ef1b6cef609072307f7714b355d849975955e6ee6d60f9f0c7a2c"));
         
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -297,12 +287,9 @@ public:
         fRequireStandard               = false;
         nDefaultPort                   = 18444;
         nHashGenesisBlock              = genesis.GetHash();
-        nHeightToFork                  = 900000;           //Height to perform the fork
+        nHeightToFork                  = 900000;           // Height to perform the fork
         nMinerThreads                  = 1;
         nTargetSpacing                 = 1 * 60;           // consensus.nTargetSpacing 1 minutes
-
-        // TODO Lico removed assertion
-        // assert(nHashGenesisBlock == uint256("0x4f023a2120d9127b21bbad01724fdb79b519f593f2a85b60d3d79160ec5f29df"));
 
         vFixedSeeds.clear(); //! Testnet mode doesn't have any fixed seeds.
         vSeeds.clear();      //! Testnet mode doesn't have any DNS seeds.

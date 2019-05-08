@@ -222,20 +222,28 @@ RES_ICONS = \
   qt/res/icons/eye.png \
   qt/res/icons/filesave.png \
   qt/res/icons/history.png \
+  qt/res/icons/history_red.png \
+  qt/res/icons/history_white.png \
   qt/res/icons/import.png \
   qt/res/icons/key.png \
   qt/res/icons/lock_closed.png \
   qt/res/icons/lock_open.png \
   qt/res/icons/notsynced.png \
+  qt/res/icons/overview_white.png \
+  qt/res/icons/overview_red.png \
   qt/res/icons/overview.png \
   qt/res/icons/privacy.png \
   qt/res/icons/qrcode.png \
   qt/res/icons/quit.png \
   qt/res/icons/receive_dark.png \
   qt/res/icons/receive.png \
+  qt/res/icons/receive_white.png \
+  qt/res/icons/receive_red.png \
   qt/res/icons/remove.png \
   qt/res/icons/send_dark.png \
   qt/res/icons/send.png \
+  qt/res/icons/send_white.png \
+  qt/res/icons/send_red.png \
   qt/res/icons/staking_active.png \
   qt/res/icons/staking_inactive.png \
   qt/res/icons/synced.png \

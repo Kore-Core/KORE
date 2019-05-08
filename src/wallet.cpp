@@ -766,7 +766,7 @@ bool CWallet::AddToWallet_Legacy(const CWalletTx& wtxIn, bool fFromLoadWallet, C
             }
         }
 
-        //// debug print
+        // debug print
         if (fDebug)
             LogPrintf("AddToWallet %s  %s%s\n", wtxIn.GetHash().ToString(), (fInsertedNew ? "new" : ""), (fUpdated ? "update" : ""));
 
@@ -836,7 +836,6 @@ void CWallet::MarkConflicted(const uint256& hashBlock, const uint256& hashTx)
 
     // Do not flush the wallet here for performance reasons
     // Lico use this one
-    //CWalletDB walletdb(strWalletFile, "r+", false);
     CWalletDB walletdb(strWalletFile);
 
     std::set<uint256> todo;
@@ -1445,11 +1444,6 @@ CAmount CWallet::GetBalance() const
         LOCK2(cs_main, cs_wallet);
         for (map<uint256, CWalletTx>::const_iterator it = mapWallet.begin(); it != mapWallet.end(); ++it) {
             const CWalletTx* pcoin = &(*it).second;
-
-            // map<string, uint32_t>::iterator it2 = mnOutPoints.find(pcoin->GetHash().ToString());
-            // if (it2 != mnOutPoints.end())
-            //     continue;
-
             if (pcoin->IsTrusted())
                 nTotal += pcoin->GetAvailableCredit();
         }
@@ -1828,7 +1822,6 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int
             return true;
         }
 
-        // nTotalLower > nTargetValue
         break;
     }
 
@@ -1842,7 +1835,7 @@ bool CWallet::SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int
         ApproximateBestSubset(vValue, nTotalLower, nTargetValue + CENT, vfBest, nBest, 1000);
 
     // If we have a bigger coin and (either the stochastic approximation didn't find a good solution,
-    //                                   or the next bigger coin is closer), return the bigger coin
+    //    or the next bigger coin is closer), return the bigger coin
     if (coinLowestLarger.second.first && ((nBest != nTargetValue && nBest < nTargetValue + CENT) || coinLowestLarger.first <= nBest)) {
         setCoinsRet.insert(coinLowestLarger.second);
         nValueRet += coinLowestLarger.first;
@@ -1884,10 +1877,8 @@ bool CWallet::SelectCoins(const CAmount& nTargetValue, set<pair<const CWalletTx*
 bool CWallet::SelectCoins_Legacy(const CAmount& nTargetValue, set<pair<const CWalletTx*, unsigned int> >& setCoinsRet, CAmount& nValueRet, const CCoinControl* coinControl, AvailableCoinsType coin_type, bool useIX, bool fProofOfStake) const
 {
     // Note: this function should never be used for "always free" tx types like dstx
-
     vector<COutput> vCoins;
     AvailableCoins(vCoins, true, coinControl, false, coin_type, useIX, fProofOfStake);
-    //const CChainParams& chainParams = Params();
 
     // coin control -> return all selected outputs (we want all selected to go into the transaction for sure)
     if (fProofOfStake || (coinControl && coinControl->HasSelected() && (!coinControl->fAllowOtherInputs))) {
@@ -1896,8 +1887,8 @@ bool CWallet::SelectCoins_Legacy(const CAmount& nTargetValue, set<pair<const CWa
                 continue;
 
             //check for min age
-            // if (GetTime() - output.tx->GetTxTime() < 4 * 60 * 60)
-            //     continue;
+            if (GetTime() - output.tx->GetTxTime() < 4 * 60 * 60)
+                continue;
 
             // Stop if we've chosen enough inputs
             if (nValueRet >= nTargetValue)
@@ -2166,7 +2157,6 @@ bool CWallet::CreateTransaction_Actual(const std::vector<CRecipient>& vecSend,
                 int nIn = 0;
                 BOOST_FOREACH (const PAIRTYPE(const CWalletTx*, unsigned int) & coin, setCoins) {
                     txNew.vin.push_back(CTxIn(coin.first->GetHash(), coin.second));
-                    //if (coin.first->vin[coin.second].prevPubKey)
                     txNew.vin[nIn++].prevPubKey = coin.first->vout[coin.second].scriptPubKey;
                 }
 
@@ -2803,7 +2793,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
     if (listInputs.empty())
         return false;
 
-    if ((uint32_t)(GetAdjustedTime() - pindex->GetBlockTime()) < (int)(Params().GetTargetSpacingForStake()))
+    if (GetAdjustedTime() - pindex->GetBlockTime() < Params().GetTargetSpacingForStake())
         MilliSleep(Params().GetTargetSpacingForStake() * 1000);
 
     CAmount nCredit;
@@ -2820,7 +2810,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
         if (IsLocked() || ShutdownRequested())
             return false;
 
-        //make sure that enough time has elapsed between
+        // make sure that enough time has elapsed between
         CBlockIndex* pindexfrom = stakeInput->GetIndexFrom();
         if (!pindexfrom || pindexfrom->nHeight < 1) {
             if (fDebug)
@@ -2851,7 +2841,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
         if (Stake(stakeInput.get(), nBits, tx.nTime, nTxNewTime, addressBalance, COutput(pcoin, stakeInput->GetPosition(), nDepth, true))) {
             LOCK(cs_main);
-            //Double check that this will pass time requirements
+            // Double check that this will pass time requirements
             if (nTxNewTime <= pindexfrom->GetMedianTimePast()) {
                 if (fDebug)
                     LogPrintf("CreateCoinStake() : kernel found, but it is too far in the past \n");
@@ -3113,10 +3103,6 @@ bool CWallet::CreateCoinStake_Legacy(const CKeyStore& keystore, CBlock* pblock, 
     // Calculate coin age reward
     CAmount devsubsidy = 0;
     {
-        //uint64_t nCoinAge =0;
-        //if (!GetCoinAge(pindexPrev, nCoinAge, txNew))
-        //    return error("CreateCoinStake : failed to calculate coin age");
-
         int64_t nReward = GetProofOfStakeSubsidy_Legacy(pindexPrev->nHeight, nCredit);
         devsubsidy = (nReward - nCredit) * 0.1;
         nReward -= devsubsidy;

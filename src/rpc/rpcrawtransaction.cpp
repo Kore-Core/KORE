@@ -764,7 +764,7 @@ UniValue signrawtransaction(const UniValue& params, bool fHelp)
 
 UniValue sendrawtransaction(const UniValue& params, bool fHelp)
 {
-    if (fHelp || params.size() < 1 || params.size() > 3)
+    if (fHelp || params.size() < 1 || params.size() > 2)
         throw runtime_error(
             "sendrawtransaction \"hexstring\" ( allowhighfees )\n"
             "\nSubmits raw transaction (serialized, hex-encoded) to local node and network.\n"
@@ -773,7 +773,6 @@ UniValue sendrawtransaction(const UniValue& params, bool fHelp)
             "\nArguments:\n"
             "1. \"hexstring\"    (string, required) The hex string of the raw transaction)\n"
             "2. allowhighfees    (boolean, optional, default=false) Allow high fees\n"
-            "3. swiftx           (boolean, optional, default=false) Use SwiftX to send this transaction\n"
 
             "\nResult:\n"
             "\"hex\"             (string) The transaction hash in hex\n"
@@ -797,10 +796,6 @@ UniValue sendrawtransaction(const UniValue& params, bool fHelp)
     bool fOverrideFees = false;
     if (params.size() > 1)
         fOverrideFees = params[1].get_bool();
-
-    bool fSwiftX = false;
-    if (params.size() > 2)
-        fSwiftX = params[2].get_bool();
 
     CCoinsViewCache& view = *pcoinsTip;
     const CCoins* existingCoins = view.AccessCoins(hashTx);

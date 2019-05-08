@@ -106,8 +106,8 @@ bool CheckKernel_Legacy(CBlockIndex* pindexPrev, unsigned int nBits, int64_t nTi
         *pBlockTime = block.GetBlockTime();
 
     // Min age requirement
-    // if (prevtx.nTime + 4 * 60 * 60 > nTime) // Min age requirement
-    //     return false;
+    if (prevtx.nTime + 4 * 60 * 60 > nTime)
+        return false;
 
     return CheckStakeKernelHash_Legacy(pindexPrev, nBits, new CCoins(prevtx, pindexPrev->nHeight), prevout, nTime);
 }
@@ -153,9 +153,10 @@ bool CheckProofOfStake_Legacy(CBlockIndex* pindexPrev, const CTransaction& tx, u
     // Min age requirement
     if (pindexPrev->nHeight - pIndex->nHeight < Params().GetCoinMaturity())
         return state.DoS(100, error("%s: tried to stake at depth %d \n", __func__, pindexPrev->nHeight - pIndex->nHeight), REJECT_INVALID, "bad-cs-premature");
-
-    // if (prevtx.nTime + 4 * 60 * 60 > tx.nTime) // Min age requirement
-    //     return error("CheckProofOfStake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d \n", prevtx.nTime, Params().GetStakeMinAge(), tx.nTime);
+    
+    // Min age requirement
+    if (prevtx.nTime + 4 * 60 * 60 > tx.nTime) 
+        return error("CheckProofOfStake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d \n", prevtx.nTime, Params().GetStakeMinAge(), tx.nTime);
 
     if (!CheckStakeKernelHash_Legacy(pindexPrev, nBits, new CCoins(prevtx, pindexPrev->nHeight), txin.prevout, tx.nTime))
         return state.DoS(1, error("%s: CheckStakeKernelHash failed \n", __func__), REJECT_INVALID, "bad-cs-proofhash");

@@ -201,7 +201,6 @@ extern bool fLargeWorkInvalidChainFound;
 
 extern int nChainHeight;
 
-extern int64_t nLastCoinStakeSearchInterval;
 extern int64_t nLastCoinStakeSearchTime;
 extern int64_t nReserveBalance;
 
@@ -375,7 +374,6 @@ bool AcceptableInputs(CTxMemPool& pool, CValidationState& state, const CTransact
 
 int GetInputAge(CTxIn& vin);
 int GetInputAgeIX(uint256 nTXHash, CTxIn& vin);
-bool GetCoinAge(const CTransaction& tx, unsigned int nTxTime, uint64_t& nCoinAge);
 
 struct CNodeStateStats {
     int nMisbehavior;

@@ -65,7 +65,6 @@ public:
 
 uint64_t nLastBlockTx = 0;
 uint64_t nLastBlockSize = 0;
-int64_t nLastCoinStakeSearchInterval = 0;
 
 // We want to sort transactions by priority and fee rate, so:
 typedef boost::tuple<double, CFeeRate, const CTransaction*> TxPriority;
@@ -210,17 +209,9 @@ unsigned int static DarkGravityWave3(const CBlockIndex* pindexLast, const CBlock
     // If calculated difficulty is lower than the minimal diff, set the new difficulty to be the minimal diff.
     if (bnNew <= 0 || bnNew > bnTargetLimit)
         bnNew = bnTargetLimit;
-    
-    // Some logging.
-    // TODO: only display these log messages for a certain debug option.
-    //printf("Difficulty Retarget - DGW 3\n");
-    //printf("Before: %08x %s\n", BlockLastSolved->nBits, uint256().SetCompact(BlockLastSolved->nBits).ToString().c_str());
-    //printf("After : %08x %s\n", bnNew.GetCompact(), bnNew.ToString().c_str());
-    //printf("Turbo mode ? %s  -> pow(%ld, %ld) \n", pastDueSpacing > 0 ? "true" : "false", nTargetSpacing, howManyDue);
 
     // Return the new diff.
     return bnNew.GetCompact();
-    
 }
 
 uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock, bool fProofOfStake)
@@ -296,7 +287,6 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
                 pblock->vtx.push_back(CTransaction(txCoinStake));
                 fStakeFound = true;
             }
-            nLastCoinStakeSearchInterval = nSearchTime - nLastCoinStakeSearchTime;
             nLastCoinStakeSearchTime = nSearchTime;
         }
         if (fDebug && fStakeFound)
@@ -838,9 +828,6 @@ int64_t nHPSTimerStart = 0;
 
 bool ProcessBlockFound(CBlock* pblock, CWallet& wallet, CReserveKey& reservekey)
 {
-    // LogPrintf("%s\n", pblock->ToString());
-    // LogPrintf("generated %s\n", FormatMoney(pblock->vtx[0].vout[0].nValue));
-
     // Found a solution
     {
         LOCK(cs_main);
@@ -910,16 +897,14 @@ bool ProcessBlockFound_Legacy(const CBlock* pblock, const CChainParams& chainpar
 // attempt to generate suitable proof-of-stake
 bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock)
 {
-    // if we are trying to sign
-    //    something except proof-of-stake block template
+    // if we are trying to sign something except proof-of-stake block template
     if (!pblock->vtx[0].vout[0].IsEmpty()) {
         if (fDebug)
             LogPrintf("something except proof-of-stake block\n");
         return false;
     }
 
-    // if we are trying to sign
-    //    a complete proof-of-stake block
+    // if we are trying to sign a complete proof-of-stake block
     if (pblock->IsProofOfStake()) {
         if (fDebug)
             LogPrintf("trying to sign a complete proof-of-stake block\n");
@@ -937,20 +922,11 @@ bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock)
 
     int64_t nSearchTime = txCoinStake.nTime; // search to current time
 
-    //cout << "SearchTime               = " << nSearchTime << endl;
-    //cout << "nLastCoinStakeSearchTime = " << nLastCoinStakeSearchTime << endl;
-
     if (nSearchTime >= nLastCoinStakeSearchTime) {
         int64_t nSearchInterval = 1;
         if (pwallet->CreateCoinStake_Legacy(*pwallet, pblock, nSearchInterval, nFees, txCoinStake, key)) {
-            //if (txCoinStake.nTime >= pindexBestHeader->GetMedianTimePast()+1)
-            //{
-            // make sure coinstake would meet timestamp protocol
-            //    as it would be the same as the block timestamp
-            //pblock->nTime = txCoinStake.nTime = pblock->vtx[0].nTime;
-
-            // we have to make sure that we have no future timestamps in
-            //    our transactions set
+            
+            // we have to make sure that we have no future timestamps in our transactions set
             for (vector<CTransaction>::iterator it = pblock->vtx.begin(); it != pblock->vtx.end();)
                 if (it->nTime > pblock->nTime) {
                     it = pblock->vtx.erase(it);
@@ -963,9 +939,7 @@ bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock)
 
             // append a signature to our block
             return key.Sign(pblock->GetHash(), pblock->vchBlockSig);
-            //}
         }
-        nLastCoinStakeSearchInterval = nSearchTime - nLastCoinStakeSearchTime;
         nLastCoinStakeSearchTime = nSearchTime;
     }
     return false;
@@ -997,7 +971,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             LogPrintf("Height to Fork : %d \n", Params().HeightToFork());
         }
         // check every 5 seconds
-        MilliSleep(5000);
+        MilliSleep(10000);
     }
     if (fDebug)
         LogPrintf("We are Free to create Block: %s \n", GetnHeight(chainActive.Tip()) + 1);
@@ -1036,7 +1010,6 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                     continue;
                 }
 
-                nLastCoinStakeSearchInterval = 0;
                 // Do a separate 1 minute check here to ensure fMintableCoins is updated
                 if (!fMintableCoins) {
                     if (GetTime() - nMintableLastCheck > Params().GetTargetSpacing()) // 1 minute check time
@@ -1049,7 +1022,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
 
             if (mapHashedBlocks.count(chainActive.Tip()->nHeight)) //search our map of hashed blocks, see if bestblock has been hashed yet
             {
-                if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < Params().GetTargetSpacing() * 0.75 / 2)  // wait half of the nHashDrift
+                if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < Params().GetTargetSpacingForStake() / 2)  // wait half of the nHashDrift
                 {
                     MilliSleep(5000);
                     boost::this_thread::interruption_point();
@@ -1063,7 +1036,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             }
         }
 
-        if (vNodes.size() < 3) {// || nChainHeight < GetBestPeerHeight()) {
+        if (vNodes.size() < 3 || nChainHeight < GetBestPeerHeight()) {
             MilliSleep(60000);
             continue;
         }
@@ -1143,7 +1116,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                     LogPrintf("%s(): proof-of-work found  \n  hash: %s  \ntarget: %s\n", __func__, hash.GetHex(), hashTarget.GetHex());
                     ProcessBlockFound(pblock, *pwallet, reservekey);
                     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                    // MilliSleep(Params().GetTargetSpacing() * 1000);
+                    MilliSleep(Params().GetTargetSpacing() * 1000);
 
                     // In regression test mode, stop mining after a block is found. This
                     // allows developers to controllably generate a block on demand.
@@ -1248,14 +1221,12 @@ void ThreadStakeMinter_Legacy(CWallet* pwallet)
         boost::this_thread::interruption_point();
 
         while (pwallet->IsLocked()) {
-            // nLastCoinStakeSearchInterval = 0;
             MilliSleep(2000);
             boost::this_thread::interruption_point();
         }
 
         while (vNodes.empty() || IsInitialBlockDownload() ) {
             fTryToSync = true;
-            // nLastCoinStakeSearchInterval = 0;
             MilliSleep(2000);
             boost::this_thread::interruption_point();
         }
@@ -1276,15 +1247,13 @@ void ThreadStakeMinter_Legacy(CWallet* pwallet)
             continue;
         }
 
-        // Do we have balance ?
+        // Do we have balance?
         if (pwallet->GetBalance() <= 0) {
             MilliSleep(60000);
             continue;
         }
 
-        //
         // Create new block
-        //
         unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock_Legacy(chainparams, coinstakeScript->reserveScript, pwallet, true));
         if (!pblocktemplate.get())
             return;
@@ -1294,7 +1263,7 @@ void ThreadStakeMinter_Legacy(CWallet* pwallet)
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             ProcessBlockFound_Legacy(pblock, chainparams);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);
-            // MilliSleep(Params().GetTargetSpacing()/2 * 1000);
+            MilliSleep(Params().GetTargetSpacing()/2 * 1000);
         }
 
         MilliSleep(500);
@@ -1355,9 +1324,7 @@ void KoreMiner_Legacy()
                 } while (true);
             }
 
-            //
             // Create new block
-            //
             unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
             CBlockIndex* pindexPrev = chainActive.Tip();
 
@@ -1374,9 +1341,7 @@ void KoreMiner_Legacy()
             if (fDebug)
                 LogPrintf("KoreMiner_Legacy Running with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
-            //
             // Search
-            //
             int64_t nStart = GetTime();
             arith_uint256 hashTarget = arith_uint256().SetCompact(pblock->nBits);
             uint256 testHash;
@@ -1409,7 +1374,7 @@ void KoreMiner_Legacy()
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
                         ProcessBlockFound_Legacy(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                        // MilliSleep(Params().GetTargetSpacing() * 1000);
+                        MilliSleep(Params().GetTargetSpacing() * 1000);
                         break;
                     }
                 }

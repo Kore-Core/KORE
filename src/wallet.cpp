@@ -1972,6 +1972,7 @@ int CWallet::CountInputsWithAmount(CAmount nInputAmount)
                     CTxIn vin = CTxIn(out.tx->GetHash(), out.i);
 
                     if (out.tx->vout[out.i].nValue != nInputAmount) continue;
+                    if (IsSpent(out.tx->GetHash(), i) || IsMine(pcoin->vout[i]) != ISMINE_SPENDABLE) continue;
 
                     nTotal++;
                 }
@@ -4037,7 +4038,7 @@ bool CWallet::MultiSend()
         if (out.tx->GetDepthInMainChain() != Params().GetCoinMaturity() + 1)
             continue;
 
-        if (!fMultiSendStake)
+        if (!(fMultiSendStake && out.tx->IsCoinStake()))
             continue;
 
         CTxDestination destMyAddress;

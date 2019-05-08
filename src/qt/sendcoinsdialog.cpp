@@ -524,11 +524,8 @@ void SendCoinsDialog::setBalance(const CAmount& balance, const CAmount& unconfir
     Q_UNUSED(watchUnconfirmedBalance);
     Q_UNUSED(watchImmatureBalance);
 
-    if (model && model->getOptionsModel()) {
-        uint64_t bal = 0;
-        QSettings settings;
-
-        ui->labelBalance->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), bal));
+    if (model && model->getOptionsModel()) {        
+        ui->labelBalance->setText(BitcoinUnits::formatWithUnit(model->getOptionsModel()->getDisplayUnit(), balance));
     }
 }
 

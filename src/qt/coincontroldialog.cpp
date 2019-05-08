@@ -774,7 +774,6 @@ void CoinControlDialog::updateView()
         double dPrioritySum = 0;
         int nChildren = 0;
         int nInputSum = 0;
-        int n = 0;
         for(const COutput& out: coins.second) {
             isminetype mine = pwalletMain->IsMine(out.tx->vout[out.i]);
             bool fMultiSigUTXO = (mine & ISMINE_MULTISIG);

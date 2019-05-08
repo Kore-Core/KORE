@@ -14,7 +14,7 @@ PATCH="patch --no-backup-if-mismatch -f"
 pushd tor
 $PATCH -p0 < ../depends/patches/tor/remove_libcap_from_configure_ac.patch
 $PATCH -p0 < ../depends/patches/tor/remove_tor_backtrace.patch
-autoreconf --install --force --warnings=all
+autoreconf --install --warnings=all
 popd
 
 srcdir="$(dirname $0)"
@@ -25,4 +25,4 @@ if [ -z ${LIBTOOLIZE} ] && GLIBTOOLIZE="`which glibtoolize 2>/dev/null`"; then
 fi
 which autoreconf >/dev/null || \
   (echo "configuration failed, please install autoconf first" && exit 1)
-autoreconf --install --force --warnings=all
+autoreconf --install --warnings=all

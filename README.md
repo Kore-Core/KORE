@@ -48,7 +48,7 @@ b) disabling swap
 sudo apt-get update
 sudo apt-get install -y git curl jq
 sudo apt-get install -y software-properties-common
-sudo apt-get install -y autotools-dev autoconf automake build-essential bsdmainutils
+sudo apt-get install -y autotools-dev autoconf automake build-essential
 sudo apt-get install -y qttools5-dev-tools qttools5-dev libprotobuf-dev libqrencode-dev
 sudo apt-get install -y libtool pkg-config protobuf-compiler python3
 

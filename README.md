@@ -10,7 +10,7 @@ KORE is an open source crypto-currency focused on security and privacy with fast
 
 <table>
 <tr><td>Pre Fork Algo</td><td>Momentum</td></tr>
-<tr><td>Post Fork Algo</td><td>Yescrypt</td></tr>
+<tr><td>Post Fork Algo</td><td>Yescrypt R32</td></tr>
 <tr><td>Block Time</td><td>60 Seconds</td></tr>
 <tr><td>Difficulty Retargeting</td><td>Every Block</td></tr>
 <tr><td>Max Coin Supply</td><td>12,000,000 KORE</td></tr>

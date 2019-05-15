@@ -1,0 +1,26 @@
+# /etc/conf.d/kored: config file for /etc/init.d/kored
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/kore/kore.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/kored"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/kored.pid"
+
+# Where to write kored data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/kored"
+
+# User and group to own kored process
+#BITCOIND_USER="kore"
+#BITCOIND_GROUP="kore"
+
+# Path to kored executable
+#BITCOIND_BIN="/usr/bin/kored"
+
+# Nice value to run kored under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOIND_OPTS=""

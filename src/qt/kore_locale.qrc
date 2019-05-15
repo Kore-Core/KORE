@@ -1,0 +1,35 @@
+<!DOCTYPE RCC><RCC version="1.0">
+    <qresource prefix="/translations">
+        <file alias="bg">locale/kore_bg.qm</file>
+        <file alias="en">locale/kore_en.qm</file>
+        <file alias="fr_FR">locale/kore_fr_FR.qm</file>
+        <file alias="ja">locale/kore_ja.qm</file>
+        <file alias="BR">locale/kore_pt_BR.qm</file>
+        <file alias="sv">locale/kore_sv.qm</file>
+        <file alias="zh_TW">locale/kore_zh_TW.qm</file>
+        <file alias="ca">locale/kore_ca.qm</file>
+        <file alias="en_US">locale/kore_en_US.qm</file>
+        <file alias="hi_IN">locale/kore_hi_IN.qm</file>
+        <file alias="ko_KR">locale/kore_ko_KR.qm</file>
+        <file alias="pt">locale/kore_pt.qm</file>
+        <file alias="tr">locale/kore_tr.qm</file>
+        <file alias="cs">locale/kore_cs.qm</file>
+        <file alias="es_ES">locale/kore_es_ES.qm</file>
+        <file alias="hr_HR">locale/kore_hr_HR.qm</file>
+        <file alias="lt_LT">locale/kore_lt_LT.qm</file>
+        <file alias="lt_LT">locale/kore_lt_LT.qm</file>
+        <file alias="uk">locale/kore_uk.qm</file>
+        <file alias="da">locale/kore_da.qm</file>
+        <file alias="es">locale/kore_es.qm</file>
+        <file alias="hr">locale/kore_hr.qm</file>
+        <file alias="nl">locale/kore_nl.qm</file>
+        <file alias="ru">locale/kore_ru.qm</file>
+        <file alias="vi">locale/kore_vi.qm</file>
+        <file alias="de">locale/kore_de.qm</file>
+        <file alias="fi">locale/kore_fi.qm</file>
+        <file alias="it">locale/kore_it.qm</file>
+        <file alias="pl">locale/kore_pl.qm</file>
+        <file alias="sk">locale/kore_sk.qm</file>
+        <file alias="zh_CN">locale/kore_zh_CN.qm</file>
+    </qresource>
+</RCC>

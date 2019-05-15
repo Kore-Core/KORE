@@ -1,0 +1,17 @@
+--- old/configure	2018-11-02 10:26:37.000000000 -0300
++++ new/configure	2019-03-21 16:56:09.645627433 -0300
+@@ -10654,11 +10654,9 @@
+   return 0;
+ }
+ _ACEOF
+-if ac_fn_c_try_link "$LINENO"; then :
+-  ac_cv_lib_cap_cap_init=yes
+-else
+-  ac_cv_lib_cap_cap_init=no
+-fi
++
++ac_cv_lib_cap_cap_init=no
++
+ rm -f core conftest.err conftest.$ac_objext \
+     conftest$ac_exeext conftest.$ac_ext
+ LIBS=$ac_check_lib_save_LIBS

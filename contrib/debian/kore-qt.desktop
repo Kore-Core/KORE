@@ -1,0 +1,12 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=KORE
+Comment=KORE P2P Cryptocurrency
+Comment[fr]=KORE, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=KORE, eşten eşe kriptografik sanal para birimi
+Exec=kore-qt %u
+Terminal=false
+Type=Application
+Icon=kore128
+MimeType=x-scheme-handler/kore;
+Categories=Office;Finance;

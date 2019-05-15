@@ -137,7 +137,7 @@ public:
         nBlocksToBanOldWallets                        = 1440;                // Ban old nodes one day before fork
         nHeightToFork                                 = 483063;              // Height to perform the fork
         nLastPOWBlock                                 = 1000;
-        strDevFundPubKey 				 			  = "04D410C4A7FEC6DBF6FEDC9721104ADA1571D5E3E4791085EFC083A9F3F4C007D240A6A647DDA0CA1466641B0739A86A67B97AC48484FC7CA88257804B7CE52ED2";
+        strDevFundPubKey 				 			  = "042C33BF3A0EFF253824BB33DAACA96160C7B972A5C84758B986198FE8CF7B7DC9A1F33FD7B7BF6A0283A140ADE6068783E31994FEF144354F6BC340B384D02080";
         vAlertPubKey                                  = ParseHex("042b0fb78026380244cc458a914dae461899b121f53bc42105d134158b9773e3fdadca67ca3015dc9c4ef9b9df91f2ef05b890a15cd2d2b85930d37376b2196002");
         
         // Deployment of BIP68, BIP112, and BIP113.

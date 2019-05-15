@@ -1,8 +1,6 @@
 KORE Core integration/staging repository
 =====================================
 
-[![Build Status](https://travis-ci.org/KORE-Project/KORE.svg?branch=master)](https://travis-ci.org/KORE-Project/KORE) [![GitHub version](https://badge.fury.io/gh/KORE-Project%2FKORE.svg)](https://badge.fury.io/gh/KORE-Project%2FKORE)
-
 KORE is an open source crypto-currency focused on security and privacy with fast private transactions consisting of low transaction fees & environmental footprint.  It utilizes a custom Proof of Stake protocol for securing its network.
 
 

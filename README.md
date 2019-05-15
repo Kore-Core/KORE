@@ -51,7 +51,7 @@ Note2: If you machine has less than 3G memory, you should use a swapfile.
 a) enabling swap
 
 ```bash
-    sudo dd if=/dev/zero of=/swapfile bs,=4096 count=1048576
+    sudo dd if=/dev/zero of=/swapfile bs=4096 count=1048576
     sudo chmod 600 /swapfile
     sudo mkswap /swapfile
     sudo swapon /swapfile

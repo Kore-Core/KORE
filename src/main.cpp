@@ -6343,36 +6343,6 @@ bool static ProcessMessagePong(CNode* pfrom, string strCommand, CDataStream& vRe
     return true;
 }
 
-bool static ProcessMessageAlert(CNode* pfrom, CDataStream& vRecv)
-{
-    CAlert alert;
-    vRecv >> alert;
-
-    uint256 alertHash = alert.GetHash();
-    if (pfrom->setKnown.count(alertHash) == 0) {
-        if (alert.ProcessAlert()) {
-            // Relay
-            pfrom->setKnown.insert(alertHash);
-            {
-                LOCK(cs_vNodes);
-                BOOST_FOREACH (CNode* pnode, vNodes)
-                    alert.RelayTo(pnode);
-            }
-        } else {
-            // Small DoS penalty so peers that send us lots of
-            // duplicate/expired/invalid-signature/whatever alerts
-            // eventually get banned.
-            // This isn't a Misbehaving(100) (immediate ban) because the
-            // peer might be an older or different implementation with
-            // a different signature key, etc.
-
-            Misbehaving(pfrom->GetId(), 10, "Alert message error");
-        }
-    }
-
-    return true;
-}
-
 bool static ProcessMessageGetBlocks(CNode* pfrom, string strCommand, CDataStream& vRecv, int64_t nTimeReceived)
 {
     const CChainParams& chainparams = Params();
@@ -7180,9 +7150,6 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
 
     else if (strCommand == NetMsgType::PONG)
         return ProcessMessagePong(pfrom, strCommand, vRecv, nTimeReceived);
-
-    else if (fAlerts && strCommand == NetMsgType::ALERT)
-        return ProcessMessageAlert(pfrom, vRecv);
 
     else if (strCommand == NetMsgType::FILTERLOAD)
         return ProcessMessageFilterLoad(pfrom, vRecv);

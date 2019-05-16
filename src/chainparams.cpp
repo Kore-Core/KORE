@@ -119,7 +119,7 @@ public:
         fMiningRequiresPeers                          = true;
         fRequireStandard                              = true;
         fSkipProofOfWorkCheck                         = false;
-        nDefaultPort                                  = 10743;
+        nDefaultPort                                  = 15743;
         nCoinMaturity                                 = 25;
         nMaxMoneyOut                                  = MAX_MONEY;
         nMaxReorganizationDepth                       = 25;
@@ -210,7 +210,7 @@ public:
         base58Prefixes[SCRIPT_ADDRESS]                = std::vector<unsigned char>(1, 190);
         base58Prefixes[SECRET_KEY]                    = std::vector<unsigned char>(1, 233);
         fEnableBigReward                              = true;
-        nDefaultPort                                  = 11743;
+        nDefaultPort                                  = 16743;
         nBlocksToBanOldWallets                        = 60;           // Ban old nodes one hour before fork 
         nHeightToFork                                 = 51;
         nLastPOWBlock                                 = 50;

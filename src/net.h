@@ -22,6 +22,7 @@
 
 #include <deque>
 #include <stdint.h>
+#include <regex>
 
 #ifndef WIN32
 #include <arpa/inet.h>
@@ -329,6 +330,7 @@ public:
     // store the sanitized version in cleanSubVer. The original should be used when dealing with
     // the network or wire types and the cleaned string used when displayed or logged.
     std::string strSubVer, cleanSubVer;
+    uint32_t clientVersion;
     bool fWhitelisted; // This peer can bypass DoS banning.
     bool fOneShot;
     bool fClient;
@@ -346,6 +348,25 @@ public:
     CBloomFilter* pfilter;
     int nRefCount;
     NodeId id;
+
+    void SetClientVersion(){
+        // "/KORE Core:0.13.1/"
+        const regex r("/KORE Core:([0-9]+).([0-9]+).([0-9]+)");
+        smatch sm;
+
+        uint32_t major = 0;
+        uint32_t minor = 0;
+        uint32_t revision = 0;
+
+        if (regex_search(cleanSubVer, sm, r) && sm.size() == 4)
+        {
+            major = atoi(sm[1]) * 1000000;
+            minor = atoi(sm[2]) * 10000;
+            revision = atoi(sm[3]) * 100;
+        }
+        clientVersion = major + minor + revision;
+    }
+
 protected:
 
     // Denial-of-service detection/prevention

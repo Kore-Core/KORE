@@ -17,6 +17,8 @@ static const int PROTOCOL_VERSION = 70101;
 // 00 => _CLIENT_VERSION_REVISION
 // 01 => _CLIENT_VERSION_BUILD
 
+static const int MIM_CLIENT_VERSION = 130100;
+
 //! initial proto version, to be increased after version/verack negotiation
 static const int INIT_PROTO_VERSION = 209;
 

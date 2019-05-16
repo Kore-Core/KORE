@@ -4325,6 +4325,9 @@ bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool f
 {
     if (fDebug)
         LogPrintf("CheckBlockHeader fCheckPOW: %s \n", fCheckPOW ? "true" : "false");
+    if(block.nVersion < CBlockHeader::POS_FORK_VERSION)
+        return state.DoS(100, error("CheckBlockHeader(): CURRENT_VERSION is not valid"),
+            REJECT_INVALID, "Invalid Version");
     // Check proof of work matches claimed amount
     if (fCheckPOW && !CheckProofOfWork(block.GetHash(), block.nBits))
         return state.DoS(50, error("CheckBlockHeader(): proof of work failed"),
@@ -6845,6 +6848,7 @@ bool static ProcessMessageVersion(CNode* pfrom, string strCommand, CDataStream& 
     if (!vRecv.empty()) {
         vRecv >> LIMITED_STRING(pfrom->strSubVer, MAX_SUBVERSION_LENGTH);
         pfrom->cleanSubVer = SanitizeString(pfrom->strSubVer);
+        pfrom->SetClientVersion();
     }
     if (!vRecv.empty()) {
         vRecv >> pfrom->nStartingHeight;
@@ -7100,8 +7104,8 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         return false;
     }
 
-    else if (chainActive.Height() + Params().HeightToBanOldWallets() > Params().HeightToFork() && pfrom->nVersion < MIN_PEER_PROTO_VERSION) {
-        pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", MIN_PEER_PROTO_VERSION));
+     else if (chainActive.Height() + Params().HeightToBanOldWallets() > Params().HeightToFork() && pfrom->clientVersion < MIM_CLIENT_VERSION) {
+        pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", MIM_CLIENT_VERSION));
         Misbehaving(pfrom->GetId(), 1000, "Ban due to fork");
         pfrom->fDisconnect = true;
         return false;

@@ -1080,7 +1080,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             SetThreadPriority(THREAD_PRIORITY_NORMAL);
             ProcessBlockFound(pblock, *pwallet, reservekey);
             SetThreadPriority(THREAD_PRIORITY_LOWEST);
-            MilliSleep(5000);
+            MilliSleep(Params().GetTargetSpacingForStake() * 1000);
             continue;
         }
 
@@ -1116,8 +1116,8 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
                     LogPrintf("%s(): proof-of-work found  \n  hash: %s  \ntarget: %s\n", __func__, hash.GetHex(), hashTarget.GetHex());
                     ProcessBlockFound(pblock, *pwallet, reservekey);
                     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                    MilliSleep(Params().GetTargetSpacing() * 1000);
-
+                    MilliSleep(Params().GetTargetSpacingForStake() * 1000);
+                    
                     // In regression test mode, stop mining after a block is found. This
                     // allows developers to controllably generate a block on demand.
                     if (Params().ShouldMineBlocksOnDemand())

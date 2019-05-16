@@ -157,7 +157,6 @@ public:
     CBlockHeader GetBlockHeader() const
     {
         CBlockHeader block(nVersion);
-        //block.nVersion       = nVersion;
         block.hashPrevBlock = hashPrevBlock;
         block.hashMerkleRoot = hashMerkleRoot;
         block.nTime = nTime;

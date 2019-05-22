@@ -255,7 +255,8 @@ bool GetKernelStakeModifier(uint256 hashBlockFrom, uint64_t& nStakeModifier, boo
         // some fields in the database yet, like nFlags, nStakeModifier
         nStakeModifier = PREDEFINED_MODIFIER; //uint64_t("stakemodifier");
 
-        LogPrintf("GetKernelStakeModifier(): DEFAULT_PRE_FORK_MODIFIER, nStakeModifier=%u\n", nStakeModifier);
+        if(fDebug)
+            LogPrintf("GetKernelStakeModifier(): PREDEFINED_MODIFIER, nStakeModifier=%u\n", nStakeModifier);
 
         return true;
     }
@@ -305,24 +306,18 @@ bool CheckStake(const CDataStream& ssUniqueID, CAmount nValueIn, const uint64_t 
     uint256 bnCoinDayWeight = uint256(nValueIn) / MINIMUM_STAKE_VALUE;
 
     // Now check if proof-of-stake hash meets target protocol
-    bool canStake = hashProofOfStake < (bnCoinDayWeight * bnTarget);
+    bool canStake = hashProofOfStake / bnCoinDayWeight < bnTarget;
 
-    CHashWriter ss1(SER_GETHASH, 0);
-    ss1 << ssUniqueID;
-    uint256 test = ss1.GetHash();
-
-    if (fDebug) {    
+    if (fDebug) {
         LogPrintf("CheckStake()\n");
-        LogPrintf("hash:            %s\n", hashProofOfStake.ToString());
-        LogPrintf("target:          %s\n", (bnCoinDayWeight * bnTarget).ToString());        
-        LogPrintf("ssUniqueID=      %s\n", test.ToString());
-        LogPrintf("hashPOS=         %s\n", hashProofOfStake.ToString());
-        LogPrintf("nValueIn=        %s\n", nValueIn);
-        LogPrintf("nStakeModifier=  %u\n", nStakeModifier);
-        LogPrintf("bnTarget=        %s\n", bnTarget.ToString());
-        LogPrintf("bnCoinDayWeight= %s\n", bnCoinDayWeight.ToString());
-        LogPrintf("nTimeBlockFrom=  %u\n", nTimeBlockFrom);
-        LogPrintf("nTimeTx=         %u\n", nTimeTx);
+        LogPrintf("hashWeightened:      %s\n", (hashProofOfStake / bnCoinDayWeight).ToString());
+        LogPrintf("target:              %s\n", bnTarget.ToString());
+        LogPrintf("hash:                %s\n", hashProofOfStake.ToString());
+        LogPrintf("bnCoinDayWeight:     %s\n", bnCoinDayWeight.ToString());
+        LogPrintf("nValueIn:            %s\n", nValueIn);
+        LogPrintf("nStakeModifier:      %u\n", nStakeModifier);
+        LogPrintf("nTimeBlockFrom:      %u\n", nTimeBlockFrom);
+        LogPrintf("nTimeTx:             %u\n", nTimeTx);
         LogPrintf("%s\n", canStake ? "Can stake" : "Can't stake");
     }
 

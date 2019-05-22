@@ -3902,7 +3902,8 @@ static bool ActivateBestChainStep(CValidationState& state, CBlockIndex* pindexMo
                 PruneBlockIndexCandidates();
                 if (!pindexOldTip || chainActive.Tip()->nChainWork > pindexOldTip->nChainWork) {
                     // We're in a better position than we were. Return temporarily to release the lock.
-                    LogPrintf("%s(): We have a new best chain.\n", __func__);
+                    if(fDebug)
+                        LogPrintf("%s(): We have a new best chain.\n", __func__);
                     fContinue = false;
                     break;
                 }
@@ -4965,8 +4966,11 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
         std::list<CKoreStake> listStake;
         CAmount stakedBalance;
 
-        if (!CheckProofOfStake(block, hashProofOfStake, listStake, stakedBalance))
-            return state.DoS(25, error("%s: proof of stake check failed", __func__));
+        if (!CheckProofOfStake(block, hashProofOfStake, listStake, stakedBalance)){
+            if (chainActive.Height() < 492000)
+                return state.DoS(1, error("%s: proof of stake check failed", __func__));
+            return state.DoS(100, error("%s: proof of stake check failed", __func__));
+        }
 
         //Check minimum stake value
         if (stakedBalance < MINIMUM_STAKE_VALUE)

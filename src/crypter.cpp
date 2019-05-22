@@ -206,7 +206,7 @@ bool CCryptoKeyStore::Lock()
     {
         LOCK(cs_KeyStore);
         vMasterKey.clear();
-        //pwalletMain->zwalletMain->Lock();
+        pwalletMain->fWalletUnlockAnonymizeOnly = false;
     }
 
     NotifyStatusChanged(this);

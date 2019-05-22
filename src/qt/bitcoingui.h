@@ -69,6 +69,7 @@ public:
 #endif // ENABLE_WALLET
     bool enableWallet;
     bool fMultiSend = false;
+    bool fIsLocked = true;
 
 protected:
     void changeEvent(QEvent* e);

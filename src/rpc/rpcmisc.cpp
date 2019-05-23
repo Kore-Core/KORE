@@ -441,7 +441,7 @@ UniValue getstakingstatus(const UniValue& params, bool fHelp)
     if (pwalletMain) {
         obj.push_back(Pair("walletunlocked", !pwalletMain->IsLocked()));
         obj.push_back(Pair("mintablecoins", pwalletMain->MintableCoins()));
-        obj.push_back(Pair("enoughcoins", nReserveBalance <= pwalletMain->GetBalance()));
+        obj.push_back(Pair("enoughcoins", MINIMUM_STAKE_VALUE <= pwalletMain->GetBalance() - nReserveBalance));
     }
 
     bool nStaking = false;

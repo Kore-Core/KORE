@@ -22,7 +22,7 @@ enum isminetype {
     ISMINE_MULTISIG = 2,
     ISMINE_SPENDABLE  = 4,
     ISMINE_STAKE = 8,
-    ISMINE_ALL = ISMINE_WATCH_ONLY | ISMINE_SPENDABLE
+    ISMINE_ALL = ISMINE_WATCH_ONLY | ISMINE_SPENDABLE | ISMINE_STAKE
 };
 /** used for bitflags of isminetype */
 typedef uint8_t isminefilter;

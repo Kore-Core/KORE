@@ -4936,6 +4936,11 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
 
     CBlockIndex*& pindex = *ppindex;
 
+    if (!AcceptBlockHeader(block, state, &pindex))
+        return false;
+
+    int nHeight = pindex->nHeight;
+
     // Get prev block index
     CBlockIndex* pindexPrev = NULL;
     if (block.GetHash() != Params().HashGenesisBlock()) {
@@ -4967,7 +4972,7 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
         CAmount stakedBalance;
 
         if (!CheckProofOfStake(block, hashProofOfStake, listStake, stakedBalance)){
-            if (chainActive.Height() < 493000)
+            if (nHeight < 493000)
                 return state.DoS(1, error("%s: proof of stake check failed", __func__));
             return state.DoS(100, error("%s: proof of stake check failed", __func__));
         }
@@ -4997,9 +5002,6 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
             mapProofOfStake.insert(make_pair(hash, hashProofOfStake));
     }
 
-    if (!AcceptBlockHeader(block, state, &pindex))
-        return false;
-
     if (pindex->nStatus & BLOCK_HAVE_DATA) {
         // TODO: deal better with duplicate blocks.
         // return state.DoS(20, error("AcceptBlock() : already have block %d %s", pindex->nHeight, pindex->GetBlockHash().ToString()), REJECT_DUPLICATE, "duplicate");
@@ -5013,8 +5015,6 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
         }
         return false;
     }
-
-    int nHeight = pindex->nHeight;
 
     // Write block to history file
     try {
@@ -6530,7 +6530,8 @@ bool static ProcessMessageGetHeaders(CNode* pfrom, string strCommand, CDataStrea
     // we must use CBlocks, as CBlockHeaders won't include the 0x00 nTx count at the end
     vector<CBlock> vHeaders;
     int nLimit = MAX_HEADERS_RESULTS;
-    LogPrint("net", "getheaders %d to %s from peer=%d\n", (pindex ? pindex->nHeight : -1), hashStop.ToString(), pfrom->id);
+     if (pindex != NULL)
+        LogPrint("net", "getheaders for block %d with hash %s from peerId=%d\n", pindex->nHeight, (locator.IsNull() ? hashStop.ToString() : pindex->GetBlockHash().ToString()), pfrom->id);
     for (; pindex; pindex = chainActive.Next(pindex)) {
         vHeaders.push_back(pindex->GetBlockHeader());
         if (--nLimit <= 0 || pindex->GetBlockHash() == hashStop)

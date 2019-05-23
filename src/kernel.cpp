@@ -310,9 +310,9 @@ bool CheckStake(const CDataStream& ssUniqueID, CAmount nValueIn, const uint64_t 
 
     if (fDebug) {
         LogPrintf("CheckStake()\n");
+        LogPrintf("hash:                %s\n", hashProofOfStake.ToString());
         LogPrintf("hashWeightened:      %s\n", (hashProofOfStake / bnCoinDayWeight).ToString());
         LogPrintf("target:              %s\n", bnTarget.ToString());
-        LogPrintf("hash:                %s\n", hashProofOfStake.ToString());
         LogPrintf("bnCoinDayWeight:     %s\n", bnCoinDayWeight.ToString());
         LogPrintf("nValueIn:            %s\n", nValueIn);
         LogPrintf("nStakeModifier:      %u\n", nStakeModifier);

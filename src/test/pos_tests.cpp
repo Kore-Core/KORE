@@ -230,7 +230,7 @@ void StartPreMineAndWalletAllocation()
                 break;
             }
 
-            if (wallets[0].CreateTransaction(vecSend, txNew, reserveKey, feeRate, failReason, (const CCoinControl*)__null, ALL_COINS, false, 0L))
+            if (wallets[0].CreateTransaction(vecSend, txNew, reserveKey, feeRate, failReason, (const CCoinControl*)__null, ALL_COINS, false))
                 if (wallets[0].CommitTransaction(txNew, reserveKey)) {
 #ifdef LOG_INTEGRATION_TESTS
                     printf("Transactions done for case %d in block %d.\n", populate++, i);
@@ -320,7 +320,7 @@ BOOST_AUTO_TEST_CASE(pos_integration)
 
             if (!SignBlock(*pblock, *wallet)) {
 #ifdef LOG_INTEGRATION_TESTS
-                printf("BitcoinMiner(): Signing new block with UTXO key failed \n");
+                printf("KoreMinter(): Signing new block with UTXO key failed \n");
 #endif
                 continue;
             }

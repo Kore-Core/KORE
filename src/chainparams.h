@@ -98,7 +98,7 @@ public:
     int64_t                   GetBudgetFeeConfirmations() const        { return nBudgetFeeConfirmations; }
     int64_t                   GetBudgetVoteUpdate() const              { return nBudgetVoteUpdate; }
     int32_t                   GetCoinMaturity() const                  { return nCoinMaturity; }
-    /** Used if GenerateBitcoins is called with a negative number of threads */
+    /** Used if GenerateKores is called with a negative number of threads */
     int32_t                   GetDefaultMinerThreads() const           { return nMinerThreads; }
     int32_t                   GetDefaultPort() const                   { return nDefaultPort; }
     std::string               GetDevFundPubKey() const                 { return strDevFundPubKey; }

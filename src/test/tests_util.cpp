@@ -938,7 +938,7 @@ void ScanForWalletTransactions(CWallet* pwallet)
 
 void GenerateBlocks(int startBlock, int endBlock, CWallet* pwallet, CScript& scriptPubKey, bool fProofOfStake, bool logToStdout)
 {
-    bool fGenerateBitcoins = false;
+    bool fGenerateKores = false;
     bool fMintableCoins = false;
     int nMintableLastCheck = 0;
     CReserveKey reservekey(pwallet); // Lico, once we want to use the same pubkey, we dont need to remove it from key pool
@@ -972,8 +972,8 @@ void GenerateBlocks(int startBlock, int endBlock, CWallet* pwallet, CScript& scr
                 SetMockTime(GetTime() + 5000);
                 boost::this_thread::interruption_point();
 
-                if (!fGenerateBitcoins && !fProofOfStake) {
-                    //cout << "BitcoinMiner Going out of Loop !!!" << endl;
+                if (!fGenerateKores && !fProofOfStake) {
+                    //cout << "KoreMiner Going out of Loop !!!" << endl;
                     continue;
                 }
             }
@@ -983,7 +983,7 @@ void GenerateBlocks(int startBlock, int endBlock, CWallet* pwallet, CScript& scr
                 if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < Params().GetTargetSpacing() * 0.75 / 2) // wait half of the nHashDrift
                 {
                     SetMockTime(GetTime() + 5);
-                    //cout << "BitcoinMiner Going out of Loop !!!" << endl;
+                    //cout << "KoreMiner Going out of Loop !!!" << endl;
                     continue;
                 }
             }
@@ -1021,7 +1021,7 @@ void GenerateBlocks(int startBlock, int endBlock, CWallet* pwallet, CScript& scr
         if (fProofOfStake) {
             //cout << "CPUMiner : proof-of-stake block found " << pblock->GetHash().ToString() << endl;
             if (!SignBlock(*pblock, *pwallet)) {
-                //cout << "BitcoinMiner(): Signing new block with UTXO key failed" << endl;
+                //cout << "KoreMinter(): Signing new block with UTXO key failed" << endl;
                 continue;
             }
             //cout << "CPUMiner : proof-of-stake block was signed " << pblock->GetHash().ToString() << endl;
@@ -1053,7 +1053,7 @@ void GenerateBlocks(int startBlock, int endBlock, CWallet* pwallet, CScript& scr
 
                 if (hash <= hashTarget) {
                     // Found a solution
-                    //cout << "BitcoinMiner:" << endl;
+                    //cout << "KoreMinter:" << endl;
                     //cout << "proof-of-work found  "<< endl;
                     //cout << "hash  : " << hash.GetHex() << endl;
                     //cout << "target: " << hashTarget.GetHex() << endl;
@@ -1122,7 +1122,7 @@ void GeneratePOWLegacyBlocks(int startBlock, int endBlock, CWallet* pwallet, CSc
             return;
         }
         CBlock* pblock = &pblocktemplate->block;
-        IncrementExtraNonce_Legacy(pblock, pindexPrev, nExtraNonce);
+        IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
         LogPrintf("Running KoreMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(),
             ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
@@ -1208,7 +1208,7 @@ void GeneratePOSLegacyBlocks(int startBlock, int endBlock, CWallet* pwallet, CSc
 
 void Create_Transaction(CBlock* pblock, const CBlockIndex* pindexPrev, const blockinfo_t blockinfo[], int i)
 {
-    // This method simulates the transaction creation, similar to IncrementExtraNonce_Legacy
+    // This method simulates the transaction creation, similar to IncrementExtraNonce
     unsigned int nHeight = pindexPrev->nHeight + 1; // Height first in coinbase required for block.version=2
     CMutableTransaction txCoinbase(pblock->vtx[0]);
     txCoinbase.vin[0].scriptSig = (CScript() << nHeight << CScriptNum(blockinfo[i].extranonce)) + COINBASE_FLAGS;
@@ -1221,7 +1221,7 @@ void Create_Transaction(CBlock* pblock, const CBlockIndex* pindexPrev, const blo
 
 void Create_NewTransaction(CBlock* pblock, const CBlockIndex* pindexPrev, const blockinfo_t blockinfo[], int i)
 {
-    // This method simulates the transaction creation, similar to IncrementExtraNonce_Legacy
+    // This method simulates the transaction creation, similar to IncrementExtraNonce
     unsigned int nHeight = pindexPrev->nHeight + 1; // Height first in coinbase required for block.version=2
     CMutableTransaction txCoinbase(pblock->vtx[0]);
     txCoinbase.vin[0].scriptSig = (CScript() << nHeight << CScriptNum(blockinfo[i].extranonce)) + COINBASE_FLAGS;

@@ -147,9 +147,7 @@ struct CRecipient {
 class CWallet : public CCryptoKeyStore, public CValidationInterface
 {
 private:
-    bool SelectCoins(const CAmount& nTargetValue, std::set<std::pair<const CWalletTx*, unsigned int> >& setCoinsRet, CAmount& nValueRet, const CCoinControl* coinControl = NULL, AvailableCoinsType coin_type = ALL_COINS, bool useIX = true) const;
-    
-    // it was public bool SelectCoins(int64_t nTargetValue, std::set<std::pair<const CWalletTx*,unsigned int> >& setCoinsRet, int64_t& nValueRet, const CCoinControl *coinControl = NULL, AvailableCoinsType coin_type=ALL_COINS, bool useIX = true) const;
+    bool SelectCoins(const CAmount& nTargetValue, std::set<std::pair<const CWalletTx*, unsigned int> >& setCoinsRet, CAmount& nValueRet, const CCoinControl* coinControl = NULL, AvailableCoinsType coin_type = ALL_COINS) const;
     bool SelectCoins_Legacy(const CAmount& nTargetValue, set<pair<const CWalletTx*, unsigned int> >& setCoinsRet, CAmount& nValueRet, const CCoinControl* coinControl, AvailableCoinsType coin_type, bool useIX, bool fProofOfStake) const;
 
     CWalletDB* pwalletdbEncryption;
@@ -305,7 +303,7 @@ public:
         return nWalletMaxVersion >= wf;
     }
 
-    void AvailableCoins(std::vector<COutput>& vCoins, bool fOnlyConfirmed = true, const CCoinControl* coinControl = NULL, bool fIncludeZeroValue = false, AvailableCoinsType nCoinType = ALL_COINS, bool fUseIX = false, int nWatchonlyConfig = 1) const;
+    void AvailableCoins(std::vector<COutput>& vCoins, bool fOnlyConfirmed = true, const CCoinControl* coinControl = NULL, bool fIncludeZeroValue = false, AvailableCoinsType nCoinType = ALL_COINS, int nWatchonlyConfig = 1) const;
     std::map<CBitcoinAddress, std::vector<COutput> > AvailableCoinsByAddress(bool fConfirmed = true, CAmount maxCoinValue = 0);
     bool SelectCoinsMinConf(const CAmount& nTargetValue, int nConfMine, int nConfTheirs, std::vector<COutput> vCoins, std::set<std::pair<const CWalletTx*, unsigned int> >& setCoinsRet, CAmount& nValueRet) const;
 
@@ -397,12 +395,12 @@ public:
     CAmount GetUnconfirmedWatchOnlyBalance() const;
     CAmount GetImmatureWatchOnlyBalance() const;
     CAmount GetLockedWatchOnlyBalance() const;
-    bool CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, std::string& strFailReason, const CCoinControl* coinControl = NULL, AvailableCoinsType coin_type = ALL_COINS, bool useIX = false, bool sign = true);
-    bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey, std::string strCommand = "tx");
+    bool CreateTransaction(const std::vector<CRecipient>& vecSend, CWalletTx& wtxNew, CReserveKey& reservekey, CAmount& nFeeRet, std::string& strFailReason, const CCoinControl* coinControl = NULL, AvailableCoinsType coin_type = ALL_COINS, bool sign = true);
+    bool CommitTransaction(CWalletTx& wtxNew, CReserveKey& reservekey);
     bool AddAccountingEntry(const CAccountingEntry&, CWalletDB& pwalletdb);
     bool CreateCollateralTransaction(CMutableTransaction& txCollateral, std::string& strReason);
     bool ConvertList(std::vector<CTxIn> vCoins, std::vector<int64_t>& vecAmounts);
-    bool CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CMutableTransaction& txNew, CMutableTransaction& txLock, unsigned int& nTxNewTime, bool fProofOfStake, CKey& key);
+    bool CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int64_t nSearchInterval, CMutableTransaction& txNew, CMutableTransaction& txLock, unsigned int& nTxNewTime, bool fProofOfStake);
     bool CreateCoinStake_Legacy(const CKeyStore& keystore, CBlock* pblock, int64_t nSearchInterval, int64_t nFees, CMutableTransaction& txNew, CKey& key);
     bool MultiSend();
     void AutoCombineDust();
@@ -858,9 +856,8 @@ public:
     bool WriteToDisk(CWalletDB* pwalletdb);
 
     int64_t GetTxTime() const;
-    int64_t GetComputedTxTime() const;
     int GetRequestCount() const;
-    void RelayWalletTransaction(std::string strCommand = "tx");
+    void RelayWalletTransaction();
 
     std::set<uint256> GetConflicts() const;
 };

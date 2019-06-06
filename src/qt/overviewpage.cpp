@@ -23,9 +23,9 @@
 #include <QSettings>
 #include <QTimer>
 
-#define DECORATION_SIZE 48
+#define DECORATION_SIZE 40
 #define ICON_OFFSET 16
-#define NUM_ITEMS 5
+#define NUM_ITEMS 10
 
 extern CWallet* pwalletMain;
 
@@ -37,43 +37,69 @@ public:
     {
     }
 
+    inline QColor amountTextColor(const QModelIndex& index, const qint64& amount) const
+    {
+        // Check transaction status
+        int nStatus = index.data(TransactionTableModel::StatusRole).toInt();
+        //cout << "Status: " << nStatus << endl;
+        if (nStatus == TransactionStatus::Conflicted || nStatus == TransactionStatus::NotAccepted) {
+            //cout << "COLOR_ORPHAN" << endl;
+            return COLOR_ORPHAN;
+        }
+
+        if (nStatus == TransactionRecord::Generated || nStatus == TransactionRecord::StakeMint ||
+            nStatus == TransactionRecord::MNReward) {
+            //cout << "COLOR_STAKE" << endl;
+            return COLOR_STAKE;
+        }
+
+        // Conflicted tx
+        if (nStatus == TransactionStatus::Conflicted || nStatus == TransactionStatus::NotAccepted) {            
+            //cout << "COLOR_CONFLICTED" << endl;
+            return COLOR_CONFLICTED;
+        }
+        // Unconfimed or immature
+        if ((nStatus == TransactionStatus::Unconfirmed) || (nStatus == TransactionStatus::Immature)) {
+            //cout << "COLOR_UNCONFIRMED" << endl;
+            return COLOR_UNCONFIRMED;
+        }
+        if (amount < 0) {
+            //cout << "COLOR_NEGATIVE" << endl;
+            return COLOR_NEGATIVE;
+        }
+        if (amount > 0) {
+            //cout << "COLOR_POSITIVE" << endl;
+            return COLOR_POSITIVE;
+        }
+
+        // To avoid overriding above conditional formats a default text color for this QTableView is not defined in stylesheet,
+        // so we must always return a color here
+        return COLOR_BLACK;
+    }
+
     inline void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
         painter->save();
 
         QIcon icon = qvariant_cast<QIcon>(index.data(Qt::DecorationRole));
         QRect mainRect = option.rect;
-        mainRect.moveLeft(ICON_OFFSET);
-        QRect decorationRect(mainRect.topLeft(), QSize(DECORATION_SIZE, DECORATION_SIZE));
-        int xspace = DECORATION_SIZE + 8;
+        //mainRect.moveLeft(ICON_OFFSET);
+        QPoint iconPos(mainRect.left(), mainRect.top()+8);
+        
+        QRect decorationRect(iconPos, QSize(24, 24));
+        //int xspace = DECORATION_SIZE + 8;
+        int xspace = 24 + 8;
         int ypad = 6;
         int halfheight = (mainRect.height() - 2 * ypad) / 2;
-        QRect amountRect(mainRect.left() + xspace, mainRect.top() + ypad, mainRect.width() - xspace - ICON_OFFSET, halfheight);
+        QRect amountRect(mainRect.left() + xspace, mainRect.top() + ypad, mainRect.width() - xspace /*- ICON_OFFSET*/, halfheight);
         QRect addressRect(mainRect.left() + xspace, mainRect.top() + ypad + halfheight, mainRect.width() - xspace, halfheight);
         icon.paint(painter, decorationRect);
 
         QDateTime date = index.data(TransactionTableModel::DateRole).toDateTime();
         QString address = index.data(Qt::DisplayRole).toString();
         qint64 amount = index.data(TransactionTableModel::AmountRole).toLongLong();
-        bool confirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();
-
-        // Check transaction status
-        int nStatus = index.data(TransactionTableModel::StatusRole).toInt();
-        bool fConflicted = false;
-        if (nStatus == TransactionStatus::Conflicted || nStatus == TransactionStatus::NotAccepted) {
-            fConflicted = true; // Most probably orphaned, but could have other reasons as well
-        }
-        bool fImmature = false;
-        if (nStatus == TransactionStatus::Immature) {
-            fImmature = true;
-        }
-
-        QVariant value = index.data(Qt::ForegroundRole);
+        bool confirmed = index.data(TransactionTableModel::ConfirmedRole).toBool();        
         QColor foreground = COLOR_BLACK;
-        if (value.canConvert<QBrush>()) {
-            QBrush brush = qvariant_cast<QBrush>(value);
-            foreground = brush.color();
-        }
 
         painter->setPen(foreground);
         QRect boundingRect;
@@ -85,23 +111,12 @@ public:
             iconWatchonly.paint(painter, watchonlyRect);
         }
 
-        if (fConflicted) { // No need to check anything else for conflicted transactions
-            foreground = COLOR_CONFLICTED;
-        } else if (!confirmed || fImmature) {
-            foreground = COLOR_UNCONFIRMED;
-        } else if (amount < 0) {
-            foreground = COLOR_NEGATIVE;
-        } else {
-            foreground = COLOR_BLACK;
-        }
+        foreground = amountTextColor(index, amount);
         painter->setPen(foreground);
-        QString amountText = BitcoinUnits::formatWithUnit(unit, amount, true, BitcoinUnits::separatorAlways);
-        if (!confirmed) {
-            amountText = QString("[") + amountText + QString("]");
-        }
+        QString amountText = BitcoinUnits::format(unit, amount, true, BitcoinUnits::separatorAlways);
         painter->drawText(amountRect, Qt::AlignRight | Qt::AlignVCenter, amountText);
 
-        painter->setPen(COLOR_BLACK);
+        painter->setPen(QColor(9, 9, 9));
         painter->drawText(amountRect, Qt::AlignLeft | Qt::AlignVCenter, GUIUtil::dateTimeStr(date));
 
         painter->restore();
@@ -138,6 +153,7 @@ OverviewPage::OverviewPage(QWidget* parent) : QWidget(parent),
     ui->listTransactions->setIconSize(QSize(DECORATION_SIZE, DECORATION_SIZE));
     ui->listTransactions->setMinimumHeight(NUM_ITEMS * (DECORATION_SIZE + 2));
     ui->listTransactions->setAttribute(Qt::WA_MacShowFocusRect, false);
+    ui->listTransactions->setSpacing(0);
 
     connect(ui->listTransactions, SIGNAL(clicked(QModelIndex)), this, SLOT(handleTransactionClicked(QModelIndex)));
 
@@ -170,13 +186,11 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
     currentWatchUnconfBalance = watchUnconfBalance;
     currentWatchImmatureBalance = watchImmatureBalance;
 
-
     ui->labelBalance->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, balance, false, BitcoinUnits::separatorAlways));
     ui->labelUnconfirmed->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, unconfirmedBalance, false, BitcoinUnits::separatorAlways));
     ui->labelImmature->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, immatureBalance, false, BitcoinUnits::separatorAlways));
     ui->labelStaked->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, stakedBalance, false, BitcoinUnits::separatorAlways));
-    ui->labelTotal->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, balance + unconfirmedBalance + stakedBalance, false, BitcoinUnits::separatorAlways));
-
+    ui->labelTotal->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, balance + unconfirmedBalance + immatureBalance + stakedBalance, false, BitcoinUnits::separatorAlways));
 
     ui->labelWatchAvailable->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, watchOnlyBalance, false, BitcoinUnits::separatorAlways));
     ui->labelWatchPending->setText(BitcoinUnits::floorHtmlWithUnit(nDisplayUnit, watchUnconfBalance, false, BitcoinUnits::separatorAlways));
@@ -185,7 +199,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 
     // only show immature (newly mined) balance if it's non-zero, so as not to complicate things
     // for the non-mining users
-    bool showImmature = immatureBalance != 0;
+    bool showImmature = true;//immatureBalance != 0;
     bool showWatchOnlyImmature = watchImmatureBalance != 0;
 
     // for symmetry reasons also show immature label when the watch-only one is shown
@@ -195,7 +209,7 @@ void OverviewPage::setBalance(const CAmount& balance, const CAmount& unconfirmed
 
     // only show staked (locked) balance if it's non-zero, so as not to complicate things
     // for the non-staking users
-    bool showStaked = stakedBalance != 0;
+    bool showStaked = true;//stakedBalance != 0;
 
     ui->labelStaked->setVisible(showStaked);
     ui->labelStakedText->setVisible(showStaked);
@@ -206,7 +220,6 @@ void OverviewPage::updateWatchOnlyLabels(bool showWatchOnly)
 {
     ui->labelSpendable->setVisible(showWatchOnly);      // show spendable label (only when watch-only is active)
     ui->labelWatchonly->setVisible(showWatchOnly);      // show watch-only label
-    ui->lineWatchBalance->setVisible(showWatchOnly);    // show watch-only balance separator line
     ui->labelWatchAvailable->setVisible(showWatchOnly); // show watch-only available balance
     ui->labelWatchPending->setVisible(showWatchOnly);   // show watch-only pending balance
     ui->labelWatchTotal->setVisible(showWatchOnly);     // show watch-only total balance

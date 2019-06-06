@@ -197,7 +197,7 @@ void PrepareShutdown()
 #ifdef ENABLE_WALLET
     if (pwalletMain)
         bitdb.Flush(false);
-    GenerateBitcoins(false, NULL, 0);
+    GenerateKores(false, 0);
 #endif
     StopNode();
     StopTorControl();
@@ -1738,7 +1738,7 @@ bool AppInit2()
 #ifdef ENABLE_WALLET
     // Mine proof-of-stake blocks in the background
     if (pwalletMain)
-        GenerateBitcoins(GetBoolArg("-gen", false), pwalletMain, GetArg("-genproclimit", 1));
+        GenerateKores(GetBoolArg("-gen", false), GetArg("-genproclimit", 1));
     // Mine proof-of-stake blocks in the background
     if (!GetBoolArg("-staking", false))
         LogPrintf("Staking disabled\n");

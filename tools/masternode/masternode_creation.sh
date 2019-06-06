@@ -2,7 +2,7 @@
 set -e
 
 masternode_coins_amount=500
-coin=kore-testnet
+coin=kore
 echo " how many parameters $#"
 if [ $# -lt 3 ]
 then

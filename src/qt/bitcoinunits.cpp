@@ -53,28 +53,15 @@ QString BitcoinUnits::id(int unit)
 
 QString BitcoinUnits::name(int unit)
 {
-    if (Params().GetNetworkID() == CBaseChainParams::MAIN) {
-        switch (unit) {
-        case KORE:
-            return QString("KORE");
-        case mKORE:
-            return QString("mKORE");
-        case uKORE:
-            return QString::fromUtf8("μKORE");
-        default:
-            return QString("???");
-        }
-    } else {
-        switch (unit) {
-        case KORE:
-            return QString("tKORE");
-        case mKORE:
-            return QString("mtKORE");
-        case uKORE:
-            return QString::fromUtf8("μtKORE");
-        default:
-            return QString("???");
-        }
+    switch (unit) {
+    case KORE:
+        return QString("KORE");
+     case mKORE:
+         return QString("mKORE");
+    case uKORE:
+        return QString::fromUtf8("μKORE");
+    default:
+        return QString("???");
     }
 }
 
@@ -210,7 +197,8 @@ QString BitcoinUnits::floorHtmlWithUnit(int unit, const CAmount& amount, bool pl
 {
     QString str(floorWithUnit(unit, amount, plussign, separators));
     str.replace(QChar(THIN_SP_CP), QString(THIN_SP_HTML));
-    return QString("<span style='white-space: nowrap;'>%1</span>").arg(str);
+    //return QString("<span style='white-space: nowrap;'>%1</span>").arg(str);
+    return str;
 }
 
 bool BitcoinUnits::parse(int unit, const QString& value, CAmount* val_out)

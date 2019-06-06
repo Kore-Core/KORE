@@ -6,14 +6,29 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>620</width>
-    <height>250</height>
+    <width>800</width>
+    <height>324</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>0</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Transaction details</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>10</number>
+   </property>
    <item>
     <widget class="QTextEdit" name="detailText">
      <property name="toolTip">

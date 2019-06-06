@@ -125,7 +125,7 @@ TransactionView::TransactionView(QWidget* parent) : QWidget(parent), model(0), t
     int width = view->verticalScrollBar()->sizeHint().width();
 // Cover scroll bar width with spacing
 #ifdef Q_OS_MAC
-    hlayout->addSpacing(width + 2);
+    hlayout->addSpacing(width +  2);
 #else
     hlayout->addSpacing(width);
 #endif
@@ -147,6 +147,16 @@ TransactionView::TransactionView(QWidget* parent) : QWidget(parent), model(0), t
     QAction* showDetailsAction = new QAction(tr("Show transaction details"), this);
 
     contextMenu = new QMenu();
+    // css for menu.
+    QString  menuStyle(
+           "QMenu::item:selected{"
+           "background-color: rgba(222, 222, 222);"
+           "color: #333;"
+           "}"
+        );
+
+    contextMenu->setStyleSheet(menuStyle);
+
     contextMenu->addAction(copyAddressAction);
     contextMenu->addAction(copyLabelAction);
     contextMenu->addAction(copyAmountAction);

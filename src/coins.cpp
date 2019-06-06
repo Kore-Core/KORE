@@ -155,7 +155,7 @@ CCoinsModifier CCoinsViewCache::ModifyCoins(const uint256& txid)
     size_t cachedCoinUsage = 0;
     if (fDebug) {
         LogPrintf("Coins in the cache : %d \n", cacheCoins.size());
-        LogPrintf("ModifyCoins_Legacy txid: %s inserted ? %s \n", txid.ToString().c_str(), ret.second ? "true" : "false");
+        LogPrintf("ModifyCoins txid: %s inserted ? %s \n", txid.ToString().c_str(), ret.second ? "true" : "false");
     }
     if (ret.second) {
         if (!base->GetCoins(txid, ret.first->second.coins)) {

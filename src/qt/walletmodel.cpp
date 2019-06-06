@@ -333,7 +333,7 @@ WalletModel::SendCoinsReturn WalletModel::sendCoins(WalletModelTransaction& tran
 
         transaction.getRecipients();
 
-        if (!wallet->CommitTransaction(*newTx, *keyChange, "tx"))
+        if (!wallet->CommitTransaction(*newTx, *keyChange))
             return TransactionCommitFailed;
 
         CTransaction* t = (CTransaction*)newTx;

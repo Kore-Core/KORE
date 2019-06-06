@@ -74,6 +74,8 @@ public:
     QModelIndex index(int row, int column, const QModelIndex& parent = QModelIndex()) const;
     bool processingQueuedTransactions() { return fProcessingQueuedTransactions; }
 
+    static QColor amountTextColor(const QModelIndex& index);
+
 private:
     CWallet* wallet;
     WalletModel* walletModel;

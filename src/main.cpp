@@ -2089,7 +2089,7 @@ bool IsInitialBlockDownload()
     static bool lockIBDState = false;
     if (lockIBDState)
         return false;
-    bool state = (chainActive.Height() < pindexBestHeader->nHeight - 24 * 60 || // 60 => Blocks per hour
+    bool state = (chainActive.Height() < pindexBestHeader->nHeight - 2 * 60 || // 60 Blocks per hour
                   pindexBestHeader->GetBlockTime() < GetTime() - chainParams.GetMaxTipAge()); // ~1440 blocks behind -> 2 x fork detection time
     if (!state)
         lockIBDState = true;
@@ -2891,7 +2891,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     int64_t nTime1 = GetTimeMicros();
     nTimeConnect += nTime1 - nTimeStart;
-    LogPrint("bench", "      - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n",
+    LogPrint("bench", "  - Connect %u transactions: %.2fms (%.3fms/tx, %.3fms/txin) [%.2fs]\n",
         (unsigned)block.vtx.size(), 0.001 * (nTime1 - nTimeStart), 0.001 * (nTime1 - nTimeStart) / block.vtx.size(),
         nInputs <= 1 ? 0 : 0.001 * (nTime1 - nTimeStart) / (nInputs - 1), nTimeConnect * 0.000001);
 
@@ -2909,7 +2909,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     int64_t nTime2 = GetTimeMicros();
     nTimeVerify += nTime2 - nTimeStart;
-    LogPrint("bench", "    - Verify %u txins: %.2fms (%.3fms/txin) [%.2fs]\n", nInputs - 1, 0.001 * (nTime2 - nTimeStart),
+    LogPrint("bench", "  - Verify %u txins: %.2fms (%.3fms/txin) [%.2fs]\n", nInputs - 1, 0.001 * (nTime2 - nTimeStart),
         nInputs <= 1 ? 0 : 0.001 * (nTime2 - nTimeStart) / (nInputs - 1), nTimeVerify * 0.000001);
 
     //IMPORTANT NOTE: Nothing before this point should actually store to disk (or even memory)
@@ -2942,7 +2942,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     int64_t nTime3 = GetTimeMicros();
     nTimeIndex += nTime3 - nTime2;
-    LogPrint("bench", "    - Index writing: %.2fms [%.2fs]\n", 0.001 * (nTime3 - nTime2), nTimeIndex * 0.000001);
+    LogPrint("bench", "  - Index writing: %.2fms [%.2fs]\n", 0.001 * (nTime3 - nTime2), nTimeIndex * 0.000001);
 
     // Watch for changes to the previous coinbase transaction.
     static uint256 hashPrevBestCoinBase;
@@ -2951,7 +2951,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
 
     int64_t nTime4 = GetTimeMicros();
     nTimeCallbacks += nTime4 - nTime3;
-    LogPrint("bench", "    - Callbacks: %.2fms [%.2fs]\n", 0.001 * (nTime4 - nTime3), nTimeCallbacks * 0.000001);
+    LogPrint("bench", "  - Callbacks: %.2fms [%.2fs]\n", 0.001 * (nTime4 - nTime3), nTimeCallbacks * 0.000001);
 
     return true;
 }
@@ -3532,11 +3532,14 @@ void static UpdateTip(CBlockIndex* pindexNew)
     mempool.AddTransactionsUpdated(1);
 
     if (fDebug) 
-        LogPrintf("%s: new best=%s  height=%d  log2_work=%.8g  tx=%lu  date=%s progress=%f  cache=%.1fMiB(%utx)\n", __func__,
-            chainActive.Tip()->GetBlockHash().ToString(), chainActive.Height(), log(chainActive.Tip()->nChainWork.getdouble()) / log(2.0), (unsigned long)chainActive.Tip()->nChainTx,
-            DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()),
-            Checkpoints::GuessVerificationProgress(Params().GetTxData(), chainActive.Tip()), pcoinsTip->DynamicMemoryUsage() * (1.0 / (1 << 20)), pcoinsTip->GetCacheSize());
-
+        LogPrintf("%s:\n",                  __func__);
+        LogPrintf("New Best Block: %s\n",   chainActive.Tip()->GetBlockHash().ToString());
+        LogPrintf("Height: %d\n",           chainActive.Height());
+        LogPrintf("log2_work: %.8g\n",      log(chainActive.Tip()->nChainWork.getdouble()) / log(2.0));
+        LogPrintf("tx: %lu\n",              (unsigned long)chainActive.Tip()->nChainTx);
+        LogPrintf("date: %s\n",             DateTimeStrFormat("%Y-%m-%d %H:%M:%S", chainActive.Tip()->GetBlockTime()));
+        LogPrintf("progress: %f\n",         Checkpoints::GuessVerificationProgress(Params().GetTxData(), chainActive.Tip()));
+        LogPrintf("cache: %.1fMiB(%utx)\n", pcoinsTip->DynamicMemoryUsage() * (1.0 / (1 << 20)), pcoinsTip->GetCacheSize());
     cvBlockChange.notify_all();
 
     // Check the version of the last 100 blocks to see if we need to upgrade:
@@ -3679,7 +3682,7 @@ bool static ConnectTip(CValidationState& state, CBlockIndex* pindexNew, const CB
     int64_t nTime6 = GetTimeMicros();
     nTimePostConnect += nTime6 - nTime5;
     nTimeTotal += nTime6 - nTime1;
-    LogPrint("bench", "  - Connect postprocess: %.2fms [%.2fs]\n", (nTime6 - nTime5) * 0.001, nTimePostConnect * 0.000001);
+    LogPrint("bench", "- Connect postprocess: %.2fms [%.2fs]\n", (nTime6 - nTime5) * 0.001, nTimePostConnect * 0.000001);
     LogPrint("bench", "- Connect block: %.2fms [%.2fs]\n", (nTime6 - nTime1) * 0.001, nTimeTotal * 0.000001);
 
     return true;
@@ -4972,8 +4975,8 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
         CAmount stakedBalance;
 
         if (!CheckProofOfStake(block, hashProofOfStake, listStake, stakedBalance)){
-            if (nHeight < 493000)
-                return state.DoS(1, error("%s: proof of stake check failed", __func__));
+            if (IsInitialBlockDownload())
+                return state.DoS(0, error("%s: proof of stake check failed", __func__));
             return state.DoS(100, error("%s: proof of stake check failed", __func__));
         }
 
@@ -5034,7 +5037,7 @@ bool AcceptBlock(CBlock& block, CValidationState& state, CBlockIndex** ppindex, 
     }
 
     if (fDebug) { 
-        LogPrintf("AcceptBlock block: %d<-- \n",nHeight);
+        LogPrintf("AcceptBlock block: %d \n",nHeight);
     }
     return true;
 }
@@ -6530,7 +6533,7 @@ bool static ProcessMessageGetHeaders(CNode* pfrom, string strCommand, CDataStrea
     // we must use CBlocks, as CBlockHeaders won't include the 0x00 nTx count at the end
     vector<CBlock> vHeaders;
     int nLimit = MAX_HEADERS_RESULTS;
-     if (pindex != NULL)
+    if (pindex != NULL)
         LogPrint("net", "getheaders for block %d with hash %s from peerId=%d\n", pindex->nHeight, (locator.IsNull() ? hashStop.ToString() : pindex->GetBlockHash().ToString()), pfrom->id);
     for (; pindex; pindex = chainActive.Next(pindex)) {
         vHeaders.push_back(pindex->GetBlockHeader());

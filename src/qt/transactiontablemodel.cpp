@@ -284,7 +284,7 @@ QString TransactionTableModel::formatTxStatus(const TransactionRecord* wtx) cons
         status = tr("Unconfirmed");
         break;
     case TransactionStatus::Confirming:
-        status = tr("Confirming (%1 of %2 recommended confirmations)").arg(wtx->status.depth).arg(TransactionRecord::RecommendedNumConfirmations);
+        status = tr("Confirming (%1 of %2 recommended confirmations)").arg(wtx->status.depth).arg(Params().GetCoinMaturity());
         break;
     case TransactionStatus::Confirmed:
         status = tr("Confirmed (%1 confirmations)").arg(wtx->status.depth);
@@ -437,13 +437,13 @@ QVariant TransactionTableModel::txStatusDecoration(const TransactionRecord* wtx)
         return QIcon(":/icons/transaction_0");
     case TransactionStatus::Confirming:
         switch (wtx->status.depth) {
-        case 1:
+        case 1 ... 5:
             return QIcon(":/icons/transaction_1");
-        case 2:
+        case 6 ... 10:
             return QIcon(":/icons/transaction_2");
-        case 3:
+        case 11 ... 15:
             return QIcon(":/icons/transaction_3");
-        case 4:
+        case 16 ... 20:
             return QIcon(":/icons/transaction_4");
         default:
             return QIcon(":/icons/transaction_5");
@@ -481,6 +481,38 @@ QString TransactionTableModel::formatTooltip(const TransactionRecord* rec) const
         tooltip += QString(" ") + formatTxToAddress(rec, true);
     }
     return tooltip;
+}
+
+QColor TransactionTableModel::amountTextColor(const QModelIndex& index)
+{
+    TransactionRecord* rec = static_cast<TransactionRecord*>(index.internalPointer());
+
+    // Minted
+    if (rec->type == TransactionRecord::Generated || rec->type == TransactionRecord::StakeMint ||
+        rec->type == TransactionRecord::MNReward) {
+        if (rec->status.status == TransactionStatus::Conflicted || rec->status.status == TransactionStatus::NotAccepted)
+            return COLOR_ORPHAN;
+        else
+            return COLOR_STAKE;
+    }
+    // Conflicted tx
+    if (rec->status.status == TransactionStatus::Conflicted || rec->status.status == TransactionStatus::NotAccepted) {
+        return COLOR_CONFLICTED;
+    }
+    // Unconfimed or immature
+    if ((rec->status.status == TransactionStatus::Unconfirmed) || (rec->status.status == TransactionStatus::Immature)) {
+        return COLOR_UNCONFIRMED;
+    }
+    if ((rec->credit + rec->debit) < 0) {
+        return COLOR_NEGATIVE;
+    }
+    if ((rec->credit + rec->debit) > 0) {
+        return COLOR_POSITIVE;
+    }
+
+    // To avoid overriding above conditional formats a default text color for this QTableView is not defined in stylesheet,
+    // so we must always return a color here
+    return COLOR_BLACK;
 }
 
 QVariant TransactionTableModel::data(const QModelIndex& index, int role) const
@@ -533,33 +565,8 @@ QVariant TransactionTableModel::data(const QModelIndex& index, int role) const
         return formatTooltip(rec);
     case Qt::TextAlignmentRole:
         return column_alignments[index.column()];
-    case Qt::ForegroundRole:
-        // Minted
-        if (rec->type == TransactionRecord::Generated || rec->type == TransactionRecord::StakeMint ||
-                rec->type == TransactionRecord::MNReward) {
-            if (rec->status.status == TransactionStatus::Conflicted || rec->status.status == TransactionStatus::NotAccepted)
-                return COLOR_ORPHAN;
-            else
-                return COLOR_STAKE;
-        }
-        // Conflicted tx
-        if (rec->status.status == TransactionStatus::Conflicted || rec->status.status == TransactionStatus::NotAccepted) {
-            return COLOR_CONFLICTED;
-        }
-        // Unconfimed or immature
-        if ((rec->status.status == TransactionStatus::Unconfirmed) || (rec->status.status == TransactionStatus::Immature)) {
-            return COLOR_UNCONFIRMED;
-        }
-        if (index.column() == Amount && (rec->credit + rec->debit) < 0) {
-            return COLOR_NEGATIVE;
-        }
-        if (index.column() == ToAddress) {
-            return addressColor(rec);
-        }
-
-        // To avoid overriding above conditional formats a default text color for this QTableView is not defined in stylesheet,
-        // so we must always return a color here
-        return COLOR_BLACK;
+    case Qt::ForegroundRole:       
+        return  index.column() == Amount ? amountTextColor(index) : COLOR_BLACK;
     case TypeRole:
         return rec->type;
     case DateRole:

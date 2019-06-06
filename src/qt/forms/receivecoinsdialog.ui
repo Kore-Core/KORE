@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>962</width>
+    <width>800</width>
     <height>616</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>800</width>
+    <height>0</height>
+   </size>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" stretch="0">
    <item>
@@ -137,6 +143,12 @@
            <enum>QFrame::Sunken</enum>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
            <item>
             <layout class="QGridLayout" name="gridLayout">
              <item row="7" column="2">

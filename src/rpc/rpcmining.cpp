@@ -279,7 +279,7 @@ UniValue setgenerate(const UniValue& params, bool fHelp)
     {
         mapArgs["-gen"] = (fGenerate ? "1" : "0");
         mapArgs["-genproclimit"] = itostr(nGenProcLimit);
-        GenerateBitcoins(fGenerate, pwalletMain, nGenProcLimit);
+        GenerateKores(fGenerate, nGenProcLimit);
     }
 
     return NullUniValue;

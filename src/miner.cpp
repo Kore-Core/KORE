@@ -6,7 +6,6 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include "miner.h"
-
 #include "amount.h"
 #include "arith_uint256.h"
 #include "hash.h"
@@ -29,10 +28,10 @@
 #include "invalid.h"
 #include "validationinterface.h"
 
-
 #include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <fstream>
+#include <iostream>
 #include <queue> // Legacy
 
 using namespace std;
@@ -41,7 +40,6 @@ using namespace std;
 //
 // KOREMiner
 //
-
 //
 // Unconfirmed transactions in the memory pool often depend on other
 // transactions in the memory pool. When we select transactions from the
@@ -106,8 +104,8 @@ CAmount GetBlockReward(CBlockIndex* pindexPrev)
         if (pindexPrev->nMoneySupply == MAX_MONEY)
             return 0;
 
-        double moneySupplyFloat = (double)pindexPrev->nMoneySupply / COIN;        
-        double rewardDouble = pow(1.44e14 - pow(moneySupplyFloat, 2), (double)1 / 2)/1.436e7;
+        double moneySupplyFloat = (double)pindexPrev->nMoneySupply / COIN;
+        double rewardDouble = pow(1.44e14 - pow(moneySupplyFloat, 2), (double)1 / 2) / 1.436e7;
 
         CAmount reward = ceil(rewardDouble * COIN);
         if (reward + pindexPrev->nMoneySupply < MAX_MONEY)
@@ -135,12 +133,11 @@ inline CBlockIndex* GetParentIndex(CBlockIndex* index)
     return index->pprev;
 }
 
-unsigned int static DarkGravityWave3(const CBlockIndex* pindexLast, const CBlockHeader *pblock, bool fProofOfStake) 
+unsigned int static DarkGravityWave3(const CBlockIndex* pindexLast, const CBlockHeader* pblock, bool fProofOfStake)
 {
     /* current difficulty formula, darkcoin - DarkGravity v3, written by Evan Duffield - evan@darkcoin.io */
-    const CBlockIndex *BlockLastSolved = pindexLast;
-    const CBlockIndex *BlockReading = pindexLast;
-    const CBlockHeader *BlockCreating = pblock;
+    const CBlockIndex* BlockLastSolved = pindexLast;
+    const CBlockIndex* BlockReading = pindexLast;
     int64_t nActualTimespan = 0;
     int64_t LastBlockTime = 0;
     static int64_t PastBlocksMin = 24;
@@ -151,49 +148,57 @@ unsigned int static DarkGravityWave3(const CBlockIndex* pindexLast, const CBlock
     static int64_t nTargetSpacing = Params().GetTargetSpacing();
 
     if (BlockLastSolved == NULL || BlockLastSolved->nHeight == 0 || BlockLastSolved->nHeight < PastBlocksMin) {
-        return fProofOfStake ?  Params().ProofOfStakeLimit().GetCompact() : Params().ProofOfWorkLimit().GetCompact();
+        return fProofOfStake ? Params().ProofOfStakeLimit().GetCompact() : Params().ProofOfWorkLimit().GetCompact();
     }
-    
+
     uint256 bnTargetLimit = fProofOfStake ? Params().ProofOfStakeLimit() : Params().ProofOfWorkLimit();
 
     // loop over the past n blocks, where n == PastBlocksMax
     for (unsigned int i = 1; BlockReading && BlockReading->nHeight > 0; i++) {
-        if (PastBlocksMax > 0 && i > PastBlocksMax) { break; }
+        if (PastBlocksMax > 0 && i > PastBlocksMax) {
+            break;
+        }
         CountBlocks++;
 
         // Calculate average difficulty based on the blocks we iterate over in this for loop
-        if(CountBlocks <= PastBlocksMin) {
-            if (CountBlocks == 1) { PastDifficultyAverage.SetCompact(BlockReading->nBits); }
-            else { PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks)+(uint256().SetCompact(BlockReading->nBits))) / (CountBlocks+1); }
+        if (CountBlocks <= PastBlocksMin) {
+            if (CountBlocks == 1)
+                PastDifficultyAverage.SetCompact(BlockReading->nBits);
+            else
+                PastDifficultyAverage = ((PastDifficultyAveragePrev * CountBlocks) + (uint256().SetCompact(BlockReading->nBits))) / (CountBlocks + 1);
+
             PastDifficultyAveragePrev = PastDifficultyAverage;
         }
 
         // If this is the second iteration (LastBlockTime was set)
-        if(LastBlockTime > 0){
+        if (LastBlockTime > 0) {
             // Calculate time difference between previous block and current block
             int64_t Diff = (LastBlockTime - BlockReading->GetBlockTime());
             // Increment the actual timespan
             nActualTimespan += Diff;
         }
         // Set LasBlockTime to the block time for the block in current iteration
-        LastBlockTime = BlockReading->GetBlockTime();      
+        LastBlockTime = BlockReading->GetBlockTime();
 
-        if (BlockReading->pprev == NULL) { assert(BlockReading); break; }
+        if (BlockReading->pprev == NULL) {
+            assert(BlockReading);
+            break;
+        }
         BlockReading = BlockReading->pprev;
     }
-    
+
     // bnNew is the difficulty
     uint256 bnNew(PastDifficultyAverage);
 
     // nTargetTimespan is the time that the CountBlocks should have taken to be generated.
-    int64_t nTargetTimespan = CountBlocks*nTargetSpacing;
+    int64_t nTargetTimespan = CountBlocks * nTargetSpacing;
 
     // Limit the re-adjustment to 3x or 0.33x
     // We don't want to increase/decrease diff too much.
-    if (nActualTimespan < nTargetTimespan/3)
-        nActualTimespan = nTargetTimespan/3;
-    if (nActualTimespan > nTargetTimespan*3)
-        nActualTimespan = nTargetTimespan*3;
+    if (nActualTimespan < nTargetTimespan / 3)
+        nActualTimespan = nTargetTimespan / 3;
+    if (nActualTimespan > nTargetTimespan * 3)
+        nActualTimespan = nTargetTimespan * 3;
 
 
     int64_t nMyBlockSpacing = pblock->GetBlockTime() - pindexLast->GetBlockTime();
@@ -216,13 +221,11 @@ unsigned int static DarkGravityWave3(const CBlockIndex* pindexLast, const CBlock
 
 uint32_t GetNextTarget(const CBlockIndex* pindexLast, const CBlockHeader* pblock, bool fProofOfStake)
 {
-    // Lico    
-    return UseLegacyCode(pindexLast->nHeight + 1) ? 
-        GetNextWorkRequired_Legacy(pindexLast, pblock, fProofOfStake) :
-        DarkGravityWave3(pindexLast, pblock, fProofOfStake);
-        
+    // Lico
+    return UseLegacyCode(pindexLast->nHeight + 1) ?
+               GetNextWorkRequired_Legacy(pindexLast, pblock, fProofOfStake) :
+               DarkGravityWave3(pindexLast, pblock, fProofOfStake);
 }
-
 
 
 inline CMutableTransaction CreateCoinbaseTransaction(const CScript& scriptPubKeyIn)
@@ -237,11 +240,8 @@ inline CMutableTransaction CreateCoinbaseTransaction(const CScript& scriptPubKey
     return txNew;
 }
 
-std::pair<int, std::pair<uint256, uint256> > pCheckpointCache;
 CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, bool fProofOfStake)
 {
-    CReserveKey reservekey(pwallet);
-
     // Create new block
     unique_ptr<CBlockTemplate> pblocktemplate(new CBlockTemplate(CBlockHeader::POS_FORK_VERSION));
     if (!pblocktemplate.get())
@@ -263,25 +263,19 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
     pblocktemplate->vTxFees.push_back(-1);   // updated at end
     pblocktemplate->vTxSigOps.push_back(-1); // updated at end
 
-
     // ppcoin: if coinstake available add coinstake tx
     if (fProofOfStake) {
         boost::this_thread::interruption_point();
         static int64_t nLastCoinStakeSearchTime = GetAdjustedTime(); // only initialized at startup
-
         bool fStakeFound = false;
         unsigned int nTxNewTime = 0;
-        CKey key;
         CMutableTransaction txCoinbase;
         CMutableTransaction txCoinStake;
-
         pblock->nTime = GetAdjustedTime();
-        CBlockIndex* pindexPrev = chainActive.Tip();
-        pblock->nBits = GetNextTarget(pindexPrev, pblock, fProofOfStake);
+        pblock->nBits = GetNextTarget(chainActive.Tip(), pblock, fProofOfStake);
         int64_t nSearchTime = pblock->nTime; // search to current time
-
         if (nSearchTime >= nLastCoinStakeSearchTime) {
-            if (pwallet->CreateCoinStake(*pwallet, pblock->nBits, nSearchTime - nLastCoinStakeSearchTime, txCoinbase, txCoinStake, nTxNewTime, fProofOfStake, key)) {
+            if (pwallet->CreateCoinStake(*pwallet, pblock->nBits, nSearchTime - nLastCoinStakeSearchTime, txCoinbase, txCoinStake, nTxNewTime, fProofOfStake)) {
                 pblock->nTime = nTxNewTime;
                 pblock->vtx[0] = CTransaction(txCoinbase);
                 pblock->vtx.push_back(CTransaction(txCoinStake));
@@ -291,13 +285,15 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
         }
         if (fDebug && fStakeFound)
             LogPrintf("%s(): stake found\n", __func__);
-        
+
         if (!fStakeFound)
             return NULL;
-    }
+    } else 
+        pblock->nTime = GetAdjustedTime();
 
     // Largest block you're willing to create:
     unsigned int nBlockMaxSize = GetArg("-blockmaxsize", DEFAULT_BLOCK_MAX_SIZE);
+
     // Limit to betweeen 1K and MAX_BLOCK_SIZE-1K for sanity:
     unsigned int nBlockMaxSizeNetwork = MAX_BLOCK_SIZE;
     nBlockMaxSize = std::max((unsigned int)1000, std::min((nBlockMaxSizeNetwork - 1000), nBlockMaxSize));
@@ -320,10 +316,6 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
 
         CBlockIndex* pindexPrev = chainActive.Tip();
         const int nHeight = pindexPrev->nHeight + 1;
-        if (!fProofOfStake)
-            pblock->nTime = GetAdjustedTime();
-        // we will be creating blocks from after fork here always
-        pblock->nVersion = CBlockHeader::POS_FORK_VERSION;
         CCoinsViewCache view(pcoinsTip);
 
         // Priority order to process transactions
@@ -375,7 +367,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
                 if (invalid_out::ContainsOutPoint(txin.prevout)) {
                     if (fDebug)
                         LogPrintf("%s : found invalid input %s in tx %s", __func__, txin.prevout.ToString(), tx.GetHash().ToString());
-                    
+
                     fMissingInputs = true;
                     break;
                 }
@@ -481,9 +473,9 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             nBlockSigOps += nTxSigOps;
             nFees += nTxFees;
 
-            if (fPrintPriority && fDebug) 
+            if (fPrintPriority && fDebug)
                 LogPrintf("priority %.1f fee %s txid %s\n", dPriority, feeRate.ToString(), tx.GetHash().ToString());
-            
+
             // Add transactions that depend on this one to the priority queue
             if (mapDependers.count(hash)) {
                 BOOST_FOREACH (COrphan* porphan, mapDependers[hash]) {
@@ -507,16 +499,12 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
             pblock->vtx[0] = txNew;
             pblock->vtx[0].vin[0].scriptSig = CScript() << nHeight << OP_0;
             pblock->vtx[0].vout[0].nValue += nFees;
-        }
-        else
+            UpdateTime(pblock, pindexPrev, fProofOfStake);
+        } else
             pblock->vtx[0].vout[1].nValue += nFees;
 
         // Fill in header
         pblock->hashPrevBlock = pindexPrev->GetBlockHash();
-        if (!fProofOfStake) {
-            UpdateTime(pblock, pindexPrev, fProofOfStake);
-            pblock->nBits = GetNextTarget(pindexPrev, pblock, fProofOfStake);
-        }
         pblock->nNonce = 0;
 
         pblocktemplate->vTxSigOps[0] = GetLegacySigOpCount(pblock->vtx[0]);
@@ -544,7 +532,7 @@ inline CMutableTransaction CreateCoinbaseTransaction_Legacy(const CScript& scrip
     txNew.vin[0].prevout.SetNull();
     txNew.vin[0].scriptSig = CScript() << nHeight << OP_0;
     txNew.nTime = GetAdjustedTime();
-    txNew.SetVersion(1);    
+    txNew.SetVersion(1);
 
     if (fProofOfStake) {
         txNew.vout.resize(1);
@@ -782,7 +770,7 @@ CBlockTemplate* CreateNewBlock_Legacy(const CChainParams& chainparams, const CSc
 }
 
 
-void IncrementExtraNonce(CBlock* pblock, CBlockIndex* pindexPrev, unsigned int& nExtraNonce)
+void IncrementExtraNonce(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce)
 {
     // Update nExtraNonce
     static uint256 hashPrevBlock;
@@ -798,24 +786,6 @@ void IncrementExtraNonce(CBlock* pblock, CBlockIndex* pindexPrev, unsigned int& 
 
     pblock->vtx[0] = txCoinbase;
     pblock->hashMerkleRoot = pblock->BuildMerkleTree();
-}
-
-void IncrementExtraNonce_Legacy(CBlock* pblock, const CBlockIndex* pindexPrev, unsigned int& nExtraNonce)
-{
-    // Update nExtraNonce
-    static uint256 hashPrevBlock;
-    if (hashPrevBlock != pblock->hashPrevBlock) {
-        nExtraNonce = 0;
-        hashPrevBlock = pblock->hashPrevBlock;
-    }
-    ++nExtraNonce;
-    unsigned int nHeight = pindexPrev->nHeight + 1; // Height first in coinbase required for block.version=2
-    CMutableTransaction txCoinbase(pblock->vtx[0]);
-    txCoinbase.vin[0].scriptSig = (CScript() << nHeight << CScriptNum(nExtraNonce)) + COINBASE_FLAGS;
-    assert(txCoinbase.vin[0].scriptSig.size() <= 100);
-
-    pblock->vtx[0] = txCoinbase;
-    pblock->hashMerkleRoot = BlockMerkleRoot(*pblock);
 }
 
 #ifdef ENABLE_WALLET
@@ -892,8 +862,6 @@ bool ProcessBlockFound_Legacy(const CBlock* pblock, const CChainParams& chainpar
     return true;
 }
 
-#include <iostream>
-
 // attempt to generate suitable proof-of-stake
 bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock)
 {
@@ -908,7 +876,7 @@ bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock)
     if (pblock->IsProofOfStake()) {
         if (fDebug)
             LogPrintf("trying to sign a complete proof-of-stake block\n");
-        
+
         return true;
     }
 
@@ -925,7 +893,6 @@ bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock)
     if (nSearchTime >= nLastCoinStakeSearchTime) {
         int64_t nSearchInterval = 1;
         if (pwallet->CreateCoinStake_Legacy(*pwallet, pblock, nSearchInterval, nFees, txCoinStake, key)) {
-            
             // we have to make sure that we have no future timestamps in our transactions set
             for (vector<CTransaction>::iterator it = pblock->vtx.begin(); it != pblock->vtx.end();)
                 if (it->nTime > pblock->nTime) {
@@ -945,108 +912,68 @@ bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock)
     return false;
 }
 
-bool fGenerateBitcoins = false;
-bool fMintableCoins = false;
-int nMintableLastCheck = 0;
-
-// ***TODO*** that part changed in bitcoin, we are using a mix with old one here for now
-
-void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
+void KoreMinter(CWallet* pwallet)
 {
-    LogPrintf("KOREMiner started, fProofOfStake:%s \n", fProofOfStake ? "true" : "false");
+    LogPrintf("KOREMitner started");
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-    RenameThread("kore-miner");
+    RenameThread("kore-minter");
 
     // Each thread has its own key and counter
     CReserveKey reservekey(pwallet);
     unsigned int nExtraNonce = 0;
+    bool fMintableCoins = false;
+    int nMintableLastCheck = 0;
 
-    while (!ShutdownRequested() && UseLegacyCode(GetnHeight(chainActive.Tip()) + 1)) {
+    while (!ShutdownRequested()) {
         boost::this_thread::interruption_point();
-        // while nobody requested to shutdown and we should use the legacy code
-        // this thread should wait
-        if (fDebug) {
-            LogPrintf("This thread is waiting for the Fork to happen.\n");
-            LogPrintf("Current nHeight: %d \n", GetnHeight(chainActive.Tip()));
-            LogPrintf("Height to Fork : %d \n", Params().HeightToFork());
+        //control the amount of times the client will check for mintable coins
+        if ((GetTime() - nMintableLastCheck > Params().GetTargetSpacing())) {
+            nMintableLastCheck = GetTime();
+            fMintableCoins = pwallet->MintableCoins();
         }
-        // check every 5 seconds
-        MilliSleep(10000);
-    }
-    if (fDebug)
-        LogPrintf("We are Free to create Block: %s \n", GetnHeight(chainActive.Tip()) + 1);
-    
-    while (!ShutdownRequested() && (fGenerateBitcoins || fProofOfStake)) {
-        boost::this_thread::interruption_point();
-        if (fProofOfStake) {
-            //control the amount of times the client will check for mintable coins
-            if ((GetTime() - nMintableLastCheck > Params().GetTargetSpacing())) {
+
+        while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || (pwallet->GetBalance() - nReserveBalance) < MINIMUM_STAKE_VALUE) {
+            if (fDebug) {
+                LogPrintf("%s(): still unable to stake.\n", __func__);
+                if (vNodes.empty())
+                    LogPrintf("\tThere are no nodes connected;\n");
+                if (pwallet->IsLocked())
+                    LogPrintf("\tThe wallet is locked;\n");
+                if (!fMintableCoins)
+                    LogPrintf("\tThere are no mintable coins;\n");
+                if (pwallet->GetBalance() - nReserveBalance < MINIMUM_STAKE_VALUE)
+                    LogPrintf("\tAvailable balance to stake is less than minimun stake value;\n");
+            }
+
+            MilliSleep(5000);
+            boost::this_thread::interruption_point();
+
+            // Do a separate 1 minute check here to ensure fMintableCoins is updated
+            if (!fMintableCoins && GetTime() - nMintableLastCheck > Params().GetTargetSpacing()) {
                 nMintableLastCheck = GetTime();
                 fMintableCoins = pwallet->MintableCoins();
             }
+        }
 
-            while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || pwallet->GetBalance() == 0 || nReserveBalance > pwallet->GetBalance())
+        if (mapHashedBlocks.count(chainActive.Tip()->nHeight)) //search our map of hashed blocks, see if bestblock has been hashed yet
+        {
+            if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < Params().GetTargetSpacingForStake() / 2) // wait half of the nHashDrift
             {
-                if (fDebug) {
-                    LogPrintf("%s(): still unable to stake.\n", __func__);
-                    if (vNodes.empty())
-                        LogPrintf("\tThere are no nodes connected;\n");
-                    if (pwallet->IsLocked())
-                        LogPrintf("\tThe wallet is locked;\n");
-                    if (!fMintableCoins)
-                        LogPrintf("\tThere are no mintable coins;\n");
-                    if (pwallet->GetBalance() == 0)
-                        LogPrintf("\tZero balance;\n");
-                    if (nReserveBalance >= pwallet->GetBalance())
-                        LogPrintf("\tThe wallet balance is lower than the reserved balance;\n");
-                }
-
-                MilliSleep(5000);
+                MilliSleep(500);
                 boost::this_thread::interruption_point();
-                if (!fGenerateBitcoins && !fProofOfStake) {
-                    if (fDebug)
-                        LogPrintf("BitcoinMiner Going out of Loop !!! \n");
-
-                    continue;
-                }
-
-                // Do a separate 1 minute check here to ensure fMintableCoins is updated
-                if (!fMintableCoins) {
-                    if (GetTime() - nMintableLastCheck > Params().GetTargetSpacing()) // 1 minute check time
-                    {
-                        nMintableLastCheck = GetTime();
-                        fMintableCoins = pwallet->MintableCoins();
-                    }
-                }
-            }
-
-            if (mapHashedBlocks.count(chainActive.Tip()->nHeight)) //search our map of hashed blocks, see if bestblock has been hashed yet
-            {
-                if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < Params().GetTargetSpacingForStake() / 2)  // wait half of the nHashDrift
-                {
-                    MilliSleep(5000);
-                    boost::this_thread::interruption_point();
-                    if (!fGenerateBitcoins && !fProofOfStake) {
-                        if (fDebug)
-                            LogPrintf("BitcoinMiner Going out of Loop !!! \n");
-                        
-                        continue;
-                    }
-                }
             }
         }
 
-        if (vNodes.size() < 3 || nChainHeight < GetBestPeerHeight()) {
-            MilliSleep(60000);
+        if (vNodes.size() < 3 || IsInitialBlockDownload()) {
+            MilliSleep(2 * 60 * 1000);
             continue;
         }
 
-        if (!fProofOfStake && (chainActive.Tip()->nHeight > Params().GetLastPoWBlock())) {
-             if (fDebug) 
-               LogPrintf("Pow Period has ended, we need to exit this thread \n");
-             
-             break;
+        if (nChainHeight < GetBestPeerHeight()) {
+            MilliSleep(5000);
+            continue;
         }
+
         //
         // Create new block
         //
@@ -1057,7 +984,7 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
             continue;
         }
 
-        unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlockWithKey(reservekey, pwallet, fProofOfStake));
+        unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlockWithKey(reservekey, pwallet, true));
         if (!pblocktemplate.get())
             continue;
 
@@ -1065,222 +992,36 @@ void BitcoinMiner(CWallet* pwallet, bool fProofOfStake)
         IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
         //Stake miner main
-        if (fProofOfStake) {
-            LogPrintf("%s(): proof-of-stake block found %s \n", __func__, pblock->GetHash().ToString().c_str());
-            
-            if (!SignBlock(*pblock, *pwallet)) {
-                LogPrintf("%s(): Signing new block with UTXO key failed \n", __func__);
-                MilliSleep(500);
-                continue;
-            }
+        LogPrintf("%s(): proof-of-stake block found %s \n", __func__, pblock->GetHash().ToString().c_str());
 
-            if (fDebug)
-                LogPrintf("BitcoinMiner : proof-of-stake block was signed %s \n", pblock->GetHash().ToString().c_str());
-            
-            SetThreadPriority(THREAD_PRIORITY_NORMAL);
-            ProcessBlockFound(pblock, *pwallet, reservekey);
-            SetThreadPriority(THREAD_PRIORITY_LOWEST);
-            MilliSleep(Params().GetTargetSpacingForStake() * 1000);
+        if (!SignBlock(*pblock, *pwallet)) {
+            LogPrintf("%s(): Signing new block with UTXO key failed \n", __func__);
+            MilliSleep(500);
             continue;
         }
 
         if (fDebug)
-            LogPrintf("Running KOREMiner with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+            LogPrintf("KoreMinter : proof-of-stake block was signed %s \n", pblock->GetHash().ToString().c_str());
 
-        //
-        // Search
-        //
-        int64_t nStart = GetTime();
-        uint256 hashTarget = uint256().SetCompact(pblock->nBits);
-        if (fDebug)
-            LogPrintf("target: %s\n", hashTarget.GetHex());
-        
-        while (true) {
-            unsigned int nHashesDone = 0;
-
-            uint256 hash;
-
-            if (fDebug)
-                LogPrintf("nbits : %08x \n", pblock->nBits);
-            
-            while (true) {
-                hash = pblock->GetHash();
-                if (fDebug) {
-                    LogPrintf("hash      %s\n", hash.ToString().c_str());
-                    LogPrintf("hashTarget %s\n", hashTarget.ToString().c_str());
-                }
-
-                if (hash <= hashTarget) {
-                    // Found a solution
-                    SetThreadPriority(THREAD_PRIORITY_NORMAL);
-                    LogPrintf("%s(): proof-of-work found  \n  hash: %s  \ntarget: %s\n", __func__, hash.GetHex(), hashTarget.GetHex());
-                    ProcessBlockFound(pblock, *pwallet, reservekey);
-                    SetThreadPriority(THREAD_PRIORITY_LOWEST);
-                    MilliSleep(Params().GetTargetSpacingForStake() * 1000);
-                    
-                    // In regression test mode, stop mining after a block is found. This
-                    // allows developers to controllably generate a block on demand.
-                    if (Params().ShouldMineBlocksOnDemand())
-                        throw boost::thread_interrupted();
-
-                    break;
-                }
-                pblock->nNonce += 1;
-                nHashesDone += 1;
-                if (fDebug)
-                    LogPrintf("Looking for a solution with nounce: %d hashesDone : %d \n", pblock->nNonce, nHashesDone);
-                
-                if ((pblock->nNonce & 0xFF) == 0)
-                    break;
-            }
-
-            // Meter hashes/sec
-            static int64_t nHashCounter;
-            if (nHPSTimerStart == 0) {
-                nHPSTimerStart = GetTimeMillis();
-                nHashCounter = 0;
-            } else
-                nHashCounter += nHashesDone;
-            if (GetTimeMillis() - nHPSTimerStart > 4000) {
-                static CCriticalSection cs;
-                {
-                    LOCK(cs);
-                    if (GetTimeMillis() - nHPSTimerStart > 4000) {
-                        dHashesPerMin = 1000.0 * nHashCounter / (GetTimeMillis() - nHPSTimerStart);
-                        nHPSTimerStart = GetTimeMillis();
-                        nHashCounter = 0;
-                        static int64_t nLogTime;
-                        if (GetTime() - nLogTime > 30 * 60) {
-                            nLogTime = GetTime();
-                            if (fDebug)
-                                LogPrintf("hashmeter %6.0f khash/s\n", dHashesPerMin / 1000.0);
-                        }
-                    }
-                }
-            }
-
-            // Check for stop or if block needs to be rebuilt
-            boost::this_thread::interruption_point();
-            // Regtest mode doesn't require peers
-            if (vNodes.empty() && Params().DoesMiningRequiresPeers())
-                break;
-            if (pblock->nNonce >= 0xffff0000)
-                break;
-            if (mempool.GetTransactionsUpdated() != nTransactionsUpdatedLast && GetTime() - nStart > 60)
-                break;
-            if (pindexPrev != chainActive.Tip())
-                break;
-
-            // Update nTime every few seconds
-            UpdateTime(pblock, pindexPrev, fProofOfStake);
-            // Changing pblock->nTime can change work required:
-            hashTarget.SetCompact(pblock->nBits);
-        }
+        SetThreadPriority(THREAD_PRIORITY_NORMAL);
+        ProcessBlockFound(pblock, *pwallet, reservekey);
+        SetThreadPriority(THREAD_PRIORITY_LOWEST);
+        MilliSleep(Params().GetTargetSpacingForStake() * 1000);
+        continue;
     }
+
     if (fDebug)
         LogPrintf("Exiting kore-miner \n");
 }
 
-void static ThreadBitcoinMiner(void* parg)
-{
-    boost::this_thread::interruption_point();
-    CWallet* pwallet = (CWallet*)parg;
-    try {
-        BitcoinMiner(pwallet, false);
-        boost::this_thread::interruption_point();
-    } catch (std::exception& e) {
-        LogPrintf("ThreadBitcoinMiner( %c) exception", e.what());
-    } catch (...) {
-        LogPrintf("ThreadBitcoinMiner() exception");
-    }
-
-    LogPrintf("ThreadBitcoinMiner exiting\n");
-}
-
-void ThreadStakeMinter_Legacy(CWallet* pwallet)
+void KoreMiner()
 {
     if (fDebug)
-        LogPrintf("StakeMiner Legacy started\n");
-    
-    SetThreadPriority(THREAD_PRIORITY_LOWEST);
-    RenameThread("kore-pos-legacy");
+        LogPrintf("KoreMiner started\n");
 
     const CChainParams& chainparams = Params();
-    boost::shared_ptr<CReserveScript> coinstakeScript;
-    GetMainSignals().ScriptForMining(coinstakeScript);
-
-    if (!coinstakeScript || coinstakeScript->reserveScript.empty())
-        throw std::runtime_error("No coinstake script available (staking requires a wallet)");
-
-    bool fTryToSync = true;
-
-    // lets say the fork will happen at block 50, this thread can only be running until
-    // block 48, because if we are in block 48 it means we are trying to create the last
-    // legacy block which is the block 49.
-    while (!ShutdownRequested() && UseLegacyCode(GetnHeight(chainActive.Tip()) + 1)) {
-        boost::this_thread::interruption_point();
-
-        while (pwallet->IsLocked()) {
-            MilliSleep(2000);
-            boost::this_thread::interruption_point();
-        }
-
-        while (vNodes.empty() || IsInitialBlockDownload() ) {
-            fTryToSync = true;
-            MilliSleep(2000);
-            boost::this_thread::interruption_point();
-        }
-
-		if (fTryToSync)
-		{
-			fTryToSync = false;
-			if (vNodes.size() < 3 || nChainHeight < GetBestPeerHeight())
-			{
-				MilliSleep(60000);
-				continue;
-			}
-		}
-
-        if (nChainHeight < GetBestPeerHeight() - 1)
-        {
-            MilliSleep(2000);
-            continue;
-        }
-
-        // Do we have balance?
-        if (pwallet->GetBalance() <= 0) {
-            MilliSleep(60000);
-            continue;
-        }
-
-        // Create new block
-        unique_ptr<CBlockTemplate> pblocktemplate(CreateNewBlock_Legacy(chainparams, coinstakeScript->reserveScript, pwallet, true));
-        if (!pblocktemplate.get())
-            return;
-
-        CBlock* pblock = &pblocktemplate->block;
-        if (SignBlock_Legacy(pwallet, pblock)) {
-            SetThreadPriority(THREAD_PRIORITY_NORMAL);
-            ProcessBlockFound_Legacy(pblock, chainparams);
-            SetThreadPriority(THREAD_PRIORITY_LOWEST);
-            MilliSleep(Params().GetTargetSpacing()/2 * 1000);
-        }
-
-        MilliSleep(500);
-    }
-
-    if (fDebug)
-        LogPrintf("Exiting stake-miner-legacy at block: %d", GetnHeight(chainActive.Tip()));
-}
-
-void KoreMiner_Legacy()
-{
-    if (fDebug)
-        LogPrintf("KoreMiner_Legacy started\n");
-    
-    const CChainParams& chainparams = Params();
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
-    RenameThread("kore-pow-legacy");
+    RenameThread("kore-pow");
 
     unsigned int nExtraNonce = 0;
 
@@ -1294,31 +1035,24 @@ void KoreMiner_Legacy()
         if (!coinbaseScript || coinbaseScript->reserveScript.empty()) {
             if (fDebug)
                 LogPrintf("No coinbase script available (mining requires a wallet)\n");
-            
             throw std::runtime_error("No coinbase script available (mining requires a wallet)");
         }
 
         // This thread should exit, if it has reached last
-        while (!ShutdownRequested() && UseLegacyCode(GetnHeight(chainActive.Tip()) + 1)) {
-            if (chainActive.Tip()->nHeight > Params().GetLastPoWBlock() ) {
-                if (fDebug)
-                    LogPrintf("Pow Period has ended, we need to exit this thread \n");
-                
-                break;
-            }
+        while (!ShutdownRequested() && chainActive.Tip()->nHeight <= Params().GetLastPoWBlock()) {
             if (chainparams.DoesMiningRequiresPeers()) {
                 // Busy-wait for the network to come online so we don't waste time mining
                 // on an obsolete chain. In regtest mode we expect to fly solo.
                 do {
                     if (fDebug)
-                        LogPrintf("KoreMiner_Legacy is waiting for a Peer!!! \n");
-                    
+                        LogPrintf("KoreMiner is waiting for a Peer!!! \n");
+
                     bool fvNodesEmpty;
                     {
                         LOCK(cs_vNodes);
                         fvNodesEmpty = vNodes.empty();
                     }
-                    if (!fvNodesEmpty && !IsInitialBlockDownload() )
+                    if (!fvNodesEmpty && !IsInitialBlockDownload())
                         break;
                     MilliSleep(1000);
                 } while (true);
@@ -1332,14 +1066,14 @@ void KoreMiner_Legacy()
 
             if (!pblocktemplate.get()) {
                 LogPrintf("Error in KoreMiner: Keypool ran out, please call keypoolrefill before restarting the mining thread\n");
-                
                 return;
             }
+
             CBlock* pblock = &pblocktemplate->block;
-            IncrementExtraNonce_Legacy(pblock, pindexPrev, nExtraNonce);
+            IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
             if (fDebug)
-                LogPrintf("KoreMiner_Legacy Running with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
+                LogPrintf("KoreMiner Running with %u transactions in block (%u bytes)\n", pblock->vtx.size(), ::GetSerializeSize(*pblock, SER_NETWORK, PROTOCOL_VERSION));
 
             // Search
             int64_t nStart = GetTime();
@@ -1350,27 +1084,26 @@ void KoreMiner_Legacy()
                 unsigned int nHashesDone = 0;
                 unsigned int nNonceFound = (unsigned int)-1;
                 if (fDebug)
-                    LogPrintf("KoreMiner_Legacy Looking for a Hash Solution \n");
-                
+                    LogPrintf("KoreMiner Looking for a Hash Solution \n");
+
                 for (int i = 0; i < 1; i++) {
                     pblock->nNonce = pblock->nNonce + 1;
                     testHash = pblock->CalculateBestBirthdayHash();
                     nHashesDone++;
                     if (fDebug) {
-                        LogPrintf("KoreMiner_Legacy testHash %s\n", testHash.ToString().c_str());
-                        LogPrintf("KoreMiner_Legacy Hash Target %s\n", hashTarget.ToString().c_str());
+                        LogPrintf("KoreMiner testHash %s\n", testHash.ToString().c_str());
+                        LogPrintf("KoreMiner Hash Target %s\n", hashTarget.ToString().c_str());
                     }
 
                     if (UintToArith256(testHash) < hashTarget) {
                         // Found a solution
                         nNonceFound = pblock->nNonce;
                         if (fDebug) {
-                            LogPrintf("KoreMiner_Legacy Found Hash %s\n", testHash.ToString().c_str());
-                            LogPrintf("KoreMiner_Legacy hash2 %s\n", pblock->GetHash().ToString().c_str());
+                            LogPrintf("KoreMiner Found Hash %s\n", testHash.ToString().c_str());
+                            LogPrintf("KoreMiner hash2 %s\n", pblock->GetHash().ToString().c_str());
                         }
                         // Found a solution
                         assert(testHash == pblock->GetHash());
-
                         SetThreadPriority(THREAD_PRIORITY_NORMAL);
                         ProcessBlockFound_Legacy(pblock, chainparams);
                         SetThreadPriority(THREAD_PRIORITY_LOWEST);
@@ -1420,19 +1153,20 @@ void KoreMiner_Legacy()
                 UpdateTime(pblock, pindexPrev);
             }
         }
+        if (fDebug)
+            LogPrintf("Pow Period has ended, we need to exit this thread \n");
 
     } catch (const boost::thread_interrupted&) {
-        LogPrintf("KoreMiner_Legacy Exiting at block: %d", GetnHeight(chainActive.Tip()));
-        
+        LogPrintf("KoreMiner Exiting at block: %d", GetnHeight(chainActive.Tip()));
         throw;
+
     } catch (const std::runtime_error& e) {
         LogPrintf("KoreMiner runtime error: %s\n", e.what());
-        LogPrintf("KoreMiner_Legacy Runtime Error : %s Exiting at block: %d", e.what(), GetnHeight(chainActive.Tip()));
-        
+        LogPrintf("KoreMiner Runtime Error : %s Exiting at block: %d", e.what(), GetnHeight(chainActive.Tip()));
         return;
     }
     if (fDebug)
-        LogPrintf("Exiting stake-miner-legacy at block: %d", GetnHeight(chainActive.Tip()));
+        LogPrintf("Exiting kore-pow at block: %d", GetnHeight(chainActive.Tip()));
 }
 
 // ppcoin: stake minter thread
@@ -1440,25 +1174,23 @@ void ThreadStakeMinter()
 {
     boost::this_thread::interruption_point();
     if (fDebug)
-        LogPrintf("ThreadStakeMinter started\n");
-    
+        LogPrintf("StakeMinter started\n");
+
     CWallet* pwallet = pwalletMain;
     try {
-        BitcoinMiner(pwallet, true);
-
+        KoreMinter(pwallet);
         boost::this_thread::interruption_point();
     } catch (std::exception& e) {
-        LogPrintf("ThreadStakeMinter() exception \n");
+        LogPrintf("StakeMinter() exception \n");
     } catch (...) {
-        LogPrintf("ThreadStakeMinter() error \n");
+        LogPrintf("StakeMinter() error \n");
     }
-    LogPrintf("ThreadStakeMinter exiting,\n");
+    LogPrintf("StakeMinter exiting,\n");
 }
 
 void StakingCoins(bool fStaking)
 {
     static boost::thread_group* stakingThreads = NULL;
-    CWallet* pwallet = pwalletMain;
 
     if (stakingThreads != NULL) {
         stakingThreads->interrupt_all();
@@ -1466,21 +1198,36 @@ void StakingCoins(bool fStaking)
         stakingThreads = NULL;
     }
 
-    if (!fStaking){
+    if (!fStaking) {
         return;
     }
 
     stakingThreads = new boost::thread_group();
-    stakingThreads->create_thread(boost::bind(&ThreadStakeMinter_Legacy, pwallet));
     stakingThreads->create_thread(boost::bind(&TraceThread<void (*)()>, "stakemint", &ThreadStakeMinter));
 }
 
-void GenerateBitcoins(bool fGenerate, CWallet* pwallet, int nThreads)
+void static ThreadKoreMiner()
 {
-    LogPrintf("GenerateBitcoins with %d threads\n", nThreads);
-    
+    boost::this_thread::interruption_point();
+    if (fDebug)
+        LogPrintf("ThreadKoreMiner started\n");
+    try {
+        KoreMiner();
+        boost::this_thread::interruption_point();
+    } catch (std::exception& e) {
+        LogPrintf("ThreadKoreMiner( %c) exception", e.what());
+    } catch (...) {
+        LogPrintf("ThreadKoreMiner() exception");
+    }
+
+    LogPrintf("ThreadKoreMiner exiting\n");
+}
+
+void GenerateKores(bool fGenerate, int nThreads)
+{
+    LogPrintf("GenerateKores with %d threads\n", nThreads);
+
     static boost::thread_group* minerThreads = NULL;
-    fGenerateBitcoins = fGenerate;
 
     if (nThreads < 0) {
         // In regtest threads defaults to 1
@@ -1501,8 +1248,7 @@ void GenerateBitcoins(bool fGenerate, CWallet* pwallet, int nThreads)
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++) {
-        minerThreads->create_thread(boost::bind(&KoreMiner_Legacy));
-        minerThreads->create_thread(boost::bind(&ThreadBitcoinMiner, pwallet));
+        minerThreads->create_thread(boost::bind(&TraceThread<void (*)()>, "miner", &ThreadKoreMiner));
     }
 }
 

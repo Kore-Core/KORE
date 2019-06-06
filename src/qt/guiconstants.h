@@ -14,7 +14,8 @@ static const int MODEL_UPDATE_DELAY = 500;
 static const int MAX_PASSPHRASE_SIZE = 1024;
 
 /* Kore GUI -- Size of icons in status bar */
-static const int STATUSBAR_ICONSIZE = 16;
+static const int STATUSBAR_ICONSIZE = 22;
+static const int STATUSBAR_ICON_SELECTION_SHADE = 5;
 
 static const bool DEFAULT_SPLASHSCREEN = true;
 
@@ -24,7 +25,9 @@ static const bool DEFAULT_SPLASHSCREEN = true;
 /* Transaction list -- unconfirmed transaction */
 #define COLOR_UNCONFIRMED QColor(91, 76, 134)
 /* Transaction list -- negative amount */
-#define COLOR_NEGATIVE QColor(206, 0, 188)
+#define COLOR_NEGATIVE QColor(189, 22, 22)
+/* Transaction list -- positive amount */
+#define COLOR_POSITIVE QColor(25, 158, 60)
 /* Transaction list -- bare address (without label) */
 #define COLOR_BAREADDRESS QColor(140, 140, 140)
 /* Transaction list -- TX status decoration - open until date */
@@ -37,7 +40,7 @@ static const bool DEFAULT_SPLASHSCREEN = true;
 #define COLOR_CONFLICTED QColor(255, 0, 0)
 /* Transaction list -- TX status decoration - orphan (Light Gray #D3D3D3) */
 #define COLOR_ORPHAN QColor(211, 211, 211)
-/* Transaction list -- TX status decoration - stake (BlueViolet #8A2BE2) */
+/* Transaction list -- TX status decoration - stake (yellow #ffbb11) */
 #define COLOR_STAKE QColor(138,43,226)
 /* Tooltips longer than this (in characters) are converted into rich text,
    so that they can be word-wrapped.

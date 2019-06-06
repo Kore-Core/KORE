@@ -12,7 +12,6 @@
 bool SignBlockWithKey(CBlock& block, const CKey& key);
 bool SignBlock(CBlock& block, const CKeyStore& keystore);
 bool CheckBlockSignature(const CBlock& block);
-
 bool CheckBlockSignature_Legacy(const CBlock& block, const uint256& hash);
 
 #endif //KORE_BLOCKSIGNATURE_H

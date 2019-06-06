@@ -370,12 +370,12 @@ static void SendMoney(const CTxDestination& address, CAmount nValue, bool fSubtr
     CRecipient recipient = {scriptPubKey, nValue, fSubtractFeeFromAmount};
     vecSend.push_back(recipient);
 
-    if (!pwalletMain->CreateTransaction(vecSend, wtxNew, reservekey, nFeeRequired, strError, NULL, ALL_COINS, fUseIX, true)) {
+    if (!pwalletMain->CreateTransaction(vecSend, wtxNew, reservekey, nFeeRequired, strError, NULL, ALL_COINS, true)) {
         if (!fSubtractFeeFromAmount && nValue + nFeeRequired > pwalletMain->GetBalance())
             strError = strprintf("Error: This transaction requires a transaction fee of at least %s because of its amount, complexity, or use of recently received funds!", FormatMoney(nFeeRequired));
         throw JSONRPCError(RPC_WALLET_ERROR, strError);
     }
-    if (!pwalletMain->CommitTransaction(wtxNew, reservekey, (fUseIX ? "ix" : "tx")))
+    if (!pwalletMain->CommitTransaction(wtxNew, reservekey))
         throw JSONRPCError(RPC_WALLET_ERROR, "Error: The transaction was rejected! This might happen if some of the coins in your wallet were already spent, such as if you used a copy of wallet.dat and coins were spent in the copy but not marked as spent here.");
 }
 
@@ -766,17 +766,18 @@ UniValue getbalance(const UniValue& params, bool fHelp)
 
     UniValue obj(UniValue::VOBJ);
     if (params.size() == 0) {
-        CAmount balance  = pwalletMain->GetBalance();
-        CAmount staked   = pwalletMain->GetStakedBalance();
-        CAmount immature = pwalletMain->GetImmatureBalance();
-        CAmount total    = balance + staked + immature;
+        CAmount balance     = pwalletMain->GetBalance();
+        CAmount unconfirmed = pwalletMain->GetUnconfirmedBalance();
+        CAmount staked      = pwalletMain->GetStakedBalance();
+        CAmount immature    = pwalletMain->GetImmatureBalance();
+        CAmount total       = balance + unconfirmed + staked + immature;
 
         obj.push_back(Pair("available",     ValueFromAmount(balance)));
+        obj.push_back(Pair("unconfirmed",   ValueFromAmount(unconfirmed)));
         obj.push_back(Pair("staked",        ValueFromAmount(staked)));
         obj.push_back(Pair("immature",      ValueFromAmount(immature)));
         obj.push_back(Pair("total",         ValueFromAmount(total)));
         obj.push_back(Pair("reserved",      ValueFromAmount(nReserveBalance)));
-        obj.push_back(Pair("unconfirmed",   ValueFromAmount(pwalletMain->GetUnconfirmedBalance())));
         return obj;
     }
 

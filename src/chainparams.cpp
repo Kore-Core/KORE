@@ -123,7 +123,7 @@ public:
         nCoinMaturity                                 = 25;
         nMaxMoneyOut                                  = MAX_MONEY;
         nMaxReorganizationDepth                       = 25;
-        nMaxTipAge                                    = 24 * 60 * 60;
+        nMaxTipAge                                    = 2 * 60 * 60;
         nMinerConfirmationWindow                      = 50;                  // nPowTargetTimespan / nPowTargetSpacing
         nMinerThreads                                 = 0;
         nPastBlocksMax                                = 128;
@@ -248,6 +248,24 @@ public:
         /* nTxCount */ 0,
         /* dTxRate  */ 0
         };
+
+        //
+        checkpointData = {
+            {
+                {     0, nHashGenesisBlock},
+                {     25000, uint256S("0xdf692454f3b24470af3fe9d3e4591ae16a98f2d9709e33889001c2df3b27c747")}
+            }
+        };
+
+        // Getting info from
+        // getchaintxstats 24999 df692454f3b24470af3fe9d3e4591ae16a98f2d9709e33889001c2df3b27c747
+        chainTxData = ChainTxData{
+        // Data from rpc: getchaintxstats 
+        /* nTime    */ 1559712610,
+        /* nTxCount */ 50376,
+        /* dTxRate  */ 0.02124285951644177
+        };
+
     }
 };
 static CTestNetParams testNetParams;

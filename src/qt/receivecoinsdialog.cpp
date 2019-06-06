@@ -74,6 +74,8 @@ void ReceiveCoinsDialog::setModel(WalletModel* model)
         tableView->setSelectionMode(QAbstractItemView::ContiguousSelection);
         tableView->setColumnWidth(RecentRequestsTableModel::Date, DATE_COLUMN_WIDTH);
         tableView->setColumnWidth(RecentRequestsTableModel::Label, LABEL_COLUMN_WIDTH);
+        tableView->setColumnWidth(RecentRequestsTableModel::Message, MINIMUM_COLUMN_WIDTH);
+        tableView->setColumnWidth(RecentRequestsTableModel::Amount, MINIMUM_COLUMN_WIDTH);
 
         connect(tableView->selectionModel(),
             SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this,

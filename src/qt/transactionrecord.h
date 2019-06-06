@@ -9,6 +9,7 @@
 
 #include "amount.h"
 #include "uint256.h"
+#include "chainparams.h"
 
 #include <QList>
 #include <QString>
@@ -90,9 +91,6 @@ public:
         ObfuscationCreateDenominations,
         Obfuscated
     };
-
-    /** Number of confirmation recommended for accepting a transaction */
-    static const int RecommendedNumConfirmations = 6;
 
     TransactionRecord() : hash(), time(0), type(Other), address(""), debit(0), credit(0)
     {

@@ -80,7 +80,6 @@ public:
     typedef BIP9Deployment vDeployments_type[MAX_VERSION_BITS_DEPLOYMENTS];
 
     const std::vector<unsigned char>&      AlertKey() const                    { return vAlertPubKey; }
-    const int32_t                          HeightToBanOldWallets() const       { return nBlocksToBanOldWallets; }
     const int32_t                          HeightToFork() const                { return nHeightToFork; };
     const uint256&                         HashGenesisBlock() const            { return nHashGenesisBlock; }
     const MessageStartChars&               MessageStart() const                { return pchMessageStart; }
@@ -153,7 +152,6 @@ protected:
     uint32_t                   nCoinMaturity;
     int32_t                    nDefaultPort;
     uint256                    nHashGenesisBlock;
-    int32_t                    nBlocksToBanOldWallets;
     int32_t                    nHeightToFork;    
     MessageStartChars          pchMessageStart;
     int32_t                    nMaxReorganizationDepth;

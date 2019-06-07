@@ -134,7 +134,6 @@ public:
         nStakeLockInterval                            = 2 * 60 * 60;         // Stake remains locked for 4 hours
         nStakeMinAge                                  = 2 * 60 * 60;
         nTargetSpacing                                = 1 * 60;              // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
-        nBlocksToBanOldWallets                        = 1440;                // Ban old nodes one day before fork
         nHeightToFork                                 = 483063;              // Height to perform the fork
         nLastPOWBlock                                 = 1000;
         strDevFundPubKey 				 			  = "02f6a9ccc5a81718a9abe524975cd60a73930ad047ba9d597b747f545e2fbafd9e";
@@ -210,10 +209,9 @@ public:
         base58Prefixes[SCRIPT_ADDRESS]                = std::vector<unsigned char>(1, 190);
         base58Prefixes[SECRET_KEY]                    = std::vector<unsigned char>(1, 233);
         fEnableBigReward                              = true;
-        nDefaultPort                                  = 16743;
-        nBlocksToBanOldWallets                        = 60;           // Ban old nodes one hour before fork 
-        nHeightToFork                                 = 51;
-        nLastPOWBlock                                 = 50;
+        nDefaultPort                                  = 17743;
+        nHeightToFork                                 = 101;
+        nLastPOWBlock                                 = 100;
         vAlertPubKey                                  = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
         strDevFundPubKey                              = "04fb16faf70501f5292a630bced3ec5ff4df277d637e855d129896066854e1d2c9d7cab8dbd5b98107594e74a005e127c66c13a918be477fd3827b872b33d25e03";
         // Deployment of BIP68, BIP112, and BIP113.
@@ -225,11 +223,11 @@ public:
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
         
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1557340145, 0, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1559915251, 1, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
     
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x108f21fa13f48ef6f4edfdbe4d18b09475aa9b5488d9f4ef8a1b02d2c081e7cb"));
-        assert(genesis.hashMerkleRoot == uint256S("0x1b889cb87b7ef1b6cef609072307f7714b355d849975955e6ee6d60f9f0c7a2c"));
+        assert(nHashGenesisBlock == uint256S("0x01d9cb0bb08f99ffb48cf3a4310a8d7a9641d9af3ff5f63042bfa00adcd4b7de"));
+        assert(genesis.hashMerkleRoot == uint256S("0x0c82c705e6f0d196d595e72afd4f9eb61bc8006da3717c4e45c5c893364c6fbb"));
         
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -248,24 +246,6 @@ public:
         /* nTxCount */ 0,
         /* dTxRate  */ 0
         };
-
-        //
-        checkpointData = {
-            {
-                {     0, nHashGenesisBlock},
-                {     25000, uint256S("0xdf692454f3b24470af3fe9d3e4591ae16a98f2d9709e33889001c2df3b27c747")}
-            }
-        };
-
-        // Getting info from
-        // getchaintxstats 24999 df692454f3b24470af3fe9d3e4591ae16a98f2d9709e33889001c2df3b27c747
-        chainTxData = ChainTxData{
-        // Data from rpc: getchaintxstats 
-        /* nTime    */ 1559712610,
-        /* nTxCount */ 50376,
-        /* dTxRate  */ 0.02124285951644177
-        };
-
     }
 };
 static CTestNetParams testNetParams;

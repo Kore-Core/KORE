@@ -7112,9 +7112,9 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
         return false;
     }
 
-     else if (chainActive.Height() + Params().HeightToBanOldWallets() > Params().HeightToFork() && pfrom->clientVersion < MIM_CLIENT_VERSION) {
+     else if (pfrom->clientVersion < MIM_CLIENT_VERSION) {
         pfrom->PushMessage(NetMsgType::REJECT, strCommand, REJECT_OBSOLETE, strprintf("Version must be %d or greater", MIM_CLIENT_VERSION));
-        Misbehaving(pfrom->GetId(), 1000, "Ban due to fork");
+        Misbehaving(pfrom->GetId(), 100, "Ban due to fork");
         pfrom->fDisconnect = true;
         return false;
     }

@@ -1170,15 +1170,15 @@ void ThreadSocketHandler()
 
 // hidden service seeds
 static const char* strMainNetOnionSeed[][1] = {
-     {"mp2a5yjqtz4eh23s.onion"},
-     {"qlnfmbykjv66j4qv.onion"},
+    {"mp2a5yjqtz4eh23s.onion"},
+    {"qlnfmbykjv66j4qv.onion"},
     {NULL} // last element => couldn't use size ?
 };
 
 static const char* strTestNetOnionSeed[][1] = {
-     {"5c5fxjpfgceb6s4c.onion"},
-     {"7pxgbkz26lymgqwi.onion"},
-     {"w4ockyd7ruolzr5d.onion"}, 
+    {"zf52xt67uhkqz4br.onion"},
+    {"vtb6j42hxpnw6oun.onion"},
+    {"2sxihybnmhpdcamu.onion"},
     {NULL} // last element => couldn't use size ?
 };
 

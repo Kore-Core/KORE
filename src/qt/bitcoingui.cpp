@@ -1126,6 +1126,7 @@ void BitcoinGUI::setEncryptionStatus(int status)
         encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
         // Let's show how this affets staking
         labelStakingIcon->setEnabled(true);
+        labelStakingIcon->checkStakingTimer();
         
         break;
     case WalletModel::UnlockedForAnonymizationOnly:
@@ -1139,6 +1140,7 @@ void BitcoinGUI::setEncryptionStatus(int status)
         encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
         // Let's show how this affets staking
         labelStakingIcon->setEnabled(true);
+        labelStakingIcon->checkStakingTimer();
 
         break;
     case WalletModel::Locked:
@@ -1152,6 +1154,7 @@ void BitcoinGUI::setEncryptionStatus(int status)
         encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
         // Let's show how this affets staking
         labelStakingIcon->setEnabled(false);
+        labelStakingIcon->checkStakingTimer();
 
         break;
     }
@@ -1375,7 +1378,7 @@ void StakingStatusBarControl::setOptionsModel(OptionsModel* optionsModel)
         enableStaking->setEnabled(staking);
         disableStaking->setEnabled(!staking);
         //StakingCoins(staking);
-        updateStakingIcon(staking);
+        updateStakingIcon(staking, false);
     }
 }
 
@@ -1398,7 +1401,7 @@ void StakingStatusBarControl::updateStakingIcon(bool staking, bool action)
 
     if (staking) {
         setPixmap(QIcon(":/icons/staking_active").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
-        setToolTip(tr("Staking is active\n MultiSend: %1").arg(fMultiSend ? tr("Active") : tr("Not Active")));
+        setToolTip(tr("Staking is active%1\n MultiSend: %2").arg( pwalletMain->IsLocked() ? tr(", when unlocked") : tr(" ")).arg(fMultiSend ? tr("Active") : tr("Not Active")));
         if (action && enableStaking->isEnabled() == true) {
             updateStaking2KoreConf(true);
             StakingCoins(true);

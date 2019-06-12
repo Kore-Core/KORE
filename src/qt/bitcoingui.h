@@ -304,6 +304,8 @@ private slots:
     void updateStakingIcon(bool staking);
     /** Tells underlying optionsModel to update its current display unit. */
     void onMenuSelection(QAction* action);
+    
+public slots:
     void checkStakingTimer();
 
 };

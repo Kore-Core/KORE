@@ -1198,25 +1198,25 @@ void updateStaking2KoreConf( bool staking )
 
     std::ostringstream strTemp;
 
-    bool isConfExist = false;
+    bool isStakingAlreadyinKoreConf = false;
 
-    if (streamConfig.peek() == std::ifstream::traits_type::eof())
-        strTemp << strNew << std::endl;
-    else {
-        for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it) {
-            std::string strKey =    it->string_key;
-            std::string strValue =  it->value[0];
-            if((strKey + "=" + strValue) == strReplace){
-                strTemp << strNew << std::endl;
-                isConfExist = true;
-                continue;
-            }
-            strTemp << strKey << "=" << strValue << std::endl;
-        }
-        if(!isConfExist)
+    for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it) {
+        std::string strKey = it->string_key;
+        std::string strValue = it->value[0];
+        if (strKey == "staking") {
+            // Let's put the new value
             strTemp << strNew << std::endl;
+            isStakingAlreadyinKoreConf = true;
+            continue;
+        }
+        // the key is different, se lets keep its value
+        strTemp << strKey << "=" << strValue << std::endl;
     }
-    
+    if (!isStakingAlreadyinKoreConf) {
+        // our key is not in the file yet, so lets add it
+        strTemp << strNew << std::endl;
+    }
+
     std::ofstream newKoreConfig;
     newKoreConfig.open(pathConfig.string().c_str(),fstream::out);
 

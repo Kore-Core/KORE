@@ -163,6 +163,10 @@ public:
         // + Is surrounded by blocks with reasonable timestamps
         //   (no blocks before with a timestamp after, none after with timestamp before)
         // + Contains no strange transactions
+        // Getting a checkpoint
+        //   first: get the blockhash, getblockhash 5000, for example
+        //   second: get stats from the windows: getchaintxstats 4999 hash
+
         checkpointData = {
             {
                 {     0, nHashGenesisBlock},
@@ -236,15 +240,16 @@ public:
 
         checkpointData = {
             {
-                {     0, nHashGenesisBlock}
+                {     0, nHashGenesisBlock},
+                {5000, uint256S("0x5871e36a46456ac2cd9d4985dc7671d2a97fb0df4ff1e5282b4ebfa9276d5c48")}
             }
         };
 
         chainTxData = ChainTxData{
         // Data from rpc: getchaintxstats
-        /* nTime    */ genesis.GetBlockTime(),
-        /* nTxCount */ 0,
-        /* dTxRate  */ 0
+        /* nTime    */ 1560331326,
+        /* nTxCount */ 10000,
+        /* dTxRate  */ 0.02409597902266439
         };
     }
 };

@@ -1711,9 +1711,7 @@ bool CWallet::SelectStakeCoins(std::list<std::unique_ptr<CStakeInput> >& listInp
             if (IsBelowMinAge(out, nTxTime, GetAdjustedTime()))
                 continue;            
                 
-            if (out.tx->IsLegacyCoinStake() && out.nDepth < Params().GetCoinMaturity())
-                continue;
-            else if (out.tx->vout[out.i].IsCoinStake() && !out.tx->IsStakeSpendable())
+            if (out.tx->vout[out.i].IsCoinStake() && !out.tx->IsStakeSpendable())
                 continue;
 
             //add to our stake set
@@ -2271,7 +2269,7 @@ bool CWallet::CreateCoinStake(const CKeyStore& keystore, unsigned int nBits, int
 
     // Mark coin stake transaction
     CTxIn txIn;
-    CBlockIndex* pindex = chainActive.Tip();
+    CBlockIndex* pindex = chainActive.Tip();    
     int nHeight = pindex->nHeight + 1;
     txIn.scriptSig = CScript() << nHeight << OP_0;
     txCoinbase.vin.push_back(txIn);

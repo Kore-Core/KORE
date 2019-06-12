@@ -27,13 +27,37 @@ QProgressBar::chunk {
 QLabel#progressBarLabel {
     color: #fafafa;
 }
-    
+
+QLabel#unitDisplayControl {
+    display: inline-block;
+    /* padding: 0 2px;   */
+}
+
+
+QLabel#unitDisplayControl:hover {
+    background-color: rgba(255,255,255,0.2);
+}
+
+QLabel#labelStakingIcon {
+    display: inline-block;
+    padding: 0 5px;    
+}
+
+QLabel#labelStakingIcon:hover {
+    background-color: rgba(255,255,255,0.2);
+
+}
+
 QPushButton#labelEncryptionIcon {
     background-color:transparent;
 }
 
 QPushButton#labelEncryptionIcon:hover {
     background-color: rgba(255,255,255,0.2);
+}
+
+QPushButton#labelEncryptionIcon:active {
+    border:0px
 }
 
 QPushButton#labelConnectionsIcon {
@@ -44,17 +68,13 @@ QPushButton#labelConnectionsIcon:hover {
     background-color: rgba(255,255,255,0.2);
 }
 
-QPushButton#labelBlocksIcon:hover {
-    background-color: rgba(255,255,255,0.2);
-}
-
 
 QPushButton#labelConnectionsIcon:active {
     border:0px
 }
 
-QPushButton#labelEncryptionIcon:active {
-    border:0px
+QPushButton#labelBlocksIcon:hover {
+    background-color: rgba(255,255,255,0.2);
 }
         
 
@@ -77,14 +97,6 @@ background-color:#ffffff;
 
 QMenu {
 background-color:#ffffff;
-}
-
-#unitDisplayControl:hover {
-    background-color: rgba(255,255,255,0.2);
-    padding-bottom: 6px;
-    padding-top: 6px;
-    padding-right: 10px;
-    padding-left: 2px;
 }
 
 QMenu::item {
@@ -1249,7 +1261,7 @@ QWidget .QFrame#frame_2 .QLabel#label_4 { /* Recent Transactions Label */
 min-width:180px;
 color:#6C6262;
 margin-left:67px;
-margin-top:10px;
+margin-top:8px;
 margin-right:5px;
 padding-right:5px;
 font-weight:bold;

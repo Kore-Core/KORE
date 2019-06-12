@@ -28,6 +28,7 @@ class BlockExplorer;
 class RPCConsole;
 class SendCoinsRecipient;
 class UnitDisplayStatusBarControl;
+class StakingStatusBarControl;
 class WalletFrame;
 class WalletModel;
 
@@ -83,7 +84,7 @@ private:
     WalletFrame* walletFrame;
 
     UnitDisplayStatusBarControl* unitDisplayControl;
-    QLabel* labelStakingIcon;
+    StakingStatusBarControl* labelStakingIcon;
     QPushButton* labelEncryptionIcon;
     QPushButton* labelConnectionsIcon;
     QLabel* labelBlocksIcon;
@@ -178,8 +179,6 @@ public slots:
     */
     void message(const QString& title, const QString& message, unsigned int style, bool* ret = NULL);
 
-    void setStakingStatus();
-
 #ifdef ENABLE_WALLET
     /** Set the encryption status as shown in the UI.
        @param[in] status            current encryption status
@@ -273,6 +272,40 @@ private slots:
     void updateDisplayUnit(int newUnits);
     /** Tells underlying optionsModel to update its current display unit. */
     void onMenuSelection(QAction* action);
+};
+
+class StakingStatusBarControl : public QLabel
+{
+    Q_OBJECT
+
+public:
+  explicit StakingStatusBarControl();
+  void setOptionsModel(OptionsModel* optionsModel);
+protected:
+    /** So that it responds to left-button clicks */
+    void mousePressEvent(QMouseEvent* event);
+
+private:
+    OptionsModel* optionsModel;
+    QMenu* menu;
+    QAction* enableStaking;
+    QAction* disableStaking;
+
+
+    /** Shows context menu with Display Unit options by the mouse coordinates */
+    void onStakingIconClicked(const QPoint& point);
+    /** Creates context menu, its actions, and wires up all the relevant signals for mouse events. */
+    void createContextMenu();
+
+    void updateStakingIcon(bool staking, bool action);
+
+private slots:
+    /** When Display Units are changed on OptionsModel it will refresh the display text of the control on the status bar */
+    void updateStakingIcon(bool staking);
+    /** Tells underlying optionsModel to update its current display unit. */
+    void onMenuSelection(QAction* action);
+    void checkStakingTimer();
+
 };
 
 #endif // BITCOIN_QT_BITCOINGUI_H

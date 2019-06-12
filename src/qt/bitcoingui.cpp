@@ -189,17 +189,17 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
     frameBlocksLayout->setSpacing(8);
     unitDisplayControl = new UnitDisplayStatusBarControl();
     unitDisplayControl->setObjectName("unitDisplayControl");
-    labelStakingIcon = new QLabel();
+    labelStakingIcon = new StakingStatusBarControl();
     labelStakingIcon->setObjectName("labelStakingIcon");
     labelEncryptionIcon = new QPushButton();
-    labelEncryptionIcon->setFixedSize(STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE,STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE);
+    labelEncryptionIcon->setFixedSize(STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE+3,STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE);
     labelEncryptionIcon->setText("");
     labelEncryptionIcon->setIconSize(QSize(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
     labelEncryptionIcon->setObjectName("labelEncryptionIcon");
     labelEncryptionIcon->setFlat(true); // Make the button look like a label, but clickable
     //labelEncryptionIcon->setMaximumSize(STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE, STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE);
     labelConnectionsIcon = new QPushButton();
-    labelConnectionsIcon->setFixedSize(STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE,STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE);
+    labelConnectionsIcon->setFixedSize(STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE+3,STATUSBAR_ICONSIZE+STATUSBAR_ICON_SELECTION_SHADE);
     labelConnectionsIcon->setText("");
     labelConnectionsIcon->setIconSize(QSize(STATUSBAR_ICONSIZE,STATUSBAR_ICONSIZE));
     labelConnectionsIcon->setObjectName("labelConnectionsIcon");
@@ -274,10 +274,6 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
     // Subscribe to notifications from core
     subscribeToCoreSignals();
 
-    QTimer* timerStakingIcon = new QTimer(labelStakingIcon);
-    connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(setStakingStatus()));
-    timerStakingIcon->start(10000);
-    setStakingStatus();
 }
 
 BitcoinGUI::~BitcoinGUI()
@@ -596,6 +592,7 @@ void BitcoinGUI::setClientModel(ClientModel* clientModel)
         }
 #endif // ENABLE_WALLET
         unitDisplayControl->setOptionsModel(clientModel->getOptionsModel());
+        labelStakingIcon->setOptionsModel(clientModel->getOptionsModel());
     } else {
         // Disable possibility to show main window via action
         toggleHideAction->setEnabled(false);
@@ -1094,23 +1091,6 @@ bool BitcoinGUI::eventFilter(QObject* object, QEvent* event)
     return QMainWindow::eventFilter(object, event);
 }
 
-void BitcoinGUI::setStakingStatus()
-{
-    if (pwalletMain){
-        fMultiSend = pwalletMain->isMultiSendEnabled();
-        fIsLocked = pwalletMain->IsLocked();
-    }
-
-    if (GetBoolArg("-staking", false) && !fIsLocked) {
-        labelStakingIcon->show();
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_active").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
-        labelStakingIcon->setToolTip(tr("Staking is active\n MultiSend: %1").arg(fMultiSend ? tr("Active") : tr("Not Active")));
-    } else {
-        labelStakingIcon->show();
-        labelStakingIcon->setPixmap(QIcon(":/icons/staking_inactive").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
-        labelStakingIcon->setToolTip(tr("Staking is not active\n MultiSend: %1").arg(fMultiSend ? tr("Active") : tr("Not Active")));
-    }
-}
 
 #ifdef ENABLE_WALLET
 bool BitcoinGUI::handlePaymentRequest(const SendCoinsRecipient& recipient)
@@ -1144,6 +1124,9 @@ void BitcoinGUI::setEncryptionStatus(int status)
         unlockWalletAction->setVisible(false);
         lockWalletAction->setVisible(true);
         encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
+        // Let's show how this affets staking
+        labelStakingIcon->setEnabled(true);
+        
         break;
     case WalletModel::UnlockedForAnonymizationOnly:
         labelEncryptionIcon->show();
@@ -1154,6 +1137,9 @@ void BitcoinGUI::setEncryptionStatus(int status)
         unlockWalletAction->setVisible(true);
         lockWalletAction->setVisible(true);
         encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
+        // Let's show how this affets staking
+        labelStakingIcon->setEnabled(true);
+
         break;
     case WalletModel::Locked:
         labelEncryptionIcon->show();
@@ -1164,6 +1150,9 @@ void BitcoinGUI::setEncryptionStatus(int status)
         unlockWalletAction->setVisible(true);
         lockWalletAction->setVisible(false);
         encryptWalletAction->setEnabled(false); // TODO: decrypt currently not supported
+        // Let's show how this affets staking
+        labelStakingIcon->setEnabled(false);
+
         break;
     }
 }
@@ -1310,7 +1299,7 @@ void UnitDisplayStatusBarControl::setOptionsModel(OptionsModel* optionsModel)
 /** When Display Units are changed on OptionsModel it will refresh the display text of the control on the status bar */
 void UnitDisplayStatusBarControl::updateDisplayUnit(int newUnits)
 {
-    setPixmap(QIcon(":/icons/unit_" + BitcoinUnits::id(newUnits)).pixmap(39 + 20 , STATUSBAR_ICONSIZE));
+    setPixmap(QIcon(":/icons/unit_" + BitcoinUnits::id(newUnits)).pixmap(50, STATUSBAR_ICONSIZE));
 }
 
 /** Shows context menu with Display Unit options by the mouse coordinates */
@@ -1325,5 +1314,127 @@ void UnitDisplayStatusBarControl::onMenuSelection(QAction* action)
 {
     if (action) {
         optionsModel->setDisplayUnit(action->data());
+    }
+}
+
+StakingStatusBarControl::StakingStatusBarControl() : optionsModel(0), menu(0)
+{
+  createContextMenu();
+  setToolTip(tr("Pig Clicked !!!"));
+
+  QTimer* timerStakingIcon = new QTimer(this);
+  connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(checkStakingTimer()));
+  timerStakingIcon->start(10000);
+}
+
+void StakingStatusBarControl::mousePressEvent(QMouseEvent* event)
+{
+    onStakingIconClicked(event->pos());
+}
+
+/** Creates context menu, its actions, and wires up all the relevant signals for mouse events. */
+void StakingStatusBarControl::createContextMenu()
+{
+    menu = new QMenu();
+    QString  menuStyle(
+           "QMenu::item:selected{"
+           "background-color: rgba(222, 222, 222);"
+           "color: #333;"
+           "}"
+        );
+
+    menu->setStyleSheet(menuStyle);
+    // doesn work reading from default.css ...
+    //menu->setStyleSheet(GUIUtil::loadStyleSheet());
+    //menu->setObjectName("unitMenu");
+
+    // Create Enable Option
+    enableStaking = new QAction(QString("Enable Staking"), this);
+    enableStaking->setData(QVariant(true));   
+    menu->addAction(enableStaking);    
+
+    // Create Disable Option
+    disableStaking = new QAction(QString("Disable Staking"), this);
+    disableStaking->setData(QVariant(false));
+    menu->addAction(disableStaking);
+
+    connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(onMenuSelection(QAction*)));
+}
+
+/** Lets the control know about the Options Model (and its signals) */
+void StakingStatusBarControl::setOptionsModel(OptionsModel* optionsModel)
+{
+    if (optionsModel) {
+        this->optionsModel = optionsModel;
+
+        // be aware of a display unit change reported by the OptionsModel object.
+        connect(optionsModel, SIGNAL(displayStakingIconChanged(bool)), this, SLOT(updateStakingIcon(bool)));
+
+        // initialize the display units label with the current value in the model.
+        bool staking = optionsModel->getStaking();
+        enableStaking->setEnabled(staking);
+        disableStaking->setEnabled(!staking);
+        //StakingCoins(staking);
+        updateStakingIcon(staking);
+    }
+}
+
+void StakingStatusBarControl::checkStakingTimer()
+{
+    // this timer is checking if the staking was activated by the console (rpc)
+    bool isStaking = GetBoolArg("-staking", false);
+    // here the action was already done by the rpc, so we just need to 
+    // refresh the screen
+    updateStakingIcon(isStaking, false);
+}
+
+void StakingStatusBarControl::updateStakingIcon(bool staking, bool action)
+{
+    bool fMultiSend = false;
+
+    if (pwalletMain) {
+        fMultiSend = pwalletMain->isMultiSendEnabled();
+    }
+
+    if (staking) {
+        setPixmap(QIcon(":/icons/staking_active").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+        setToolTip(tr("Staking is active\n MultiSend: %1").arg(fMultiSend ? tr("Active") : tr("Not Active")));
+        if (action && enableStaking->isEnabled() == true) {
+            updateStaking2KoreConf(true);
+            StakingCoins(true);
+        }
+        enableStaking->setEnabled(false);
+        disableStaking->setEnabled(true);
+    } else {
+        setPixmap(QIcon(":/icons/staking_inactive").pixmap(STATUSBAR_ICONSIZE + STATUSBAR_ICON_SELECTION_SHADE, STATUSBAR_ICONSIZE));
+        setToolTip(tr("Staking is not active\n MultiSend: %1").arg(fMultiSend ? tr("Active") : tr("Not Active")));
+        if (action && disableStaking->isEnabled() == true) {
+            updateStaking2KoreConf(false);
+            StakingCoins(false);
+        }
+        enableStaking->setEnabled(true);
+        disableStaking->setEnabled(false);                    
+    }
+
+}
+
+/** When Display Units are changed on OptionsModel it will refresh the display text of the control on the status bar */
+void StakingStatusBarControl::updateStakingIcon(bool staking)
+{
+     updateStakingIcon(staking, true);
+}
+
+/** Shows context menu with Display Unit options by the mouse coordinates */
+void StakingStatusBarControl::onStakingIconClicked(const QPoint& point)
+{
+    QPoint globalPos = mapToGlobal(point);
+    menu->exec(globalPos);
+}
+
+/** Tells underlying optionsModel to update its current display unit. */
+void StakingStatusBarControl::onMenuSelection(QAction* action)
+{
+    if (action) {
+        optionsModel->setStaking(action->data());
     }
 }

@@ -30,6 +30,9 @@
 
 #include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/program_options/detail/config_file.hpp>
+
 #include <fstream>
 #include <iostream>
 #include <queue> // Legacy
@@ -246,7 +249,10 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
     unique_ptr<CBlockTemplate> pblocktemplate(new CBlockTemplate(CBlockHeader::POS_FORK_VERSION));
     if (!pblocktemplate.get())
         return NULL;
-    CBlock* pblock = &pblocktemplate->block; // pointer for convenience
+
+    // pointer for convenience
+    CBlock* pblock = &pblocktemplate->block;
+
     // Set if block as proof of stake or not
     pblock->fIsProofOfStake = fProofOfStake;
 
@@ -255,9 +261,7 @@ CBlockTemplate* CreateNewBlock(const CScript& scriptPubKeyIn, CWallet* pwallet, 
     if (Params().ShouldMineBlocksOnDemand())
         pblock->nVersion = GetArg("-blockversion", pblock->nVersion);
 
-    CMutableTransaction txNew;
-
-    txNew = CreateCoinbaseTransaction(scriptPubKeyIn);
+    CMutableTransaction txNew = CreateCoinbaseTransaction(scriptPubKeyIn);
     pblock->vtx.push_back(txNew);
 
     pblocktemplate->vTxFees.push_back(-1);   // updated at end
@@ -914,7 +918,7 @@ bool SignBlock_Legacy(CWallet* pwallet, CBlock* pblock)
 
 void KoreMinter(CWallet* pwallet)
 {
-    LogPrintf("KOREMitner started");
+    LogPrintf("KORE Minter started\n");
     SetThreadPriority(THREAD_PRIORITY_LOWEST);
     RenameThread("kore-minter");
 
@@ -926,17 +930,21 @@ void KoreMinter(CWallet* pwallet)
 
     while (!ShutdownRequested()) {
         boost::this_thread::interruption_point();
+
+        while (IsInitialBlockDownload())
+            MilliSleep(2 * 60 * 1000);
+
         //control the amount of times the client will check for mintable coins
         if ((GetTime() - nMintableLastCheck > Params().GetTargetSpacing())) {
             nMintableLastCheck = GetTime();
             fMintableCoins = pwallet->MintableCoins();
         }
 
-        while (vNodes.empty() || pwallet->IsLocked() || !fMintableCoins || (pwallet->GetBalance() - nReserveBalance) < MINIMUM_STAKE_VALUE) {
+        while (vNodes.size() < 3 || pwallet->IsLocked() || !fMintableCoins || (pwallet->GetBalance() - nReserveBalance) < MINIMUM_STAKE_VALUE) {
             if (fDebug) {
                 LogPrintf("%s(): still unable to stake.\n", __func__);
-                if (vNodes.empty())
-                    LogPrintf("\tThere are no nodes connected;\n");
+                if (vNodes.size() < 3)
+                    LogPrintf("\tThere are no sufficient nodes connected;\n");
                 if (pwallet->IsLocked())
                     LogPrintf("\tThe wallet is locked;\n");
                 if (!fMintableCoins)
@@ -959,28 +967,13 @@ void KoreMinter(CWallet* pwallet)
         {
             if (GetTime() - mapHashedBlocks[chainActive.Tip()->nHeight] < Params().GetTargetSpacingForStake() / 2) // wait half of the nHashDrift
             {
-                MilliSleep(500);
+                MilliSleep(5000);
                 boost::this_thread::interruption_point();
             }
         }
 
-        if (vNodes.size() < 3 || IsInitialBlockDownload()) {
-            MilliSleep(2 * 60 * 1000);
-            continue;
-        }
-
         if (nChainHeight < GetBestPeerHeight()) {
             MilliSleep(5000);
-            continue;
-        }
-
-        //
-        // Create new block
-        //
-        unsigned int nTransactionsUpdatedLast = mempool.GetTransactionsUpdated();
-        CBlockIndex* pindexPrev = chainActive.Tip();
-        if (!pindexPrev) {
-            MilliSleep(500);
             continue;
         }
 
@@ -989,19 +982,18 @@ void KoreMinter(CWallet* pwallet)
             continue;
 
         CBlock* pblock = &pblocktemplate->block;
+        CBlockIndex* pindexPrev = chainActive.Tip();
         IncrementExtraNonce(pblock, pindexPrev, nExtraNonce);
 
-        //Stake miner main
         LogPrintf("%s(): proof-of-stake block found %s \n", __func__, pblock->GetHash().ToString().c_str());
 
         if (!SignBlock(*pblock, *pwallet)) {
             LogPrintf("%s(): Signing new block with UTXO key failed \n", __func__);
-            MilliSleep(500);
+            MilliSleep(5000);
             continue;
         }
 
-        if (fDebug)
-            LogPrintf("KoreMinter : proof-of-stake block was signed %s \n", pblock->GetHash().ToString().c_str());
+        LogPrintf("%s(): proof-of-stake block was signed %s \n", __func__, pblock->GetHash().ToString().c_str());
 
         SetThreadPriority(THREAD_PRIORITY_NORMAL);
         ProcessBlockFound(pblock, *pwallet, reservekey);
@@ -1009,9 +1001,6 @@ void KoreMinter(CWallet* pwallet)
         MilliSleep(Params().GetTargetSpacingForStake() * 1000);
         continue;
     }
-
-    if (fDebug)
-        LogPrintf("Exiting kore-miner \n");
 }
 
 void KoreMiner()
@@ -1186,11 +1175,64 @@ void ThreadStakeMinter()
         LogPrintf("StakeMinter() error \n");
     }
     LogPrintf("StakeMinter exiting,\n");
+    StakingCoins(false);
+}
+
+void updateStaking2KoreConf( bool staking )
+{
+    bool isStaking = GetBoolArg("-staking", false);
+    std::string stakingFlag = (staking ? "1" : "0");
+    mapArgs["-staking"] = stakingFlag;
+
+    std::string strReplace = strprintf("staking=%s", (isStaking ? "1" : "0"));
+    std::string strNew = strprintf("staking=%s", stakingFlag);
+
+
+    boost::filesystem::ifstream streamConfig(GetConfigFile());
+    boost::filesystem::path pathConfig = GetConfigFile();
+    if(!streamConfig || !boost::filesystem::exists(pathConfig))
+        LogPrintf("Error opening files!");
+
+    std::set<string> setOptions;
+    setOptions.insert("*");
+
+    std::ostringstream strTemp;
+
+    bool isConfExist = false;
+
+    if (streamConfig.peek() == std::ifstream::traits_type::eof())
+        strTemp << strNew << std::endl;
+    else {
+        for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it) {
+            std::string strKey =    it->string_key;
+            std::string strValue =  it->value[0];
+            if((strKey + "=" + strValue) == strReplace){
+                strTemp << strNew << std::endl;
+                isConfExist = true;
+                continue;
+            }
+            strTemp << strKey << "=" << strValue << std::endl;
+        }
+        if(!isConfExist)
+            strTemp << strNew << std::endl;
+    }
+    
+    std::ofstream newKoreConfig;
+    newKoreConfig.open(pathConfig.string().c_str(),fstream::out);
+
+    newKoreConfig << strTemp.str();
+
+    newKoreConfig.flush();
 }
 
 void StakingCoins(bool fStaking)
 {
     static boost::thread_group* stakingThreads = NULL;
+    if (fDebug) {
+        LogPrintf("---------------------------------------------------- \n");
+        LogPrintf("StakingCoins: %s \n", fStaking ? "Enable" : "Disable");
+        LogPrintf("---------------------------------------------------- \n");
+    }
 
     if (stakingThreads != NULL) {
         stakingThreads->interrupt_all();
@@ -1199,6 +1241,7 @@ void StakingCoins(bool fStaking)
     }
 
     if (!fStaking) {
+        mapArgs["-staking"] = "0";
         return;
     }
 
@@ -1219,7 +1262,7 @@ void static ThreadKoreMiner()
     } catch (...) {
         LogPrintf("ThreadKoreMiner() exception");
     }
-
+    GenerateKores(false, 0);
     LogPrintf("ThreadKoreMiner exiting\n");
 }
 
@@ -1243,8 +1286,10 @@ void GenerateKores(bool fGenerate, int nThreads)
         minerThreads = NULL;
     }
 
-    if (nThreads == 0 || !fGenerate)
+    if (nThreads == 0 || !fGenerate) {
+        mapArgs["-gen"] = "0";
         return;
+    }
 
     minerThreads = new boost::thread_group();
     for (int i = 0; i < nThreads; i++) {

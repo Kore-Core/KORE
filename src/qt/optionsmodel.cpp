@@ -118,6 +118,9 @@ void OptionsModel::Init()
         addOverriddenOption("-lang");
 
     language = settings.value("language").toString();
+
+    // Read the staking
+    fStaking =  GetBoolArg("-staking", false);
 }
 
 void OptionsModel::Reset()
@@ -317,6 +320,14 @@ void OptionsModel::setDisplayUnit(const QVariant& value)
         nDisplayUnit = value.toInt();
         settings.setValue("nDisplayUnit", nDisplayUnit);
         emit displayUnitChanged(nDisplayUnit);
+    }
+}
+
+void OptionsModel::setStaking(const QVariant& value)
+{
+    if (!value.isNull()) {
+        fStaking = value.toBool();
+        emit displayStakingIconChanged(fStaking);
     }
 }
 

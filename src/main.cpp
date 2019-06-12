@@ -3060,7 +3060,7 @@ bool ConnectBlock_Legacy(const CBlock& block, CValidationState& state, CBlockInd
             return state.DoS(100, error("%s: tried to stake at depth %d", __func__, pindex->nHeight - coins->nHeight), REJECT_INVALID, "bad-cs-premature");
 
         if (coins->nTime + 4 * 60 * 60 > block.vtx[1].nTime) // Min age requirement
-            return error("CheckProofOfStake() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d \n", coins->nTime,  4 * 60 * 60, block.vtx[1].nTime);
+            return error("CheckProofOfStake_Legacy() : min age violation - nTimeBlockFrom=%d nStakeMinAge=%d nTimeTx=%d \n", coins->nTime,  4 * 60 * 60, block.vtx[1].nTime);
         if (!CheckStakeKernelHash_Legacy(pindex->pprev, block.nBits, coins, prevout, block.vtx[1].nTime))
             return state.DoS(100, error("%s: proof-of-stake hash doesn't match nBits", __func__), REJECT_INVALID, "bad-cs-proofhash");
     }
@@ -4327,8 +4327,8 @@ int GetnHeight(const CBlockIndex* pIndex)
 
 bool CheckBlockHeader(const CBlockHeader& block, CValidationState& state, bool fCheckPOW)
 {
-    if (fDebug)
-        LogPrintf("CheckBlockHeader fCheckPOW: %s \n", fCheckPOW ? "true" : "false");
+    if (fDebug && fCheckPOW)
+        LogPrintf("CheckBlockHeader fCheckPOW: true");
     if(block.nVersion < CBlockHeader::POS_FORK_VERSION)
         return state.DoS(100, error("CheckBlockHeader(): CURRENT_VERSION is not valid"),
             REJECT_INVALID, "Invalid Version");
@@ -4365,8 +4365,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
     bool fBlockIsProofOfWork = !fBlockIsProofOfStake;
     // Check that the header is valid (particularly PoW).  This is mostly
     // redundant with the call in AcceptBlockHeader.
-    if (fDebug)
-        LogPrintf("CheckBlock fCheckPOW: %s \n", fCheckPOW ? "true" : "false");
+
     if (!CheckBlockHeader(block, state, fBlockIsProofOfWork && fCheckPOW))
         return state.DoS(100, error("CheckBlock() : CheckBlockHeader failed"),
             REJECT_INVALID, "bad-header", true);
@@ -5217,8 +5216,6 @@ bool ProcessNewBlock_Legacy(CValidationState& state, const CChainParams& chainpa
 
 bool TestBlockValidity(CValidationState& state, const CBlock& block, CBlockIndex* const pindexPrev, bool fCheckPOW, bool fCheckMerkleRoot)
 {
-    if (fDebug)
-        LogPrintf("TestBlockValidity fCheckPOW: %s \n", fCheckPOW ? "true" : "false");
     AssertLockHeld(cs_main);
     assert(pindexPrev == chainActive.Tip());
 

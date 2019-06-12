@@ -56,11 +56,13 @@ public:
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
     /** Updates current unit in memory, settings and emits displayUnitChanged(newUnit) signal */
     void setDisplayUnit(const QVariant& value);
+    void setStaking(const QVariant& value);
 
     /* Explicit getters */
     bool getMinimizeToTray() { return fMinimizeToTray; }
     bool getMinimizeOnClose() { return fMinimizeOnClose; }
     int getDisplayUnit() { return nDisplayUnit; }
+    bool getStaking() {return fStaking;}
     QString getThirdPartyTxUrls() { return strThirdPartyTxUrls; }
     bool getProxySettings(QNetworkProxy& proxy) const;
     bool getCoinControlFeatures() { return fCoinControlFeatures; }
@@ -77,6 +79,7 @@ private:
     bool fMinimizeOnClose;
     QString language;
     int nDisplayUnit;
+    bool fStaking;
     QString strThirdPartyTxUrls;
     bool fCoinControlFeatures;
     bool fHideZeroBalances;
@@ -88,6 +91,7 @@ private:
 
 signals:
     void displayUnitChanged(int unit);
+    void displayStakingIconChanged(bool);
     void coinControlFeaturesChanged(bool);
     void hideZeroBalancesChanged(bool);
 };

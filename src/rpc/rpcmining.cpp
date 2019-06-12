@@ -27,8 +27,6 @@
 #include <stdint.h>
 
 #include <boost/assign/list_of.hpp>
-#include <boost/filesystem/fstream.hpp>
-#include <boost/program_options/detail/config_file.hpp>
 
 #include <univalue.h>
 
@@ -129,51 +127,12 @@ UniValue setstaking(const UniValue& params, bool fHelp)
     if (params.size() == 1)
         fStaking = params[0].get_bool();
 
-    if (fStaking == isStaking) return strprintf("Staking = %s", fStaking);
-
-    std::string stakingFlag = (fStaking ? "1" : "0");
-    mapArgs["-staking"] = stakingFlag;
-
-    std::string strReplace = strprintf("staking=%s", (isStaking ? "1" : "0"));
-    std::string strNew = strprintf("staking=%s", stakingFlag);
-
-
-    boost::filesystem::ifstream streamConfig(GetConfigFile());
-    boost::filesystem::path pathConfig = GetConfigFile();
-    if(!streamConfig || !boost::filesystem::exists(pathConfig))
-        LogPrintf("Error opening files!");
-
-    std::set<string> setOptions;
-    setOptions.insert("*");
-
-    std::ostringstream strTemp;
-
-    bool isConfExist = false;
-
-    if (streamConfig.peek() == std::ifstream::traits_type::eof())
-        strTemp << strNew << std::endl;
-    else {
-        for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it) {
-            std::string strKey =    it->string_key;
-            std::string strValue =  it->value[0];
-            if((strKey + "=" + strValue) == strReplace){
-                strTemp << strNew << std::endl;
-                isConfExist = true;
-                continue;
-            }
-            strTemp << strKey << "=" << strValue << std::endl;
-        }
-        if(!isConfExist)
-            strTemp << strNew << std::endl;
-    }
+    if (fStaking == isStaking) return 
     
-    std::ofstream newKoreConfig;
-    newKoreConfig.open(pathConfig.string().c_str(),fstream::out);
+    strprintf("Staking = %s", fStaking);
+    
+    updateStaking2KoreConf(fStaking);
 
-    newKoreConfig << strTemp.str();
-
-    newKoreConfig.flush();
-	
     StakingCoins(fStaking);
 
     return NullUniValue;

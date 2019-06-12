@@ -38,6 +38,8 @@ void GenerateKores(bool fGenerate, int nThreads);
 /** Run the staking thread */
 void StakingCoins(bool fStaking);
 
+void updateStaking2KoreConf( bool staking );
+
 extern double dHashesPerMin;
 extern int64_t nHPSTimerStart;
 

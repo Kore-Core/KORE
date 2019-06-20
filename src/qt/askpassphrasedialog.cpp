@@ -74,8 +74,8 @@ AskPassphraseDialog::AskPassphraseDialog(Mode mode, QWidget* parent, WalletModel
         break;
     }
 
-    // Set checkbox "For anonymization, and staking only" depending on from where we were called
-    if (context == Context::Unlock_Menu || context == Context::BIP_38) {
+       // Set checkbox "For anonymization, and staking only" depending on from where we were called    
+    if (context == Context::Unlock_Menu || context == Context::BIP_38 || mode == Mode::UnlockAnonymize) {
         ui->anonymizationCheckBox->setChecked(true);
     }
     else {

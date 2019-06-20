@@ -17,6 +17,7 @@
 #include "optionsdialog.h"
 #include "optionsmodel.h"
 #include "rpcconsole.h"
+#include "rpcserver.h" // only used to verify if we can start staking
 #include "util.h"
 #include "utilitydialog.h"
 
@@ -1384,6 +1385,12 @@ void StakingStatusBarControl::setOptionsModel(OptionsModel* optionsModel)
 
 void StakingStatusBarControl::checkStakingTimer()
 {
+    std::string statusmessage;
+    
+    // when rpc is ready we are ready as well !
+    // we can start staking untill we have finished starting the application 
+    if (RPCIsInWarmup(&statusmessage))
+      return;
     // this timer is checking if the staking was activated by the console (rpc)
     bool isStaking = GetBoolArg("-staking", false);
     // here the action was already done by the rpc, so we just need to 

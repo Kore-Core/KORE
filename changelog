@@ -1,7 +1,8 @@
 kore (0.13.2.7) stable; urgency=medium
   * only works for testnet
   * upgrade tor to 0.4.1.5
-  * obfs4 ez for Qt
+  * Enabling/Disabling Obfs4 from Status Bar
+  * Enabling/Disabling Obfs4 from Settings/Options/Obfs4 tab
 
  -- Kore <dev@kore.com>  Wed, 21 Aug 2019 10:00:00 -0300
 
@@ -11,8 +12,8 @@ kore (0.13.2.6) stable; urgency=medium
   * upgrade qt to 5.9.8
   * upgrade tor to 0.4.1.4-rc
   * Ubuntu tor browser integration
-  * Ubuntu compilation for obfs4 ez
-  * Ubuntu installation package ez
+  * Ubuntu compilation for obfs4proxy
+  * Ubuntu installation package
 
  -- Kore <dev@kore.com>  Thu, 07 Aug 2019 12:00:00 -0300
 

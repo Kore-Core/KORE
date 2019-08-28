@@ -42,7 +42,7 @@ b) disabling swap
     sudo rm /swapfile
 ```
 
-### Installating dependencies
+### 1. Installating dependencies
 
 ```bash
 sudo apt-get update
@@ -56,14 +56,14 @@ sudo apt-get install -y devscripts debhelper
 
 ```
 
-### Building KORE dependencies
+### 2. Building KORE dependencies
 
 ```bash
 cd depends
 make
 ```
 
-### Building KORE source
+### 3. Building KORE source
 
 ```bash
 cd ..
@@ -73,7 +73,7 @@ cd ..
 make
 ```
 
-### Generating the installer (.deb)
+### 4. Generating the installer (.deb)
 #### First, Download Go
 ```bash
 From a web browser open and save the following link: 
@@ -98,12 +98,14 @@ from the kore root directory, give the command:
 make deploy
 ```
 
-### Installing kore (.deb)
+### 5. Installing kore (.deb)
 ```bash
   The installer is generated in the share folder, so in order to install it, give the following command: 
   cd <kore-dir>/share
   sudo apt install ./kore_<version>_amd64.deb
   * <kore-dir> is the directory where you download the kore git repository
   * <version> is this source code version
+  ** if you get problems with old version, you can remove with the command:
+    sudo apt-get remove kore --purge -y
 ```
 

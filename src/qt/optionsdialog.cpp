@@ -13,6 +13,7 @@
 #include "bitcoinunits.h"
 #include "guiutil.h"
 #include "optionsmodel.h"
+#include "captchadialog.h"
 
 #include "main.h" // for MAX_SCRIPTCHECK_THREADS
 #include "netbase.h"
@@ -22,20 +23,26 @@
 #include "wallet.h" // for CWallet::minTxFee
 #endif
 
+#include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 
 #include <QDataWidgetMapper>
+#include <QDebug>
 #include <QDir>
 #include <QIntValidator>
 #include <QLocale>
 #include <QMessageBox>
+#include <QRegExp>
 #include <QTimer>
+
+namespace fs = boost::filesystem;
 
 OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(parent),
                                                                    ui(new Ui::OptionsDialog),
                                                                    model(0),
                                                                    mapper(0),
-                                                                   fProxyIpValid(true)
+                                                                   fProxyIpValid(true),
+                                                                   fRestartNoMoreQuestions(false)
 {
     ui->setupUi(this);
     GUIUtil::restoreWindowGeometry("nOptionsDialogWindow", this->size(), this);
@@ -54,6 +61,7 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
     ui->proxyIp->setEnabled(false);
     ui->proxyPort->setEnabled(false);
     ui->proxyPort->setValidator(new QIntValidator(1, 65535, this));
+
 
     connect(ui->connectSocks, SIGNAL(toggled(bool)), ui->proxyIp, SLOT(setEnabled(bool)));
     connect(ui->connectSocks, SIGNAL(toggled(bool)), ui->proxyPort, SLOT(setEnabled(bool)));
@@ -133,6 +141,17 @@ OptionsDialog::OptionsDialog(QWidget* parent, bool enableWallet) : QDialog(paren
 
     /* setup/change UI elements when proxy IP is invalid/valid */
     connect(this, SIGNAL(proxyIpChecks(QValidatedLineEdit*, QLineEdit*)), this, SLOT(doProxyIpChecks(QValidatedLineEdit*, QLineEdit*)));
+
+    /* show current obfs4 bridges */
+    obfs4EnabledCurrent = GetBoolArg("-obfs4", false);
+    qDebug() << "obfs4EnabledCurrent : " << obfs4EnabledCurrent;
+    ui->enableObfs4checkBox->setCheckState(obfs4EnabledCurrent ? Qt::Checked : Qt::Unchecked);
+    ui->retrieveNewBridgespushButton->setVisible(obfs4EnabledCurrent);
+    ui->bridgesGroup->setEnabled(obfs4EnabledCurrent);
+    oldObfs4Bridges = GUIUtil::retrieveBridgesFromTorrc(torrcWithoutBridges);
+
+    ui->currentBridgesTextEdit->setPlainText(oldObfs4Bridges.join("\n"));
+
 }
 
 OptionsDialog::~OptionsDialog()
@@ -175,6 +194,11 @@ void OptionsDialog::setModel(OptionsModel* model)
     connect(ui->theme, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
     connect(ui->lang, SIGNAL(valueChanged()), this, SLOT(showRestartWarning()));
     connect(ui->thirdPartyTxUrls, SIGNAL(textChanged(const QString&)), this, SLOT(showRestartWarning()));
+}
+
+bool OptionsDialog::isRestartRequired()
+{
+    return model && model->isRestartRequired();
 }
 
 void OptionsDialog::setMapper()
@@ -233,7 +257,7 @@ void OptionsDialog::on_resetButton_clicked()
     if (model) {
         // confirmation dialog
         QMessageBox::StandardButton btnRetVal = QMessageBox::question(this, tr("Confirm options reset"),
-            tr("Client restart required to activate changes.") + "<br><br>" + tr("Client will be shutdown, do you want to proceed?"),
+            tr("Client restart required to activate changes.") + "<br><br>" + tr("Client will be restarted, do you want to proceed?"),
             QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
 
         if (btnRetVal == QMessageBox::Cancel)
@@ -241,19 +265,73 @@ void OptionsDialog::on_resetButton_clicked()
 
         /* reset all options and close GUI */
         model->Reset();
-        QApplication::quit();
+        model->setRestartRequired(true);
+        fRestartNoMoreQuestions = true;
+        accept();
     }
 }
 
 void OptionsDialog::on_okButton_clicked()
 {
-    mapper->submit();
+    bool obfs4EnabledNew = ui->enableObfs4checkBox->isChecked();
+    mapper->submit();  
+
+    if (obfs4EnabledCurrent != obfs4EnabledNew)
+        UpdateConfigFileKeyBool( "obfs4", obfs4EnabledNew );
+
+    // if the obfs4 bridges were changed, we need to update the torrc file
+     if (oldObfs4Bridges != newObfs4Bridges) {
+        GUIUtil::saveBridges2Torrc(torrcWithoutBridges, newObfs4Bridges);
+     }
+    // just close the options, the user will restart the gui later.
     accept();
 }
 
 void OptionsDialog::on_cancelButton_clicked()
 {
+    model->setRestartRequired(false);
     reject();
+}
+
+void OptionsDialog::on_retrieveNewBridgespushButton_clicked()
+{
+    if (ui->enableObfs4checkBox->isChecked()) {
+        // cool we are now checked, so let's retrieve the bridges
+        CaptchaDialog dlg(this);
+        int code = dlg.exec();
+        if (code == QDialog::Accepted) {
+            const QStringList& bridges = dlg.getBridges();
+            if (bridges.size() > 0) {
+                // we have new bridges, so we can enable the obfs4
+                ui->bridgesGroup->setEnabled(true);
+                if (bridges != oldObfs4Bridges) {
+                    newObfs4Bridges = bridges;
+                    ui->newBridgesTextEdit->setPlainText(bridges.join("\n"));
+                    this->model->setRestartRequired(true);
+                    showRestartWarning(true);
+                } else {
+                    // torproject is still returning the same bridges
+                    QMessageBox::warning(this, windowTitle(), tr("Tor has returned the same bridges yet, please wait more time, before changing the bridges."),
+                        QMessageBox::Ok, QMessageBox::Ok);
+                }
+            }
+        } else { 
+            // user canceled the captcha dialog
+            // need to be disabled
+            ui->enableObfs4checkBox->setCheckState(Qt::Unchecked);
+        }
+    } else {
+        // disabled the obfs4
+        // it is required to restart if it was enabled and now it is not anymore.
+        if (obfs4EnabledCurrent)
+            this->model->setRestartRequired(true);
+        ui->bridgesGroup->setEnabled(false);
+    }  
+}
+
+void OptionsDialog::on_enableObfs4checkBox_clicked()
+{
+    on_retrieveNewBridgespushButton_clicked();
 }
 
 void OptionsDialog::showRestartWarning(bool fPersistent)

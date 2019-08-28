@@ -3,7 +3,7 @@ AC_PREREQ([2.69])
 define(_CLIENT_VERSION_MAJOR, 0)
 define(_CLIENT_VERSION_MINOR, 13)
 define(_CLIENT_VERSION_REVISION, 2)
-define(_CLIENT_VERSION_BUILD, 5)
+define(_CLIENT_VERSION_BUILD, 7)
 define(_CLIENT_VERSION_IS_RELEASE, true)
 define(_COPYRIGHT_YEAR, 2019)
 AC_INIT([Kore Core],[_CLIENT_VERSION_MAJOR._CLIENT_VERSION_MINOR._CLIENT_VERSION_REVISION],[www.kore.org],[kore])
@@ -11,10 +11,6 @@ AC_CONFIG_SRCDIR([src/main.cpp])
 AC_CONFIG_HEADERS([src/config/bitcoin-config.h])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([build-aux/m4])
-
-# Configuring tor in order to compile correctly
-# check if the --prefix parameter is used!
-AX_SUBDIRS_CONFIGURE([tor], [ [--enable-lzma=no], [--disable-unittests], [--disable-tool-name-check], [--disable-seccomp], [--disable-asciidoc], [--with-openssl-dir=$($PKG_CONFIG --variable=libdir zlib libevent openssl)] ])
 
 BITCOIN_DAEMON_NAME=kored
 BITCOIN_GUI_NAME=kore-qt
@@ -168,6 +164,12 @@ AC_ARG_ENABLE([lcov],
   [enable lcov testing (default is no)])],
   [use_lcov=$enableval],
   [use_lcov=no])
+
+AC_ARG_ENABLE([tor-browser],
+  [AS_HELP_STRING([--enable-tor-browser],
+  [enable tor browser (default is no)])],
+  [enable_tor_browser=$enableval],
+  [enable_tor_browser=no])  
 
 AC_ARG_ENABLE([glibc-back-compat],
   [AS_HELP_STRING([--enable-glibc-back-compat],
@@ -1125,6 +1127,7 @@ AM_CONDITIONAL([USE_LCOV],[test x$use_lcov = xyes])
 AM_CONDITIONAL([GLIBC_BACK_COMPAT],[test x$use_glibc_compat = xyes])
 AM_CONDITIONAL([HARDEN],[test x$use_hardening = xyes])
 AM_CONDITIONAL([USE_LIBSECP256K1],[test x$use_libsecp256k1 = xyes])
+AM_CONDITIONAL([ENABLE_TOR_BROWSER],[test x$enable_tor_browser = xyes])
 
 AC_DEFINE(CLIENT_VERSION_MAJOR, _CLIENT_VERSION_MAJOR, [Major version])
 AC_DEFINE(CLIENT_VERSION_MINOR, _CLIENT_VERSION_MINOR, [Minor version])
@@ -1231,6 +1234,7 @@ echo "  with wallet   = $enable_wallet"
 echo "  with gui / qt = $bitcoin_enable_qt"
 if test x$bitcoin_enable_qt != xno; then
     echo "    qt version  = $bitcoin_qt_got_major_vers"
+    echo "    tor browser = $enable_tor_browser"
     echo "    with qr     = $use_qr"
 fi
 echo "  with zmq      = $use_zmq"

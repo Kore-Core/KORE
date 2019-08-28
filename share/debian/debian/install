@@ -1,0 +1,11 @@
+kore-qt.png /usr/local/share/kore/
+
+../../release/kore-qt /usr/local/share/kore/
+../../release/kore-cli /usr/local/share/kore/
+../../release/kored /usr/local/share/kore/
+../../release/obfs4proxy /usr/local/share/kore/
+../../release/torbrowser-setup.tar.xz /usr/local/share/kore/
+
+../tor-browser-conf/local-settings.js /usr/local/share/kore/torbrowser-setup/
+../tor-browser-conf/mozilla.cfg /usr/local/share/kore/torbrowser-setup/
+../tor-browser-conf/user.js /usr/local/share/kore/torbrowser-setup/

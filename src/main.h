@@ -612,7 +612,6 @@ bool UseLegacyCode(const CBlockHeader & block);
 bool UseLegacyCode(int nHeight);
 bool UseLegacyCode();
 
-static const int32_t GetCurrentTransactionVersion();
 
 /** Functions for validating blocks and updating the block tree */
 

@@ -7,6 +7,7 @@
 #define BITCOIN_QT_OPTIONSDIALOG_H
 
 #include <QDialog>
+//#include <QNetworkRequest>
 
 class OptionsModel;
 class QValidatedLineEdit;
@@ -32,6 +33,8 @@ public:
 
     void setModel(OptionsModel* model);
     void setMapper();
+    bool isRestartRequired();
+    bool restartNoQuestions() {return fRestartNoMoreQuestions;}
 
 protected:
     bool eventFilter(QObject* object, QEvent* event);
@@ -46,19 +49,28 @@ private slots:
     void on_resetButton_clicked();
     void on_okButton_clicked();
     void on_cancelButton_clicked();
+    void on_retrieveNewBridgespushButton_clicked();
+    void on_enableObfs4checkBox_clicked();
 
     void showRestartWarning(bool fPersistent = false);
     void clearStatusLabel();
-    void doProxyIpChecks(QValidatedLineEdit* pUiProxyIp, QLineEdit* pUiProxyPort);
+    void doProxyIpChecks(QValidatedLineEdit* pUiProxyIp, QLineEdit* pUiProxyPort);    
 
 signals:
     void proxyIpChecks(QValidatedLineEdit* pUiProxyIp, QLineEdit* pUiProxyPort);
 
 private:
+
     Ui::OptionsDialog* ui;
     OptionsModel* model;
     QDataWidgetMapper* mapper;
     bool fProxyIpValid;
+    bool fRestartNoMoreQuestions;
+    bool obfs4EnabledCurrent;
+    QStringList newObfs4Bridges;
+    QStringList oldObfs4Bridges;
+    QByteArray torrcWithoutBridges;
+
 };
 
 #endif // BITCOIN_QT_OPTIONSDIALOG_H

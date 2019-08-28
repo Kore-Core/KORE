@@ -3,6 +3,10 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
+# initializing all git modules modules
+git submodule init 
+git submodule update
+
 srcdir="$(dirname $0)"
 cd "$srcdir"
 if [ -z ${LIBTOOLIZE} ] && GLIBTOOLIZE="`which glibtoolize 2>/dev/null`"; then

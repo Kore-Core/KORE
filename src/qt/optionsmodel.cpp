@@ -121,6 +121,7 @@ void OptionsModel::Init()
 
     // Read the staking
     fStaking =  GetBoolArg("-staking", false);
+    fObfs4 = GetBoolArg("-obfs4", false);
 }
 
 void OptionsModel::Reset()
@@ -328,6 +329,14 @@ void OptionsModel::setStaking(const QVariant& value)
     if (!value.isNull()) {
         fStaking = value.toBool();
         emit displayStakingIconChanged(fStaking);
+    }
+}
+
+void OptionsModel::setObfs4(const QVariant& value)
+{
+    if (!value.isNull()) {
+        fObfs4 = value.toBool();
+        emit displayObfs4IconChanged(fObfs4);
     }
 }
 

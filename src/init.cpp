@@ -1305,7 +1305,9 @@ bool AppInit2()
             return InitError(_("Failed to listen on any port. Use -listen=0 if you want this."));
     }
 
-    StartTor();
+    if (!StartTor()) {
+        return InitError(_("Problems starting tor with Obfs4. Please check if the bridges were configured correctly at torrc file or if your obfs4proxy is installed. If you don't want to use the obfs4, just disable it at your kore.conf"));
+    }
 
 
     if (mapArgs.count("-externalip")) {
@@ -1318,7 +1320,7 @@ bool AppInit2()
     } else {
         MilliSleep(500);
         string automatic_onion;
-        boost::filesystem::path const hostname_path = GetDataDir() / "onion" / "hostname";
+        boost::filesystem::path const hostname_path = GetDataDir() / "tor" / "onion" / "hostname";
         int attempts = 0;
         while (true) {
             if (filesystem::exists(hostname_path))

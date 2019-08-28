@@ -1,0 +1,26 @@
+kore (0.13.2.7) stable; urgency=medium
+  * only works for testnet
+  * upgrade tor to 0.4.1.5
+  * obfs4 ez for Qt
+
+ -- Kore <dev@kore.com>  Wed, 21 Aug 2019 10:00:00 -0300
+
+kore (0.13.2.6) stable; urgency=medium
+  * only works for testnet
+  * upgrade openssl to 1.0.2s
+  * upgrade qt to 5.9.8
+  * upgrade tor to 0.4.1.4-rc
+  * Ubuntu tor browser integration
+  * Ubuntu compilation for obfs4 ez
+  * Ubuntu installation package ez
+
+ -- Kore <dev@kore.com>  Thu, 07 Aug 2019 12:00:00 -0300
+
+kore (0.13.2.5) stable; urgency=medium
+  * Trime Drift Penalty
+  * Better Status bar icons
+  * Checkbox for "For Staking Only" at Unlock Dialog, starting checked.
+  * Fix when wallet was configured with staking=1 at kore.conf
+
+ -- Kore <dev@kore.com>  Thu, 8 Jun 2019 12:00:00 -0300
+ 

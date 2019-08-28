@@ -7,10 +7,11 @@
 #include "bitcoingui.h"
 
 #include "bitcoinunits.h"
+#include "captchadialog.h"
 #include "clientmodel.h"
 #include "guiconstants.h"
 #include "guiutil.h"
-#include "miner.h"
+#include "miner.h" // StakingCoins
 #include "networkstyle.h"
 #include "notificator.h"
 #include "openuridialog.h"
@@ -36,10 +37,12 @@
 #include "util.h"
 
 #include <iostream>
+#include <sys/stat.h>
 
 #include <QAction>
 #include <QApplication>
 #include <QDateTime>
+#include <QDebug>
 #include <QDesktopWidget>
 #include <QDragEnterEvent>
 #include <QIcon>
@@ -71,6 +74,7 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
 	clientModel(0),
 	walletFrame(0),
 	unitDisplayControl(0),
+    labelObfs4Icon(0),
 	labelStakingIcon(0),
 	labelEncryptionIcon(0),
 	labelConnectionsIcon(0),
@@ -94,6 +98,8 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
 	aboutAction(0),
 	receiveCoinsAction(0),
 	optionsAction(0),
+    browserAction(0),
+    fIsTorBrowserRunning(false),
 	toggleHideAction(0),
 	encryptWalletAction(0),
 	backupWalletAction(0),
@@ -190,6 +196,8 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
     frameBlocksLayout->setSpacing(8);
     unitDisplayControl = new UnitDisplayStatusBarControl();
     unitDisplayControl->setObjectName("unitDisplayControl");
+    labelObfs4Icon = new Obfs4ControlLabel();
+    labelObfs4Icon->setObjectName("labelStakingIcon");
     labelStakingIcon = new StakingStatusBarControl();
     labelStakingIcon->setObjectName("labelStakingIcon");
     labelEncryptionIcon = new QPushButton();
@@ -208,12 +216,17 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
     //labelConnectionsIcon->setMaximumSize(STATUSBAR_ICONSIZE + STATUSBAR_ICON_SELECTION_SHADE, STATUSBAR_ICONSIZE + STATUSBAR_ICON_SELECTION_SHADE);
     labelBlocksIcon = new QLabel();
     labelBlocksIcon->setObjectName("labelBlocksIcon");
+
+
     if (enableWallet) {
         frameBlocksLayout->addStretch();
         frameBlocksLayout->addWidget(unitDisplayControl);
         frameBlocksLayout->addStretch();
         frameBlocksLayout->addWidget(labelEncryptionIcon);
     }
+    frameBlocksLayout->addWidget(labelObfs4Icon);
+    frameBlocksLayout->addStretch();
+
     frameBlocksLayout->addStretch();
     frameBlocksLayout->addWidget(labelStakingIcon);
     frameBlocksLayout->addStretch();
@@ -244,6 +257,9 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
     statusBar()->addWidget(progressBar);
     statusBar()->addPermanentWidget(frameBlocks);
 
+    // the obfs4 can emit a restart signal
+    connect(labelObfs4Icon, SIGNAL(handleRestart(QStringList)), this, SLOT(handleRestart(QStringList)));
+
     // Jump directly to tabs in RPC-console
     connect(openInfoAction, SIGNAL(triggered()), rpcConsole, SLOT(showInfo()));
     connect(openRPCConsoleAction, SIGNAL(triggered()), rpcConsole, SLOT(showConsole()));
@@ -265,6 +281,11 @@ BitcoinGUI::BitcoinGUI(const NetworkStyle* networkStyle, QWidget* parent) : QMai
 
     // prevents an open debug window from becoming stuck/unusable on client shutdown
     connect(quitAction, SIGNAL(triggered()), explorerWindow, SLOT(hide()));
+
+#ifdef ENABLE_TOR_BROWSER
+    torBrowserProcess = new QProcess(this);
+    connect(torBrowserProcess, SIGNAL(finished(int , QProcess::ExitStatus )), this, SLOT(on_torBrowserProcessExit(int , QProcess::ExitStatus )));
+#endif    
 
     // Install event filter to be able to catch status tip events (QEvent::StatusTip)
     this->installEventFilter(this);
@@ -289,6 +310,11 @@ BitcoinGUI::~BitcoinGUI()
     delete appMenuBar;
     MacDockIconHandler::cleanup();
 #endif
+#ifdef ENABLE_TOR_BROWSER
+    KillTorBrowserProcess();
+    if (torBrowserProcess)
+      delete torBrowserProcess;
+#endif    
 }
 
 void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
@@ -340,7 +366,13 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     historyAction->setShortcut(QKeySequence(Qt::ALT + Qt::Key_4));
 #endif
     tabGroup->addAction(historyAction);
-
+#ifdef ENABLE_TOR_BROWSER
+    browserAction = new QAction(QIcon(":/icons/browser"), tr("&Tor Browser..."), this);
+    browserAction->setStatusTip(tr("Surf's up!"));
+    browserAction->setToolTip(browserAction->statusTip());
+    browserAction->setCheckable(true);
+    tabGroup->addAction(browserAction);
+#endif    
 
 #ifdef ENABLE_WALLET
 
@@ -357,6 +389,9 @@ void BitcoinGUI::createActions(const NetworkStyle* networkStyle)
     connect(historyAction, SIGNAL(triggered()), this, SLOT(showNormalIfMinimized()));
     connect(historyAction, SIGNAL(triggered()), this, SLOT(gotoHistoryPage()));
 #endif // ENABLE_WALLET
+#ifdef ENABLE_TOR_BROWSER
+    connect(browserAction, SIGNAL(triggered()), this, SLOT(browserClicked()));
+#endif 
 
     quitAction = new QAction(QIcon(":/icons/quit"), tr("E&xit"), this);
     quitAction->setStatusTip(tr("Quit application"));
@@ -542,6 +577,9 @@ void BitcoinGUI::createToolBars()
         toolbar->addAction(sendCoinsAction);
         toolbar->addAction(receiveCoinsAction);
         toolbar->addAction(historyAction);
+#ifdef ENABLE_TOR_BROWSER
+        toolbar->addAction(browserAction);
+#endif        
         QSettings settings;
         toolbar->setMovable(false); // remove unused icon in upper left corner
         toolbar->setOrientation(Qt::Vertical);
@@ -635,6 +673,9 @@ void BitcoinGUI::setWalletActionsEnabled(bool enabled)
     sendCoinsAction->setEnabled(enabled);
     receiveCoinsAction->setEnabled(enabled);
     historyAction->setEnabled(enabled);
+#ifdef ENABLE_TOR_BROWSER    
+    browserAction->setEnabled(enabled);    
+#endif    
     encryptWalletAction->setEnabled(enabled);
     backupWalletAction->setEnabled(enabled);
     changePassphraseAction->setEnabled(enabled);
@@ -684,6 +725,10 @@ void BitcoinGUI::createTrayIconMenu()
     // Configuration of the tray icon (or dock icon) icon menu
     trayIconMenu->addAction(toggleHideAction);
     trayIconMenu->addSeparator();
+#ifdef ENABLE_TOR_BROWSER
+    trayIconMenu->addAction(browserAction);
+    trayIconMenu->addSeparator();
+#endif    
     trayIconMenu->addAction(sendCoinsAction);
     trayIconMenu->addAction(receiveCoinsAction);
     trayIconMenu->addSeparator();
@@ -726,6 +771,35 @@ void BitcoinGUI::optionsClicked()
     OptionsDialog dlg(this, enableWallet);
     dlg.setModel(clientModel->getOptionsModel());
     dlg.exec();
+
+    if (dlg.isRestartRequired()) {
+        QMessageBox::StandardButton btnRetVal = QMessageBox::Cancel;
+        bool noQuestions = dlg.restartNoQuestions();
+        if (!noQuestions) {
+            btnRetVal = QMessageBox::question(this, tr("Confirm Restart"),
+                tr("Client restart required to activate changes.") + "<br><br>" + tr("Do you want to restart now ?"),
+                QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+        }
+
+        if (noQuestions || btnRetVal == QMessageBox::Yes) {
+            // if necessary to restart
+            QStringList args = QApplication::arguments();
+            args.removeFirst();
+
+            // Remove existing repair-options
+            args.removeAll(SALVAGEWALLET);
+            args.removeAll(RESCAN);
+            args.removeAll(ZAPTXES1);
+            args.removeAll(ZAPTXES2);
+            args.removeAll(UPGRADEWALLET);
+            args.removeAll(REINDEX);
+
+            // Send command-line arguments to BitcoinGUI::handleRestart()
+            emit handleRestart(args);
+
+            return;
+        }
+    }
 }
 
 void BitcoinGUI::aboutClicked()
@@ -743,6 +817,64 @@ void BitcoinGUI::showHelpMessageClicked()
     help->setAttribute(Qt::WA_DeleteOnClose);
     help->show();
 }
+
+
+#ifdef WIN32
+#include <stdlib.h>
+void setenv( const char *envname, const char *envval, int overwrite)
+{
+   _putenv_s(envname, envval);
+}
+#endif
+
+#ifdef ENABLE_TOR_BROWSER
+void BitcoinGUI::SetupTorBrowserEnvironment()
+{
+    setenv("TOR_SOCKS_PORT", std::to_string(TOR_SOCKS_PORT).c_str(), 1);
+    setenv("TOR_CONTROL_PORT", std::to_string(TOR_CONTROL_PORT).c_str(), 1);
+    setenv("TOR_SKIP_LAUNCH", "1", 1);
+    boost::filesystem::path authCookie;
+    authCookie = GetDataDir(true) / "tor" / "control_auth_cookie";
+    setenv("TOR_CONTROL_COOKIE_AUTH_FILE", authCookie.string().c_str(), 1);
+}
+#endif
+
+void BitcoinGUI::browserClicked()
+{
+#ifdef ENABLE_TOR_BROWSER
+
+#ifdef WIN32
+    string torBrowserExec = string(getenv("USERPROFILE")) + "\\AppData\\Local\\Kore\\Browser\\firefox.exe";
+#else
+    string torBrowserExec = "/usr/local/share/kore/Browser/start-tor-browser";
+#endif
+
+    if (!fIsTorBrowserRunning) {
+        struct stat sb;
+        bool foundTorBrowser = false;
+
+        if ((stat(torBrowserExec.c_str(), &sb) == 0 && sb.st_mode & S_IXUSR)) {
+            foundTorBrowser = true;
+        }
+
+        if (foundTorBrowser) {
+            SetupTorBrowserEnvironment();
+            torBrowserProcess->start(torBrowserExec.c_str());
+            fIsTorBrowserRunning = true;
+        } else {
+            // warn user to check his environment
+            QMessageBox::critical(this, tr("Tor Browser not Found !!!"),
+                tr("Could not find start-tor-browser, please check your environment PATH variable."));
+        }
+    }
+#endif
+}
+
+void BitcoinGUI::on_torBrowserProcessExit(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    fIsTorBrowserRunning = false;
+}
+
 
 #ifdef ENABLE_WALLET
 void BitcoinGUI::openClicked()
@@ -1242,9 +1374,33 @@ void BitcoinGUI::unsubscribeFromCoreSignals()
     uiInterface.ThreadSafeMessageBox.disconnect(boost::bind(ThreadSafeMessageBox, this, _1, _2, _3));
 }
 
+void BitcoinGUI::KillTorBrowserProcess()
+{
+    if (fIsTorBrowserRunning) {
+#ifndef WIN32        
+        int pId = torBrowserProcess->pid();
+
+        QProcess get_child_a;
+        QStringList get_child_a_cmd;
+        get_child_a_cmd << "--ppid" << QString::number(pId) << "-o pid --no-heading";
+        get_child_a.start("ps", get_child_a_cmd);
+        get_child_a.waitForFinished(1000);
+        QString child_a_str = get_child_a.readAllStandardOutput();
+        int child_a = child_a_str.toInt();
+
+        QProcess::execute("kill " + QString::number(child_a));
+#endif        
+
+        torBrowserProcess->kill();
+        fIsTorBrowserRunning = false;
+    }
+}
+
 /** Get restart command-line parameters and request restart */
 void BitcoinGUI::handleRestart(QStringList args)
 {
+    KillTorBrowserProcess();
+
     if (!ShutdownRequested())
         emit requestedRestart(args);
 }
@@ -1324,7 +1480,6 @@ void UnitDisplayStatusBarControl::onMenuSelection(QAction* action)
 StakingStatusBarControl::StakingStatusBarControl() : optionsModel(0), menu(0)
 {
   createContextMenu();
-  setToolTip(tr("Pig Clicked !!!"));
 
   QTimer* timerStakingIcon = new QTimer(this);
   connect(timerStakingIcon, SIGNAL(timeout()), this, SLOT(checkStakingTimer()));
@@ -1410,7 +1565,7 @@ void StakingStatusBarControl::updateStakingIcon(bool staking, bool action)
         setPixmap(QIcon(":/icons/staking_active").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
         setToolTip(tr("Staking is active%1\n MultiSend: %2").arg( pwalletMain->IsLocked() ? tr(", when unlocked") : tr(" ")).arg(fMultiSend ? tr("Active") : tr("Not Active")));
         if (action && enableStaking->isEnabled() == true) {
-            updateStaking2KoreConf(true);
+            UpdateConfigFileKeyBool("staking", true);
             StakingCoins(true);
         }
         enableStaking->setEnabled(false);
@@ -1419,7 +1574,7 @@ void StakingStatusBarControl::updateStakingIcon(bool staking, bool action)
         setPixmap(QIcon(":/icons/staking_inactive").pixmap(STATUSBAR_ICONSIZE + STATUSBAR_ICON_SELECTION_SHADE, STATUSBAR_ICONSIZE));
         setToolTip(tr("Staking is not active\n MultiSend: %1").arg(fMultiSend ? tr("Active") : tr("Not Active")));
         if (action && disableStaking->isEnabled() == true) {
-            updateStaking2KoreConf(false);
+            UpdateConfigFileKeyBool("staking",false);
             StakingCoins(false);
         }
         enableStaking->setEnabled(true);
@@ -1447,4 +1602,229 @@ void StakingStatusBarControl::onMenuSelection(QAction* action)
     if (action) {
         optionsModel->setStaking(action->data());
     }
+}
+
+Obfs4ControlLabel::Obfs4ControlLabel() : optionsModel(0), menu(0)
+{
+  createContextMenu();
+}
+
+void Obfs4ControlLabel::mousePressEvent(QMouseEvent* event)
+{
+    onObfs4IconClicked(event->pos());
+}
+
+/** Creates context menu, its actions, and wires up all the relevant signals for mouse events. */
+void Obfs4ControlLabel::createContextMenu()
+{
+    menu = new QMenu();
+    QString  menuStyle(
+           "QMenu::item:selected{"
+           "background-color: rgba(222, 222, 222);"
+           "color: #333;"
+           "}"
+        );
+
+    menu->setStyleSheet(menuStyle);
+    // doesn work reading from default.css ...
+    //menu->setStyleSheet(GUIUtil::loadStyleSheet());
+    //menu->setObjectName("unitMenu");
+
+    // Create Enable Option
+    enableStaking = new QAction(QString("Enable Obfs4"), this);
+    enableStaking->setData(QVariant(true));   
+    menu->addAction(enableStaking);    
+
+    // Create Disable Option
+    disableStaking = new QAction(QString("Disable Obfs4"), this);
+    disableStaking->setData(QVariant(false));
+    menu->addAction(disableStaking);
+
+    // Create Retrieve Option
+    retrieveBridges = new QAction(QString("Update Bridges"), this);
+    retrieveBridges->setData(QVariant(false));
+    menu->addAction(retrieveBridges);
+
+    //connect(menu, SIGNAL(triggered(QAction*)), this, SLOT(onMenuSelection(QAction*)));
+
+    // lets connect the menu items
+    //connect(enableStaking, SIGNAL(triggered(QAction*)), this, SLOT(enablingObfs4(QAction*)));
+    connect(enableStaking, &QAction::triggered, this, &Obfs4ControlLabel::enablingObfs4);
+    connect(disableStaking, &QAction::triggered, this, &Obfs4ControlLabel::disablingObfs4);
+    connect(retrieveBridges, &QAction::triggered, this, &Obfs4ControlLabel::retrievingBridges);
+
+    // initialize the display units label with the current value in the model.
+    bool obfs4 = GetBoolArg("-obfs4", false);
+    enableStaking->setEnabled(!obfs4);
+    disableStaking->setEnabled(obfs4);
+    // retrieveBridge will only be enabled if obfs4 is enabled
+    retrieveBridges->setEnabled(obfs4);
+    if (obfs4)
+        setActiveIcon();
+    else
+        setInactiveIcon();
+}
+
+void Obfs4ControlLabel::setActiveIcon()
+{
+    setPixmap(QIcon(":/icons/obfs4_active").pixmap(STATUSBAR_ICONSIZE, STATUSBAR_ICONSIZE));
+    setToolTip(tr("Obfs4 enabled"));
+}
+
+void Obfs4ControlLabel::setInactiveIcon()
+{
+    setPixmap(QIcon(":/icons/obfs4_inactive").pixmap(STATUSBAR_ICONSIZE + STATUSBAR_ICON_SELECTION_SHADE, STATUSBAR_ICONSIZE));
+    setToolTip(tr("Obfs4 is not enabled"));
+}
+
+
+/** Lets the control know about the Options Model (and its signals) */
+void Obfs4ControlLabel::setOptionsModel(OptionsModel* optionsModel)
+{
+    if (optionsModel) {
+        this->optionsModel = optionsModel;
+
+        // be aware of a display unit change reported by the OptionsModel object.
+        connect(optionsModel, SIGNAL(displayObfs4IconChanged(bool)), this, SLOT(updateStakingIcon(bool)));
+
+        // initialize the display units label with the current value in the model.
+        bool obfs4 = optionsModel->getObfs4();
+        enableStaking->setEnabled(!obfs4);
+        disableStaking->setEnabled(obfs4);
+        // retrieveBridge will only be enabled if obfs4 is enabled
+        retrieveBridges->setEnabled(obfs4);
+        if (obfs4)
+            setActiveIcon();
+        else
+            setInactiveIcon();
+    }
+}
+
+void Obfs4ControlLabel::requestRestart()
+{
+    QMessageBox::StandardButton btnRetVal = QMessageBox::Cancel;
+    btnRetVal = QMessageBox::question(this, tr("Confirm Restart"),
+        tr("Client restart required to activate changes.") + "<br><br>" + tr("Do you want to restart now ?"),
+        QMessageBox::Yes | QMessageBox::Cancel, QMessageBox::Cancel);
+
+    if (btnRetVal == QMessageBox::Yes) {
+        // if necessary to restart
+        QStringList args = QApplication::arguments();
+        args.removeFirst();
+
+        // Remove existing repair-options
+        args.removeAll(SALVAGEWALLET);
+        args.removeAll(RESCAN);
+        args.removeAll(ZAPTXES1);
+        args.removeAll(ZAPTXES2);
+        args.removeAll(UPGRADEWALLET);
+        args.removeAll(REINDEX);
+
+        emit handleRestart(args);
+
+        return;
+    }
+}
+
+void Obfs4ControlLabel::updateStakingIcon(bool staking, bool action)
+{
+    bool fMultiSend = false;
+
+    if (pwalletMain) {
+        fMultiSend = pwalletMain->isMultiSendEnabled();
+    }
+
+    if (staking) {
+        CaptchaDialog dlg(this);
+        int code = dlg.exec();
+        if (code == QDialog::Accepted) {
+            const QStringList& bridges = dlg.getBridges();
+            if (bridges.size() > 0) {
+                 QByteArray torrcWithoutBridges;
+                if (bridges != GUIUtil::retrieveBridgesFromTorrc(torrcWithoutBridges)) {
+                    // save the bridges and ask to restart
+                    UpdateConfigFileKeyBool( "obfs4", true );
+                    GUIUtil::saveBridges2Torrc(torrcWithoutBridges, bridges);
+                    requestRestart();
+                } else {
+                    // torproject is still returning the same bridges
+                    QMessageBox::warning(this, windowTitle(), tr("Tor has returned the same bridges yet, please wait more time, before changing the bridges."),
+                        QMessageBox::Ok, QMessageBox::Ok);
+                }
+            }
+        }
+    } else {
+        if (action && disableStaking->isEnabled() == true) {
+            setInactiveIcon();
+            UpdateConfigFileKeyBool("obfs4",false);
+            requestRestart();
+        }
+        enableStaking->setEnabled(true);
+        disableStaking->setEnabled(false);                    
+    }
+
+}
+
+/** When Display Units are changed on OptionsModel it will refresh the display text of the control on the status bar */
+void Obfs4ControlLabel::updateStakingIcon(bool staking)
+{
+     updateStakingIcon(staking, true);
+}
+
+/** Shows context menu with Display Unit options by the mouse coordinates */
+void Obfs4ControlLabel::onObfs4IconClicked(const QPoint& point)
+{
+    QPoint globalPos = mapToGlobal(point);
+    menu->exec(globalPos);
+}
+
+/** Tells underlying optionsModel to update its current display unit. */
+void Obfs4ControlLabel::onMenuSelection(QAction* action)
+{
+    if (action) {
+        optionsModel->setStaking(action->data());
+    }
+}
+
+void Obfs4ControlLabel::solveCaptcha(bool atLeastEnable)
+{
+    CaptchaDialog dlg(this);
+    int code = dlg.exec();
+    if (code == QDialog::Accepted) {
+        const QStringList& bridges = dlg.getBridges();
+        if (bridges.size() > 0) {
+            QByteArray torrcWithoutBridges;
+            bool differentBridges = bridges != GUIUtil::retrieveBridgesFromTorrc(torrcWithoutBridges);
+            if (differentBridges || atLeastEnable) {
+                // save the bridges and ask to restart
+                UpdateConfigFileKeyBool("obfs4", true);
+                if (differentBridges)
+                    GUIUtil::saveBridges2Torrc(torrcWithoutBridges, bridges);
+                requestRestart();
+            } else {
+                // torproject is still returning the same bridges
+                QMessageBox::warning(this, windowTitle(), tr("Tor has returned the same bridges yet, please wait more time, before changing the bridges."),
+                    QMessageBox::Ok, QMessageBox::Ok);
+            }
+        }
+    }
+}
+
+void Obfs4ControlLabel::enablingObfs4()
+{
+    // if we have bridges in the torrc file and are the same, it is still ok
+    // to just enable obfs4 in the config file
+    solveCaptcha(true);
+}
+
+void Obfs4ControlLabel::disablingObfs4()
+{    
+    UpdateConfigFileKeyBool("obfs4", false);
+    requestRestart();
+}
+
+void Obfs4ControlLabel::retrievingBridges()
+{
+    // the bridges needs to be the same
+    solveCaptcha(false);
 }

@@ -671,6 +671,12 @@ CBlockIndex* FindForkInGlobalIndex(const CChain& chain, const CBlockLocator& loc
 CCoinsViewCache* pcoinsTip = NULL;
 CBlockTreeDB* pblocktree = NULL;
 
+
+static const int32_t GetCurrentTransactionVersion()
+{
+    return UseLegacyCode() ? 1 : 2;
+}
+
 //////////////////////////////////////////////////////////////////////////////
 //
 // mapOrphanTransactions
@@ -3513,11 +3519,6 @@ bool UseLegacyCode(int nHeight)
 bool UseLegacyCode()
 {
     return chainActive.Tip()->nHeight < Params().HeightToFork();
-}
-
-static const int32_t GetCurrentTransactionVersion()
-{
-    return UseLegacyCode() ? 1 : 2;
 }
 
 /** Update chainActive and related internal data structures. */

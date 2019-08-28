@@ -57,12 +57,14 @@ public:
     /** Updates current unit in memory, settings and emits displayUnitChanged(newUnit) signal */
     void setDisplayUnit(const QVariant& value);
     void setStaking(const QVariant& value);
+    void setObfs4(const QVariant& value);
 
     /* Explicit getters */
     bool getMinimizeToTray() { return fMinimizeToTray; }
     bool getMinimizeOnClose() { return fMinimizeOnClose; }
     int getDisplayUnit() { return nDisplayUnit; }
     bool getStaking() {return fStaking;}
+    bool getObfs4() {return fObfs4;}
     QString getThirdPartyTxUrls() { return strThirdPartyTxUrls; }
     bool getProxySettings(QNetworkProxy& proxy) const;
     bool getCoinControlFeatures() { return fCoinControlFeatures; }
@@ -80,6 +82,7 @@ private:
     QString language;
     int nDisplayUnit;
     bool fStaking;
+    bool fObfs4;
     QString strThirdPartyTxUrls;
     bool fCoinControlFeatures;
     bool fHideZeroBalances;
@@ -92,6 +95,7 @@ private:
 signals:
     void displayUnitChanged(int unit);
     void displayStakingIconChanged(bool);
+    void displayObfs4IconChanged(bool);
     void coinControlFeaturesChanged(bool);
     void hideZeroBalancesChanged(bool);
 };

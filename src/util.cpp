@@ -19,6 +19,7 @@
 #include "utilstrencodings.h"
 #include "utiltime.h"
 
+#include <regex>
 #include <stdarg.h>
 
 #include <openssl/bio.h>
@@ -464,8 +465,7 @@ boost::filesystem::path GetConfigFile()
     return pathConfigFile;
 }
 
-void ReadConfigFile(map<string, string>& mapSettingsRet,
-    map<string, vector<string> >& mapMultiSettingsRet)
+void ReadConfigFile(map<string, string>& mapSettingsRet, map<string, vector<string> >& mapMultiSettingsRet)
 {
     boost::filesystem::ifstream streamConfig(GetConfigFile());
     if (!streamConfig.good()) {
@@ -490,6 +490,90 @@ void ReadConfigFile(map<string, string>& mapSettingsRet,
     }
     // If datadir is changed in .conf file:
     ClearDatadirCache();
+}
+
+/*
+  This function will update the kore.conf file with a new value for a key.
+  The value is a boolean value (0 or 1)
+*/
+void UpdateConfigFileKeyBool( const std::string key, bool value )
+{
+    bool currentValueFromConfig = GetBoolArg("-" + key, false);
+    std::string stringValue = (value ? "1" : "0");
+    mapArgs["-" + key] = stringValue;
+
+    std::string strReplace = strprintf(key+"=%s", (currentValueFromConfig ? "1" : "0"));
+    std::string strNew = strprintf(key+"=%s", stringValue);
+
+
+    boost::filesystem::ifstream streamConfig(GetConfigFile());
+    boost::filesystem::path pathConfig = GetConfigFile();
+    if(!streamConfig || !boost::filesystem::exists(pathConfig))
+        LogPrintf("Error opening files!");
+
+    std::set<string> setOptions;
+    setOptions.insert("*");
+
+    std::ostringstream strTemp;
+
+    bool isKeyAlreadyinKoreConf = false;
+
+    // Reading the config file and looking for the key
+    for (boost::program_options::detail::config_file_iterator it(streamConfig, setOptions), end; it != end; ++it) {
+        std::string strKey = it->string_key;
+        std::string strValue = it->value[0];
+        if (strKey == key) {
+            // Found the key we are looking, Let's put the new value
+            strTemp << strKey << "=" << stringValue << std::endl;
+            isKeyAlreadyinKoreConf = true;
+        } else {
+            // it is not the key we are looking, so lets keep the way it is
+            strTemp << strKey << "=" << strValue << std::endl;
+        }
+    }
+    if (!isKeyAlreadyinKoreConf) {
+        // the key is not in the file yet, so lets add it
+        strTemp << strNew << std::endl;
+    }
+
+    // lets save the new config file.
+    std::ofstream newKoreConfig;
+    newKoreConfig.open(pathConfig.string().c_str(),fstream::out);
+
+    newKoreConfig << strTemp.str();
+
+    newKoreConfig.flush();
+}
+
+void CreateTorrcFile(boost::filesystem::path & torDir)
+{
+    boost::filesystem::path torFilePath = torDir / "torrc";
+    boost::filesystem::ifstream streamConfig(torFilePath);
+    if (!streamConfig.good()) {
+        TryCreateDirectory(torDir);
+        // lets create the torrc file
+        FILE* torrcFile = fopen(torFilePath.string().c_str(), "a");
+        if (torrcFile != NULL) {
+            // initialize the torrc file
+            fclose(torrcFile);
+        }
+    }
+}
+
+bool CheckTorHasBridges(boost::filesystem::path torrcFilePath)
+{
+    boost::filesystem::ifstream torrcFile(torrcFilePath);
+    bool found = false;
+    if (torrcFile.is_open()) {
+        std::cmatch m;         
+        string line;
+        while (getline(torrcFile, line) && !found) {
+            found = std::regex_match ( line.c_str(), m, std::regex("(bridge obfs4 .+)") );            
+        }
+        torrcFile.close();
+    }
+
+    return found;
 }
 
 #ifndef WIN32

@@ -24,6 +24,32 @@ make install # optional
 
 This will build kore-qt as well if the dependencies are met.
 
+To create a Debian Installer (.deb).
+------------------------------------
+
+Before creating the installer, make sure you have the following requirements and make sure that the project has been compiled:
+
+- Linux 16.04 or higher.
+- Go 1.11.0 or later.
+
+Install the dependencies:
+
+```
+sudo apt-get install -y devscripts debhelper
+```
+
+Run the command:
+
+```
+make deploy
+```
+
+Get the installer from the directory:
+
+```
+expresskore/share/
+```
+
 Dependencies
 ---------------------
 

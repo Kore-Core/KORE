@@ -131,7 +131,7 @@ UniValue setstaking(const UniValue& params, bool fHelp)
     
     strprintf("Staking = %s", fStaking);
     
-    updateStaking2KoreConf(fStaking);
+    UpdateConfigFileKeyBool("staking", fStaking);
 
     StakingCoins(fStaking);
 

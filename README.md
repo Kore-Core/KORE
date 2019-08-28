@@ -51,6 +51,7 @@ sudo apt-get install -y software-properties-common
 sudo apt-get install -y autotools-dev autoconf automake build-essential
 sudo apt-get install -y qttools5-dev-tools qttools5-dev libprotobuf-dev libqrencode-dev
 sudo apt-get install -y libtool pkg-config protobuf-compiler python3
+sudo apt-get install -y devscripts debhelper
 
 
 ```
@@ -67,9 +68,42 @@ make
 ```bash
 cd ..
 ./autogen.sh
-./configure --with-gui=qt5 --prefix=$(pwd)/depends/x86_64-pc-linux-gnu
+./configure --with-gui=qt5 --prefix=`pwd`/depends/x86_64-pc-linux-gnu --disable-tests  --enable-tor-browser
 
 make
 ```
 
+### Generating the installer (.deb)
+#### First, Download Go
+```bash
+From a web browser open and save the following link: 
+  https://golang.org/doc/install?download=go1.12.7.linux-amd64.tar.gz
+```
+
+#### Second, Install Go
+```bash
+cd ~/Downloads
+sudo tar -C /usr/local -xzf go1.12.7.linux-amd64.tar.gz
+```
+
+#### Third, make Go available 
+```bash
+in a terminal make go available, with the following command:
+export PATH=$PATH:/usr/local/go/bin
+```
+
+#### Fourth, generate the (.deb)
+```bash
+from the kore root directory, give the command:
+make deploy
+```
+
+### Installing kore (.deb)
+```bash
+  The installer is generated in the share folder, so in order to install it, give the following command: 
+  cd <kore-dir>/share
+  sudo apt install ./kore_<version>_amd64.deb
+  * <kore-dir> is the directory where you download the kore git repository
+  * <version> is this source code version
+```
 

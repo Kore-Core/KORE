@@ -80,7 +80,7 @@ public:
     typedef BIP9Deployment vDeployments_type[MAX_VERSION_BITS_DEPLOYMENTS];
 
     const std::vector<unsigned char>&      AlertKey() const                    { return vAlertPubKey; }
-    const int32_t                          HeightToFork() const                { return nHeightToFork; };
+    int32_t                                HeightToFork() const                { return nHeightToFork; };
     const uint256&                         HashGenesisBlock() const            { return nHashGenesisBlock; }
     const MessageStartChars&               MessageStart() const                { return pchMessageStart; }
     const uint256&                         ProofOfWorkLimit() const            { return bnProofOfWorkLimit; }

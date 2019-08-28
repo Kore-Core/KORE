@@ -14,9 +14,23 @@ pkgconfig_DATA = libbitcoinconsensus.pc
 endif
 
 BITCOIND_BIN=$(top_builddir)/src/$(BITCOIN_DAEMON_NAME)$(EXEEXT)
+DEPLOY_BITCOIND_BIN=$(top_builddir)/release/$(BITCOIN_DAEMON_NAME)$(EXEEXT)
 BITCOIN_QT_BIN=$(top_builddir)/src/qt/$(BITCOIN_GUI_NAME)$(EXEEXT)
+DEPLOYBITCOIN_QT_BIN=$(top_builddir)/release/$(BITCOIN_GUI_NAME)$(EXEEXT)
 BITCOIN_CLI_BIN=$(top_builddir)/src/$(BITCOIN_CLI_NAME)$(EXEEXT)
+DEPLOY_BITCOIN_CLI_BIN=$(top_builddir)/release/$(BITCOIN_CLI_NAME)$(EXEEXT)
+OBFS4PROXY_BIN=$(top_builddir)/src/obfs4/obfs4proxy/obfs4proxy$(EXEEXT)
+DEPLOY_OBFS4PROXY_BIN=$(top_builddir)/release/obfs4proxy$(EXEEXT)
 BITCOIN_WIN_INSTALLER=$(PACKAGE)-$(PACKAGE_VERSION)-win$(WINDOWS_BITS)-setup$(EXEEXT)
+BITCOIN_LINUX_INSTALLER=kore-installer
+TOR_BROWSER_VERSION=8.5.4
+TOR_BROWSER_LINUX_DOWNLOAD=https://www.torproject.org/dist/torbrowser/$(TOR_BROWSER_VERSION)/tor-browser-linux64-$(TOR_BROWSER_VERSION)_en-US.tar.xz
+TOR_BROWSER_WINDOWS_DOWNLOAD=https://www.torproject.org/dist/torbrowser/$(TOR_BROWSER_VERSION)/torbrowser-install-win64-$(TOR_BROWSER_VERSION)_en-US.exe
+TOR_BROWSER_MAC_DOWNLOAD=https://www.torproject.org/dist/torbrowser/$(TOR_BROWSER_VERSION)/TorBrowser-$(TOR_BROWSER_VERSION)-osx64_en-US.dmg
+DEPLOY_TOR_BROWSER_WINDOWS=$(top_builddir)/release/torbrowser-setup.exe
+DEPLOY_TOR_BROWSER_LINUX=$(top_builddir)/release/torbrowser-setup.tar.xz
+BUILD_LINUX_DIR=$(top_builddir)/share/debian
+BUILD_LINUX_INSTALLER=$(BUILD_LINUX_DIR)/build.sh
 
 empty :=
 space := $(empty) $(empty)
@@ -66,13 +80,29 @@ distcleancheck:
 	@:
 
 $(BITCOIN_WIN_INSTALLER): all-recursive
+	cd ./src/obfs4/; GOOS=windows GOARCH=amd64 go build -o obfs4proxy/obfs4proxy.exe ./obfs4proxy; cd ../../
 	$(MKDIR_P) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIND_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_QT_BIN) $(top_builddir)/release
-	STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_CLI_BIN) $(top_builddir)/release
+	rm $(DEPLOY_BITCOIND_BIN); STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIND_BIN) $(top_builddir)/release
+	rm $(DEPLOYBITCOIN_QT_BIN); STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_QT_BIN) $(top_builddir)/release
+	rm $(DEPLOY_BITCOIN_CLI_BIN); STRIPPROG="$(STRIP)" $(INSTALL_STRIP_PROGRAM) $(BITCOIN_CLI_BIN) $(top_builddir)/release
+	rm $(DEPLOY_OBFS4PROXY_BIN); cp $(OBFS4PROXY_BIN) $(DEPLOY_OBFS4PROXY_BIN)
+	$(top_builddir)/share/tor-browser-conf/moz-byteshift.py -i="$(top_builddir)/share/tor-browser-conf/mozilla.txt" -o="$(top_builddir)/share/tor-browser-conf/mozilla.cfg"
+	@test -f $(DEPLOY_TOR_BROWSER_WINDOWS) || wget -O $(DEPLOY_TOR_BROWSER_WINDOWS) --show-progress $(TOR_BROWSER_WINDOWS_DOWNLOAD)
 	@test -f $(MAKENSIS) && $(MAKENSIS) -V2 $(top_builddir)/share/setup.nsi || \
 	  echo error: could not build $@
 	@echo built $@
+
+$(BITCOIN_LINUX_INSTALLER):
+	cd ./src/obfs4/; go build -o obfs4proxy/obfs4proxy ./obfs4proxy; cd ../../
+	$(MKDIR_P) $(top_builddir)/release
+	rm $(DEPLOY_BITCOIND_BIN); strip -s $(BITCOIND_BIN)  -o $(DEPLOY_BITCOIND_BIN)
+	rm $(DEPLOYBITCOIN_QT_BIN); strip -s $(BITCOIN_QT_BIN)  -o $(DEPLOYBITCOIN_QT_BIN)
+	rm $(DEPLOY_BITCOIN_CLI_BIN); strip -s $(BITCOIN_CLI_BIN) -o $(DEPLOY_BITCOIN_CLI_BIN)
+	rm $(DEPLOY_OBFS4PROXY_BIN); strip -s $(OBFS4PROXY_BIN) -o $(DEPLOY_OBFS4PROXY_BIN)
+	$(top_builddir)/share/tor-browser-conf/moz-byteshift.py -i="$(top_builddir)/share/tor-browser-conf/mozilla.txt" -o="$(top_builddir)/share/tor-browser-conf/mozilla.cfg"
+	@test -f $(DEPLOY_TOR_BROWSER_LINUX) || wget -O $(DEPLOY_TOR_BROWSER_LINUX) --show-progress $(TOR_BROWSER_LINUX_DOWNLOAD)
+	cp $(top_builddir)/changelog $(BUILD_LINUX_DIR)/debian
+	cd $(BUILD_LINUX_DIR); debuild -us -uc
 
 $(OSX_APP)/Contents/PkgInfo:
 	$(MKDIR_P) $(@D)
@@ -154,6 +184,10 @@ if TARGET_WINDOWS
 deploy: $(BITCOIN_WIN_INSTALLER)
 endif
 
+if TARGET_LINUX
+deploy: $(BITCOIN_LINUX_INSTALLER)
+endif
+
 $(BITCOIN_QT_BIN): FORCE
 	$(MAKE) -C src qt/$(@F)
 
@@ -221,7 +255,7 @@ dist_noinst_SCRIPTS = autogen.sh
 
 EXTRA_DIST = $(top_srcdir)/share/genbuild.sh qa/pull-tester/rpc-tests.sh qa/pull-tester/run-bitcoin-cli qa/rpc-tests $(DIST_DOCS) $(WINDOWS_PACKAGING) $(OSX_PACKAGING)
 
-CLEANFILES = $(OSX_DMG) $(BITCOIN_WIN_INSTALLER)
+CLEANFILES = $(OSX_DMG) $(BITCOIN_WIN_INSTALLER) $(BITCOIN_LINUX_INSTALLER)
 
 .INTERMEDIATE: $(COVERAGE_INFO)
 

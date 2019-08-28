@@ -47,6 +47,7 @@
 #include <QApplication>
 #include <QClipboard>
 #include <QDateTime>
+#include <QDebug>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QDoubleValidator>
@@ -55,6 +56,7 @@
 #include <QLineEdit>
 #include <QSettings>
 #include <QTextDocument> // for Qt::mightBeRichText
+#include <QTextStream>
 #include <QThread>
 
 #if QT_VERSION < 0x050000
@@ -78,6 +80,8 @@ extern double NSAppKitVersionNumber;
 #endif
 
 #define URI_SCHEME "kore"
+
+namespace fs = boost::filesystem;
 
 namespace GUIUtil
 {
@@ -213,6 +217,60 @@ QString formatBitcoinURI(const SendCoinsRecipient& info)
     }
 
     return ret;
+}
+
+QStringList retrieveBridgesFromTorrc(QByteArray & torrcWithoutBridges)
+{
+    QStringList bridges;
+    fs::path torrcPath = GetDataDir() / "tor" /  "torrc";
+    QFile torrc(torrcPath.string().c_str());
+
+    if (torrc.open(QIODevice::ReadOnly))
+    {
+        QTextStream in(&torrc);
+        QString line;
+        QRegExp bridgeExp("(bridge obfs4 .+)");
+
+        while (!in.atEnd()) {
+            line = in.readLine();
+            if (bridgeExp.exactMatch(line)) {
+                // it is a bridge
+                bridges.push_back(line);
+            } else {
+                // save file without the bridges
+                torrcWithoutBridges.push_back(line.toUtf8() + "\n");
+            }
+        }
+        torrc.close();
+    }
+
+    return bridges;
+}
+
+void saveBridges2Torrc(const QByteArray & torrcWithoutBridges, const QStringList & newObfs4Bridges)
+{
+    fs::path torrcPath = GetDataDir() / "tor" /  "torrc";
+    QString torrcPathStr(torrcPath.string().c_str());
+
+    // Rename the torrc if it exists
+    if (QFile::exists(torrcPathStr))
+    {
+        char timestamp[20] = "";
+        int64_t now = GetTime();
+        strftime (timestamp, 20,"%Y-%m-%d-%H:%M:%S", localtime(&now));
+        QString newTorrcFileName = torrcPathStr + QString(timestamp);
+        QFile::rename(torrcPathStr, newTorrcFileName);
+    }
+
+    QFile torrc(torrcPathStr);
+
+    if (torrc.open(QFile::WriteOnly | QFile::Truncate))
+    {
+        QTextStream out(&torrc);
+        out << torrcWithoutBridges;
+        out << newObfs4Bridges.join("\n").toUtf8().data();
+        torrc.close();
+    } 
 }
 
 bool isDust(const QString& address, const CAmount& amount)

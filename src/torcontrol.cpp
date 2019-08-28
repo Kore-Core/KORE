@@ -30,7 +30,7 @@
 #include <event2/thread.h>
 
 /** Default control port */
-const std::string DEFAULT_TOR_CONTROL = "127.0.0.1:9978";
+const std::string DEFAULT_TOR_CONTROL = "127.0.0.1:" + std::to_string(TOR_CONTROL_PORT);
 /** Tor cookie size (from control-spec.txt) */
 static const int TOR_COOKIE_SIZE = 32;
 /** Size of client/server nonce for SAFECOOKIE */
@@ -525,7 +525,7 @@ void TorController::auth_cb(TorControlConnection& _conn, const TorControlReply& 
 
         // Now that we know Tor is running setup the proxy for onion addresses
         // if -onion isn't set to something else.
-        CService resolved(LookupNumeric("127.0.0.1", 9979));
+        CService resolved(LookupNumeric("127.0.0.1", TOR_SOCKS_PORT));
         proxyType addrOnion = proxyType(resolved, true);
         SetProxy(NET_TOR, addrOnion);
         SetLimited(NET_TOR, false);

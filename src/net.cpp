@@ -24,6 +24,7 @@
 
 #ifdef WIN32
 #include <string.h>
+#include <windows.h>    //GetModuleFileNameW
 #else
 #include <fcntl.h>
 #endif
@@ -38,6 +39,7 @@
 #include <boost/filesystem.hpp>
 #include <boost/thread.hpp>
 #include <chrono>
+#include <regex>
 #include <sys/stat.h>
 #include <thread>
 
@@ -1170,8 +1172,11 @@ void ThreadSocketHandler()
 
 // hidden service seeds
 static const char* strMainNetOnionSeed[][1] = {
-    {"mp2a5yjqtz4eh23s.onion"},
-    {"qlnfmbykjv66j4qv.onion"},
+    // {"mp2a5yjqtz4eh23s.onion"}, MAINET
+    // {"qlnfmbykjv66j4qv.onion"}, MAINET
+    {"zf52xt67uhkqz4br.onion"},
+    {"vtb6j42hxpnw6oun.onion"},
+    {"2sxihybnmhpdcamu.onion"},
     {NULL} // last element => couldn't use size ?
 };
 
@@ -1296,11 +1301,8 @@ static char* convert_arg(const std::string& arg)
     return r;
 }
 
-void TorThread()
+std::string GetObfs4TransportPlugin(fs::path &tor_directory)
 {
-    fs::path tor_directory = GetDataDir() / "tor";
-    fs::path tor_log = GetDataDir() / "tor.log";
-    boost::optional<std::string> clientTransportPlugin;
     struct stat sb;
     /*
     TOR - OBFS4
@@ -1318,20 +1320,39 @@ void TorThread()
 
     */
 
-    bool obfs4 = GetBoolArg("-obfs4proxy", false);
+    std::string clientTransportPlugin = "";
+    bool obfs4 = GetBoolArg("-obfs4", false);
     if (obfs4) {
 #ifdef WIN32
         if (stat("obfs4proxy.exe", &sb) == 0 && sb.st_mode & S_IXUSR) {
-            clientTransportPlugin = "obfs4 exec obfs4proxy.exe";
+            char obfs4proxyPath[MAX_PATH] = {0};
+            GetModuleFileNameA(NULL, obfs4proxyPath, MAX_PATH);
+            // need to remove the program name and change to obfs4proxy, because they are in the same directory.
+            string obfs4Str(obfs4proxyPath);
+            string directory;
+            const size_t last_slash_idx = obfs4Str.rfind('\\');
+            directory = obfs4Str.substr(0, last_slash_idx);
+            clientTransportPlugin = "obfs4 exec " + directory + "\\" + "obfs4proxy.exe" +  " -enableLogging=true -logLevel DEBUG managed";
+            LogPrintf("Transport Plug obfs4: %s \n", directory + "\\" + "obfs4proxy");
         }
 #else
-        if ((stat("obfs4proxy", &sb) == 0 && sb.st_mode & S_IXUSR) || !std::system("which obfs4proxy")) {
-            LogPrintf("Attention Attention, please list your bridges !");
-            LogPrintf("Using external obfs4proxy as ClientTransportPlugin.\nSpecify bridges in %s\n", tor_directory);
-            clientTransportPlugin = "obfs4 exec /usr/bin/obfs4proxy -enableLogging=true -logLevel DEBUG managed";
+        if ((stat("/usr/local/share/kore/obfs4proxy", &sb) == 0 && sb.st_mode & S_IXUSR) || !std::system("which obfs4proxy")) {
+            LogPrintf("Attention Attention!!! \n Using external obfs4proxy as ClientTransportPlugin.\nSpecify bridges in %s\n", tor_directory);
+            clientTransportPlugin = "obfs4 exec /usr/local/share/kore/obfs4proxy -enableLogging=true -logLevel DEBUG managed";
+        } else {
+            LogPrintf("Attention Attention, Couldn't find obfs4proxy plugin \n");
+            LogPrintf("Please check your installation. \n");
         }
 #endif
     }
+    return clientTransportPlugin;
+}
+
+void TorThread()
+{
+    fs::path tor_directory = GetDataDir() / "tor";
+    fs::path tor_log = GetDataDir() / "tor.log";
+    std::string clientTransportPlugin = GetObfs4TransportPlugin(tor_directory);
 
     // set up command line arguments for tor
     std::vector<std::string> tor_args;
@@ -1339,17 +1360,19 @@ void TorThread()
     tor_args.push_back("--Log");
     tor_args.push_back("notice file " + tor_log.string());
     tor_args.push_back("--SocksPort");
-    tor_args.push_back(std::to_string(9979));
+    tor_args.push_back(std::to_string(TOR_SOCKS_PORT));
     tor_args.push_back("--ControlPort");
-    tor_args.push_back("9978");
+    tor_args.push_back(std::to_string(TOR_CONTROL_PORT));
     tor_args.push_back("--CookieAuthentication");
     tor_args.push_back("1");
+    tor_args.push_back("--CookieAuthFile");
+    tor_args.push_back((tor_directory / "control_auth_cookie").string());
     tor_args.push_back("--GeoIPFile");
     tor_args.push_back((tor_directory / "geoip").string());
     tor_args.push_back("--GeoIPv6File");
     tor_args.push_back((tor_directory / "geoip6").string());
     tor_args.push_back("--HiddenServiceDir");
-    tor_args.push_back((GetDataDir() / "onion").string());
+    tor_args.push_back((tor_directory / "onion").string());
     tor_args.push_back("--HiddenServicePort");
     tor_args.push_back(std::to_string(Params().GetDefaultPort()));
     tor_args.push_back("-f");
@@ -1358,29 +1381,41 @@ void TorThread()
     tor_args.push_back(tor_directory.string());
     tor_args.push_back("--ignore-missing-torrc");
 
-    if (clientTransportPlugin) {
+    if (!clientTransportPlugin.empty()) {
         LogPrintf("Using external obfs4proxy as ClientTransportPlugin.\nSpecify bridges in %s\n", tor_directory);
         tor_args.push_back("--ClientTransportPlugin");
-        tor_args.push_back(*clientTransportPlugin);
+        tor_args.push_back(clientTransportPlugin);
         tor_args.push_back("--UseBridges");
         tor_args.push_back("1");
     }
 
-
     // set up args in memory and call tor_main()
     std::vector<char*> argv;
     std::transform(tor_args.begin(), tor_args.end(), std::back_inserter(argv), convert_arg);
+   
     tor_main(argv.size(), &argv[0]);
 }
 
 static boost::thread* tor_thread = nullptr;
 
-extern const char tor_git_revision[] = "";
-
-void StartTor()
+bool StartTor()
 {
     assert(!tor_thread);
-    tor_thread = new boost::thread(boost::bind(&TraceThread<void (*)()>, "tor", &TorThread));
+    fs::path tor_directory = GetDataDir() / "tor";
+    CreateTorrcFile(tor_directory);
+    // if we are going to start with obfs4 plugin, than we need to make sure we have the bridges in the torrc file
+    // lets check if the kore.conf is configure with obfs4
+    bool isObfs4 = GetBoolArg("-obfs4", false);
+    bool hasBridgesConfiguredTorrc = CheckTorHasBridges(tor_directory / "torrc");
+    bool hasObfs4Plugin = !GetObfs4TransportPlugin(tor_directory).empty() ;
+    // Can only start tor with obfs4 if we have bridges configured, otherwise return error.
+    bool canStartTor = isObfs4 && hasObfs4Plugin && hasBridgesConfiguredTorrc || !isObfs4;
+
+    if (canStartTor)
+    {
+        tor_thread = new boost::thread(boost::bind(&TraceThread<void (*)()>, "tor", &TorThread));  
+    } 
+    return canStartTor;
 }
 
 void InterruptTor()
@@ -2068,6 +2103,25 @@ void RelayInv(CInv& inv)
         if (pnode->nVersion >= ActiveProtocol())
             pnode->PushInventory(inv);
     }
+}
+
+
+void CNode::SetClientVersion()
+{
+    // "/KORE Core:0.13.1/"
+    const regex r("/KORE Core:([0-9]+).([0-9]+).([0-9]+)");
+    smatch sm;
+
+    uint32_t major = 0;
+    uint32_t minor = 0;
+    uint32_t revision = 0;
+
+    if (regex_search(cleanSubVer, sm, r) && sm.size() == 4) {
+        major = atoi(sm[1]) * 1000000;
+        minor = atoi(sm[2]) * 10000;
+        revision = atoi(sm[3]) * 100;
+    }
+    clientVersion = major + minor + revision;
 }
 
 void CNode::RecordBytesRecv(uint64_t bytes)

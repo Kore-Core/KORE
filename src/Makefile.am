@@ -3,8 +3,54 @@
 # file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 DIST_SUBDIRS = secp256k1 univalue
-TOR_LIBS=  -ltor -lor -lor-ctime -lor-crypto -lor-event -lor-trunnel \
-	-lcurve25519_donna -led25519_donna -led25519_ref10 -lkeccak-tiny
+
+TOR_UTIL_LIBS = \
+  -ltor-geoip \
+	-ltor-process \
+  -ltor-buf \
+  -ltor-pubsub \
+	-ltor-dispatch \
+	-ltor-time \
+	-ltor-fs \
+	-ltor-encoding \
+	-ltor-sandbox \
+	-ltor-container \
+	-ltor-net \
+	-ltor-thread \
+	-ltor-memarea \
+	-ltor-math \
+	-ltor-meminfo \
+	-ltor-osinfo \
+	-ltor-log \
+	-ltor-lock \
+	-ltor-fdio \
+	-ltor-string \
+	-ltor-term \
+	-ltor-smartlist-core \
+	-ltor-malloc \
+	-ltor-wallclock \
+	-ltor-err \
+  -ltor-version \
+	-ltor-intmath \
+  -ltor-ctime
+
+TOR_CRYPTO_LIBS = \
+	-ltor-tls \
+	-ltor-crypt-ops \
+	-lkeccak-tiny \
+	-lcurve25519_donna \
+  -led25519_ref10 \
+  -led25519_donna  
+
+
+TOR_LIBS = \
+  -ltor-app \
+	-ltor-compress \
+	-ltor-evloop \
+	$(TOR_CRYPTO_LIBS) \
+	$(TOR_UTIL_LIBS) \
+	-lor-trunnel \
+	-ltor-trace
 
 LIBS+= -lssl -lcrypto
 
@@ -345,11 +391,17 @@ libbitcoin_common_a_SOURCES = \
   script/script_error.cpp \
   $(BITCOIN_CORE_H)
 
+if ENABLE_TOR_BROWSER
+TOR_BROWSER_FLAGS = -DENABLE_TOR_BROWSER
+else
+TOR_BROWSER_FLAGS =
+endif
+
 # util: shared between all executables.
 # This library *must* be included to make sure that the glibc
 # backward-compatibility objects and their sanity checks are linked.
-libbitcoin_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES)
-libbitcoin_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS)
+libbitcoin_util_a_CPPFLAGS = $(AM_CPPFLAGS) $(BITCOIN_INCLUDES) $(TOR_BROWSER_FLAGS)
+libbitcoin_util_a_CXXFLAGS = $(AM_CXXFLAGS) $(PIE_FLAGS) $(TOR_BROWSER_FLAGS)
 libbitcoin_util_a_SOURCES = \
   allocators.cpp \
   compat/strnlen.cpp \

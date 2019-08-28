@@ -1,3 +1,5 @@
+!include "MUI2.nsh"
+
 Name "@PACKAGE_NAME@ (@WINDOWS_BITS@-bit)"
 
 RequestExecutionLevel highest
@@ -21,12 +23,13 @@ SetCompressor /SOLID lzma
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER "@PACKAGE_NAME@"
 !define MUI_FINISHPAGE_RUN $INSTDIR\@BITCOIN_GUI_NAME@@EXEEXT@
-!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
+!define MUI_UNICON "@abs_top_srcdir@/share/pixmaps/bitcoin.ico"
 !define MUI_UNWELCOMEFINISHPAGE_BITMAP "@abs_top_srcdir@/share/pixmaps/nsis-wizard.bmp"
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
 
 # Included files
 !include Sections.nsh
+!include LogicLib.nsh
 !include MUI2.nsh
 !if "@WINDOWS_BITS@" == "64"
 !include x64.nsh
@@ -37,23 +40,20 @@ Var StartMenuGroup
 
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_DIRECTORY
+#!insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_STARTMENU Application $StartMenuGroup
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
-!insertmacro MUI_UNPAGE_CONFIRM
+#!insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 
 # Installer languages
 !insertmacro MUI_LANGUAGE English
 
 # Installer attributes
-OutFile @abs_top_srcdir@/@PACKAGE_TARNAME@-${VERSION}-win@WINDOWS_BITS@-setup.exe
-!if "@WINDOWS_BITS@" == "64"
-InstallDir $PROGRAMFILES64\Kore
-!else
-InstallDir $PROGRAMFILES\Kore
-!endif
+OutFile @abs_top_srcdir@/share/@PACKAGE_TARNAME@-${VERSION}-win@WINDOWS_BITS@-setup.exe
+InstallDir $PROFILE\AppData\Local\Kore
+
 CRCCheck on
 XPStyle on
 BrandingText " "
@@ -74,8 +74,20 @@ Section -Main SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
     File @abs_top_srcdir@/release/@BITCOIN_GUI_NAME@@EXEEXT@
+    File @abs_top_srcdir@/release/obfs4proxy.exe
+    File @abs_top_srcdir@/share/pixmaps/bitcoin.ico
     File /oname=COPYING.txt @abs_top_srcdir@/COPYING
     File /oname=readme.txt @abs_top_srcdir@/doc/README_windows.txt
+    File @abs_top_srcdir@/release/torbrowser-setup.exe
+    ExecWait '"$INSTDIR\torbrowser-setup.exe" /S /D=$INSTDIR'
+    Delete /REBOOTOK $INSTDIR\torbrowser-setup.exe
+    Delete /REBOOTOK "$INSTDIR\Start Tor Browser.lnk"
+    SetOutPath $INSTDIR\Browser
+    File @abs_top_srcdir@/share/tor-browser-conf/mozilla.cfg
+    SetOutPath $INSTDIR\Browser\defaults\pref
+    File @abs_top_srcdir@/share/tor-browser-conf/local-settings.js
+    SetOutPath $INSTDIR\Browser\TorBrowser\Data\Browser\profile.default
+    File @abs_top_srcdir@/share/tor-browser-conf/user.js
     SetOutPath $INSTDIR\daemon
     File @abs_top_srcdir@/release/@BITCOIN_DAEMON_NAME@@EXEEXT@
     File @abs_top_srcdir@/release/@BITCOIN_CLI_NAME@@EXEEXT@
@@ -89,6 +101,7 @@ Section -post SEC0001
     WriteRegStr HKCU "${REGKEY}" Path $INSTDIR
     SetOutPath $INSTDIR
     WriteUninstaller $INSTDIR\uninstall.exe
+    CreateShortcut "$DESKTOP\$(^Name).lnk" $INSTDIR\@BITCOIN_GUI_NAME@@EXEEXT@
     !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     CreateDirectory $SMPROGRAMS\$StartMenuGroup
     CreateShortcut "$SMPROGRAMS\$StartMenuGroup\$(^Name).lnk" $INSTDIR\@BITCOIN_GUI_NAME@@EXEEXT@
@@ -99,7 +112,7 @@ Section -post SEC0001
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayVersion "${VERSION}"
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" Publisher "${COMPANY}"
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" URLInfoAbout "${URL}"
-    WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayIcon $INSTDIR\uninstall.exe
+    WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" DisplayIcon $INSTDIR\kore.ico
     WriteRegStr HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" UninstallString $INSTDIR\uninstall.exe
     WriteRegDWORD HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoModify 1
     WriteRegDWORD HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)" NoRepair 1
@@ -125,15 +138,21 @@ done${UNSECTION_ID}:
 # Uninstaller sections
 Section /o -un.Main UNSEC0000
     Delete /REBOOTOK $INSTDIR\@BITCOIN_GUI_NAME@@EXEEXT@
+    Delete /REBOOTOK $INSTDIR\obfs4proxy.exe
+    Delete /REBOOTOK $INSTDIR\kore.ico
     Delete /REBOOTOK $INSTDIR\COPYING.txt
     Delete /REBOOTOK $INSTDIR\readme.txt
+    Delete /REBOOTOK $INSTDIR\setup.bat
     RMDir /r /REBOOTOK $INSTDIR\daemon
     RMDir /r /REBOOTOK $INSTDIR\doc
+    RMDir /r /REBOOTOK $INSTDIR\Browser
+    RMDir /r /REBOOTOK $INSTDIR
     DeleteRegValue HKCU "${REGKEY}\Components" Main
 SectionEnd
 
 Section -un.post UNSEC0001
     DeleteRegKey HKCU "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$(^Name)"
+    Delete /REBOOTOK "$DESKTOP\$(^Name).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\Uninstall $(^Name).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\$(^Name).lnk"
     Delete /REBOOTOK "$SMPROGRAMS\$StartMenuGroup\@PACKAGE_NAME@ (testnet, @WINDOWS_BITS@-bit).lnk"
@@ -158,15 +177,28 @@ SectionEnd
 # Installer functions
 Function .onInit
     InitPluginsDir
-!if "@WINDOWS_BITS@" == "64"
-    ${If} ${RunningX64}
-      ; disable registry redirection (enable access to 64-bit portion of registry)
-      SetRegView 64
-    ${Else}
-      MessageBox MB_OK|MB_ICONSTOP "Cannot install 64-bit version on a 32-bit system."
-      Abort
+    !if "@WINDOWS_BITS@" == "64"
+        ${If} ${RunningX64}
+        ; disable registry redirection (enable access to 64-bit portion of registry)
+        SetRegView 64
+        ${Else}
+        MessageBox MB_OK|MB_ICONSTOP "Cannot install 64-bit version on a 32-bit system."
+        Abort
+        ${EndIf}
+    !endif
+
+    ; Check to see if already installed
+    ${If} ${FileExists} "$INSTDIR\uninstall.exe"
+        MessageBox MB_OKCANCEL|MB_ICONQUESTION "Kore is already installed. Do you wish to continue?" /SD IDOK IDCANCEL cancel
+            ExecWait '"$INSTDIR\uninstall.exe" /S _=$INSTDIR'
+            Goto continue
+
+        cancel:
+            Abort
+
+        continue:
+            ; nothing
     ${EndIf}
-!endif
 FunctionEnd
 
 # Uninstaller functions

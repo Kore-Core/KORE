@@ -66,6 +66,9 @@ Q_IMPORT_PLUGIN(qtaccessiblewidgets)
 #if QT_VERSION < 0x050400
 Q_IMPORT_PLUGIN(AccessibleFactory)
 #endif
+#if defined(QT_JPEG_SUPPORT)
+Q_IMPORT_PLUGIN(QJpegPlugin);
+#endif
 #if defined(QT_QPA_PLATFORM_XCB)
 Q_IMPORT_PLUGIN(QXcbIntegrationPlugin);
 #elif defined(QT_QPA_PLATFORM_WINDOWS)
@@ -516,11 +519,11 @@ WId BitcoinApplication::getMainWinId() const
 #ifndef BITCOIN_QT_TEST
 int main(int argc, char* argv[])
 {
-    SetupEnvironment();
-
     /// 1. Parse command-line options. These take precedence over anything else.
     // Command-line options take precedence:
     ParseParameters(argc, argv);
+
+    SetupEnvironment();
 
 // Do not refer to data directory yet, this can be overridden by Intro::pickDataDirectory
 

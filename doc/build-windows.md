@@ -1,3 +1,4 @@
+
 WINDOWS BUILD NOTES
 ====================
 
@@ -124,6 +125,31 @@ Then build using:
     ./autogen.sh # not required when building from tarball
     CONFIG_SITE=$PWD/depends/i686-w64-mingw32/share/config.site ./configure --prefix=/
     make
+
+## Creating an installer for Windows
+
+Before creating the installer, make sure you have the following requirements and make sure that the project has been compiled:
+
+- Linux 18.04 or higher.
+- Go 1.11.0 or later.
+
+Install the dependencies:
+
+```
+sudo apt-get install nsis -y
+```
+
+Run the command:
+
+```
+make deploy
+```
+
+Get the installer from the directory:
+
+```
+expresskore/share/
+```
 
 ## Depends system
 

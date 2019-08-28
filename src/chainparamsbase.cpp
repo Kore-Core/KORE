@@ -83,7 +83,7 @@ void SelectBaseParams(CBaseChainParams::Network network)
 {
     switch (network) {
     case CBaseChainParams::MAIN:
-        pCurrentBaseParams = &mainParams;
+        pCurrentBaseParams = &testNetParams;
         break;
     case CBaseChainParams::TESTNET:
         pCurrentBaseParams = &testNetParams;
@@ -103,7 +103,6 @@ void SelectBaseParams(CBaseChainParams::Network network)
 CBaseChainParams::Network NetworkIdFromCommandLine()
 {
     bool fRegTest = GetBoolArg("-regtest", false);
-    // TODO change this when deliver for mainnet
     bool fTestNet = GetBoolArg("-testnet", false);
 
     if (fTestNet && fRegTest)

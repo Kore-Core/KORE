@@ -166,7 +166,7 @@ const char* GetOpName(opcodetype opcode)
 /**
  * Used for swap dump
  */
-const bool GetOpFromName(string str, opcodetype& opcode)
+bool GetOpFromName(string str, opcodetype& opcode)
 {
     if (str == "0") opcode = OP_0;
     else if (str == "OP_PUSHDATA1") opcode = OP_PUSHDATA1;

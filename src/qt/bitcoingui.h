@@ -19,10 +19,13 @@
 #include <QPoint>
 #include <QPushButton>
 #include <QSystemTrayIcon>
+#include <QProcess>
 
+class BitcoinGUI;
 class ClientModel;
 class NetworkStyle;
 class Notificator;
+class Obfs4ControlLabel;
 class OptionsModel;
 class BlockExplorer;
 class RPCConsole;
@@ -38,6 +41,7 @@ QT_BEGIN_NAMESPACE
 class QAction;
 class QProgressBar;
 class QProgressDialog;
+class QProcess;
 QT_END_NAMESPACE
 
 /**
@@ -84,6 +88,7 @@ private:
     WalletFrame* walletFrame;
 
     UnitDisplayStatusBarControl* unitDisplayControl;
+    Obfs4ControlLabel* labelObfs4Icon;
     StakingStatusBarControl* labelStakingIcon;
     QPushButton* labelEncryptionIcon;
     QPushButton* labelConnectionsIcon;
@@ -123,6 +128,11 @@ private:
     QAction* openConfEditorAction;
     QAction* showBackupsAction;
     QAction* openAction;
+//#ifdef ENABLE_TOR_BROWSER
+    QAction *browserAction;
+    QProcess *torBrowserProcess;
+    bool fIsTorBrowserRunning;
+//#endif
     QAction* openBlockExplorerAction;
     QAction* showHelpMessageAction;
     QAction* multiSendAction;
@@ -155,6 +165,10 @@ private:
     void subscribeToCoreSignals();
     /** Disconnect core signals from GUI client */
     void unsubscribeFromCoreSignals();
+
+    void SetupTorBrowserEnvironment();
+
+    void KillTorBrowserProcess();
 
 signals:
     /** Signal raised when a URI was entered or dragged to the GUI */
@@ -222,6 +236,10 @@ private slots:
     void openClicked();
 
 #endif // ENABLE_WALLET
+
+    void browserClicked();
+    void on_torBrowserProcessExit(int exitCode, QProcess::ExitStatus exitStatus);
+
     /** Show configuration dialog */
     void optionsClicked();
     /** Show about dialog */
@@ -274,12 +292,14 @@ private slots:
     void onMenuSelection(QAction* action);
 };
 
+
 class StakingStatusBarControl : public QLabel
 {
     Q_OBJECT
 
 public:
   explicit StakingStatusBarControl();
+  ~StakingStatusBarControl() {};
   void setOptionsModel(OptionsModel* optionsModel);
 protected:
     /** So that it responds to left-button clicks */
@@ -307,6 +327,54 @@ private slots:
     
 public slots:
     void checkStakingTimer();
+
+};
+
+class Obfs4ControlLabel : public QLabel
+{
+    Q_OBJECT
+
+public:
+  explicit Obfs4ControlLabel();
+  void setOptionsModel(OptionsModel* optionsModel);
+protected:
+    /** So that it responds to left-button clicks */
+    void mousePressEvent(QMouseEvent* event);
+
+private:
+    OptionsModel* optionsModel;
+    QMenu* menu;
+    QAction* enableStaking;
+    QAction* disableStaking;
+    QAction* retrieveBridges;
+
+
+    /** Shows context menu with Display Unit options by the mouse coordinates */
+    void onObfs4IconClicked(const QPoint& point);
+    /** Creates context menu, its actions, and wires up all the relevant signals for mouse events. */
+    void createContextMenu();
+
+    void updateStakingIcon(bool staking, bool action);
+
+    void setActiveIcon();
+    void setInactiveIcon();
+    void requestRestart();
+    void solveCaptcha(bool atLeastEnable);
+
+signals:
+    /** Restart handling */
+    void handleRestart(QStringList args);    
+
+private slots:
+    /** When Display Units are changed on OptionsModel it will refresh the display text of the control on the status bar */
+    void updateStakingIcon(bool staking);
+    /** Tells underlying optionsModel to update its current display unit. */
+    void onMenuSelection(QAction* action);
+
+    void enablingObfs4();
+    void disablingObfs4();
+    void retrievingBridges();
+    
 
 };
 

@@ -22,7 +22,6 @@
 
 #include <deque>
 #include <stdint.h>
-#include <regex>
 
 #ifndef WIN32
 #include <arpa/inet.h>
@@ -74,6 +73,8 @@ static const uint64_t DEFAULT_MAX_UPLOAD_TARGET = 0;
 static const bool DEFAULT_BLOCKSONLY = false;
 // NOTE: When adjusting this, update rpcnet:setban's help ("24h")
 static const unsigned int DEFAULT_MISBEHAVING_BANTIME = 60 * 60 * 24;  // Default 24-hour ban
+static const unsigned int TOR_SOCKS_PORT = 9979;
+static const unsigned int TOR_CONTROL_PORT = 9978;
 
 unsigned int ReceiveFloodSize();
 unsigned int SendBufferSize();
@@ -108,7 +109,7 @@ struct CNodeSignals {
 
 CNodeSignals& GetNodeSignals();
 
-void StartTor();
+bool StartTor();
 void InterruptTor();
 void StopTor();
 
@@ -349,23 +350,7 @@ public:
     int nRefCount;
     NodeId id;
 
-    void SetClientVersion(){
-        // "/KORE Core:0.13.1/"
-        const regex r("/KORE Core:([0-9]+).([0-9]+).([0-9]+)");
-        smatch sm;
-
-        uint32_t major = 0;
-        uint32_t minor = 0;
-        uint32_t revision = 0;
-
-        if (regex_search(cleanSubVer, sm, r) && sm.size() == 4)
-        {
-            major = atoi(sm[1]) * 1000000;
-            minor = atoi(sm[2]) * 10000;
-            revision = atoi(sm[3]) * 100;
-        }
-        clientVersion = major + minor + revision;
-    }
+    void SetClientVersion();
 
 protected:
 

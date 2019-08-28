@@ -1,0 +1,32 @@
+//
+lockPref("network.proxy.type", 1);
+lockPref("network.proxy.socks_port", 9979);
+lockPref("network.proxy.socks", "127.0.0.1");
+
+// Don't raise software update windows in this browser instance.
+lockPref("app.update.enabled", false);
+
+lockPref("toolkit.telemetry.enabled", false);
+lockPref("browser.dom.window.dump.enabled", false);
+lockPref("privacy.history.custom", true);
+lockPref("privacy.donottrackheader.enabled", true);
+
+
+// Security Level
+// https://www.ghacks.net/overview-firefox-aboutconfig-security-privacy-preferences/
+lockPref("extensions.torlauncher.start_tor", false);
+lockPref("browser.privatebrowsing.autostart", true);
+lockPref("browser.safebrowsing.enabled", true);
+lockPref("browser.safebrowsing.malware.enabled", true);
+lockPref("browser.send_pings", false);
+lockPref("browser.startup.homepage", "https://www.startpage.com");
+lockPref("browser.urlbar.placeholderName", "Startpage");
+// load browser's home page
+lockPref("browser.startup.page", 1);
+lockPref("privacy.trackingprotection.enabled", true);
+lockPref("places.history.enabled", false);
+lockPref("browser.selfsupport.url", false);
+lockPref("dom.disable_open_during_load", true);
+lockPref("extensions.blocklist.enabled", true);
+lockPref("extensions.getAddons.cache.enabled", false);
+lockPref("extensions.update.enabled", false);

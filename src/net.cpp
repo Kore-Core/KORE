@@ -1181,9 +1181,10 @@ static const char* strMainNetOnionSeed[][1] = {
 };
 
 static const char* strTestNetOnionSeed[][1] = {
-    {"zf52xt67uhkqz4br.onion"},
-    {"vtb6j42hxpnw6oun.onion"},
-    {"2sxihybnmhpdcamu.onion"},
+    {"6amb5xxbwtw3oxyp.onion"},
+    {"wbscdmr5kf7vgatj.onion"},
+    {"twpra6xyumz2zbca.onion"},
+    {"l2mr7ihixxufzfqa.onion"},
     {NULL} // last element => couldn't use size ?
 };
 
@@ -1375,6 +1376,8 @@ void TorThread()
     tor_args.push_back((tor_directory / "onion").string());
     tor_args.push_back("--HiddenServicePort");
     tor_args.push_back(std::to_string(Params().GetDefaultPort()));
+    tor_args.push_back("--HiddenServiceVersion");
+    tor_args.push_back("2");    
     tor_args.push_back("-f");
     tor_args.push_back((tor_directory / "torrc").string());
     tor_args.push_back("--DataDirectory");

@@ -233,18 +233,22 @@ UniValue listunspent(const UniValue& params, bool fHelp)
             "\nExamples\n" +
             HelpExampleCli("listunspent", "") + HelpExampleCli("listunspent", "6 9999999 \"[\\\"1PGFqEzfmQch1gKD3ra4k18PNj3tTUUSqg\\\",\\\"1LtvqCaApEdUGFkpKMM4MstjcaL4dKg8SP\\\"]\"") + HelpExampleRpc("listunspent", "6, 9999999 \"[\\\"1PGFqEzfmQch1gKD3ra4k18PNj3tTUUSqg\\\",\\\"1LtvqCaApEdUGFkpKMM4MstjcaL4dKg8SP\\\"]\""));
 
-    RPCTypeCheck(params, boost::assign::list_of(UniValue::VNUM)(UniValue::VNUM)(UniValue::VARR)(UniValue::VNUM));
 
     int nMinDepth = 1;
-    if (params.size() > 0)
+    if (!params[0].isNull()) {    
+        RPCTypeCheckArgument(params[0], UniValue::VNUM);
         nMinDepth = params[0].get_int();
+    }
 
     int nMaxDepth = 9999999;
-    if (params.size() > 1)
+    if (!params[1].isNull()) {
+        RPCTypeCheckArgument(params[1], UniValue::VNUM);
         nMaxDepth = params[1].get_int();
+    }
 
     set<CBitcoinAddress> setAddress;
     if (params.size() > 2) {
+        RPCTypeCheckArgument(params[2], UniValue::VARR);
         UniValue inputs = params[2].get_array();
         for (unsigned int inx = 0; inx < inputs.size(); inx++) {
             const UniValue& input = inputs[inx];
@@ -259,6 +263,7 @@ UniValue listunspent(const UniValue& params, bool fHelp)
 
     int nWatchonlyConfig = 1;
     if(params.size() > 3) {
+        RPCTypeCheckArgument(params[3], UniValue::VNUM);
         nWatchonlyConfig = params[3].get_int();
         if (nWatchonlyConfig > 3 || nWatchonlyConfig < 1)
             nWatchonlyConfig = 1;
@@ -364,7 +369,7 @@ UniValue createrawtransaction(const UniValue& params, bool fHelp)
         int nOutput = vout_v.get_int();
         if (nOutput < 0)
             throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter, vout must be positive");
-
+        
         CTxIn in(COutPoint(txid, nOutput));
         rawTx.vin.push_back(in);
     }

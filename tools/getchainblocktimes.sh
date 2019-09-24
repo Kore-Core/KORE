@@ -14,7 +14,7 @@ echo "##   datadir : optional"
 exit 1
 fi
 
-cli="../src/kore-cli"
+cli="../src/kore-cli -testnet"
 
 if [ ! -z "$4" ]; then
   cli="$cli -datadir=$4"    

@@ -33,6 +33,15 @@ namespace RPCServer
 class CBlockIndex;
 class CNetAddr;
 
+/** Wrapper for UniValue::VType, which includes typeAny:
+ * Used to denote don't care type. */
+struct UniValueType {
+    UniValueType(UniValue::VType _type) : typeAny(false), type(_type) {}
+    UniValueType() : typeAny(true) {}
+    bool typeAny;
+    UniValue::VType type;
+};
+
 class JSONRequest
 {
 public:
@@ -65,6 +74,11 @@ bool RPCIsInWarmup(std::string* statusOut);
  */
 void RPCTypeCheck(const UniValue& params,
                   const std::list<UniValue::VType>& typesExpected, bool fAllowNull=false);
+
+/**
+ * Type-check one argument; throws JSONRPCError if wrong type given.
+ */
+void RPCTypeCheckArgument(const UniValue& value, const UniValueType& typeExpected);
 
 /**
  * Check for expected keys/value types in an Object.

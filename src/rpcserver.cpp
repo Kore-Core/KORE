@@ -88,6 +88,13 @@ void RPCTypeCheck(const UniValue& params,
     }
 }
 
+void RPCTypeCheckArgument(const UniValue& value, const UniValueType& typeExpected)
+{
+    if (!typeExpected.typeAny && value.type() != typeExpected.type) {
+        throw JSONRPCError(RPC_TYPE_ERROR, strprintf("Expected type %s, got %s", uvTypeName(typeExpected.type), uvTypeName(value.type())));
+    }
+}
+
 void RPCTypeCheckObj(const UniValue& o,
     const map<string, UniValue::VType>& typesExpected,
     bool fAllowNull)

@@ -1,0 +1,3 @@
+[submodule "src/obfs4"]
+	path = src/obfs4
+	url = https://github.com/Yawning/obfs4.git

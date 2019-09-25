@@ -243,14 +243,17 @@ public:
         convertSeed6(vFixedSeeds, pnSeed6_test, ARRAYLEN(pnSeed6_test));
 
         checkpointData = {
-            {{0, nHashGenesisBlock}}
+            {
+                {0, nHashGenesisBlock},            
+                {9000, uint256S("0x2eb969a55e0418271b57b791a3f5ed132d1067a99622d81076f1289a946afff2")}
+            }
         };
 
         chainTxData = ChainTxData{
             // Data from rpc: getchaintxstats
-            /* nTime    */ 1560331326,
-            /* nTxCount */ 10000,
-            /* dTxRate  */ 0.02409597902266439};
+            /* nTime    */ 1569346862,
+            /* nTxCount */ 18098,
+            /* dTxRate  */ 0.02995262797233818};
     }
 };
 static CTestNetParams testNetParams;

@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+cli="../src/kore-cli -testnet"
+
 # This array tells the amount we need to send to the address
 array_value=(  5000 2500 2000 1500 1250 1000 800 600 500 400 300 200 100 50 25)
 array_address=( 2    5     8    8    6    6   6   6   6   5   4   4   4   3  2)
@@ -45,11 +47,15 @@ then
     # let's finish the last loop
     times=$[${array_address[$i]} -1]
     while [ $j -le $times ]; do
-       echo "$k Should send ${array_value[$i]} to ${addressess[$k]}, on error call: $0 $1 $k $i $j"
+       echo "$k sendtoaddress ${addressess[$k]} ${array_value[$i]}, on error call: $0 $1 $k $i $j"
+       txid=`$cli sendtoaddress ${addressess[$k]} ${array_value[$i]}`
+       echo "txid=$txid"
        k=$[k+1]
        j=$(( $j+1 ))   
+       sleep 1
     done
     i=$(( $i+1 ))
+    sleep 5
 else
     # First time executing the script
     # k point to the address we want to send the money
@@ -63,11 +69,15 @@ while [ $i -le $total ]; do
    j=0
    times=$[${array_address[$i]} -1]
    while [ $j -le $times ]; do
-       echo "$k Sending ${array_value[$i]} to ${addressess[$k]}, on error call: $0 $1 $k $i $j"
+       echo "$k sendtoaddress ${addressess[$k]} ${array_value[$i]}, on error call: $0 $1 $k $i $j"
+       txid=`$cli sendtoaddress ${addressess[$k]} ${array_value[$i]}`
+       echo "txid=$txid"
        k=$[k+1]
-       j=$(( $j+1 ))   
+       j=$(( $j+1 ))
+       sleep 1
     done
     i=$(( $i+1 ))
+    sleep 5
 done
 echo "Congratulations you have sent all the money!!!"
 exit 0

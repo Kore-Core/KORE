@@ -1324,6 +1324,7 @@ std::string GetObfs4TransportPlugin(fs::path &tor_directory)
     std::string clientTransportPlugin = "";
     bool obfs4 = GetBoolArg("-obfs4", false);
     if (obfs4) {
+        std::string obfs4path = GetArg("-obfs4path", ".");
 #ifdef WIN32
         if (stat("obfs4proxy.exe", &sb) == 0 && sb.st_mode & S_IXUSR) {
             char obfs4proxyPath[MAX_PATH] = {0};
@@ -1333,14 +1334,25 @@ std::string GetObfs4TransportPlugin(fs::path &tor_directory)
             string directory;
             const size_t last_slash_idx = obfs4Str.rfind('\\');
             directory = obfs4Str.substr(0, last_slash_idx);
-            clientTransportPlugin = "obfs4 exec " + directory + "\\" + "obfs4proxy.exe" +  " -enableLogging=true -logLevel DEBUG managed";
-            LogPrintf("Transport Plug obfs4: %s \n", directory + "\\" + "obfs4proxy");
-        }
-#else
-        if ((stat("/usr/local/share/kore/obfs4proxy", &sb) == 0 && sb.st_mode & S_IXUSR) || !std::system("which obfs4proxy")) {
-            LogPrintf("Attention Attention!!! \n Using external obfs4proxy as ClientTransportPlugin.\nSpecify bridges in %s\n", tor_directory);
-            clientTransportPlugin = "obfs4 exec /usr/local/share/kore/obfs4proxy -enableLogging=true -logLevel DEBUG managed";
+            clientTransportPlugin = "obfs4 exec " + directory + "\\" + "obfs4proxy.exe" + " -enableLogging=true -logLevel DEBUG managed";
+            LogPrintf("Transport Plugin obfs4: %s \n", directory + "\\" + "obfs4proxy.exe");
+        } else if (stat((obfs4path + "\\obfs4proxy.exe").c_str(), &sb) == 0 && sb.st_mode & S_IXUSR) {
+            // lets try to find the obfsproxy from the parameter or current directory
+            clientTransportPlugin = "obfs4 exec " + obfs4path + "\\" + "obfs4proxy.exe" + " -enableLogging=true -logLevel DEBUG managed";
+            LogPrintf("Transport Plugin obfs4: %s \n", obfs4path + "\\" + "obfs4proxy.exe");
         } else {
+            LogPrintf("Attention Attention, Couldn't find obfs4proxy plugin \n");
+            LogPrintf("Please check your installation. \n");            
+        }    
+#else
+        if ((stat("/usr/local/share/kore/obfs4proxy", &sb) == 0 && sb.st_mode & S_IXUSR)) {
+            LogPrintf("Transport Plugin /usr/local/share/kore/obfs4proxy as ClientTransportPlugin.\nSpecify bridges at %s\n", tor_directory);
+            clientTransportPlugin = "obfs4 exec /usr/local/share/kore/obfs4proxy -enableLogging=true -logLevel DEBUG managed";
+        } else if ((stat((obfs4path + "/obfs4proxy").c_str(), &sb) == 0 && sb.st_mode & S_IXUSR)) {
+            LogPrintf("Transport Plugin %s/obfs4proxy as ClientTransportPlugin.\nSpecify bridges at %s\n", obfs4path, tor_directory);
+            clientTransportPlugin = "obfs4 exec " + obfs4path + "/obfs4proxy -enableLogging=true -logLevel DEBUG managed";
+        }
+        else {
             LogPrintf("Attention Attention, Couldn't find obfs4proxy plugin \n");
             LogPrintf("Please check your installation. \n");
         }

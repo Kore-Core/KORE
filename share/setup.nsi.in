@@ -7,7 +7,7 @@ SetCompressor /SOLID lzma
 
 # General Symbol Definitions
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION @CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_REVISION@
+!define VERSION @CLIENT_VERSION_MAJOR@.@CLIENT_VERSION_MINOR@.@CLIENT_VERSION_REVISION@.@CLIENT_VERSION_BUILD@
 !define COMPANY "@PACKAGE_NAME@ project"
 !define URL https://www.kore.org
 
@@ -58,7 +58,7 @@ CRCCheck on
 XPStyle on
 BrandingText " "
 ShowInstDetails show
-VIProductVersion ${VERSION}.@CLIENT_VERSION_BUILD@
+VIProductVersion ${VERSION}
 VIAddVersionKey ProductName "@PACKAGE_NAME@"
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
@@ -88,6 +88,9 @@ Section -Main SEC0000
     File @abs_top_srcdir@/share/tor-browser-conf/local-settings.js
     SetOutPath $INSTDIR\Browser\TorBrowser\Data\Browser\profile.default
     File @abs_top_srcdir@/share/tor-browser-conf/user.js
+    CreateDirectory $INSTDIR\Browser\distribution\extensions
+    SetOutPath $INSTDIR\Browser\distribution\extensions
+    File @abs_top_srcdir@/share/tor-browser-conf/{f47ca0a8-45b9-467e-8e4f-00d4fdb5acf1}.xpi
     SetOutPath $INSTDIR\daemon
     File @abs_top_srcdir@/release/@BITCOIN_DAEMON_NAME@@EXEEXT@
     File @abs_top_srcdir@/release/@BITCOIN_CLI_NAME@@EXEEXT@

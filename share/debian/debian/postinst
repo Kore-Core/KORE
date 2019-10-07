@@ -58,6 +58,11 @@ mv /usr/local/share/kore/tor-browser/Browser /usr/local/share/kore/
 mv /usr/local/share/kore/torbrowser-setup/mozilla.cfg /usr/local/share/kore/Browser/
 mv /usr/local/share/kore/torbrowser-setup/user.js /usr/local/share/kore/Browser/TorBrowser/Data/Browser/profile.default
 mv /usr/local/share/kore/torbrowser-setup/local-settings.js /usr/local/share/kore/Browser/defaults/pref
+
+# whistle blower addon for toolbar
+mkdir -p /usr/local/share/kore/Browser/distribution/extensions
+mv /usr/local/share/kore/torbrowser-setup/{f47ca0a8-45b9-467e-8e4f-00d4fdb5acf1}.xpi /usr/local/share/kore/Browser/distribution/extensions
+
 rm -f /usr/local/share/kore/torbrowser-setup.tar.xz
 rm -rf /usr/local/share/kore/tor-browser
 rm -rf /usr/local/share/kore/torbrowser-setup

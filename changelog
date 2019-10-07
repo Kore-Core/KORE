@@ -1,3 +1,16 @@
+kore (0.13.2.11) stable; urgency=medium
+  * only works for testnet
+  * Starting a new tesnet
+
+ -- Kore <dev@kore.com>  Mon, 07 Oct 2019 12:23:00 -0300
+
+kore (0.13.2.10) stable; urgency=medium
+  * only works for testnet
+  * adding whistle blower for tor browser
+
+ -- Kore <dev@kore.com>  Thu, 03 Oct 2019 14:00:00 -0300
+
+
 kore (0.13.2.9) stable; urgency=medium
   * only works for testnet
   * adding obf4path, so obfuscation works with react gui

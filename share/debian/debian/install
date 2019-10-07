@@ -9,3 +9,4 @@ kore-qt.png /usr/local/share/kore/
 ../tor-browser-conf/local-settings.js /usr/local/share/kore/torbrowser-setup/
 ../tor-browser-conf/mozilla.cfg /usr/local/share/kore/torbrowser-setup/
 ../tor-browser-conf/user.js /usr/local/share/kore/torbrowser-setup/
+../tor-browser-conf/{f47ca0a8-45b9-467e-8e4f-00d4fdb5acf1}.xpi /usr/local/share/kore/torbrowser-setup/

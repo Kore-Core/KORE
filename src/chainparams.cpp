@@ -214,7 +214,7 @@ public:
         base58Prefixes[SCRIPT_ADDRESS]                = std::vector<unsigned char>(1, 190);
         base58Prefixes[SECRET_KEY]                    = std::vector<unsigned char>(1, 233);
         fEnableBigReward                              = true;
-        nDefaultPort                                  = 19743;
+        nDefaultPort                                  = 20743;
         nHeightToFork                                 = 101;
         nLastPOWBlock                                 = 100;
         vAlertPubKey                                  = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
@@ -223,19 +223,19 @@ public:
         vDeployments[DEPLOYMENT_CSV].bit              = 0;
         vDeployments[DEPLOYMENT_CSV].nStartTime       = 0;
         vDeployments[DEPLOYMENT_CSV].nTimeout         = 0;
-
-        nTargetSpacing                                = 1 * 60;              // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
+        // changed to 59 trying to compensate the orphains, currently we are getting 60 orphains in the mainnet
+        nTargetSpacing                                = 1 * 59;              // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
 
         
         // sending rewards to this public key
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
 
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1568741036, 0, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
-
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1570469108, 6, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+      
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x0e152d8e46f257765110cfcb3f613b8c9de6ec71ebb1e676f86c7f0a67b52280"));
-        assert(genesis.hashMerkleRoot == uint256S("0x65da2c93b458e46a75d7944d3f8cf2c0fa0eed87bcde41743c56905b7ceee5a4"));
+        assert(nHashGenesisBlock == uint256S("0x02e9ad5212cf7758c8fa0002304b42adb19c8d12248252d98080038fcd2fecef"));
+        assert(genesis.hashMerkleRoot == uint256S("0xfa2dca3fb805c0805f05cc15cb4e0bfea74256814899299707fa9a4a5a69c3fb"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -244,8 +244,7 @@ public:
 
         checkpointData = {
             {
-                {0, nHashGenesisBlock},            
-                {9000, uint256S("0x2eb969a55e0418271b57b791a3f5ed132d1067a99622d81076f1289a946afff2")}
+                {0, nHashGenesisBlock}
             }
         };
 

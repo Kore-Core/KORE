@@ -89,7 +89,7 @@ $(BITCOIN_WIN_INSTALLER): all-recursive
 	$(top_builddir)/share/tor-browser-conf/moz-byteshift.py -i="$(top_builddir)/share/tor-browser-conf/mozilla.txt" -o="$(top_builddir)/share/tor-browser-conf/mozilla.cfg"
 	@test -f $(DEPLOY_TOR_BROWSER_WINDOWS) || wget -O $(DEPLOY_TOR_BROWSER_WINDOWS) --show-progress $(TOR_BROWSER_WINDOWS_DOWNLOAD)
 	@test -f $(MAKENSIS) && $(MAKENSIS) -V2 $(top_builddir)/share/setup.nsi || \
-	  echo error: could not build $@
+	  echo error: nsys could not build $@. Make sure nsys is installed
 	@echo built $@
 
 $(BITCOIN_LINUX_INSTALLER):

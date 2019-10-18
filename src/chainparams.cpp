@@ -224,7 +224,7 @@ public:
         vDeployments[DEPLOYMENT_CSV].nStartTime       = 0;
         vDeployments[DEPLOYMENT_CSV].nTimeout         = 0;
         // changed to 59 trying to compensate the orphains, currently we are getting 60 orphains in the mainnet
-        nTargetSpacing                                = 1 * 59;              // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
+        nTargetSpacing                                = 1 * 57;              // [nStakeMinConfirmations-1, max(nStakeMinConfirmations-1, any bigger value)]
 
         
         // sending rewards to this public key
@@ -244,15 +244,16 @@ public:
 
         checkpointData = {
             {
-                {0, nHashGenesisBlock}
+                {0, nHashGenesisBlock},
+                {14000, uint256S("0xa36d228d53f92f6f6d855361801e46e659062b6347388ab3a01f58258c690b7c")}
             }
         };
 
         chainTxData = ChainTxData{
             // Data from rpc: getchaintxstats
-            /* nTime    */ 1569346862,
-            /* nTxCount */ 18098,
-            /* dTxRate  */ 0.02995262797233818};
+            /* nTime    */ 1571400980,
+            /* nTxCount */ 29410,
+            /* dTxRate  */ 0.03213475689851871};
     }
 };
 static CTestNetParams testNetParams;

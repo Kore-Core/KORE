@@ -1,3 +1,9 @@
+kore (0.13.2.12) stable; urgency=medium
+  * only works for testnet
+  * Adjusting testnet parameters
+
+ -- Kore <dev@kore.com>  Fri, 18 Oct 2019 16:42:00 -0300
+
 kore (0.13.2.11) stable; urgency=medium
   * only works for testnet
   * Starting a new tesnet

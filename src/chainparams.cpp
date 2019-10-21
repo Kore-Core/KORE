@@ -214,7 +214,7 @@ public:
         base58Prefixes[SCRIPT_ADDRESS]                = std::vector<unsigned char>(1, 190);
         base58Prefixes[SECRET_KEY]                    = std::vector<unsigned char>(1, 233);
         fEnableBigReward                              = true;
-        nDefaultPort                                  = 20743;
+        nDefaultPort                                  = 21743;
         nHeightToFork                                 = 101;
         nLastPOWBlock                                 = 100;
         vAlertPubKey                                  = ParseHex("04cd7ce93858b4257079f4ed9150699bd9f66437ff76617690d1cc180321e94ea391bbccf3bccdcf2edaf0429e32c07b53354e9cecf458cca3fe71dc277f11d9c5");
@@ -231,11 +231,11 @@ public:
         CScript genesisOutputScript                   = CScript() << ParseHex("04678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5f") << OP_CHECKSIG;
         const char* pszTimestamp                      = "https://bitcoinmagazine.com/articles/altcoins-steal-spotlight-bitcoin-reaches-new-highs/";
 
-        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1570469108, 6, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
+        genesis = CreateGenesisBlock(NULL, genesisOutputScript, 1571681771, 7, 2500634, 64441706, 0x201fffff, 1, 49 * COIN);
       
         nHashGenesisBlock = genesis.GetHash();
-        assert(nHashGenesisBlock == uint256S("0x02e9ad5212cf7758c8fa0002304b42adb19c8d12248252d98080038fcd2fecef"));
-        assert(genesis.hashMerkleRoot == uint256S("0xfa2dca3fb805c0805f05cc15cb4e0bfea74256814899299707fa9a4a5a69c3fb"));
+        assert(nHashGenesisBlock == uint256S("0x07c85137f45d1676136fb3b88eddd6d637750f1c03aa5fde8ced7280e5f81066"));
+        assert(genesis.hashMerkleRoot == uint256S("0x39f04416f8325ccbe77c3b84591e5620d133a278632db606f7880c1f1398a14e"));
 
         vFixedSeeds.clear();
         vSeeds.clear();
@@ -245,15 +245,15 @@ public:
         checkpointData = {
             {
                 {0, nHashGenesisBlock},
-                {14000, uint256S("0xa36d228d53f92f6f6d855361801e46e659062b6347388ab3a01f58258c690b7c")}
+                {5, uint256S("0x1e6f740505ec341d05c6d6f4cf4349d6f00b74118fd7cee107d068fc4c0b98d8")}
             }
         };
 
         chainTxData = ChainTxData{
             // Data from rpc: getchaintxstats
-            /* nTime    */ 1571400980,
-            /* nTxCount */ 29410,
-            /* dTxRate  */ 0.03213475689851871};
+            /* nTime    */ 1571691419,
+            /* nTxCount */ 1571691419,
+            /* dTxRate  */ 0.04100140503257121};
     }
 };
 static CTestNetParams testNetParams;

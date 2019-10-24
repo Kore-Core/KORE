@@ -1,3 +1,11 @@
+kore (0.13.2.13) stable; urgency=medium
+  * only works for testnet
+  * update torbrowser to 9.0
+  * update kore addon for torbrowser is now a menu with 4 options
+
+ -- Kore <dev@kore.com>  Thu, 24 Oct 2019 15:42:00 -0300
+
+
 kore (0.13.2.12) stable; urgency=medium
   * only works for testnet
   * Adjusting testnet parameters
